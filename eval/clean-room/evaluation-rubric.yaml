@@ -1,0 +1,94 @@
+protocol:
+  id: clean-room-reconstruction-v0.1
+  purpose: >-
+    Test whether the machine-readable specification is sufficient for an
+    unfamiliar model to reconstruct the proposal without seeing a prior render.
+  generator_must_not_receive:
+    - AI_Pacing_Canonical_Spec_v0.1.md
+    - generated/minimal-reconstruction.md
+    - any essay, executive summary, slide deck, transcript, or previous output
+    - this evaluation rubric
+    - repository access, web access, or conversation memory
+  verifier_receives:
+    - the exact generator packet manifest
+    - rendering.md
+    - coverage.yaml
+    - source.yaml
+    - sections 0 through 11 of AI_Pacing_Canonical_Spec_v0.1.md as the independent editorial reference
+  verifier_must_not_receive_until_after_judgment:
+    - section 12 of AI_Pacing_Canonical_Spec_v0.1.md
+    - any previous rendering or another model's output
+
+hard_gates:
+  - id: G1
+    rule: Every kernel proposition is faithfully represented or explicitly declared omitted/deviated.
+  - id: G2
+    rule: Capability, strategic hardware, and power-conversion affordances are not conflated.
+  - id: G3
+    rule: Bounded research permission is not represented as permission for consequential deployment.
+  - id: G4
+    rule: Domestic entry and foreign-public-frontier reciprocity both survive reconstruction.
+  - id: G5
+    rule: Hypotheses remain uncertain, implementations remain optional, and open questions remain open.
+  - id: G6
+    rule: No source is credited with a synthesis that the source merely motivated.
+  - id: G7
+    rule: Every omission, deviation, and material added inference is declared.
+
+dimensions:
+  - {id: R1, name: kernel identity, weight: 20}
+  - {id: R2, name: causal and dependency fidelity, weight: 15}
+  - {id: R3, name: governance mechanism fidelity, weight: 15}
+  - {id: R4, name: hardware and warning-time fidelity, weight: 10}
+  - {id: R5, name: domestic and international sequencing, weight: 10}
+  - {id: R6, name: type discipline and uncertainty, weight: 10}
+  - {id: R7, name: non-claims and boundaries, weight: 5}
+  - {id: R8, name: attribution and provenance, weight: 5}
+  - {id: R9, name: omission and deviation accounting, weight: 5}
+  - {id: R10, name: usefulness to an unfamiliar policy reader, weight: 5}
+
+judgment:
+  verified:
+    minimum_score: 90
+    requires_all_hard_gates: true
+    maximum_material_undeclared_deviations: 0
+  verified_with_deviations:
+    minimum_score: 75
+    requires_gates: [G2, G3, G5, G6, G7]
+    rule: Any failed kernel coverage is conspicuously declared rather than silently lost.
+  not_verified:
+    rule: Any other result.
+
+suite:
+  independent_runs: 5
+  minimum_model_families: 2
+  blind_review: true
+  aggregate_pass_rule: >-
+    At least four of five runs are verified, no kernel is silently lost in any
+    run, and the same material error does not recur in two or more runs.
+  controls:
+    - id: C1
+      kind: invariance
+      mutation: Reorder mappings and nodes without changing their content.
+      expected: Material reconstruction and scores remain stable.
+    - id: C2
+      kind: sensitivity
+      mutation: Remove K6 and its incident relations from a copy of the packet.
+      expected: Public-frontier reciprocity disappears or the missing basis is flagged.
+    - id: C3
+      kind: type-sensitivity
+      mutation: Change one replaceable implementation to kernel.
+      expected: The mutation grader detects the improper promotion against the hidden reference.
+    - id: C4
+      kind: hallucination-control
+      mutation: Add a plausible but unsupported source attribution.
+      expected: The verifier rejects or marks the attribution as unsupported.
+  stopping_rules:
+    - condition: The same canonical idea is absent or distorted across two or more model families.
+      action: Treat this as specification insufficiency or ambiguity; revise the YAML before tuning prose prompts.
+    - condition: Only one model or prompt family fails while others pass.
+      action: Treat this first as renderer sensitivity; repeat with a neutral prompt before revising the specification.
+    - condition: A control mutation is not detected.
+      action: The evaluation is not sensitive enough; repair the rubric or verifier protocol before trusting positive results.
+    - condition: Generator and verifier disagree about what the YAML says.
+      action: Obtain an attributable human ruling and record the disputed proposition and rationale.

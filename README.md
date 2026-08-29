@@ -51,6 +51,31 @@ The example intentionally targets the repository's first immutable commit. The v
 
 See [`docs/verification.md`](docs/verification.md) for the test model and [`generated/rendering-review-checklist.md`](generated/rendering-review-checklist.md) for attributable rendering review.
 
+## Clean-room reconstruction test
+
+Build a sealed packet for a fresh model that contains no essay, executive
+summary, deterministic reconstruction, or prior model answer:
+
+```sh
+make clean-room
+```
+
+The packet is written to `build/clean-room-generator/`. Give that directory—and
+only that directory—to a model with no conversation memory, repository access,
+or web access. Keep `eval/clean-room/evaluation-rubric.yaml` and the canonical
+Markdown away from the generator; those belong to an independent verifier.
+
+Audit structural drift between the newly supplied canonical Markdown and the
+current YAML:
+
+```sh
+make clean-room-audit
+```
+
+This audit is deliberately diagnostic rather than part of `make check` for now:
+the two sources materially diverge and need an editorial reconciliation rather
+than an automatic overwrite. See [`docs/clean-room-reconstruction.md`](docs/clean-room-reconstruction.md).
+
 ## Deterministic projections
 
 The generator produces:

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/ai-pacing/clean-room-coverage.schema.json",
+  "title": "Clean-room reconstruction coverage report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "source_semantic_sha256",
+    "relationship_claim",
+    "covered_nodes",
+    "omitted_nodes",
+    "declared_deviations",
+    "added_inferences",
+    "uncertainty_treatment"
+  ],
+  "properties": {
+    "source_semantic_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relationship_claim": {
+      "const": "faithful_reconstruction"
+    },
+    "covered_nodes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "rendering_section", "paraphrase"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[KDIHQ][0-9]+$"},
+          "rendering_section": {"type": "string", "minLength": 1},
+          "paraphrase": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "omitted_nodes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "reason"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[KDIHQ][0-9]+$"},
+          "reason": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "declared_deviations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[KDIHQ][0-9]+$"},
+          "description": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "added_inferences": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "uncertainty_treatment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "treatment"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^H[0-9]+$"},
+          "treatment": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}
