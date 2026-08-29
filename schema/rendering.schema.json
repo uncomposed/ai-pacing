@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/ai-pacing-rendering.schema.json",
+  "title": "Generic rendering of an exact AI Pacing Git state",
+  "type": "object",
+  "required": ["rendering_version", "rendering"],
+  "additionalProperties": false,
+  "properties": {
+    "rendering_version": {"const": 1},
+    "rendering": {
+      "type": "object",
+      "required": [
+        "id", "artifact_uri", "artifact_digest", "creator", "renders",
+        "relationship", "verifier_request"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "artifact_uri": {"type": "string", "minLength": 1},
+        "artifact_git_path": {"type": "string", "minLength": 1},
+        "artifact_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "creator": {
+          "type": "object",
+          "required": ["id"],
+          "properties": {"id": {"type": "string", "minLength": 1}}
+        },
+        "renders": {
+          "type": "object",
+          "required": ["idea", "git_object_format", "git_commit", "spec_path"],
+          "properties": {
+            "idea": {"type": "string", "minLength": 1},
+            "git_object_format": {"enum": ["sha1", "sha256"]},
+            "git_commit": {"type": "string", "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"},
+            "spec_path": {"type": "string", "minLength": 1}
+          }
+        },
+        "relationship": {
+          "type": "object",
+          "required": ["claim", "covers", "declared_omissions", "declared_deviations"],
+          "properties": {
+            "claim": {"enum": ["faithful", "scoped", "critique", "variant"]},
+            "covers": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+            "declared_omissions": {"type": "array", "items": {"type": "string"}},
+            "declared_deviations": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "verifier_request": {
+          "type": "object",
+          "required": ["policy_version", "requested_judgment"],
+          "properties": {
+            "policy_version": {"type": "string", "minLength": 1},
+            "requested_judgment": {"enum": ["verified", "verified_with_deviations"]}
+          }
+        }
+      }
+    }
+  }
+}

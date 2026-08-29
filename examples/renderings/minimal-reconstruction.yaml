@@ -1,0 +1,22 @@
+rendering_version: 1
+rendering:
+  id: urn:ai-pacing:rendering:minimal-reconstruction:0110b06
+  artifact_uri: urn:git:0110b06cb9321d56c0635b6546d4d2354bda245e:generated/minimal-reconstruction.md
+  artifact_git_path: generated/minimal-reconstruction.md
+  artifact_digest: sha256:c69fa1985e933aa2747a50027d345378eb02772337b7e519bfc0c4b34b8f7dfc
+  creator:
+    id: urn:person:cole-miller
+  renders:
+    idea: ai-pacing
+    git_object_format: sha1
+    git_commit: 0110b06cb9321d56c0635b6546d4d2354bda245e
+    spec_path: spec/ai-pacing.yaml
+  relationship:
+    claim: faithful
+    covers: [K1, K2, K3, K4, K5, K6, K7]
+    declared_omissions:
+      - Derived mechanisms, feasibility hypotheses, implementation options, and open questions.
+    declared_deviations: []
+  verifier_request:
+    policy_version: 0.1.0
+    requested_judgment: verified

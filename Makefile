@@ -14,4 +14,5 @@ generate:
 
 test:
 	@ruby test/spec_tool_test.rb
+	@ruby test/rendering_tool_test.rb
 	@python3 test/json_schema_test.py

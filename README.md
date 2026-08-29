@@ -41,6 +41,14 @@ Compute the format-independent semantic digest:
 ruby tools/spec_tool.rb digest
 ```
 
+Validate a rendering against the exact historical specification and artifact bytes it targets:
+
+```sh
+ruby tools/rendering_tool.rb examples/renderings/minimal-reconstruction.yaml
+```
+
+The example intentionally targets the repository's first immutable commit. The validator resolves that commit, loads the specification from that historical state, checks every covered proposition there, and recomputes the artifact digest from the bytes stored in the target commit.
+
 See [`docs/verification.md`](docs/verification.md) for the test model and [`generated/rendering-review-checklist.md`](generated/rendering-review-checklist.md) for attributable rendering review.
 
 ## Deterministic projections

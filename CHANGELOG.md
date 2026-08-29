@@ -8,3 +8,4 @@
 - Added executable semantic acceptance tests and explicit hypothesis stopping rules.
 - Added deterministic views, semantic hashing, mutation tests, and JSON Schema validation.
 - Encoded Git as the authority, commit-addressed verification, and one universal rendering envelope.
+- Added a generic rendering manifest, historical-commit resolver, artifact hashing, and relationship-claim tests.
