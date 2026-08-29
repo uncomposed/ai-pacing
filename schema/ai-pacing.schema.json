@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/ai-pacing.schema.json",
+  "title": "AI Pacing canonical specification",
+  "type": "object",
+  "required": [
+    "specification",
+    "typed_layers",
+    "sources",
+    "audit_events",
+    "nodes",
+    "relations",
+    "publication",
+    "acceptance_tests",
+    "deterministic_views"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "specification": {
+      "type": "object",
+      "required": ["id", "title", "version", "status", "purpose", "authority", "responsibility", "generator_contract"]
+    },
+    "typed_layers": {
+      "type": "object",
+      "required": ["kernel", "derived", "hypothesis", "implementation", "open_question"],
+      "additionalProperties": false,
+      "patternProperties": {
+        "^(kernel|derived|hypothesis|implementation|open_question)$": {
+          "type": "object",
+          "required": ["description", "prefix"]
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "audit_events": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/auditEvent"}
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/node"}
+    },
+    "relations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/relation"}
+    },
+    "publication": {
+      "type": "object",
+      "required": ["layers", "rendering_model", "verification_policy"]
+    },
+    "acceptance_tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/acceptanceTest"}
+    },
+    "deterministic_views": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/view"}
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": ["id", "title", "kind", "date", "locator", "contribution"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^SRC-[A-Z0-9-]+$"},
+        "title": {"type": "string", "minLength": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "date": {"type": "string", "format": "date"},
+        "locator": {"type": "string", "minLength": 1},
+        "contribution": {"type": "string", "minLength": 1}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["origin", "sources", "ai_roles", "author_status"],
+      "properties": {
+        "origin": {"type": "string", "minLength": 1},
+        "sources": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "ai_roles": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "author_status": {"type": "string", "minLength": 1}
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": ["id", "kind", "title", "statement", "provenance"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[KDHIQ][0-9]+$"},
+        "kind": {"enum": ["kernel", "derived", "hypothesis", "implementation", "open_question"]},
+        "title": {"type": "string", "minLength": 1},
+        "statement": {"type": "string", "minLength": 1},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "replaceable": {"type": "boolean"},
+        "falsifier": {"type": "string"},
+        "evidence_needed": {"type": "string"},
+        "stopping_rule": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kind": {"const": "hypothesis"}}},
+          "then": {"required": ["falsifier", "evidence_needed", "stopping_rule"]}
+        },
+        {
+          "if": {"properties": {"kind": {"const": "implementation"}}},
+          "then": {"required": ["replaceable"], "properties": {"replaceable": {"const": true}}}
+        }
+      ]
+    },
+    "auditEvent": {
+      "type": "object",
+      "required": ["id", "date", "phase", "summary", "evidence", "affected_nodes", "confidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^EVT-[A-Z0-9-]+$"},
+        "date": {"type": "string", "format": "date"},
+        "time": {"type": "string"},
+        "phase": {"type": "string"},
+        "summary": {"type": "string"},
+        "evidence": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "affected_nodes": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "confidence": {"enum": ["low", "medium", "high"]},
+        "caveat": {"type": "string"}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "required": ["from", "to", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "from": {"type": "string"},
+        "to": {"type": "string"},
+        "type": {"enum": ["grounds", "conditions", "implements"]}
+      }
+    },
+    "acceptanceTest": {
+      "type": "object",
+      "required": ["id", "title", "rationale", "assertions"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^AT-[0-9]+$"},
+        "title": {"type": "string"},
+        "rationale": {"type": "string"},
+        "assertions": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["type"]}}
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["id", "path", "purpose"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^VIEW-[A-Z0-9-]+$"},
+        "path": {"type": "string", "pattern": "^generated/"},
+        "purpose": {"type": "string"}
+      }
+    }
+  }
+}

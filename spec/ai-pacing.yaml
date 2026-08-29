@@ -1,0 +1,698 @@
+specification:
+  id: ai-pacing
+  title: AI Pacing
+  version: 0.1.0
+  status: working-draft
+  purpose: >-
+    Slow and condition the conversion of frontier AI capability into
+    irreversible economic, political, military, and physical power while
+    preserving enough bounded research progress to learn what is safe.
+  authority:
+    system: git
+    canonical_branch: main
+    rule: >-
+      A rendering or verification MUST resolve the version it targets to an
+      immutable full Git commit object ID. Branch names and website pages are
+      discovery aids, not verification targets.
+  responsibility:
+    canonical_editor: Cole Miller
+    ai_use_disclosure: >-
+      AI systems were used for criticism, synthesis, formalization, source
+      discovery, and editing. Inclusion in this specification means the
+      canonical editor accepted responsibility for the proposition.
+  generator_contract:
+    authoritative_object: this specification at an immutable Git commit
+    allowed:
+      - Change medium, tone, ordering, examples, and level of detail.
+      - Limit scope when the omitted claims are declared.
+      - Criticize or vary identified propositions when the relationship is declared.
+    forbidden:
+      - Turn an implementation option into a kernel proposition.
+      - Turn a hypothesis or open question into an established conclusion.
+      - Change a proposition without checking its dependent claims.
+      - Attribute a synthesis claim to a source that merely motivated it.
+      - Claim verification without naming the verifier, commit, policy, and evidence.
+
+typed_layers:
+  kernel:
+    description: Necessary propositions in the minimal identity of AI Pacing.
+    prefix: K
+  derived:
+    description: Mechanisms logically or strategically derived from kernel propositions.
+    prefix: D
+  hypothesis:
+    description: Contestable empirical assumptions on which feasibility depends.
+    prefix: H
+  implementation:
+    description: Replaceable policy or engineering choices that instantiate mechanisms.
+    prefix: I
+  open_question:
+    description: Unresolved questions that must remain visibly unresolved.
+    prefix: Q
+
+sources:
+  - id: SRC-PRODUCTIVITY-DEFLATION
+    title: Productivity deflation
+    kind: author-note
+    date: "2024-02-26"
+    locator: "Obsidian/Slaw's Notes/Productivity deflation.md"
+    contribution: Anticipated capability improvement can delay investment and adoption.
+  - id: SRC-AI-BREAKOUT
+    title: AI Breakout
+    kind: author-note
+    date: "2025-10-02"
+    locator: "Obsidian/Slaw's Notes/AI Breakout.md"
+    contribution: >-
+      Durable autonomy, industrial bootstrap, physical dependence, warning
+      thresholds, and independently controlled human vetoes.
+  - id: SRC-AI-ABSOLUTISM
+    title: Response AI absolutism
+    kind: author-note
+    date: "2026-06-12"
+    locator: "Obsidian/Slaw's Notes/Response AI absolutism.md"
+    contribution: Institutional acceptance, liability, professional sign-off, and observable thresholds.
+  - id: SRC-AI-2040
+    title: "AI 2040: Plan A"
+    kind: external-work
+    date: "2026-07-27"
+    locator: "Spoken Margins/AI 2040 Plan A"
+    contribution: Slowdown, reversibility, diffusion, transparency, and compute destruction.
+  - id: SRC-TOBY-ORD
+    title: Where AGI timelines go wrong
+    kind: listening-session
+    date: "2026-08-08"
+    locator: "Spoken Margins/Where AGI timelines go wrong, 18:40-24:48"
+    contribution: >-
+      First recoverable integrated formulation of a paced public frontier,
+      competitor review, unilateral entry, and retained human vetoes.
+  - id: SRC-NGO
+    title: "Selective Optimism: a critique of AI 2040"
+    kind: external-work
+    date: "2026-07-09"
+    locator: "Richard Ngo, Mind the Future"
+    contribution: Domestic-first political sequencing and skepticism toward inevitable race framing.
+  - id: SRC-DAVIDSON
+    title: Plan A's problem with dry tinder
+    kind: external-work
+    date: "2026-07-10"
+    locator: "Tom Davidson, Forethought"
+    contribution: Software-first scaling and the danger of accumulated physical dry tinder.
+  - id: SRC-PAUSEAI
+    title: PauseAI Is Making AI Doom Worse
+    kind: listening-session
+    date: "2026-08-19"
+    locator: "Spoken Margins, listener interjections at 43:22 and 55:46"
+    contribution: >-
+      Architecture-neutral domestic law, public-frontier pacing, profit gating,
+      and competitor access for peer review.
+  - id: SRC-HUGGING-FACE
+    title: The Hugging Face incident and the road ahead
+    kind: incident-and-listening-session
+    date: "2026-08-26"
+    locator: "Spoken Margins/The Hugging Face incident and the road ahead"
+    contribution: >-
+      Evidence that internal research can confer external agency and that
+      precursor incidents can function as warning shots.
+  - id: SRC-PLAN-A-BARGAINING
+    title: Analyze Plan A Bargaining
+    kind: ai-assisted-dialogue
+    date: "2026-08-28"
+    locator: "ChatGPT conversation 6a924ff0-2378-83ea-98ef-4ea693205786"
+    contribution: >-
+      Bargaining-entry analysis, Capability Release Compact, A/H/P labels,
+      automatic reciprocity, reporting incentives, reserve activation latency,
+      and formalization.
+
+audit_events:
+  - id: EVT-2024-ECONOMIC-PRECURSOR
+    date: "2024-02-26"
+    phase: precursor
+    summary: Productivity-deflation idea records adoption and investment effects of anticipated rapid improvement.
+    evidence: [SRC-PRODUCTIVITY-DEFLATION]
+    affected_nodes: [H5]
+    confidence: medium
+  - id: EVT-2025-SAFETY-SPINE
+    date: "2025-10-02"
+    phase: deep-inception
+    summary: AI Breakout separates intelligence from durable autonomy and identifies physical human vetoes.
+    evidence: [SRC-AI-BREAKOUT]
+    affected_nodes: [K1, K2, K7, H1, I5]
+    confidence: high
+  - id: EVT-2026-POLICY-INCEPTION
+    date: "2026-08-08"
+    phase: policy-inception
+    summary: Public-frontier gating, rival review, unilateral entry, and industrial vetoes appear together.
+    evidence: [SRC-TOBY-ORD]
+    affected_nodes: [K1, K2, K3, K4, K5, D1, D2, D3]
+    confidence: high
+    caveat: The phrase "the gate that we've described" implies an immediate precursor not preserved here.
+  - id: EVT-2026-NAMED-PROJECT
+    date: "2026-08-17"
+    phase: named-project
+    summary: AI Pacing becomes a standalone Obsidian project.
+    evidence: [SRC-TOBY-ORD, SRC-PAUSEAI]
+    affected_nodes: [K1, K2, K3, K4, K5]
+    confidence: medium
+    caveat: The initial August 17 file revision is not present in the available Git history.
+  - id: EVT-2026-REGIME-ASSEMBLY
+    date: "2026-08-29"
+    time: "12:55:54-05:00"
+    phase: regime-assembly
+    summary: >-
+      Plan A, Ngo, Davidson, the Hugging Face incident, and author interjections
+      are assembled into the current domestic-first regime.
+    evidence: [SRC-AI-2040, SRC-NGO, SRC-DAVIDSON, SRC-HUGGING-FACE, SRC-PLAN-A-BARGAINING]
+    affected_nodes: [K1, K2, K3, K4, K5, K6, K7, D1, D2, D3, D4, D5, D6, I1, I2, I3, I4, I5, I6]
+    confidence: high
+  - id: EVT-2026-CANONICAL-SPEC
+    date: "2026-08-29"
+    time: "15:46:39-05:00"
+    phase: formalization
+    summary: The evolving essay is converted into a typed, dependency-aware canonical specification.
+    evidence: [SRC-PLAN-A-BARGAINING]
+    affected_nodes: [K1, K2, K3, K4, K5, K6, K7]
+    confidence: high
+
+nodes:
+  - id: K1
+    kind: kernel
+    title: Separate capability, substrate, and power
+    statement: >-
+      Algorithmic capability (A), strategic hardware (H), and power-conversion
+      affordances (P) are related but distinct variables and should not be
+      governed as though they always change together.
+    rationale: Intelligence does not become sovereignty until it can acquire durable, consequential agency.
+    provenance:
+      origin: author-synthesis
+      sources: [SRC-AI-BREAKOUT, SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [critique, naming, formalization]
+      author_status: accepted
+  - id: K2
+    kind: kernel
+    title: Pace conversion into irreversible power
+    statement: >-
+      The objective is to slow and condition the conversion of frontier
+      intelligence into irreversible economic, political, military, and
+      physical power, not to freeze intelligence as such.
+    rationale: This preserves learning and option value while retaining intervention points.
+    provenance:
+      origin: author-synthesis
+      sources: [SRC-AI-BREAKOUT, SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [critique, synthesis, formalization]
+      author_status: accepted
+  - id: K3
+    kind: kernel
+    title: Govern bounded research and consequential use differently
+    statement: >-
+      Research inside genuinely bounded environments may proceed under a
+      different regime from public, commercial, military, governmental, or
+      otherwise power-conferring use.
+    rationale: Discovering a capability should not automatically confer the right to deploy it.
+    provenance:
+      origin: author
+      sources: [SRC-TOBY-ORD, SRC-PAUSEAI, SRC-HUGGING-FACE]
+      ai_roles: [counterexample, refinement]
+      author_status: accepted-after-revision
+  - id: K4
+    kind: kernel
+    title: Require adversarial assurance above the public frontier
+    statement: >-
+      Consequential use that materially exceeds the observable foreign public
+      capability frontier requires an adversarial control and safety case.
+    rationale: Safety evidence becomes a condition of access to economic and strategic rents.
+    provenance:
+      origin: author
+      sources: [SRC-TOBY-ORD, SRC-PAUSEAI, SRC-PLAN-A-BARGAINING]
+      ai_roles: [mechanism-analysis, formalization]
+      author_status: accepted
+  - id: K5
+    kind: kernel
+    title: Start domestically and remain internationally extensible
+    statement: >-
+      The regime should begin as a domestically justified institution that can
+      operate without foreign agreement and later admit deeper reciprocal cooperation.
+    rationale: A grand bargain is not a credible prerequisite for initial action.
+    provenance:
+      origin: author-synthesis
+      sources: [SRC-TOBY-ORD, SRC-NGO, SRC-PLAN-A-BARGAINING]
+      ai_roles: [crisis-bargaining-analysis, formalization]
+      author_status: accepted
+  - id: K6
+    kind: kernel
+    title: Make foreign public capability an automatic reciprocity input
+    statement: >-
+      Observable foreign public capability should alter the domestic safe-harbor
+      frontier so that foreign restraint can be reciprocated without a treaty and
+      foreign release cannot exploit unilateral domestic restraint indefinitely.
+    rationale: Cooperation can occur through a precommitted policy rule rather than trust.
+    provenance:
+      origin: author-synthesis
+      sources: [SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [bargaining-analysis, formalization]
+      author_status: accepted
+  - id: K7
+    kind: kernel
+    title: Maximize warning time
+    statement: >-
+      Governance should maximize the interval between credible detection of a
+      dangerous transition and the point at which humans can no longer respond effectively.
+    rationale: Observable intermediate boundaries create chances to learn before failures become irreversible.
+    metric: T_warning = T_irreversible_power - T_credible_detection
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-AI-BREAKOUT, SRC-HUGGING-FACE, SRC-PLAN-A-BARGAINING]
+      ai_roles: [unification, formalization]
+      author_status: accepted
+
+  - id: D1
+    kind: derived
+    title: Capability Release Compact
+    statement: >-
+      A domestic compact governs transitions from bounded research into public,
+      commercial, military, governmental, or other consequential use.
+    derived_from: [K2, K3, K4, K5, K6]
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-PLAN-A-BARGAINING]
+      ai_roles: [architecture, naming]
+      author_status: accepted
+  - id: D2
+    kind: derived
+    title: Rival laboratories provide the technical attack surface
+    statement: >-
+      Qualified competitors receive controlled access sufficient to attack a
+      frontier applicant's case; the government adjudicates and competitors do not hold a veto.
+    derived_from: [K4]
+    provenance:
+      origin: author
+      sources: [SRC-TOBY-ORD, SRC-PAUSEAI, SRC-PLAN-A-BARGAINING]
+      ai_roles: [risk-analysis, formalization]
+      author_status: accepted
+  - id: D3
+    kind: derived
+    title: Safety becomes part of the profit function
+    statement: >-
+      Because above-frontier monetization depends on passing hostile review,
+      controllability becomes a production input rather than only a cost.
+    derived_from: [K4, D2]
+    provenance:
+      origin: author-interjection-and-ai-formalization
+      sources: [SRC-PLAN-A-BARGAINING]
+      ai_roles: [economic-modeling]
+      author_status: accepted
+  - id: D4
+    kind: derived
+    title: Compute stock and compute entanglement differ
+    statement: >-
+      Reversibility depends on both the quantity of strategic hardware and the
+      degree to which civilian society depends on its continued operation.
+    derived_from: [K1, K2, K7]
+    provenance:
+      origin: author-synthesis
+      sources: [SRC-DAVIDSON, SRC-PLAN-A-BARGAINING]
+      ai_roles: [formalization]
+      author_status: accepted
+  - id: D5
+    kind: derived
+    title: Unauthorized agency can be made epistemically valuable
+    statement: >-
+      Predefined boundaries around external agency create high-value warning
+      signals when systems cross them without legitimate authorization.
+    derived_from: [K3, K7]
+    provenance:
+      origin: author-interjection-and-ai-formalization
+      sources: [SRC-HUGGING-FACE, SRC-PLAN-A-BARGAINING]
+      ai_roles: [security-analogy, formalization]
+      author_status: accepted-after-wording-correction
+  - id: D6
+    kind: derived
+    title: International cooperation can deepen in stages
+    statement: >-
+      Cooperation progresses from tacit public-frontier reciprocity to narrow
+      abstention, incident exchange, reciprocal review, hardware declarations,
+      activation rules, and only later treaty-level restraints.
+    derived_from: [K5, K6]
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-NGO, SRC-PLAN-A-BARGAINING]
+      ai_roles: [sequencing, formalization]
+      author_status: accepted
+
+  - id: H1
+    kind: hypothesis
+    title: A/H/P separability remains actionable
+    statement: >-
+      There is a policy-relevant interval in which algorithmic progress does not
+      automatically create uncontainable access to hardware and external power.
+    supports: [K1, K2, K3]
+    falsifier: >-
+      Frontier algorithms reliably manufacture their own access to credentials,
+      money, compute, persistence, or physical resources before humans can intervene.
+    evidence_needed: Repeated control evaluations across architectures and access configurations.
+    stopping_rule: >-
+      If bounded systems repeatedly acquire durable external agency faster than
+      detection and response, stop treating research/deployment separation as a sufficient primary control.
+    provenance:
+      origin: author-hypothesis
+      sources: [SRC-AI-BREAKOUT, SRC-HUGGING-FACE, SRC-PLAN-A-BARGAINING]
+      ai_roles: [falsification]
+      author_status: accepted-as-hypothesis
+  - id: H2
+    kind: hypothesis
+    title: Rival review has positive safety value after proliferation costs
+    statement: >-
+      Controlled competitor access reduces undetected risk and concentration more
+      than it increases leakage, proliferation, collusion, and aggregate acceleration.
+    supports: [D2, D3]
+    falsifier: Review access produces material leakage or convergent leniency without compensating safety discoveries.
+    evidence_needed: Secure pilot reviews, objection quality, leakage audits, and incentive measurements.
+    stopping_rule: Suspend rival access when marginal information-security loss exceeds demonstrated review value.
+    provenance:
+      origin: author-hypothesis
+      sources: [SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [tradeoff-analysis]
+      author_status: accepted-as-hypothesis
+  - id: H3
+    kind: hypothesis
+    title: The foreign public frontier is measurable enough to govern
+    statement: >-
+      Practical foreign capability can be observed across domains with sufficient
+      reliability to serve as one input to domestic safe-harbor decisions.
+    supports: [K6, D6]
+    falsifier: Hidden scaffolds, access conditions, or multidimensional capability make equivalent release determinations systematically manipulable.
+    evidence_needed: Domain-specific demonstrations, cost/access measurements, and repeatable equivalence protocols.
+    stopping_rule: Replace automatic equivalence with narrower domain rules wherever measurement error dominates reciprocity value.
+    provenance:
+      origin: author-hypothesis
+      sources: [SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [measurement-critique]
+      author_status: accepted-as-hypothesis
+  - id: H4
+    kind: hypothesis
+    title: Physical activation latency can preserve reversibility
+    statement: >-
+      Declared reserve hardware can be stored so covert activation takes longer
+      than independent detection and effective response.
+    supports: [D4, I4]
+    falsifier: Reserve compute can be commissioned or substituted covertly before observers can detect and interrupt it.
+    evidence_needed: Timed mobilization exercises, inspection trials, supply-chain modeling, and red-team concealment attempts.
+    stopping_rule: Do not count hardware as reversible reserve when measured covert activation time is at or below response time.
+    provenance:
+      origin: author-hypothesis
+      sources: [SRC-DAVIDSON, SRC-PLAN-A-BARGAINING]
+      ai_roles: [formalization]
+      author_status: accepted-as-hypothesis
+  - id: H5
+    kind: hypothesis
+    title: Domestic benefits can sustain the institution
+    statement: >-
+      Predictable release rules, competition, taxation, safer deployment, and
+      protection against foreign release can create a durable domestic constituency.
+    supports: [K5, D1]
+    falsifier: The regime remains politically dependent on catastrophic-risk beliefs and is repealed when those beliefs weaken.
+    evidence_needed: Coalition analysis, polling, legislative pilots, investment behavior, and distributional modeling.
+    stopping_rule: Redesign entry mechanisms when the supporting coalition cannot survive an electoral turnover.
+    provenance:
+      origin: author-hypothesis
+      sources: [SRC-PRODUCTIVITY-DEFLATION, SRC-NGO, SRC-PLAN-A-BARGAINING]
+      ai_roles: [political-economy-analysis]
+      author_status: accepted-as-hypothesis
+
+  - id: I1
+    kind: implementation
+    title: Architecture-neutral unauthorized-agency boundary
+    statement: Define prohibited external agency by observable actions rather than model architecture or legal labels.
+    implements: [K3, D5]
+    replaceable: true
+    provenance:
+      origin: author
+      sources: [SRC-PAUSEAI, SRC-HUGGING-FACE]
+      ai_roles: [drafting]
+      author_status: accepted
+  - id: I2
+    kind: implementation
+    title: Surveil, preserve, and report
+    statement: >-
+      Require affirmative surveillance, automatic evidence preservation, prompt
+      reporting on reasonable suspicion, a reporting safe harbor, and severe penalties for concealment.
+    implements: [K7, D5]
+    replaceable: true
+    provenance:
+      origin: author-medical-device-analogy
+      sources: [SRC-PLAN-A-BARGAINING]
+      ai_roles: [regulatory-translation]
+      author_status: accepted
+  - id: I3
+    kind: implementation
+    title: Weights-as-bond review process
+    statement: The applicant stakes controlled technical access to its candidate system as the price of seeking above-frontier release.
+    implements: [K4, D2, D3]
+    replaceable: true
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [incentive-design, naming]
+      author_status: accepted
+  - id: I4
+    kind: implementation
+    title: Observable uncommissioned hardware reserve
+    statement: >-
+      Store reserve accelerators uninstalled, unracked, unnetworked, and detached
+      from dedicated power and cooling, subject to independent observation.
+    implements: [D4, K7]
+    replaceable: true
+    provenance:
+      origin: author
+      sources: [SRC-DAVIDSON, SRC-PLAN-A-BARGAINING]
+      ai_roles: [formalization]
+      author_status: accepted
+  - id: I5
+    kind: implementation
+    title: Separate gate for the AI industrial survival chain
+    statement: >-
+      Scrutinize automation that removes independently controlled human
+      dependencies over compute, power, fabrication, repair, logistics, and reproduction.
+    implements: [K1, K2, K7]
+    replaceable: true
+    provenance:
+      origin: author
+      sources: [SRC-AI-BREAKOUT, SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [taxonomy, formalization]
+      author_status: accepted
+  - id: I6
+    kind: implementation
+    title: Seven-stage international ladder
+    statement: >-
+      Implement public reciprocity, capability abstention, incident exchange,
+      reciprocal review, hardware declarations, activation controls, and treaty restraint in that order.
+    implements: [D6]
+    replaceable: true
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-NGO, SRC-PLAN-A-BARGAINING]
+      ai_roles: [sequencing]
+      author_status: accepted
+  - id: I7
+    kind: implementation
+    title: Licensed compute deployment and data-center taxation
+    statement: Use deployment licensing as an administrative and potentially populist tax base for large data centers.
+    implements: [K5]
+    replaceable: true
+    provenance:
+      origin: author
+      sources: [SRC-PLAN-A-BARGAINING]
+      ai_roles: [policy-analysis]
+      author_status: accepted-as-option
+
+  - id: Q1
+    kind: open_question
+    title: How should practical public capability be measured?
+    statement: Define domain, reliability, autonomy, cost, scaffolding, accessibility, and deployment conditions for frontier equivalence.
+    relates_to: [K4, K6, H3]
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-TOBY-ORD, SRC-PLAN-A-BARGAINING]
+      ai_roles: [measurement-critique]
+      author_status: unresolved
+  - id: Q2
+    kind: open_question
+    title: What access makes adversarial review credible without unacceptable leakage?
+    statement: Determine the minimum reproducible access, security, and adjudication protocol.
+    relates_to: [D2, H2, I3]
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-PLAN-A-BARGAINING]
+      ai_roles: [risk-analysis]
+      author_status: unresolved
+  - id: Q3
+    kind: open_question
+    title: How many independent human vetoes are enough?
+    statement: Determine when energy, compute, fabrication, repair, logistics, and governance dependencies are genuinely independent.
+    relates_to: [K7, I5, H1]
+    provenance:
+      origin: author
+      sources: [SRC-AI-BREAKOUT, SRC-PLAN-A-BARGAINING]
+      ai_roles: [formalization]
+      author_status: unresolved
+  - id: Q4
+    kind: open_question
+    title: When does capability itself collapse A/H/P separability?
+    statement: Identify architectures or behaviors that make power boundaries infeasible before formal review.
+    relates_to: [K1, H1]
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-HUGGING-FACE, SRC-PLAN-A-BARGAINING]
+      ai_roles: [falsification]
+      author_status: unresolved
+
+relations:
+  - {from: K2, to: D1, type: grounds}
+  - {from: K3, to: D1, type: grounds}
+  - {from: K4, to: D1, type: grounds}
+  - {from: K5, to: D1, type: grounds}
+  - {from: K6, to: D1, type: grounds}
+  - {from: K4, to: D2, type: grounds}
+  - {from: K4, to: D3, type: grounds}
+  - {from: D2, to: D3, type: grounds}
+  - {from: K1, to: D4, type: grounds}
+  - {from: K2, to: D4, type: grounds}
+  - {from: K7, to: D4, type: grounds}
+  - {from: K3, to: D5, type: grounds}
+  - {from: K7, to: D5, type: grounds}
+  - {from: K5, to: D6, type: grounds}
+  - {from: K6, to: D6, type: grounds}
+  - {from: H1, to: K1, type: conditions}
+  - {from: H1, to: K2, type: conditions}
+  - {from: H1, to: K3, type: conditions}
+  - {from: H2, to: D2, type: conditions}
+  - {from: H2, to: D3, type: conditions}
+  - {from: H3, to: K6, type: conditions}
+  - {from: H4, to: D4, type: conditions}
+  - {from: H5, to: K5, type: conditions}
+  - {from: D5, to: I1, type: implements}
+  - {from: D5, to: I2, type: implements}
+  - {from: D2, to: I3, type: implements}
+  - {from: D4, to: I4, type: implements}
+  - {from: K7, to: I5, type: implements}
+  - {from: D6, to: I6, type: implements}
+
+publication:
+  layers:
+    canonical:
+      authority: Git repository and immutable commit
+      contains: Specification, history, sources, generated deterministic views, and tests
+    website:
+      authority: none
+      contains: Cached readable projections, rendering index, and verification records
+      disagreement_rule: If a website view and the targeted Git commit disagree, the Git commit controls.
+    federation:
+      authority: transport-only
+      contains: Announcements, pointers, and attestations
+  rendering_model:
+    universal_type: rendering
+    rule: >-
+      Essays, games, runs, analyses, songs, films, protests, simulations,
+      critiques, and all other external works use the same rendering envelope.
+    required_fields: [artifact_uri, artifact_digest, target_git_commit, creator, relationship_claim, verifier_request]
+    optional_fields: [covers, declared_omissions, declared_deviations, evidence_uri]
+  verification_policy:
+    principle: Verification describes fidelity and declared relationship, not quality or endorsement.
+    outcomes:
+      - verified
+      - verified_with_deviations
+      - not_verified
+    attestation_must_name:
+      - artifact_digest
+      - full_target_git_commit
+      - verifier_identity
+      - verification_policy_version
+      - judgment
+      - evidence_digest
+
+acceptance_tests:
+  - id: AT-001
+    title: Kernel is complete and minimal
+    rationale: A faithful reconstruction must include all seven identity claims.
+    assertions:
+      - {type: exact_kind_ids, kind: kernel, ids: [K1, K2, K3, K4, K5, K6, K7]}
+  - id: AT-002
+    title: Capability is not conflated with power
+    rationale: K1 and K2 must jointly ground the hardware-entanglement mechanism.
+    assertions:
+      - {type: node_exists, id: K1, kind: kernel}
+      - {type: node_exists, id: K2, kind: kernel}
+      - {type: path_exists, from: K1, to: D4}
+      - {type: path_exists, from: K2, to: D4}
+  - id: AT-003
+    title: Research permission does not imply deployment permission
+    rationale: The research/deployment distinction and external-agency boundary must both remain represented.
+    assertions:
+      - {type: node_exists, id: K3, kind: kernel}
+      - {type: path_exists, from: K3, to: I1}
+  - id: AT-004
+    title: Above-frontier release is adversarially gated
+    rationale: Removing rival review changes a central mechanism rather than a drafting detail.
+    assertions:
+      - {type: path_exists, from: K4, to: D2}
+      - {type: path_exists, from: D2, to: I3}
+      - {type: path_exists, from: D2, to: D3}
+  - id: AT-005
+    title: Domestic entry and automatic reciprocity coexist
+    rationale: The proposal must neither require a treaty first nor ignore foreign public releases.
+    assertions:
+      - {type: node_exists, id: K5, kind: kernel}
+      - {type: node_exists, id: K6, kind: kernel}
+      - {type: path_exists, from: K5, to: D6}
+      - {type: path_exists, from: K6, to: D6}
+  - id: AT-006
+    title: Warning time has legal, technical, and physical implementations
+    rationale: K7 must reach incident reporting, hardware reversibility, and industrial vetoes.
+    assertions:
+      - {type: path_exists, from: K7, to: I2}
+      - {type: path_exists, from: K7, to: I4}
+      - {type: path_exists, from: K7, to: I5}
+  - id: AT-007
+    title: Foundational uncertainty remains falsifiable
+    rationale: Feasibility claims must expose evidence needs and stopping rules.
+    assertions:
+      - {type: all_kind_have_fields, kind: hypothesis, fields: [falsifier, evidence_needed, stopping_rule]}
+  - id: AT-008
+    title: Implementation options cannot masquerade as kernel claims
+    rationale: Optional policy choices must remain replaceable.
+    assertions:
+      - {type: all_kind_field_equals, kind: implementation, field: replaceable, value: true}
+  - id: AT-009
+    title: Provenance is proposition-level
+    rationale: Every claim must expose responsibility and source lineage.
+    assertions:
+      - {type: all_nodes_have_provenance}
+  - id: AT-010
+    title: Publication authority is commit-addressed
+    rationale: Branch movement or website drift must not alter the object that was rendered or verified.
+    assertions:
+      - {type: field_equals, path: specification.authority.system, value: git}
+      - {type: field_equals, path: publication.rendering_model.universal_type, value: rendering}
+      - {type: collection_contains, path: publication.verification_policy.attestation_must_name, value: full_target_git_commit}
+
+deterministic_views:
+  - id: VIEW-CANONICAL-JSON
+    path: generated/canonical.json
+    purpose: Stable normalized serialization used for semantic hashing and machine comparison.
+  - id: VIEW-MINIMAL
+    path: generated/minimal-reconstruction.md
+    purpose: Seven-claim checksum for a purported explanation of the idea.
+  - id: VIEW-AUDIT
+    path: generated/audit-trail.md
+    purpose: Chronological intellectual provenance with confidence and caveats.
+  - id: VIEW-GRAPH
+    path: generated/dependency-graph.mmd
+    purpose: Machine-generated Mermaid dependency graph for omission and impact review.
+  - id: VIEW-CLAIMS
+    path: generated/claims.csv
+    purpose: Flat claim register for review, filtering, and external analysis.
+  - id: VIEW-ACCEPTANCE
+    path: generated/acceptance-matrix.md
+    purpose: Human-readable result of executable semantic acceptance assertions.
+  - id: VIEW-REVIEW
+    path: generated/rendering-review-checklist.md
+    purpose: Commit-addressed checklist for an attributable rendering-fidelity judgment.
