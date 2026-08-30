@@ -1,0 +1,12 @@
+spec_version: "0.1"
+idea:
+  id: https://ideas.proximitytoprogress.com/ideas/ai-pacing
+  name: AI Pacing
+repository:
+  object_format: sha1
+  canonical_ref: refs/heads/main
+  mirrors:
+    - https://github.com/uncomposed/ai-pacing.git
+verification:
+  verifiers_path: .idea/verifiers.yaml
+  policy_path: .idea/verification-policy.yaml

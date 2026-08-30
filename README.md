@@ -2,7 +2,10 @@
 
 This repository publishes AI Pacing as a versioned, machine-readable idea rather than a single privileged essay. Git is authoritative. Human-facing pages, PDFs, games, songs, simulations, critiques, and other works are renderings of an exact Git state.
 
-The canonical source is [`spec/ai-pacing.yaml`](spec/ai-pacing.yaml). It separates:
+The canonical source is [`spec/ai-pacing.yaml`](spec/ai-pacing.yaml). See
+[`CANONICALITY.md`](CANONICALITY.md) for the exact authority order and the known
+conformance gap between the YAML and the supplied editorial reference. The YAML
+separates:
 
 - `K` — kernel propositions that define the idea;
 - `D` — derived mechanisms;
@@ -50,6 +53,15 @@ ruby tools/rendering_tool.rb examples/renderings/minimal-reconstruction.yaml
 The example intentionally targets the repository's first immutable commit. The validator resolves that commit, loads the specification from that historical state, checks every covered proposition there, and recomputes the artifact digest from the bytes stored in the target commit.
 
 See [`docs/verification.md`](docs/verification.md) for the test model and [`generated/rendering-review-checklist.md`](generated/rendering-review-checklist.md) for attributable rendering review.
+
+The repository also contains the standard IRAP files under `.idea/`. They give
+AI Pacing a durable registry identity, declare the planned public Git mirror,
+and define recognized `faithful_rendering` and `clean_room_reconstruction`
+claims. Validate them with:
+
+```sh
+ruby tools/irap_tool.rb
+```
 
 ## Clean-room reconstruction test
 

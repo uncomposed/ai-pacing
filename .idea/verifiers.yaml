@@ -1,0 +1,9 @@
+spec_version: "0.1"
+verifiers:
+  - id: https://github.com/uncomposed
+    display_name: uncomposed
+    kind: human
+    keys:
+      - id: uncomposed-ed25519-2026-01
+        algorithm: Ed25519
+        public_key_base64: yOrdcli8rmqiIKVWBcNUp0zRBmGttbhFte7+fl4CcUU=

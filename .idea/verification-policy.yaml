@@ -1,0 +1,32 @@
+spec_version: "0.1"
+claims:
+  faithful_rendering:
+    definition: >
+      The rendering materially represents this exact AI Pacing state without
+      silently substituting a substantively different proposal while presenting
+      itself as faithful.
+    does_not_mean:
+      - The verifier endorses AI Pacing.
+      - The verifier believes the proposal is true, feasible, or desirable.
+      - The rendering is complete, persuasive, or high quality.
+      - The verifier is independent of the rendering's author.
+    recognition:
+      eligible_verifiers:
+        ids:
+          - https://github.com/uncomposed
+      rule:
+        type: any_one_pass
+  clean_room_reconstruction:
+    definition: >
+      The rendering was generated from the declared isolated packet and passed
+      the deterministic preflight and the versioned clean-room semantic rubric.
+    does_not_mean:
+      - The rendering is the uniquely correct explanation.
+      - The underlying proposal is true, feasible, or desirable.
+      - One passing model run establishes cross-model reconstructability.
+    recognition:
+      eligible_verifiers:
+        ids:
+          - https://github.com/uncomposed
+      rule:
+        type: any_one_pass
