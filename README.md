@@ -63,6 +63,18 @@ claims. Validate them with:
 ruby tools/irap_tool.rb
 ```
 
+Generate administrator-ready request bodies for the IRAP Publisher without
+including an administrator token:
+
+```sh
+ruby tools/registry_payload.rb idea
+ruby tools/registry_payload.rb dependency-map
+```
+
+The idea payload resolves the current checkout to a full commit ID. The
+dependency-map payload uses the artifact and target digests already validated by
+its rendering envelope.
+
 ## Clean-room reconstruction test
 
 Build a sealed packet for a fresh model that contains no essay, executive

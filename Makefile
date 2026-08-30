@@ -17,6 +17,7 @@ test:
 	@ruby test/rendering_tool_test.rb
 	@ruby test/clean_room_tool_test.rb
 	@ruby test/irap_tool_test.rb
+	@ruby test/registry_payload_test.rb
 	@python3 test/json_schema_test.py
 
 clean-room:
