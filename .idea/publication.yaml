@@ -1,0 +1,14 @@
+publication_version: "1"
+idea:
+  slug: ai-pacing
+  summary: >-
+    A Git-native model for slowing and conditioning the conversion of frontier
+    AI capability into irreversible power while preserving bounded research
+    progress and meaningful human vetoes.
+  specification_path: spec/ai-pacing.yaml
+  state:
+    repository: https://github.com/uncomposed/ai-pacing.git
+    object_format: sha1
+    commit: a28a40c2b964f960f196626f0ed64d59f241b7c2
+renderings:
+  - path: renderings/ai-pacing-lens.yaml

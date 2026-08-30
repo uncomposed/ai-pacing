@@ -1,0 +1,19 @@
+irap_version: "0.1"
+rendering:
+  id: https://ai-pacing.proximitytoprogress.com/renderings/a28a40c2b964f960f196626f0ed64d59f241b7c2/
+  title: AI Pacing Specification Lens
+  description: >-
+    A low-distortion interactive projection of AI Pacing's typed propositions,
+    declared dependencies, falsifiers, and publication boundaries. Its release
+    manifest recursively identifies every deployed file by SHA-256.
+  artifact:
+    uri: https://ai-pacing.proximitytoprogress.com/rendering-manifest.json
+    digest: sha256:c1eb34b78f88873b14c1fdc29ee06cfe447d97fe18cc340a9408b085539d43bb
+  renders:
+    idea_id: https://ideas.proximitytoprogress.com/ideas/ai-pacing
+    git:
+      repository: https://github.com/uncomposed/ai-pacing.git
+      object_format: sha1
+      commit: a28a40c2b964f960f196626f0ed64d59f241b7c2
+  creator:
+    id: https://github.com/uncomposed
