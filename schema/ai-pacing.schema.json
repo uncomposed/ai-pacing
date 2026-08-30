@@ -4,6 +4,7 @@
   "title": "AI Pacing canonical specification",
   "type": "object",
   "required": [
+    "idea",
     "specification",
     "typed_layers",
     "sources",
@@ -16,6 +17,15 @@
   ],
   "additionalProperties": false,
   "properties": {
+    "idea": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "format": "uri"},
+        "name": {"type": "string", "minLength": 2, "maxLength": 140}
+      }
+    },
     "specification": {
       "type": "object",
       "required": ["id", "title", "version", "status", "purpose", "authority", "responsibility", "generator_contract"]

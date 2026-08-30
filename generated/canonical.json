@@ -362,6 +362,10 @@
       "purpose": "Commit-addressed checklist for an attributable rendering-fidelity judgment."
     }
   ],
+  "idea": {
+    "id": "https://ideas.proximitytoprogress.com/ideas/ai-pacing",
+    "name": "AI Pacing"
+  },
   "nodes": [
     {
       "id": "K1",
