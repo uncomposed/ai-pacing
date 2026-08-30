@@ -1,0 +1,52 @@
+rendering_version: 1
+rendering:
+  id: https://github.com/uncomposed/ai-pacing/renderings/dependency-map/1e7e55a
+  artifact_uri: https://raw.githubusercontent.com/uncomposed/ai-pacing/1e7e55a68b434c06c3c55fc37ac32149b2844578/renderings/ai-pacing-dependency-map.drawio
+  artifact_git_path: renderings/ai-pacing-dependency-map.drawio
+  artifact_digest: sha256:314a963a14aad2fd075813c47887cfcacbf39410bcdcc7b191e4f2fd739e4ee6
+  creator:
+    id: https://github.com/uncomposed
+  renders:
+    idea: https://ideas.proximitytoprogress.com/ideas/ai-pacing
+    git_object_format: sha1
+    git_commit: 1e7e55a68b434c06c3c55fc37ac32149b2844578
+    spec_path: spec/ai-pacing.yaml
+  relationship:
+    claim: scoped
+    covers:
+      - K1
+      - K2
+      - K3
+      - K4
+      - K5
+      - K6
+      - K7
+      - D1
+      - D2
+      - D3
+      - D4
+      - D5
+      - D6
+      - H1
+      - H2
+      - H3
+      - H4
+      - H5
+      - I1
+      - I2
+      - I3
+      - I4
+      - I5
+      - I6
+      - I7
+      - Q1
+      - Q2
+      - Q3
+      - Q4
+    declared_omissions:
+      - Proposition statements, rationales, falsifiers, evidence needs, stopping rules, and provenance are not printed in the diagram.
+      - The diagram contains only typed nodes and declared graph relations from the targeted YAML.
+    declared_deviations: []
+  verifier_request:
+    policy_version: "0.1"
+    requested_judgment: verified_with_deviations

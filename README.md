@@ -102,6 +102,11 @@ The generator produces:
 
 These files are projections, not parallel authorities. If a generated view and the YAML at the same commit disagree, the YAML controls and `make check` should report the stale view.
 
+An editable draw.io dependency map is available at
+[`renderings/ai-pacing-dependency-map.drawio`](renderings/ai-pacing-dependency-map.drawio).
+Its generic rendering envelope records the exact source commit, artifact digest,
+scope, and omissions in [`examples/renderings/dependency-map.yaml`](examples/renderings/dependency-map.yaml).
+
 ## Publication rule
 
 A rendering may initially name a branch for discovery, but any verification must resolve that branch to a full immutable Git commit object ID. Verification is an attributable judgment about the declared relationship between an artifact and that exact state. It is not endorsement or a quality award.
