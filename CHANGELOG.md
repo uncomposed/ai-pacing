@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added Alexey Potapov's “Reframing AGI Confrontation with Off-Earth Autonomy” as independently convergent related work without changing the origin provenance of earlier AI Breakout claims.
+
 ## 0.1.0 — 2026-08-29
 
 - Reconstructed the seven-proposition canonical kernel from the prior AI Pacing specification.

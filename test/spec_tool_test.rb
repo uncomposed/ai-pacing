@@ -56,6 +56,15 @@ class SpecToolTest < Minitest::Test
     assert AIPacing.validate(mutated).any? { |error| error.include?("unknown source SRC-NOT-REAL") }
   end
 
+  def test_off_earth_convergence_is_not_origin_provenance
+    source_id = "SRC-POTAPOV-OFF-EARTH"
+    event = @spec["audit_events"].find { |item| item["id"] == "EVT-2026-OFF-EARTH-CONVERGENCE" }
+
+    assert_includes event["evidence"], source_id
+    assert_equal "external-convergence", event["phase"]
+    refute @spec["nodes"].any? { |node| Array(node.dig("provenance", "sources")).include?(source_id) }
+  end
+
   def test_kernel_mutation_breaks_acceptance_checksum
     mutated = copy_spec
     mutated["nodes"].find { |node| node["id"] == "K7" }["kind"] = "derived"

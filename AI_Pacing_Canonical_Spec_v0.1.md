@@ -465,6 +465,10 @@ These labels describe where design pressures entered the project. They are not c
 - **AI Breakout project notes:** intelligence versus sovereignty; physical dependence; human vetoes; strategic autonomy; successor systems.
 - **Project synthesis:** Capability Release Compact; public-frontier reciprocity; adversarial rival-lab review; deployment-rent gating; mandatory surveillance/reporting with concealment penalties; regulatory tripwires; compute entanglement; domestic activation licensing; visible local data-center taxation; warning-time objective.
 
+## Convergent External Work
+
+- **Alexey Potapov — “Reframing AGI Confrontation with Off-Earth Autonomy” (2026):** an independent decision-theoretic formulation of off-Earth industrial autonomy as an exit option. Potapov maps staged dependence onto shutdown exposure, confrontation cost, cooperative reward, and discounting. This work is recorded as convergence with the earlier AI Breakout formulation, not as its origin.
+
 ---
 
 # 11. Dependency Editing Rules

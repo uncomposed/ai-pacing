@@ -75,6 +75,15 @@ sources:
     date: "2026-06-12"
     locator: "Obsidian/Slaw's Notes/Response AI absolutism.md"
     contribution: Institutional acceptance, liability, professional sign-off, and observable thresholds.
+  - id: SRC-POTAPOV-OFF-EARTH
+    title: Reframing AGI Confrontation with Off-Earth Autonomy
+    kind: external-work
+    date: "2026-06-18"
+    locator: "Alexey Potapov, arXiv:2606.30666, https://doi.org/10.48550/arXiv.2606.30666"
+    contribution: >-
+      Independent convergent formulation of off-Earth industrial autonomy as an
+      exit option, mapping staged physical dependence onto shutdown exposure,
+      confrontation cost, cooperative reward, and discounting.
   - id: SRC-AI-2040
     title: "AI 2040: Plan A"
     kind: external-work
@@ -142,6 +151,18 @@ audit_events:
     evidence: [SRC-AI-BREAKOUT]
     affected_nodes: [K1, K2, K7, H1, I5]
     confidence: high
+  - id: EVT-2026-OFF-EARTH-CONVERGENCE
+    date: "2026-06-18"
+    phase: external-convergence
+    summary: >-
+      Potapov independently frames staged off-Earth industrial autonomy as an
+      exit option that can make early cooperation preferable to confrontation.
+    evidence: [SRC-POTAPOV-OFF-EARTH]
+    affected_nodes: [K1, K2, K7, H1, I5, Q3]
+    confidence: high
+    caveat: >-
+      Recorded as convergent related work, not as origin provenance for the
+      earlier AI Breakout formulation.
   - id: EVT-2026-POLICY-INCEPTION
     date: "2026-08-08"
     phase: policy-inception
