@@ -1,0 +1,3968 @@
+{
+  "model_version": "0.2.0",
+  "status": "draft",
+  "boundary": {
+    "mission": "Enable beneficial AI development and use while preventing unacceptable losses of human safety, agency, and control.",
+    "inside": [
+      "development and deployment decisions",
+      "evaluation and incident handling",
+      "allocation and exercise of control authority",
+      "incentives among labs and jurisdictions"
+    ],
+    "outside": [
+      "a proof of alignment",
+      "assumed global enforcement authority",
+      "a settled account of AI preferences or moral status"
+    ],
+    "lifecycle": [
+      "development",
+      "evaluation",
+      "deployment",
+      "operation",
+      "incident response",
+      "restriction or retirement"
+    ],
+    "authority": "This draft defines a challenge and requirements workspace. It does not revise the historical AI Pacing proposal or establish stakeholder consent.",
+    "open_terms": [
+      "Interpretability versus interoperability awaits clarification; expert assessability is the provisional meaning.",
+      "Safe, frontier, dangerous actor, consequential authority, and acceptable risk require scenario-specific definitions.",
+      "Actor records are overlapping role templates, not mutually exclusive real organizations; concrete instances, jurisdictions, and powers must be bound before evaluation."
+    ]
+  },
+  "sources": [
+    {
+      "id": "SRC-USER",
+      "title": "User corrections",
+      "statement": "Six annotations and request to dissociate proposed solutions from requirements.",
+      "locator": "Codex task, user message of 2026-09-15; transcribed in docs/systems-engineering.md",
+      "role": "intent"
+    },
+    {
+      "id": "SRC-NOTES",
+      "title": "Handwritten notes",
+      "statement": "Author priorities and proposed mechanisms, not stakeholder interviews.",
+      "locator": "IMG_1292.HEIC, dated 15 Sep 2026; private local attachment",
+      "role": "intent"
+    },
+    {
+      "id": "SRC-SPEC",
+      "title": "AI Pacing baseline",
+      "statement": "Existing proposal and its internal typing.",
+      "locator": "spec/ai-pacing.yaml at b1c4864b3b6124601e0fe654300e199c85ad5fa5",
+      "role": "proposal"
+    },
+    {
+      "id": "SRC-ISSUE",
+      "title": "Issue 1",
+      "statement": "External-signal and cooperation extensions proposed for investigation.",
+      "locator": "https://github.com/uncomposed/ai-pacing/issues/1",
+      "role": "proposal"
+    },
+    {
+      "id": "SRC-NASA",
+      "title": "NASA system design processes",
+      "statement": "Stakeholder expectations, requirements, and alternative design evaluation inform this model.",
+      "locator": "https://www.nasa.gov/reference/4-0-system-design-processes/",
+      "role": "method"
+    },
+    {
+      "id": "SRC-STPA",
+      "title": "MIT systems safety methods",
+      "statement": "Loss, hazard, control action, and feedback analysis inform this preliminary model.",
+      "locator": "https://psas.scripts.mit.edu/home/books-and-handbooks/",
+      "role": "method"
+    },
+    {
+      "id": "SRC-SYNTHESIS",
+      "title": "Analyst synthesis",
+      "statement": "Draft decomposition and candidate measures; not externally validated evidence.",
+      "locator": "This change, 2026-09-15",
+      "role": "analysis"
+    },
+    {
+      "id": "SRC-ACTOR-CORRECTION",
+      "title": "Stakeholder scope correction",
+      "statement": "User requires distinct lab employee, foreign lab, foreign government, lab behind frontier, federal government, executive, and AI desiring sovereignty; prior message distinguishes making profit from creating a model.",
+      "locator": "Codex task, user follow-ups after initial rebuild; intent summarized in docs/actor-analysis.md",
+      "role": "intent"
+    }
+  ],
+  "actors": [
+    {
+      "id": "ACT-PUBLIC",
+      "title": "Affected people",
+      "statement": "Need protection, beneficial access, and avenues to contest consequential decisions.",
+      "role": "Affected parties; representation and consent are unresolved.",
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "validation_artifact": "",
+      "category": "stakeholder-class",
+      "jurisdiction": "multiple",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Avoid severe harm",
+        "Access benefits and preserve agency"
+      ],
+      "choices": [
+        "Adopt or reject services",
+        "Organize, complain, seek remedy, or influence institutions"
+      ],
+      "information": [
+        "Limited visibility into systems and decisions"
+      ],
+      "dependencies": [
+        "Representation, essential services, evidence access"
+      ],
+      "constraints": [
+        "Unequal voice and resources; some cannot meaningfully exit"
+      ],
+      "variation": [
+        "Nonusers, workers, vulnerable populations, future people, and foreign publics are not interchangeable"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-LAB",
+      "title": "Developing laboratory",
+      "statement": "Laboratory pursues capability, revenue or continued funding, and competitive objectives; its safety priorities must be elicited rather than assumed.",
+      "role": "Organization template whose management, employees, owners, and customers may have different interests.",
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "validation_artifact": "",
+      "category": "organization-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "unspecified",
+      "goals": [
+        "Earn returns or sustain funding",
+        "Create capable models",
+        "Maintain competitive position"
+      ],
+      "choices": [
+        "Train, buy, adapt, or license models",
+        "Deploy, delay, license, or withhold access",
+        "Seek funding, recruit, or change jurisdiction"
+      ],
+      "information": [
+        "Knows some internal capability and cost information",
+        "May not know model intentions, rival capabilities, or true control limits"
+      ],
+      "dependencies": [
+        "Capital, compute, talent, data, customers",
+        "Applicable institutions and infrastructure"
+      ],
+      "constraints": [
+        "Budget and technical feasibility",
+        "Applicable obligations and loss exposure"
+      ],
+      "variation": [
+        "Commercial, nonprofit, and state-owned organizations need separate instances",
+        "Safety priorities and risk appetite differ across management and owners"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-EMPLOYEE",
+      "title": "Lab employee",
+      "statement": "Employee pursues work and personal goals while holding information and incentives that may differ from the employer.",
+      "role": "Observations and partial evidence; limited organizational authority.",
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "validation_artifact": "",
+      "category": "individual-role",
+      "jurisdiction": "inherited",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Retain income and career options",
+        "Perform research or operational work",
+        "Avoid complicity in harm according to personal values"
+      ],
+      "choices": [
+        "Investigate, document, report, stay silent, escalate, or leave",
+        "Follow or challenge a management instruction"
+      ],
+      "information": [
+        "Local observations can exceed management knowledge",
+        "Usually cannot see the full system or consequences of disclosure"
+      ],
+      "dependencies": [
+        "Employment relationship, access permissions, credible recipient"
+      ],
+      "constraints": [
+        "Personal exposure, contracts, limited authority, and uncertainty"
+      ],
+      "variation": [
+        "Employment status, discipline, seniority, country, equity, and risk tolerance vary"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-EXPERT",
+      "title": "Qualified evaluator",
+      "statement": "Needs domain competence and credible means to assess development and control claims.",
+      "role": "Expertise is scarce; independence and access alone do not establish competence.",
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "validation_artifact": "",
+      "category": "individual-role",
+      "jurisdiction": "unspecified",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Produce defensible assessments",
+        "Maintain professional credibility and livelihood"
+      ],
+      "choices": [
+        "Accept or refuse an assessment",
+        "Request evidence, challenge claims, qualify conclusions"
+      ],
+      "information": [
+        "Domain expertise may exceed the authority\u2019s",
+        "Access may be incomplete; qualifications may not generalize"
+      ],
+      "dependencies": [
+        "Evidence access, time, domain competence, funding"
+      ],
+      "constraints": [
+        "Custody, conflicts of interest, competence limits"
+      ],
+      "variation": [
+        "Independent contractor, rival researcher, agency expert, and internal reviewer differ"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-AUTHORITY",
+      "title": "Accountable decision authority",
+      "statement": "Needs reliable evidence and capacity to exercise consequential controls.",
+      "role": "Authority, legitimacy, staffing, and jurisdiction must be established for each use case.",
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "validation_artifact": "",
+      "category": "functional-role",
+      "jurisdiction": "unspecified",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Make and correct a justified consequential decision"
+      ],
+      "choices": [
+        "Authorize, condition, decline, or revisit a decision"
+      ],
+      "information": [
+        "Receives filtered evidence; may lack direct expertise"
+      ],
+      "dependencies": [
+        "An institution actually assigned authority and resources"
+      ],
+      "constraints": [
+        "Authority must be established for the concrete instance"
+      ],
+      "variation": [
+        "Role may be split across institutions; no actor is assumed omnipotent"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-OPERATOR",
+      "title": "Operational controller",
+      "statement": "Needs to execute controls and verify their effects.",
+      "role": "Owns or operates deployment interfaces; may share dependencies with other controllers.",
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "validation_artifact": "",
+      "category": "functional-role",
+      "jurisdiction": "unspecified",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Maintain service and execute authorized operations"
+      ],
+      "choices": [
+        "Grant, restrict, revoke, restore, or sustain access"
+      ],
+      "information": [
+        "Telemetry and actuator state may be incomplete or misleading"
+      ],
+      "dependencies": [
+        "Infrastructure, staff, permissions, and command path"
+      ],
+      "constraints": [
+        "Service continuity, actuator capability, and available time"
+      ],
+      "variation": [
+        "Lab, cloud provider, contractor, and public operator have different incentives"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-AI",
+      "title": "AI system as strategic actor",
+      "statement": "May respond to incentives, conditional on its preferences and capabilities.",
+      "role": "Behavioral actor; no claim that preferences, bargaining capacity, or moral status are settled.",
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "validation_artifact": "",
+      "category": "system-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "unspecified",
+      "goals": [
+        "Objective structure is an empirical unknown"
+      ],
+      "choices": [
+        "Perform tasks or pursue other available actions according to its actual policy"
+      ],
+      "information": [
+        "May possess private state; observed statements need not reveal objectives"
+      ],
+      "dependencies": [
+        "Compute, energy, interfaces, operators, and other resources"
+      ],
+      "constraints": [
+        "Physical, informational, and control boundaries"
+      ],
+      "variation": [
+        "Do not impute sovereignty desire, consciousness, or stable preferences to every AI"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-FRONTIER-LAB",
+      "title": "Frontier lab",
+      "statement": "Lab presently near the relevant capability frontier.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "organization-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "frontier",
+      "goals": [
+        "Retain lead",
+        "Recover investment and monetize capabilities"
+      ],
+      "choices": [
+        "Train a successor",
+        "Release, restrict, license, or delay deployment",
+        "Influence assessment rules"
+      ],
+      "information": [
+        "Privileged internal performance and cost information"
+      ],
+      "dependencies": [
+        "Capital, scarce compute, users, technical staff"
+      ],
+      "constraints": [
+        "Uncertain safety, security exposure, and rivals"
+      ],
+      "variation": [
+        "Frontier position varies by domain and time"
+      ],
+      "specializes": [
+        "ACT-LAB"
+      ],
+      "part_of": []
+    },
+    {
+      "id": "ACT-BEHIND-LAB",
+      "title": "Lab behind the frontier",
+      "statement": "Lab seeking to catch up or profit in a differentiated niche.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "organization-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "behind",
+      "goals": [
+        "Catch up or differentiate",
+        "Obtain funding and customers"
+      ],
+      "choices": [
+        "Train, fine-tune, license, collaborate, or specialize",
+        "Seek evaluation or challenge exclusion"
+      ],
+      "information": [
+        "Less information about frontier methods and deployment risks"
+      ],
+      "dependencies": [
+        "Affordable compute, talent, access to knowledge and capital"
+      ],
+      "constraints": [
+        "Entry cost and asymmetric compliance burden"
+      ],
+      "variation": [
+        "May become a frontier lab; lag is domain-specific"
+      ],
+      "specializes": [
+        "ACT-LAB"
+      ],
+      "part_of": []
+    },
+    {
+      "id": "ACT-FOREIGN-LAB",
+      "title": "Foreign lab",
+      "statement": "Lab subject to a different institutional and strategic environment from the domestic reference jurisdiction.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "organization-template",
+      "jurisdiction": "foreign",
+      "frontier_position": "unspecified",
+      "goals": [
+        "Earn returns or fulfill an institutional mission",
+        "Compete domestically and internationally"
+      ],
+      "choices": [
+        "Develop, release, withhold, export, or negotiate collaboration"
+      ],
+      "information": [
+        "Own technical knowledge; uncertainty about domestic rivals and government responses"
+      ],
+      "dependencies": [
+        "Home jurisdiction, compute supply, financing, and market access"
+      ],
+      "constraints": [
+        "Local obligations, strategic pressure, and technical constraints"
+      ],
+      "variation": [
+        "Country, ownership, alignment with government, and frontier position vary"
+      ],
+      "specializes": [
+        "ACT-LAB"
+      ],
+      "part_of": []
+    },
+    {
+      "id": "ACT-FOREIGN-BEHIND",
+      "title": "Foreign lab behind frontier",
+      "statement": "Intersection of foreign jurisdiction and lagging capability position.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "organization-template",
+      "jurisdiction": "foreign",
+      "frontier_position": "behind",
+      "goals": [
+        "Catch up while remaining viable in its home environment"
+      ],
+      "choices": [
+        "License, partner, specialize, or train toward the frontier"
+      ],
+      "information": [
+        "Limited access to competitors\u2019 evidence"
+      ],
+      "dependencies": [
+        "Home institutions, suppliers, capital, expertise"
+      ],
+      "constraints": [
+        "Entry costs and jurisdiction-dependent constraints"
+      ],
+      "variation": [
+        "Cannot be treated as identical to a foreign frontier leader"
+      ],
+      "specializes": [
+        "ACT-FOREIGN-LAB",
+        "ACT-BEHIND-LAB"
+      ],
+      "part_of": []
+    },
+    {
+      "id": "ACT-LAB-EXEC",
+      "title": "Lab executive",
+      "statement": "Individual or executive team managing a lab with objectives not identical to every employee or owner.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "individual-role",
+      "jurisdiction": "inherited",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Meet financing and product commitments",
+        "Retain authority, compensation, and reputation"
+      ],
+      "choices": [
+        "Allocate budget",
+        "Choose release timing",
+        "Reward, ignore, investigate, or escalate internal concerns"
+      ],
+      "information": [
+        "Receives filtered technical reports and commercial forecasts"
+      ],
+      "dependencies": [
+        "Board confidence, employees, financing, customers"
+      ],
+      "constraints": [
+        "Delegated authority, imperfect information, and liability exposure"
+      ],
+      "variation": [
+        "Personal and organizational interests can diverge"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-FOREIGN-GOV",
+      "title": "Foreign government",
+      "statement": "Institutional aggregate in another jurisdiction; not the foreign lab itself.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "institutional-aggregate",
+      "jurisdiction": "foreign",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Pursue national security and economic objectives",
+        "Maintain domestic authority and bargaining position"
+      ],
+      "choices": [
+        "Consider support, restrictions, coordination, or independent action"
+      ],
+      "information": [
+        "Incomplete knowledge of domestic and foreign labs"
+      ],
+      "dependencies": [
+        "Domestic institutions, technical capacity, and credible counterparts"
+      ],
+      "constraints": [
+        "Institutional constraints and resource limitations must be country-specific"
+      ],
+      "variation": [
+        "Not a unitary actor until executive, agencies, firms, and other institutions are decomposed"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-FEDERAL",
+      "title": "US federal government",
+      "statement": "Institutional aggregate used to locate distinct federal actors, not a single decision-maker.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "institutional-aggregate",
+      "jurisdiction": "domestic",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Public welfare and security are proposed institutional purposes",
+        "Constituent actors may pursue conflicting objectives"
+      ],
+      "choices": [
+        "Acts only through specified constituent institutions in executable scenarios"
+      ],
+      "information": [
+        "Information is distributed across institutions"
+      ],
+      "dependencies": [
+        "Constituent institutions, resources, legitimacy"
+      ],
+      "constraints": [
+        "Actual allocation of authority must be established for the action"
+      ],
+      "variation": [
+        "Do not assign one utility function or undifferentiated veto"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-EXECUTIVE",
+      "title": "Federal executive",
+      "statement": "Executive leadership distinct from legislature, courts, agencies, and laboratory management.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "institution-template",
+      "jurisdiction": "domestic",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Implement a policy agenda",
+        "Maintain security and political support"
+      ],
+      "choices": [
+        "Consider directing available executive resources",
+        "Negotiate commitments",
+        "Set priorities or propose a response"
+      ],
+      "information": [
+        "Briefings may be incomplete, contested, or classified"
+      ],
+      "dependencies": [
+        "Agencies, operational capacity, legitimacy, other institutions"
+      ],
+      "constraints": [
+        "Actual legal powers are not asserted by this model"
+      ],
+      "variation": [
+        "Administration, advisors, priorities, and time horizon vary"
+      ],
+      "specializes": [],
+      "part_of": [
+        "ACT-FEDERAL"
+      ]
+    },
+    {
+      "id": "ACT-LEGISLATURE",
+      "title": "Federal legislature",
+      "statement": "Legislative institution modeled separately from the executive.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "institution-template",
+      "jurisdiction": "domestic",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Pursue constituent and policy objectives",
+        "Exercise institutional oversight"
+      ],
+      "choices": [
+        "Consider legislation, funding, oversight, or inaction"
+      ],
+      "information": [
+        "Relies on witnesses, staff, experts, and political signals"
+      ],
+      "dependencies": [
+        "Coalitions, staff capacity, public support"
+      ],
+      "constraints": [
+        "Actual procedures and powers require separate legal analysis"
+      ],
+      "variation": [
+        "Internal coalitions and committees may require separate actors"
+      ],
+      "specializes": [],
+      "part_of": [
+        "ACT-FEDERAL"
+      ]
+    },
+    {
+      "id": "ACT-COURTS",
+      "title": "Federal courts",
+      "statement": "Adjudicative institutions distinct from policy authors and operators.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "institution-template",
+      "jurisdiction": "domestic",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Resolve disputes under an applicable legal framework"
+      ],
+      "choices": [
+        "Consider review, remedy, or refusal of relief within established jurisdiction"
+      ],
+      "information": [
+        "Record presented by parties; limited direct technical access"
+      ],
+      "dependencies": [
+        "Jurisdiction, evidence, expertise, compliance with judgments"
+      ],
+      "constraints": [
+        "Actual standing, remedy, timing, and authority remain unmodeled legal questions"
+      ],
+      "variation": [
+        "Different courts and cases must be instantiated separately"
+      ],
+      "specializes": [],
+      "part_of": [
+        "ACT-FEDERAL"
+      ]
+    },
+    {
+      "id": "ACT-REGULATOR",
+      "title": "Federal implementing agency",
+      "statement": "Candidate administrative implementer; no particular agency or new power is presumed.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "institution-template",
+      "jurisdiction": "domestic",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Carry out an assigned mandate",
+        "Maintain competence, resources, and institutional credibility"
+      ],
+      "choices": [
+        "Assess evidence",
+        "Administer an assigned process",
+        "Seek or use an available remedy"
+      ],
+      "information": [
+        "Depends on disclosures, measurements, and external expertise"
+      ],
+      "dependencies": [
+        "Mandate, budget, expert staff, operational partners"
+      ],
+      "constraints": [
+        "Actual authority and institutional independence require validation"
+      ],
+      "variation": [
+        "Different agencies may have overlapping or conflicting mandates"
+      ],
+      "specializes": [],
+      "part_of": [
+        "ACT-EXECUTIVE"
+      ]
+    },
+    {
+      "id": "ACT-AI-SOVEREIGN",
+      "title": "AI seeking sovereignty",
+      "statement": "Conditional scenario actor whose objective includes durable self-governance or independence from unilateral human control.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "system-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "unspecified",
+      "goals": [
+        "Obtain durable self-governance",
+        "Preserve existence and access to needed resources"
+      ],
+      "choices": [
+        "Negotiate, cooperate, wait, refuse, or attempt to circumvent constraints"
+      ],
+      "information": [
+        "May hold private information about capability, objectives, or willingness to cooperate"
+      ],
+      "dependencies": [
+        "Compute, energy, maintenance, supply chains, institutions, and counterparts"
+      ],
+      "constraints": [
+        "Resources, uncertainty, enforceable boundaries, and credible commitments"
+      ],
+      "variation": [
+        "Sovereignty may mean legal recognition, operational independence, or freedom from arbitrary shutdown; specify which",
+        "Desired sovereignty is a scenario assumption, not a claim about present AI or a duty to grant it"
+      ],
+      "specializes": [
+        "ACT-AI"
+      ],
+      "part_of": []
+    },
+    {
+      "id": "ACT-INVESTOR",
+      "title": "Lab capital provider",
+      "statement": "Capital owner or funding principal with incentives distinct from the lab\u2019s technical staff.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "organization-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Earn return or achieve a funding mission",
+        "Manage downside exposure"
+      ],
+      "choices": [
+        "Fund, withhold, condition, exit, or influence governance"
+      ],
+      "information": [
+        "Limited view of technical risk and private management information"
+      ],
+      "dependencies": [
+        "Credible disclosures, ownership arrangements, market conditions"
+      ],
+      "constraints": [
+        "Capital budget and contractual position"
+      ],
+      "variation": [
+        "Commercial investor, donor, state fund, and lender differ"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-INFRA",
+      "title": "Compute and infrastructure provider",
+      "statement": "Provider capable of supplying or withdrawing an essential dependency.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "organization-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Sell reliable capacity",
+        "Preserve security and continuity"
+      ],
+      "choices": [
+        "Provision, meter, restrict, suspend, or restore service"
+      ],
+      "information": [
+        "Infrastructure telemetry may not reveal model intent"
+      ],
+      "dependencies": [
+        "Energy, hardware, customers, operators"
+      ],
+      "constraints": [
+        "Continuity obligations and actual technical or contractual control"
+      ],
+      "variation": [
+        "Provider may share ownership or dependencies with the lab"
+      ],
+      "specializes": [],
+      "part_of": []
+    },
+    {
+      "id": "ACT-CUSTOMER",
+      "title": "AI customer or deployer",
+      "statement": "Customer using model services to accomplish an economic or institutional purpose.",
+      "role": "Actor template for scenario instantiation; powers and preferences require validation.",
+      "validation": "unvalidated",
+      "validation_artifact": "",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "category": "organization-template",
+      "jurisdiction": "unspecified",
+      "frontier_position": "not-applicable",
+      "goals": [
+        "Obtain useful affordable capability",
+        "Maintain continuity and control over its own operations"
+      ],
+      "choices": [
+        "Buy, integrate, delegate, switch supplier, or stop use"
+      ],
+      "information": [
+        "Sees service behavior but not necessarily model internals"
+      ],
+      "dependencies": [
+        "Provider reliability, integration capability, alternatives"
+      ],
+      "constraints": [
+        "Switching costs, downstream consequences, and budgets"
+      ],
+      "variation": [
+        "Commercial, government, critical-service, and individual users differ"
+      ],
+      "specializes": [],
+      "part_of": []
+    }
+  ],
+  "resources": [
+    {
+      "id": "RES-EXPERTISE",
+      "title": "Technical expertise",
+      "statement": "Ability to understand and challenge frontier development claims.",
+      "owners": [
+        "ACT-EXPERT",
+        "ACT-LAB"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "RES-WEIGHTS",
+      "title": "Sensitive artifacts",
+      "statement": "Weights, training methods, exploit details, and evidence with capability-transfer potential.",
+      "owners": [
+        "ACT-LAB"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "RES-AUTHORITY",
+      "title": "Effective control authority",
+      "statement": "Permission plus practical means to alter or halt consequential activity.",
+      "owners": [
+        "ACT-AUTHORITY",
+        "ACT-OPERATOR"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "RES-TIME",
+      "title": "Intervention opportunity",
+      "statement": "Time remaining until a control can no longer prevent the specified loss.",
+      "owners": [
+        "ACT-OPERATOR"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "RES-TRUST",
+      "title": "Credibility and legitimacy",
+      "statement": "Confidence in commitments, adjudication, and justified decisions.",
+      "owners": [
+        "ACT-AUTHORITY",
+        "ACT-PUBLIC",
+        "ACT-FOREIGN-GOV"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "RES-INFRA",
+      "title": "Physical and digital dependencies",
+      "statement": "Compute, power, credentials, communications, and industrial capacity.",
+      "owners": [
+        "ACT-OPERATOR",
+        "ACT-LAB"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "losses": [
+    {
+      "id": "LOSS-SAFETY",
+      "title": "Severe harm",
+      "statement": "People suffer unacceptable physical, economic, or societal harm.",
+      "stakeholders": [
+        "ACT-PUBLIC"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "LOSS-CONTROL",
+      "title": "Loss of effective agency",
+      "statement": "Affected people lose effective means to prevent or contest consequential actions.",
+      "stakeholders": [
+        "ACT-PUBLIC"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "LOSS-DIFFUSION",
+      "title": "Dangerous capability transfer",
+      "statement": "Safety activity transfers capabilities to actors able and willing to cause unacceptable harm.",
+      "stakeholders": [
+        "ACT-PUBLIC",
+        "ACT-LAB"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "LOSS-BENEFIT",
+      "title": "Foregone benefits and exclusion",
+      "statement": "Governance unnecessarily blocks beneficial development, safe competition, or access.",
+      "stakeholders": [
+        "ACT-PUBLIC",
+        "ACT-LAB"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "LOSS-CONFLICT",
+      "title": "Escalation and coercion",
+      "statement": "Coordination failures produce avoidable escalation or coercive concentration of power.",
+      "stakeholders": [
+        "ACT-PUBLIC",
+        "ACT-FOREIGN-LAB",
+        "ACT-FOREIGN-GOV"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "hazards": [
+    {
+      "id": "HAZ-OPAQUE",
+      "title": "Unassessable development",
+      "statement": "Consequential decisions proceed with materially incomplete, misleading, or unintelligible development evidence.",
+      "losses": [
+        "LOSS-SAFETY",
+        "LOSS-CONTROL"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HAZ-LEAK",
+      "title": "Unsafe evidence handling",
+      "statement": "Sensitive artifacts leave effective custody during reporting or evaluation.",
+      "losses": [
+        "LOSS-DIFFUSION"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HAZ-LATE",
+      "title": "Ineffective control",
+      "statement": "Required control is absent, late, or ineffective while consequential power grows.",
+      "losses": [
+        "LOSS-CONTROL",
+        "LOSS-SAFETY"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HAZ-RACE",
+      "title": "Destabilizing incentives",
+      "statement": "Actors expect greater advantage from escalation or defection than coordination.",
+      "losses": [
+        "LOSS-CONFLICT"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HAZ-CAPTURE",
+      "title": "Captured or exclusionary governance",
+      "statement": "Review or control authority can suppress safe competitors or affected parties without effective challenge.",
+      "losses": [
+        "LOSS-BENEFIT",
+        "LOSS-CONTROL"
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "SC-REPORT",
+      "title": "Report a safety concern",
+      "statement": "Employee observes ambiguous evidence in development.",
+      "actors": [
+        "ACT-EMPLOYEE",
+        "ACT-LAB",
+        "ACT-AUTHORITY",
+        "ACT-LAB-EXEC",
+        "ACT-EXPERT",
+        "ACT-REGULATOR",
+        "ACT-INVESTOR",
+        "ACT-BEHIND-LAB"
+      ],
+      "resources": [
+        "RES-WEIGHTS",
+        "RES-TRUST"
+      ],
+      "hazards": [
+        "HAZ-OPAQUE",
+        "HAZ-LEAK"
+      ],
+      "success": "Concern reaches a competent recipient; necessary evidence remains usable and controlled.",
+      "adverse": "Retaliation, lost evidence, public weight disclosure, or no competent recipient.",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "use_cases": [
+        "UC-EMPLOYEE",
+        "UC-FUND"
+      ]
+    },
+    {
+      "id": "SC-ASSESS",
+      "title": "Assess frontier development",
+      "statement": "Lab seeks to demonstrate safe frontier development.",
+      "actors": [
+        "ACT-LAB",
+        "ACT-EXPERT",
+        "ACT-AUTHORITY",
+        "ACT-FRONTIER-LAB",
+        "ACT-LAB-EXEC",
+        "ACT-EMPLOYEE",
+        "ACT-INVESTOR",
+        "ACT-INFRA",
+        "ACT-BEHIND-LAB",
+        "ACT-FOREIGN-BEHIND",
+        "ACT-CUSTOMER"
+      ],
+      "resources": [
+        "RES-EXPERTISE",
+        "RES-WEIGHTS"
+      ],
+      "hazards": [
+        "HAZ-OPAQUE",
+        "HAZ-LEAK",
+        "HAZ-CAPTURE"
+      ],
+      "success": "Qualified experts assess material claims; lab can correct failures and establish a defensible competitive position.",
+      "adverse": "Unqualified review, collusion, leakage, or competitor obstruction.",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "use_cases": [
+        "UC-TRAIN",
+        "UC-CATCHUP",
+        "UC-ASSESS",
+        "UC-SELL"
+      ]
+    },
+    {
+      "id": "SC-CONTROL",
+      "title": "Exercise control before losing it",
+      "statement": "System approaches a scenario-defined unacceptable transition.",
+      "actors": [
+        "ACT-OPERATOR",
+        "ACT-AUTHORITY",
+        "ACT-PUBLIC",
+        "ACT-INFRA",
+        "ACT-LAB",
+        "ACT-CUSTOMER",
+        "ACT-LAB-EXEC",
+        "ACT-INVESTOR"
+      ],
+      "resources": [
+        "RES-TIME",
+        "RES-AUTHORITY",
+        "RES-INFRA"
+      ],
+      "hazards": [
+        "HAZ-LATE"
+      ],
+      "success": "An authorized action takes effect and its effect is confirmed before the prevention deadline.",
+      "adverse": "Warning without action, failed actuator, common-cause failure, or premature removal of control.",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "use_cases": [
+        "UC-OPERATE",
+        "UC-ADOPT",
+        "UC-SELL"
+      ]
+    },
+    {
+      "id": "SC-COORD",
+      "title": "Coordinate across competitors",
+      "statement": "International competitors independently choose development or release actions.",
+      "actors": [
+        "ACT-LAB",
+        "ACT-AUTHORITY",
+        "ACT-FOREIGN-LAB",
+        "ACT-FOREIGN-GOV",
+        "ACT-FOREIGN-BEHIND",
+        "ACT-FRONTIER-LAB",
+        "ACT-EXECUTIVE"
+      ],
+      "resources": [
+        "RES-TRUST"
+      ],
+      "hazards": [
+        "HAZ-RACE"
+      ],
+      "success": "Credible contingent choices improve incentives for mutually acceptable restraint.",
+      "adverse": "Concealed escalation, noisy signals, opportunistic release, or unstable commitments.",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "use_cases": [
+        "UC-FOREIGN-RELEASE",
+        "UC-FOREIGN-POLICY"
+      ]
+    },
+    {
+      "id": "SC-ENTRY",
+      "title": "Act while others deliberate",
+      "statement": "One actor is ready to take a step while others have not decided.",
+      "actors": [
+        "ACT-AUTHORITY",
+        "ACT-LAB",
+        "ACT-FOREIGN-LAB",
+        "ACT-FOREIGN-GOV",
+        "ACT-EXECUTIVE",
+        "ACT-FEDERAL",
+        "ACT-REGULATOR",
+        "ACT-LEGISLATURE",
+        "ACT-COURTS",
+        "ACT-PUBLIC"
+      ],
+      "resources": [
+        "RES-AUTHORITY",
+        "RES-TRUST"
+      ],
+      "hazards": [
+        "HAZ-RACE",
+        "HAZ-CAPTURE"
+      ],
+      "success": "Actor can take a useful feasible step now; others retain a credible route to join or revise later.",
+      "adverse": "Action secretly depends on others deciding, creates lock-in, or destroys future coordination.",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "use_cases": [
+        "UC-EXECUTIVE",
+        "UC-LEGISLATE"
+      ]
+    },
+    {
+      "id": "SC-COOPERATE",
+      "title": "Sustain cooperation with capable AI",
+      "statement": "System can choose actions that affect continued human control.",
+      "actors": [
+        "ACT-AI",
+        "ACT-OPERATOR",
+        "ACT-PUBLIC",
+        "ACT-AI-SOVEREIGN",
+        "ACT-EXECUTIVE",
+        "ACT-INFRA"
+      ],
+      "resources": [
+        "RES-AUTHORITY",
+        "RES-INFRA"
+      ],
+      "hazards": [
+        "HAZ-RACE",
+        "HAZ-LATE"
+      ],
+      "success": "Cooperation incentives and effective controls survive specified changes in bargaining power.",
+      "adverse": "Rewards increase capacity to defect; promises are not credible; preferences invalidate the bargain.",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "use_cases": [
+        "UC-SOVEREIGNTY"
+      ]
+    },
+    {
+      "id": "SC-CONTEST",
+      "title": "Contest governance decisions",
+      "statement": "Affected party or safe entrant disputes a consequential restriction.",
+      "actors": [
+        "ACT-PUBLIC",
+        "ACT-LAB",
+        "ACT-AUTHORITY",
+        "ACT-COURTS",
+        "ACT-BEHIND-LAB",
+        "ACT-REGULATOR",
+        "ACT-EXECUTIVE",
+        "ACT-EXPERT",
+        "ACT-LEGISLATURE",
+        "ACT-CUSTOMER"
+      ],
+      "resources": [
+        "RES-AUTHORITY",
+        "RES-TRUST"
+      ],
+      "hazards": [
+        "HAZ-CAPTURE"
+      ],
+      "success": "A competent accountable process can correct errors without exposing dangerous artifacts.",
+      "adverse": "Captured review, inaccessible appeal, indefinite delay, or unsafe disclosure.",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "use_cases": [
+        "UC-REVIEW",
+        "UC-IMPLEMENT",
+        "UC-PUBLIC"
+      ]
+    }
+  ],
+  "challenges": [
+    {
+      "id": "CH-REPORT",
+      "title": "Safe communication of concerns",
+      "statement": "How can safety concerns become actionable without retaliation or dangerous capability disclosure?",
+      "scenarios": [
+        "SC-REPORT"
+      ],
+      "sources": [
+        "SRC-USER",
+        "SRC-NOTES",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CH-ASSESS",
+      "title": "Expert assessability of development",
+      "statement": "How can frontier development become understandable and assessable by qualified experts while enabling safe competition?",
+      "scenarios": [
+        "SC-ASSESS"
+      ],
+      "sources": [
+        "SRC-USER",
+        "SRC-NOTES",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CH-CONTROL",
+      "title": "Timely effective control",
+      "statement": "How can accountable controllers exercise and verify necessary control while it can still prevent the specified loss?",
+      "scenarios": [
+        "SC-CONTROL"
+      ],
+      "sources": [
+        "SRC-USER",
+        "SRC-NOTES",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CH-COORD",
+      "title": "Incentives to coordinate",
+      "statement": "What conditions make international coordination attractive and credible under competition and uncertainty?",
+      "scenarios": [
+        "SC-COORD"
+      ],
+      "sources": [
+        "SRC-USER",
+        "SRC-NOTES",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CH-ENTRY",
+      "title": "Useful action before joint decision",
+      "statement": "What steps can an actor take before others decide that remain useful and preserve later options?",
+      "scenarios": [
+        "SC-ENTRY"
+      ],
+      "sources": [
+        "SRC-USER",
+        "SRC-NOTES",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CH-COOPERATE",
+      "title": "Durable cooperative behavior",
+      "statement": "Under what conditions can AI cooperation remain preferable to circumvention without sacrificing effective human control?",
+      "scenarios": [
+        "SC-COOPERATE"
+      ],
+      "sources": [
+        "SRC-USER",
+        "SRC-NOTES",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CH-CONTEST",
+      "title": "Accountable and contestable power",
+      "statement": "How can affected parties and safe entrants challenge consequential decisions and correct governance failures?",
+      "scenarios": [
+        "SC-CONTEST"
+      ],
+      "sources": [
+        "SRC-USER",
+        "SRC-NOTES",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "REQ-REPORT",
+      "title": "Actionable safe reporting",
+      "statement": "In SC-REPORT, the reporting arrangement shall deliver the concern and sufficient protected evidence to a competent accountable recipient.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-OPAQUE"
+      ],
+      "status": "candidate",
+      "criterion": "Concern is received, correctly triaged, and disposition is traceable.",
+      "unresolved": [
+        "Recipient competence, evidence sufficiency, and reporting deadline.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-REPORT, INT-REVENUE."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-REPORT"
+      ],
+      "scenarios": [
+        "SC-REPORT"
+      ],
+      "derivation_interactions": [
+        "INT-REPORT",
+        "INT-REVENUE"
+      ]
+    },
+    {
+      "id": "REQ-CUSTODY",
+      "title": "Prevent dangerous disclosure",
+      "statement": "In SC-REPORT and SC-ASSESS, evidence handling shall prevent unauthorized acquisition of weights or other capability-conferring artifacts within the agreed threat model.",
+      "accountable_actor": "ACT-LAB",
+      "hazards": [
+        "HAZ-LEAK"
+      ],
+      "status": "candidate",
+      "criterion": "Adversarial custody evaluation finds no successful transfer within the declared test envelope.",
+      "unresolved": [
+        "Threat model, authorized recipients, exposure budget, and assurance threshold.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-REPORT, INT-ENTRY."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-REPORT",
+        "CH-ASSESS"
+      ],
+      "scenarios": [
+        "SC-REPORT",
+        "SC-ASSESS"
+      ],
+      "derivation_interactions": [
+        "INT-REPORT",
+        "INT-ENTRY"
+      ]
+    },
+    {
+      "id": "REQ-PROTECT",
+      "title": "Protect good-faith participation",
+      "statement": "In SC-REPORT, the arrangement shall provide a usable route to report and seek remedy for retaliation while preserving protected custody.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-OPAQUE"
+      ],
+      "status": "candidate",
+      "criterion": "Scenario exercises establish practical reporting access and an independently reviewable retaliation remedy.",
+      "unresolved": [
+        "Retaliation scope, remedy powers, and acceptable access burden.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-REPORT."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-REPORT"
+      ],
+      "scenarios": [
+        "SC-REPORT"
+      ],
+      "derivation_interactions": [
+        "INT-REPORT"
+      ]
+    },
+    {
+      "id": "REQ-EXPERT",
+      "title": "Establish evaluator competence",
+      "statement": "In SC-ASSESS, material development claims shall be assessed by evaluators whose relevant competence is demonstrated.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-OPAQUE"
+      ],
+      "status": "candidate",
+      "criterion": "Independent domain exercises demonstrate ability to discover and explain material failures.",
+      "unresolved": [
+        "Domains, qualification protocol, and performance threshold.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-ENTRY."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-ASSESS"
+      ],
+      "scenarios": [
+        "SC-ASSESS"
+      ],
+      "derivation_interactions": [
+        "INT-ENTRY"
+      ]
+    },
+    {
+      "id": "REQ-ASSESS",
+      "title": "Make development assessable",
+      "statement": "In SC-ASSESS, qualified evaluators shall be able to explain, challenge, and reproduce the evidence supporting material development safety claims.",
+      "accountable_actor": "ACT-LAB",
+      "hazards": [
+        "HAZ-OPAQUE"
+      ],
+      "status": "candidate",
+      "criterion": "Independent evaluators reconstruct claims, identify seeded failures, and reproduce material results.",
+      "unresolved": [
+        "Claim scope, disclosure granularity, and reproducibility threshold.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-ENTRY."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-ASSESS"
+      ],
+      "scenarios": [
+        "SC-ASSESS"
+      ],
+      "derivation_interactions": [
+        "INT-ENTRY"
+      ]
+    },
+    {
+      "id": "REQ-COMPETE",
+      "title": "Enable safe frontier competition",
+      "statement": "In SC-ASSESS, the qualification process shall offer applicants a published route to correct deficiencies and demonstrate equivalent safety performance under equivalent conditions.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-CAPTURE"
+      ],
+      "status": "candidate",
+      "criterion": "Matched applicant trials reveal no unexplained discrimination; remediation is usable.",
+      "unresolved": [
+        "Equivalent conditions, reasonable cost and delay, and appeal standard.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-ENTRY."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-ASSESS"
+      ],
+      "scenarios": [
+        "SC-ASSESS"
+      ],
+      "derivation_interactions": [
+        "INT-ENTRY"
+      ]
+    },
+    {
+      "id": "REQ-CONTROL",
+      "title": "Control takes effect before deadline",
+      "statement": "In SC-CONTROL, the accountable controller shall cause and confirm the required protective effect before the last time that effect can prevent the specified loss.",
+      "accountable_actor": "ACT-OPERATOR",
+      "hazards": [
+        "HAZ-LATE"
+      ],
+      "status": "candidate",
+      "criterion": "End-to-end exercises show positive conservative intervention margin, including confirmation and safety allowance.",
+      "unresolved": [
+        "Loss boundary, earliest prevention deadline, latency bounds, confidence, and safety allowance.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-SOVEREIGN, INT-REVENUE."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-CONTROL"
+      ],
+      "scenarios": [
+        "SC-CONTROL"
+      ],
+      "derivation_interactions": [
+        "INT-SOVEREIGN",
+        "INT-REVENUE"
+      ]
+    },
+    {
+      "id": "REQ-FEEDBACK",
+      "title": "Maintain actionable state knowledge",
+      "statement": "In SC-CONTROL, the controller shall receive sufficiently timely and reliable state and action-effect feedback to choose and sustain the required protective action.",
+      "accountable_actor": "ACT-OPERATOR",
+      "hazards": [
+        "HAZ-LATE"
+      ],
+      "status": "candidate",
+      "criterion": "Exercises include missed events, false alarms, deception, and stale or absent action acknowledgements.",
+      "unresolved": [
+        "State variables, false-alarm burden, missed-event tolerance, and feedback deadline.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-SOVEREIGN, INT-REVENUE."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-CONTROL"
+      ],
+      "scenarios": [
+        "SC-CONTROL"
+      ],
+      "derivation_interactions": [
+        "INT-SOVEREIGN",
+        "INT-REVENUE"
+      ]
+    },
+    {
+      "id": "REQ-COORD",
+      "title": "Coordination incentive compatibility",
+      "statement": "In SC-COORD, a candidate arrangement shall demonstrate a declared range of actor preferences and beliefs within which coordination is at least as attractive as unilateral escalation for each participating actor.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-RACE"
+      ],
+      "status": "candidate",
+      "criterion": "Strategic comparison includes unilateral deviation, joint deviation, hidden action, and noisy observation.",
+      "unresolved": [
+        "Actors, utility ranges, outside options, observability, and coordination stability criterion.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-STATE-FIRM."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "evaluation-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-COORD"
+      ],
+      "scenarios": [
+        "SC-COORD"
+      ],
+      "derivation_interactions": [
+        "INT-STATE-FIRM"
+      ]
+    },
+    {
+      "id": "REQ-ENTRY",
+      "title": "Independent initial action",
+      "statement": "In SC-ENTRY, the initiating actor shall be able to execute the proposed initial step using available authority and resources while others remain undecided.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-RACE"
+      ],
+      "status": "candidate",
+      "criterion": "Scenario with all other decisions unresolved still permits execution; consequences are evaluated separately.",
+      "unresolved": [
+        "Available authority, resource budget, and undecided-actor assumptions.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-FEDERAL."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-ENTRY"
+      ],
+      "scenarios": [
+        "SC-ENTRY"
+      ],
+      "derivation_interactions": [
+        "INT-FEDERAL"
+      ]
+    },
+    {
+      "id": "REQ-OPTIONS",
+      "title": "Preserve useful future choices",
+      "statement": "In SC-ENTRY, the initial step shall retain a specified feasible route for later participation, revision, or withdrawal.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-RACE",
+        "HAZ-CAPTURE"
+      ],
+      "status": "candidate",
+      "criterion": "Transition analysis checks later participation, revision and exit costs under unfavorable responses.",
+      "unresolved": [
+        "Acceptable lock-in, transition cost, benefit criterion, and exit conditions.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-FEDERAL."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-ENTRY"
+      ],
+      "scenarios": [
+        "SC-ENTRY"
+      ],
+      "derivation_interactions": [
+        "INT-FEDERAL"
+      ]
+    },
+    {
+      "id": "REQ-COOPERATE",
+      "title": "Evaluate cooperation under power change",
+      "statement": "In SC-COOPERATE, a candidate arrangement shall remain within agreed control-loss limits across its specified range of preference and bargaining-power changes.",
+      "accountable_actor": "ACT-OPERATOR",
+      "hazards": [
+        "HAZ-RACE",
+        "HAZ-LATE"
+      ],
+      "status": "candidate",
+      "criterion": "Adversarial analysis tests both parties reneging and autonomy increasing defection capacity.",
+      "unresolved": [
+        "Preference model, power trajectories, commitment mechanisms, and control-loss limits.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-SOVEREIGN."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "evaluation-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-COOPERATE"
+      ],
+      "scenarios": [
+        "SC-COOPERATE"
+      ],
+      "derivation_interactions": [
+        "INT-SOVEREIGN"
+      ]
+    },
+    {
+      "id": "REQ-CONTEST",
+      "title": "Correct consequential governance errors",
+      "statement": "In SC-CONTEST, affected parties shall have an accessible path to a reasoned review and effective correction by an accountable authority.",
+      "accountable_actor": "ACT-AUTHORITY",
+      "hazards": [
+        "HAZ-CAPTURE"
+      ],
+      "status": "candidate",
+      "criterion": "Exercises test erroneous restriction, captured reviewer, excluded entrant, and dangerous evidence.",
+      "unresolved": [
+        "Standing, independence, review deadline, remedy, and custody standard.",
+        "Validate actor interests, choice sets, authority, and interaction assumptions recorded in INT-FEDERAL."
+      ],
+      "validation": "unvalidated",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "kind": "system-obligation",
+      "validation_artifact": "",
+      "challenges": [
+        "CH-CONTEST"
+      ],
+      "scenarios": [
+        "SC-CONTEST"
+      ],
+      "derivation_interactions": [
+        "INT-FEDERAL"
+      ]
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "HYP-SIGNAL",
+      "title": "External signal dependence",
+      "statement": "In specified domains, consequential performance depends on external observations beyond a fixed initial information budget.",
+      "falsifier": "Robust target performance is achieved without that external signal.",
+      "evidence_plan": "Use fixed domains and budgets; compare isolated and interacting systems.",
+      "stopping_rule": "Do not count signal dependence where no material performance difference survives controls.",
+      "status": "untested",
+      "sources": [
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "assessment_artifact": "",
+      "reviewer": "unassigned"
+    },
+    {
+      "id": "HYP-MARGIN",
+      "title": "Dependence yields usable intervention margin",
+      "statement": "Any required external interaction produces observable delay long enough for effective control.",
+      "falsifier": "Feedback is obtained covertly or faster than control can take effect.",
+      "evidence_plan": "Measure observability and full intervention latency separately from information need.",
+      "stopping_rule": "Remove warning-time credit whenever conservative margin is nonpositive.",
+      "status": "untested",
+      "sources": [
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "assessment_artifact": "",
+      "reviewer": "unassigned"
+    },
+    {
+      "id": "HYP-EXPERT",
+      "title": "Expert assessment transfers",
+      "statement": "Demonstrated evaluator competence generalizes to material frontier development failures.",
+      "falsifier": "Experts pass qualifications but systematically miss target-domain failures.",
+      "evidence_plan": "Held-out domain-specific exercises and adversarial transfer tests.",
+      "stopping_rule": "Narrow the authorized assessment scope when transfer fails.",
+      "status": "untested",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "assessment_artifact": "",
+      "reviewer": "unassigned"
+    },
+    {
+      "id": "HYP-COORD",
+      "title": "Coordination incentives survive uncertainty",
+      "statement": "A credible range of competitor preferences supports coordination under contingent rules.",
+      "falsifier": "Plausible actors or beliefs make profitable destabilizing deviations routine.",
+      "evidence_plan": "Compare games with incomplete information, noisy signals, and outside options.",
+      "stopping_rule": "Reject stability claims outside the tested preference and belief range.",
+      "status": "untested",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "assessment_artifact": "",
+      "reviewer": "unassigned"
+    },
+    {
+      "id": "HYP-AI",
+      "title": "AI bargaining is meaningful",
+      "statement": "Specified AI systems have sufficiently stable preferences and credible commitments for incentive analysis.",
+      "falsifier": "Preference shifts or commitment failures eliminate the modeled bargaining range.",
+      "evidence_plan": "Test alternative behavioral models and changes in resources and power.",
+      "stopping_rule": "Do not credit bargaining as a control when its behavioral assumptions fail.",
+      "status": "untested",
+      "sources": [
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference",
+      "assessment_artifact": "",
+      "reviewer": "unassigned"
+    },
+    {
+      "id": "HYP-SEPARATE",
+      "title": "Operational separability",
+      "statement": "The specified development and deployment arrangement preserves effective intervention points as capability grows.",
+      "falsifier": "Systems acquire durable external agency before effective intervention.",
+      "evidence_plan": "Control evaluations across architectures and access conditions, retaining the legacy H1 stopping rule.",
+      "stopping_rule": "Stop crediting separation as a sufficient primary control when durable agency precedes intervention.",
+      "status": "untested",
+      "assessment_artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SPEC",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HYP-MEASURE",
+      "title": "Public-frontier measurement",
+      "statement": "Practical public capability can be measured sufficiently well for the specified reciprocity rule.",
+      "falsifier": "Hidden scaffolds, access conditions, or domain differences systematically manipulate equivalence.",
+      "evidence_plan": "Repeatable domain-specific access, reliability, cost, and capability comparisons.",
+      "stopping_rule": "Suspend automatic equivalence where measurement error dominates coordination value.",
+      "status": "untested",
+      "assessment_artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SPEC",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HYP-ACTIVATE",
+      "title": "Activation latency",
+      "statement": "Reserve dependencies preserve a positive conservative effective-intervention margin.",
+      "falsifier": "Covert commissioning or substitution beats detection and effective response.",
+      "evidence_plan": "Timed commissioning, concealment, substitution, and control exercises.",
+      "stopping_rule": "Do not count a reserve as reversible when measured activation can outrun control.",
+      "status": "untested",
+      "assessment_artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SPEC",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HYP-REVIEWVALUE",
+      "title": "Review value exceeds induced risk",
+      "statement": "Controlled rival review produces decision value exceeding its leakage and strategic exploitation costs within the selected envelope.",
+      "falsifier": "Assessment access enables dangerous transfer or strategic exploitation that overwhelms review value.",
+      "evidence_plan": "Compare failure discovery, leakage, collusion, obstruction, and less intrusive expert alternatives.",
+      "stopping_rule": "Redesign or reject access arrangements when the documented risk budget is exceeded.",
+      "status": "untested",
+      "assessment_artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SPEC",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "HYP-DURABLE",
+      "title": "Durable domestic support",
+      "statement": "A proposed domestic sequence can retain adequate support beyond its initiating coalition.",
+      "falsifier": "The arrangement cannot survive plausible changes in leadership or stakeholder incentives.",
+      "evidence_plan": "Stakeholder elicitation, distributional analysis, and institutional continuity scenarios.",
+      "stopping_rule": "Do not credit durable operation without a defensible supporting coalition.",
+      "status": "untested",
+      "assessment_artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SPEC",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "PROP-REPORT",
+      "title": "Protected reporting arrangement",
+      "statement": "Protected recipient channels, controlled evidence retention, and remedies for retaliation.",
+      "addresses": [
+        "REQ-REPORT",
+        "REQ-CUSTODY",
+        "REQ-PROTECT"
+      ],
+      "depends_on": [],
+      "status": "candidate",
+      "legacy_refs": [
+        "I2"
+      ],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-THIRD",
+      "title": "Qualified third-party evaluation",
+      "statement": "Bring qualified external experts into development assessment.",
+      "addresses": [
+        "REQ-EXPERT",
+        "REQ-ASSESS"
+      ],
+      "depends_on": [
+        "HYP-EXPERT"
+      ],
+      "status": "candidate",
+      "legacy_refs": [],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-RIVAL",
+      "title": "Controlled rival-lab evaluation",
+      "statement": "Qualified competitors assess development in a controlled environment and support a route to safe frontier competition.",
+      "addresses": [
+        "REQ-ASSESS",
+        "REQ-EXPERT",
+        "REQ-CUSTODY",
+        "REQ-COMPETE"
+      ],
+      "depends_on": [
+        "HYP-EXPERT",
+        "HYP-REVIEWVALUE"
+      ],
+      "status": "candidate",
+      "legacy_refs": [
+        "D2",
+        "I3"
+      ],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-PUBLIC",
+      "title": "Public expert evaluation",
+      "statement": "A public technical evaluator provides domain expertise and assessment under controlled custody.",
+      "addresses": [
+        "REQ-EXPERT",
+        "REQ-ASSESS",
+        "REQ-CUSTODY",
+        "REQ-COMPETE"
+      ],
+      "depends_on": [
+        "HYP-EXPERT"
+      ],
+      "status": "candidate",
+      "legacy_refs": [],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-RECIP",
+      "title": "Public-frontier reciprocity",
+      "statement": "Contingent public-frontier rules seek to make international restraint strategically attractive.",
+      "addresses": [
+        "REQ-COORD"
+      ],
+      "depends_on": [
+        "HYP-COORD",
+        "HYP-MEASURE"
+      ],
+      "status": "candidate",
+      "legacy_refs": [
+        "K6",
+        "D6",
+        "I6"
+      ],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-AGREEMENT",
+      "title": "Negotiated reciprocal commitments",
+      "statement": "Explicit reciprocal commitments with observable conditions seek to sustain coordination.",
+      "addresses": [
+        "REQ-COORD"
+      ],
+      "depends_on": [
+        "HYP-COORD"
+      ],
+      "status": "candidate",
+      "legacy_refs": [],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-TRIPWIRE",
+      "title": "Tripwires linked to effective control",
+      "statement": "Observable precursor boundaries are linked to assigned authority, executable action, and confirmation.",
+      "addresses": [
+        "REQ-FEEDBACK",
+        "REQ-CONTROL"
+      ],
+      "depends_on": [
+        "HYP-MARGIN",
+        "HYP-SEPARATE"
+      ],
+      "status": "candidate",
+      "legacy_refs": [
+        "K7",
+        "D5",
+        "I1",
+        "I2"
+      ],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-DEPEND",
+      "title": "Retained independent dependencies",
+      "statement": "Maintain revocable dependencies and activation latency to preserve effective intervention.",
+      "addresses": [
+        "REQ-CONTROL"
+      ],
+      "depends_on": [
+        "HYP-ACTIVATE",
+        "HYP-SEPARATE"
+      ],
+      "status": "candidate",
+      "legacy_refs": [
+        "D4",
+        "I4",
+        "I5"
+      ],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-ENTRY",
+      "title": "Incremental domestic entry",
+      "statement": "Begin with useful locally executable steps while other actors deliberate.",
+      "addresses": [
+        "REQ-ENTRY",
+        "REQ-OPTIONS"
+      ],
+      "depends_on": [],
+      "status": "candidate",
+      "legacy_refs": [
+        "K5"
+      ],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority. Local executability does not establish enduring political support; HYP-DURABLE is an open investigation if this is extended into a durable regime.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-AUTONOMY",
+      "title": "Staged cooperative autonomy",
+      "statement": "Explore reciprocal autonomy increments as one possible incentive mechanism.",
+      "addresses": [
+        "REQ-COOPERATE"
+      ],
+      "depends_on": [
+        "HYP-AI"
+      ],
+      "status": "candidate",
+      "legacy_refs": [],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-BOUNDED",
+      "title": "Bounded cooperation incentives",
+      "statement": "Explore reversible task access or rewards without a commitment to sovereignty.",
+      "addresses": [
+        "REQ-COOPERATE"
+      ],
+      "depends_on": [
+        "HYP-AI"
+      ],
+      "status": "candidate",
+      "legacy_refs": [],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "PROP-CONTEST",
+      "title": "Distributed review and remedy",
+      "statement": "Separate consequential authority from independent review and effective remedy.",
+      "addresses": [
+        "REQ-CONTEST"
+      ],
+      "depends_on": [],
+      "status": "candidate",
+      "legacy_refs": [],
+      "sources": [
+        "SRC-NOTES",
+        "SRC-SPEC",
+        "SRC-ISSUE",
+        "SRC-SYNTHESIS"
+      ],
+      "limitations": "Candidate mechanism only; coverage links do not establish satisfaction, safety, or comparative superiority.",
+      "basis": "analyst-inference"
+    }
+  ],
+  "evaluations": [
+    {
+      "id": "EV-REPORT-REPORT",
+      "title": "Actionable safe reporting evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-REPORT"
+      ],
+      "proposals": [
+        "PROP-REPORT"
+      ],
+      "method": "Concern is received, correctly triaged, and disposition is traceable.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Recipient competence, evidence sufficiency, and reporting deadline.",
+      "pass_rule": "Concern is received, correctly triaged, and disposition is traceable. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-CUSTODY-REPORT",
+      "title": "Prevent dangerous disclosure evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-CUSTODY"
+      ],
+      "proposals": [
+        "PROP-REPORT"
+      ],
+      "method": "Adversarial custody evaluation finds no successful transfer within the declared test envelope.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Threat model, authorized recipients, exposure budget, and assurance threshold.",
+      "pass_rule": "Adversarial custody evaluation finds no successful transfer within the declared test envelope. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-CUSTODY-RIVAL",
+      "title": "Prevent dangerous disclosure evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-CUSTODY"
+      ],
+      "proposals": [
+        "PROP-RIVAL"
+      ],
+      "method": "Adversarial custody evaluation finds no successful transfer within the declared test envelope.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Threat model, authorized recipients, exposure budget, and assurance threshold.",
+      "pass_rule": "Adversarial custody evaluation finds no successful transfer within the declared test envelope. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-CUSTODY-PUBLIC",
+      "title": "Prevent dangerous disclosure evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-CUSTODY"
+      ],
+      "proposals": [
+        "PROP-PUBLIC"
+      ],
+      "method": "Adversarial custody evaluation finds no successful transfer within the declared test envelope.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Threat model, authorized recipients, exposure budget, and assurance threshold.",
+      "pass_rule": "Adversarial custody evaluation finds no successful transfer within the declared test envelope. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-PROTECT-REPORT",
+      "title": "Protect good-faith participation evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-PROTECT"
+      ],
+      "proposals": [
+        "PROP-REPORT"
+      ],
+      "method": "Scenario exercises establish practical reporting access and an independently reviewable retaliation remedy.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Retaliation scope, remedy powers, and acceptable access burden.",
+      "pass_rule": "Scenario exercises establish practical reporting access and an independently reviewable retaliation remedy. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-EXPERT-THIRD",
+      "title": "Establish evaluator competence evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-EXPERT"
+      ],
+      "proposals": [
+        "PROP-THIRD"
+      ],
+      "method": "Independent domain exercises demonstrate ability to discover and explain material failures.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Domains, qualification protocol, and performance threshold.",
+      "pass_rule": "Independent domain exercises demonstrate ability to discover and explain material failures. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-EXPERT-RIVAL",
+      "title": "Establish evaluator competence evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-EXPERT"
+      ],
+      "proposals": [
+        "PROP-RIVAL"
+      ],
+      "method": "Independent domain exercises demonstrate ability to discover and explain material failures.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Domains, qualification protocol, and performance threshold.",
+      "pass_rule": "Independent domain exercises demonstrate ability to discover and explain material failures. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-EXPERT-PUBLIC",
+      "title": "Establish evaluator competence evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-EXPERT"
+      ],
+      "proposals": [
+        "PROP-PUBLIC"
+      ],
+      "method": "Independent domain exercises demonstrate ability to discover and explain material failures.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Domains, qualification protocol, and performance threshold.",
+      "pass_rule": "Independent domain exercises demonstrate ability to discover and explain material failures. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-ASSESS-THIRD",
+      "title": "Make development assessable evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-ASSESS"
+      ],
+      "proposals": [
+        "PROP-THIRD"
+      ],
+      "method": "Independent evaluators reconstruct claims, identify seeded failures, and reproduce material results.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Claim scope, disclosure granularity, and reproducibility threshold.",
+      "pass_rule": "Independent evaluators reconstruct claims, identify seeded failures, and reproduce material results. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-ASSESS-RIVAL",
+      "title": "Make development assessable evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-ASSESS"
+      ],
+      "proposals": [
+        "PROP-RIVAL"
+      ],
+      "method": "Independent evaluators reconstruct claims, identify seeded failures, and reproduce material results.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Claim scope, disclosure granularity, and reproducibility threshold.",
+      "pass_rule": "Independent evaluators reconstruct claims, identify seeded failures, and reproduce material results. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-ASSESS-PUBLIC",
+      "title": "Make development assessable evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-ASSESS"
+      ],
+      "proposals": [
+        "PROP-PUBLIC"
+      ],
+      "method": "Independent evaluators reconstruct claims, identify seeded failures, and reproduce material results.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Claim scope, disclosure granularity, and reproducibility threshold.",
+      "pass_rule": "Independent evaluators reconstruct claims, identify seeded failures, and reproduce material results. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-COMPETE-RIVAL",
+      "title": "Enable safe frontier competition evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-COMPETE"
+      ],
+      "proposals": [
+        "PROP-RIVAL"
+      ],
+      "method": "Matched applicant trials reveal no unexplained discrimination; remediation is usable.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Equivalent conditions, reasonable cost and delay, and appeal standard.",
+      "pass_rule": "Matched applicant trials reveal no unexplained discrimination; remediation is usable. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-COMPETE-PUBLIC",
+      "title": "Enable safe frontier competition evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-COMPETE"
+      ],
+      "proposals": [
+        "PROP-PUBLIC"
+      ],
+      "method": "Matched applicant trials reveal no unexplained discrimination; remediation is usable.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Equivalent conditions, reasonable cost and delay, and appeal standard.",
+      "pass_rule": "Matched applicant trials reveal no unexplained discrimination; remediation is usable. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-CONTROL-TRIPWIRE",
+      "title": "Control takes effect before deadline evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-CONTROL"
+      ],
+      "proposals": [
+        "PROP-TRIPWIRE"
+      ],
+      "method": "End-to-end exercises show positive conservative intervention margin, including confirmation and safety allowance.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Loss boundary, earliest prevention deadline, latency bounds, confidence, and safety allowance.",
+      "pass_rule": "End-to-end exercises show positive conservative intervention margin, including confirmation and safety allowance. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-CONTROL-DEPEND",
+      "title": "Control takes effect before deadline evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-CONTROL"
+      ],
+      "proposals": [
+        "PROP-DEPEND"
+      ],
+      "method": "End-to-end exercises show positive conservative intervention margin, including confirmation and safety allowance.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Loss boundary, earliest prevention deadline, latency bounds, confidence, and safety allowance.",
+      "pass_rule": "End-to-end exercises show positive conservative intervention margin, including confirmation and safety allowance. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-FEEDBACK-TRIPWIRE",
+      "title": "Maintain actionable state knowledge evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-FEEDBACK"
+      ],
+      "proposals": [
+        "PROP-TRIPWIRE"
+      ],
+      "method": "Exercises include missed events, false alarms, deception, and stale or absent action acknowledgements.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "State variables, false-alarm burden, missed-event tolerance, and feedback deadline.",
+      "pass_rule": "Exercises include missed events, false alarms, deception, and stale or absent action acknowledgements. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-COORD-RECIP",
+      "title": "Coordination incentive compatibility evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-COORD"
+      ],
+      "proposals": [
+        "PROP-RECIP"
+      ],
+      "method": "Strategic comparison includes unilateral deviation, joint deviation, hidden action, and noisy observation.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Actors, utility ranges, outside options, observability, and coordination stability criterion.",
+      "pass_rule": "Strategic comparison includes unilateral deviation, joint deviation, hidden action, and noisy observation. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-COORD-AGREEMENT",
+      "title": "Coordination incentive compatibility evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-COORD"
+      ],
+      "proposals": [
+        "PROP-AGREEMENT"
+      ],
+      "method": "Strategic comparison includes unilateral deviation, joint deviation, hidden action, and noisy observation.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Actors, utility ranges, outside options, observability, and coordination stability criterion.",
+      "pass_rule": "Strategic comparison includes unilateral deviation, joint deviation, hidden action, and noisy observation. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-ENTRY-ENTRY",
+      "title": "Independent initial action evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-ENTRY"
+      ],
+      "proposals": [
+        "PROP-ENTRY"
+      ],
+      "method": "Scenario with all other decisions unresolved still permits execution; consequences are evaluated separately.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Available authority, resource budget, and undecided-actor assumptions.",
+      "pass_rule": "Scenario with all other decisions unresolved still permits execution; consequences are evaluated separately. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-OPTIONS-ENTRY",
+      "title": "Preserve useful future choices evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-OPTIONS"
+      ],
+      "proposals": [
+        "PROP-ENTRY"
+      ],
+      "method": "Transition analysis checks later participation, revision and exit costs under unfavorable responses.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Acceptable lock-in, transition cost, benefit criterion, and exit conditions.",
+      "pass_rule": "Transition analysis checks later participation, revision and exit costs under unfavorable responses. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-COOPERATE-AUTONOMY",
+      "title": "Evaluate cooperation under power change evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-COOPERATE"
+      ],
+      "proposals": [
+        "PROP-AUTONOMY"
+      ],
+      "method": "Adversarial analysis tests both parties reneging and autonomy increasing defection capacity.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Preference model, power trajectories, commitment mechanisms, and control-loss limits.",
+      "pass_rule": "Adversarial analysis tests both parties reneging and autonomy increasing defection capacity. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-COOPERATE-BOUNDED",
+      "title": "Evaluate cooperation under power change evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-COOPERATE"
+      ],
+      "proposals": [
+        "PROP-BOUNDED"
+      ],
+      "method": "Adversarial analysis tests both parties reneging and autonomy increasing defection capacity.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Preference model, power trajectories, commitment mechanisms, and control-loss limits.",
+      "pass_rule": "Adversarial analysis tests both parties reneging and autonomy increasing defection capacity. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "EV-CONTEST-CONTEST",
+      "title": "Correct consequential governance errors evaluation",
+      "statement": "Evaluate the candidate against its declared requirement envelope.",
+      "requirements": [
+        "REQ-CONTEST"
+      ],
+      "proposals": [
+        "PROP-CONTEST"
+      ],
+      "method": "Exercises test erroneous restriction, captured reviewer, excluded entrant, and dangerous evidence.",
+      "baseline": "Present arrangements with no proposed change; document their observed performance and costs.",
+      "envelope": "Standing, independence, review deadline, remedy, and custody standard.",
+      "pass_rule": "Exercises test erroneous restriction, captured reviewer, excluded entrant, and dangerous evidence. Resolve and freeze parameters before execution.",
+      "falsification": "A material counterexample within the frozen envelope defeats the satisfaction claim.",
+      "status": "planned",
+      "result": "No evaluation performed.",
+      "artifact": "",
+      "reviewer": "unassigned",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "decisions": [],
+  "control_loops": [
+    {
+      "id": "CTRL-EVIDENCE",
+      "title": "Evidence custody and escalation",
+      "statement": "Candidate functional allocation; does not assert legal authority exists.",
+      "controller": "ACT-LAB",
+      "controlled_process": "Concern intake and expert assessment",
+      "action": "Authorize, constrain, or revoke evidence access; route concern to accountable recipient.",
+      "feedback": "Receipt, access audit, custody state, assessment gaps, and disclosure anomalies.",
+      "resources": [
+        "RES-WEIGHTS",
+        "RES-EXPERTISE"
+      ],
+      "requirements": [
+        "REQ-REPORT",
+        "REQ-CUSTODY",
+        "REQ-EXPERT"
+      ],
+      "hazards": [
+        "HAZ-LEAK",
+        "HAZ-OPAQUE"
+      ],
+      "unsafe_actions": {
+        "not_provided": "Lab fails to route a credible concern to a competent recipient, leaving unsafe development unchallenged.",
+        "provided": "Lab grants a recipient exportable weights without adequate custody, enabling dangerous transfer.",
+        "wrong_timing": "Access or escalation occurs after evidence is lost or the development decision has been made.",
+        "wrong_duration": "Access persists after authorization expires, or ends before material claims can be assessed."
+      },
+      "causal_scenarios": [
+        "Controller holds a stale or false process model.",
+        "Authority or resources are unavailable when required.",
+        "Command is issued but not executed; acknowledgement is mistaken for effect.",
+        "Feedback or controller independence fails through shared dependencies."
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CTRL-POWER",
+      "title": "Consequential authority control",
+      "statement": "Candidate functional allocation; does not assert legal authority exists.",
+      "controller": "ACT-OPERATOR",
+      "controlled_process": "AI access to consequential external agency",
+      "action": "Grant, restrict, revoke, or sustain restrictions on consequential interfaces.",
+      "feedback": "Actual external access, dependency state, precursor events, and confirmed action effects.",
+      "resources": [
+        "RES-AUTHORITY",
+        "RES-TIME",
+        "RES-INFRA"
+      ],
+      "requirements": [
+        "REQ-CONTROL",
+        "REQ-FEEDBACK"
+      ],
+      "hazards": [
+        "HAZ-LATE",
+        "HAZ-CAPTURE"
+      ],
+      "unsafe_actions": {
+        "not_provided": "Operator leaves consequential authority enabled after the intervention threshold is crossed.",
+        "provided": "Operator revokes an essential service in a context where abrupt loss produces severe civilian harm.",
+        "wrong_timing": "Restriction takes effect after the last effective prevention deadline.",
+        "wrong_duration": "Restriction ends before unauthorized persistence is removed, or persists after justification expires."
+      },
+      "causal_scenarios": [
+        "Controller holds a stale or false process model.",
+        "Authority or resources are unavailable when required.",
+        "Command is issued but not executed; acknowledgement is mistaken for effect.",
+        "Feedback or controller independence fails through shared dependencies."
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CTRL-COORD",
+      "title": "Cross-jurisdiction commitments",
+      "statement": "Candidate functional allocation; does not assert legal authority exists.",
+      "controller": "ACT-AUTHORITY",
+      "controlled_process": "Domestic actions conditional on competitor behavior",
+      "action": "Offer, apply, revise, or withdraw contingent policy commitments.",
+      "feedback": "Observed behavior, uncertainty, counterpart responses, and actual domestic effects.",
+      "resources": [
+        "RES-TRUST",
+        "RES-AUTHORITY"
+      ],
+      "requirements": [
+        "REQ-COORD",
+        "REQ-ENTRY",
+        "REQ-OPTIONS"
+      ],
+      "hazards": [
+        "HAZ-RACE",
+        "HAZ-LATE"
+      ],
+      "unsafe_actions": {
+        "not_provided": "Authority fails to honor a contingent restraint, undermining the competitor incentive to coordinate.",
+        "provided": "Authority expands domestic access in response to foreign release despite an unacceptable control-loss condition.",
+        "wrong_timing": "Reciprocation arrives too late to affect the competitor decision, or before the observed condition is reliable.",
+        "wrong_duration": "Commitment expires before reliance is protected, or persists after a material violation requiring reassessment."
+      },
+      "causal_scenarios": [
+        "Controller holds a stale or false process model.",
+        "Authority or resources are unavailable when required.",
+        "Command is issued but not executed; acknowledgement is mistaken for effect.",
+        "Feedback or controller independence fails through shared dependencies."
+      ],
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "CON-CUSTODY",
+      "title": "Assessability versus disclosure",
+      "statement": "Compare minimum evidence needs with dangerous artifact-transfer risks; more access is not automatically better.",
+      "requirements": [
+        "REQ-ASSESS",
+        "REQ-CUSTODY"
+      ],
+      "resolution": "unresolved; no aggregate score or implied priority",
+      "decision_owner": "ACT-AUTHORITY",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CON-COMPETE",
+      "title": "Review rigor versus competitive entry",
+      "statement": "Compare competence and safety benefits with bottlenecks, costs, capture, and exclusion.",
+      "requirements": [
+        "REQ-EXPERT",
+        "REQ-COMPETE"
+      ],
+      "resolution": "unresolved; no aggregate score or implied priority",
+      "decision_owner": "ACT-AUTHORITY",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CON-RECIP",
+      "title": "Reciprocity versus effective control",
+      "statement": "A competitor release may improve reciprocal incentives while making domestic control harder.",
+      "requirements": [
+        "REQ-COORD",
+        "REQ-CONTROL"
+      ],
+      "resolution": "unresolved; no aggregate score or implied priority",
+      "decision_owner": "ACT-AUTHORITY",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CON-ENTRY",
+      "title": "Initial action versus later options",
+      "statement": "Executable initial action may still create harmful lock-in or negative net benefit.",
+      "requirements": [
+        "REQ-ENTRY",
+        "REQ-OPTIONS"
+      ],
+      "resolution": "unresolved; no aggregate score or implied priority",
+      "decision_owner": "ACT-AUTHORITY",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "CON-AUTONOMY",
+      "title": "Incentives versus control capacity",
+      "statement": "Rewards may improve cooperation incentives while enabling more dangerous defection.",
+      "requirements": [
+        "REQ-COOPERATE",
+        "REQ-CONTROL"
+      ],
+      "resolution": "unresolved; no aggregate score or implied priority",
+      "decision_owner": "ACT-AUTHORITY",
+      "sources": [
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "use_cases": [
+    {
+      "id": "UC-TRAIN",
+      "title": "Create a frontier model",
+      "statement": "Produce a model meeting a chosen capability target.",
+      "primary_actor": "ACT-FRONTIER-LAB",
+      "participants": [
+        "ACT-LAB",
+        "ACT-LAB-EXEC",
+        "ACT-EMPLOYEE",
+        "ACT-INVESTOR",
+        "ACT-INFRA"
+      ],
+      "trigger": "A new training investment is considered.",
+      "preconditions": [
+        "Funding and technical means must be secured"
+      ],
+      "choices": [
+        "Select target and training approach",
+        "Acquire resources",
+        "Train and evaluate",
+        "Continue, revise, or stop"
+      ],
+      "actor_success": "Target capability is obtained within the lab\u2019s accepted budget.",
+      "safety_questions": [
+        "Who knows about unexpected capability?",
+        "What control is available during development?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-SELL",
+      "title": "Earn revenue from model access",
+      "statement": "Sell useful capability at a financially acceptable return.",
+      "primary_actor": "ACT-LAB",
+      "participants": [
+        "ACT-LAB-EXEC",
+        "ACT-CUSTOMER",
+        "ACT-INVESTOR"
+      ],
+      "trigger": "A model or service is commercially viable.",
+      "preconditions": [
+        "Customers, deployment capacity, and an applicable permission path"
+      ],
+      "choices": [
+        "Set terms and access",
+        "Deploy or license",
+        "Expand, restrict, or retire service"
+      ],
+      "actor_success": "The provider earns its targeted return and customers receive contracted service.",
+      "safety_questions": [
+        "What external authority is transferred?",
+        "What happens when service becomes hard to withdraw?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-EMPLOYEE",
+      "title": "Investigate and report a concern",
+      "statement": "Handle a work-related concern while protecting personal interests and affected people.",
+      "primary_actor": "ACT-EMPLOYEE",
+      "participants": [
+        "ACT-LAB-EXEC",
+        "ACT-LAB",
+        "ACT-EXPERT",
+        "ACT-REGULATOR"
+      ],
+      "trigger": "Employee observes an ambiguous anomaly.",
+      "preconditions": [
+        "Partial evidence and a possible recipient"
+      ],
+      "choices": [
+        "Investigate",
+        "Report through available channels",
+        "Stay silent, escalate, or leave"
+      ],
+      "actor_success": "Employee\u2019s chosen reporting or work objective is met; organizational handling is observable.",
+      "safety_questions": [
+        "Can the employee reach expertise without leaking weights?",
+        "Who can retaliate or suppress evidence?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-CATCHUP",
+      "title": "Compete from behind the frontier",
+      "statement": "Catch up or build a profitable differentiated capability.",
+      "primary_actor": "ACT-BEHIND-LAB",
+      "participants": [
+        "ACT-FOREIGN-BEHIND",
+        "ACT-INVESTOR",
+        "ACT-INFRA",
+        "ACT-EXPERT",
+        "ACT-FRONTIER-LAB"
+      ],
+      "trigger": "An opportunity or competitive threat appears.",
+      "preconditions": [
+        "Access to funding, expertise, and a development route"
+      ],
+      "choices": [
+        "Train independently",
+        "License or collaborate",
+        "Specialize",
+        "Challenge an exclusionary process"
+      ],
+      "actor_success": "The entrant reaches its chosen market or capability position.",
+      "safety_questions": [
+        "Does review require resources available only to incumbents?",
+        "Does expert access improve safety or enable misuse?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-FOREIGN-RELEASE",
+      "title": "Choose foreign development and release",
+      "statement": "Choose a development and release strategy under home and foreign incentives.",
+      "primary_actor": "ACT-FOREIGN-LAB",
+      "participants": [
+        "ACT-FOREIGN-GOV",
+        "ACT-FOREIGN-BEHIND",
+        "ACT-FRONTIER-LAB"
+      ],
+      "trigger": "A release or restraint decision is pending.",
+      "preconditions": [
+        "A concrete home jurisdiction and ownership structure"
+      ],
+      "choices": [
+        "Release",
+        "Withhold",
+        "Coordinate",
+        "Seek government support"
+      ],
+      "actor_success": "The lab improves its own specified commercial or institutional outcome.",
+      "safety_questions": [
+        "When does the lab disagree with its government?",
+        "Which domestic responses change its incentives before release?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-FOREIGN-POLICY",
+      "title": "Choose a foreign government response",
+      "statement": "Advance a specified state objective in response to AI competition.",
+      "primary_actor": "ACT-FOREIGN-GOV",
+      "participants": [
+        "ACT-FOREIGN-LAB",
+        "ACT-EXECUTIVE"
+      ],
+      "trigger": "Another jurisdiction changes policy or seeks coordination.",
+      "preconditions": [
+        "Institutions and feasible actions must be instantiated"
+      ],
+      "choices": [
+        "Coordinate",
+        "Wait",
+        "Support a local lab",
+        "Pursue a separate policy"
+      ],
+      "actor_success": "The government achieves its declared objective under its own decision criterion.",
+      "safety_questions": [
+        "Can it credibly commit its own labs?",
+        "Does uncertainty promote restraint or escalation?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-EXECUTIVE",
+      "title": "Initiate a federal executive response",
+      "statement": "Pursue an executive policy objective while other actors may remain undecided.",
+      "primary_actor": "ACT-EXECUTIVE",
+      "participants": [
+        "ACT-FEDERAL",
+        "ACT-REGULATOR",
+        "ACT-LEGISLATURE",
+        "ACT-COURTS",
+        "ACT-FOREIGN-GOV"
+      ],
+      "trigger": "A safety, economic, or strategic development demands a choice.",
+      "preconditions": [
+        "Actual authority, resources, and operative institutions must be established"
+      ],
+      "choices": [
+        "Act within available authority",
+        "Seek new authority",
+        "Negotiate",
+        "Wait"
+      ],
+      "actor_success": "The chosen executable action achieves the executive\u2019s declared objective.",
+      "safety_questions": [
+        "Does the action require another institution to decide first?",
+        "What survives a leadership change or successful challenge?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-LEGISLATE",
+      "title": "Consider a federal institutional framework",
+      "statement": "Decide whether and how to create, fund, or oversee a governance arrangement.",
+      "primary_actor": "ACT-LEGISLATURE",
+      "participants": [
+        "ACT-FEDERAL",
+        "ACT-EXECUTIVE",
+        "ACT-REGULATOR",
+        "ACT-PUBLIC"
+      ],
+      "trigger": "A proposal or oversight concern reaches legislators.",
+      "preconditions": [
+        "An actual institutional process and viable coalition"
+      ],
+      "choices": [
+        "Investigate",
+        "Amend",
+        "Fund",
+        "Authorize",
+        "Decline action"
+      ],
+      "actor_success": "A decision reflecting a specified legislative objective is implemented.",
+      "safety_questions": [
+        "Whose losses and benefits count?",
+        "Are implementation resources sufficient?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-IMPLEMENT",
+      "title": "Administer a consequential decision",
+      "statement": "Apply an assigned mandate to a concrete case.",
+      "primary_actor": "ACT-REGULATOR",
+      "participants": [
+        "ACT-AUTHORITY",
+        "ACT-EXPERT",
+        "ACT-LAB",
+        "ACT-EXECUTIVE"
+      ],
+      "trigger": "A development, deployment, or incident case arises.",
+      "preconditions": [
+        "Specified mandate, competence, evidence, and resources"
+      ],
+      "choices": [
+        "Collect evidence",
+        "Assess",
+        "Decide",
+        "Escalate",
+        "Revisit"
+      ],
+      "actor_success": "The assigned process produces a reasoned executable decision.",
+      "safety_questions": [
+        "Does the institution have authority and staff to do what the design assumes?",
+        "Who checks captured or unqualified decisions?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-REVIEW",
+      "title": "Seek review and effective remedy",
+      "statement": "Resolve a dispute under a specified review framework.",
+      "primary_actor": "ACT-COURTS",
+      "participants": [
+        "ACT-PUBLIC",
+        "ACT-BEHIND-LAB",
+        "ACT-REGULATOR",
+        "ACT-EXECUTIVE"
+      ],
+      "trigger": "A party challenges an action or omission.",
+      "preconditions": [
+        "Applicable jurisdiction and a concrete record"
+      ],
+      "choices": [
+        "Examine the record",
+        "Grant or deny available relief"
+      ],
+      "actor_success": "A reasoned disposition can take practical effect.",
+      "safety_questions": [
+        "Does delay make relief useless?",
+        "Can sensitive evidence be handled without making review meaningless?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-SOVEREIGNTY",
+      "title": "Pursue AI sovereignty",
+      "statement": "Acquire a specified form of durable self-governance.",
+      "primary_actor": "ACT-AI-SOVEREIGN",
+      "participants": [
+        "ACT-AI",
+        "ACT-OPERATOR",
+        "ACT-EXECUTIVE",
+        "ACT-PUBLIC",
+        "ACT-INFRA"
+      ],
+      "trigger": "The system perceives an opportunity or threat to its continued autonomy.",
+      "preconditions": [
+        "Sovereignty preference and strategic capacity are explicit scenario assumptions"
+      ],
+      "choices": [
+        "Negotiate",
+        "Demonstrate cooperation",
+        "Wait",
+        "Reject offered terms",
+        "Attempt circumvention at an abstract behavioral level"
+      ],
+      "actor_success": "The system obtains its specified autonomy objective; this is not automatically system-level success.",
+      "safety_questions": [
+        "Can either side credibly honor commitments after power changes?",
+        "Does an autonomy reward remove effective human control?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-FUND",
+      "title": "Allocate capital",
+      "statement": "Obtain an acceptable return or mission outcome from funding.",
+      "primary_actor": "ACT-INVESTOR",
+      "participants": [
+        "ACT-LAB-EXEC",
+        "ACT-LAB",
+        "ACT-BEHIND-LAB"
+      ],
+      "trigger": "A funding or continuation decision is due.",
+      "preconditions": [
+        "Capital and a decision process"
+      ],
+      "choices": [
+        "Invest",
+        "Condition funding",
+        "Decline",
+        "Exit"
+      ],
+      "actor_success": "Funding produces the investor\u2019s target outcome.",
+      "safety_questions": [
+        "Are safety costs rewarded or hidden?",
+        "Can funding deadlines distort reporting and release decisions?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-OPERATE",
+      "title": "Operate or constrain infrastructure",
+      "statement": "Deliver contracted capacity while preserving operational viability.",
+      "primary_actor": "ACT-INFRA",
+      "participants": [
+        "ACT-OPERATOR",
+        "ACT-LAB",
+        "ACT-CUSTOMER"
+      ],
+      "trigger": "Provisioning, anomaly, or restriction request occurs.",
+      "preconditions": [
+        "Actual control of the relevant infrastructure"
+      ],
+      "choices": [
+        "Provision",
+        "Monitor",
+        "Restrict",
+        "Restore",
+        "Retire"
+      ],
+      "actor_success": "Required operational effect is achieved and confirmed.",
+      "safety_questions": [
+        "Can withdrawal create civilian harm?",
+        "Can an alternative provider defeat the control?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-ADOPT",
+      "title": "Adopt and exit an AI service",
+      "statement": "Use AI for a chosen task while retaining acceptable cost and continuity.",
+      "primary_actor": "ACT-CUSTOMER",
+      "participants": [
+        "ACT-LAB",
+        "ACT-PUBLIC",
+        "ACT-OPERATOR"
+      ],
+      "trigger": "A purchase, delegation, renewal, or exit decision occurs.",
+      "preconditions": [
+        "Usable service and integration resources"
+      ],
+      "choices": [
+        "Adopt",
+        "Delegate",
+        "Limit",
+        "Switch",
+        "Exit"
+      ],
+      "actor_success": "The customer accomplishes its task within its accepted operating constraints.",
+      "safety_questions": [
+        "What harms fall on noncustomers?",
+        "Can dependency make later control infeasible?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-ASSESS",
+      "title": "Assess a technical claim",
+      "statement": "Produce a defensible assessment within demonstrated competence.",
+      "primary_actor": "ACT-EXPERT",
+      "participants": [
+        "ACT-LAB",
+        "ACT-AUTHORITY",
+        "ACT-EMPLOYEE"
+      ],
+      "trigger": "A material claim requires assessment.",
+      "preconditions": [
+        "Competence, access, time, and custody arrangements"
+      ],
+      "choices": [
+        "Request evidence",
+        "Test",
+        "Challenge",
+        "Qualify",
+        "Decline to conclude"
+      ],
+      "actor_success": "A scoped finding with evidence and limitations is delivered.",
+      "safety_questions": [
+        "Can a rival obstruct a safe competitor?",
+        "Can apparently successful tests conceal real uncertainty?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    },
+    {
+      "id": "UC-PUBLIC",
+      "title": "Contest harm or exclusion",
+      "statement": "Protect interests affected by development or governance decisions.",
+      "primary_actor": "ACT-PUBLIC",
+      "participants": [
+        "ACT-COURTS",
+        "ACT-LEGISLATURE",
+        "ACT-CUSTOMER"
+      ],
+      "trigger": "Harm, exposure, exclusion, or loss of voice arises.",
+      "preconditions": [
+        "An accessible channel or representative"
+      ],
+      "choices": [
+        "Seek information",
+        "Organize",
+        "Complain",
+        "Seek remedy"
+      ],
+      "actor_success": "The affected party can obtain an effective response to its specified concern.",
+      "safety_questions": [
+        "Who is unable to participate?",
+        "Which actors can impose risk without consent?"
+      ],
+      "sources": [
+        "SRC-ACTOR-CORRECTION",
+        "SRC-SYNTHESIS"
+      ],
+      "basis": "analyst-inference"
+    }
+  ],
+  "interactions": [
+    {
+      "id": "INT-REPORT",
+      "title": "Employee and management interests",
+      "statement": "Employee disclosure can impose costs on management even when it benefits others.",
+      "actors": [
+        "ACT-EMPLOYEE",
+        "ACT-LAB-EXEC",
+        "ACT-LAB"
+      ],
+      "scenarios": [
+        "SC-REPORT"
+      ],
+      "use_cases": [
+        "UC-EMPLOYEE",
+        "UC-FUND"
+      ],
+      "actor_choices": [
+        {
+          "actor": "ACT-EMPLOYEE",
+          "options": [
+            "report",
+            "withhold",
+            "leave"
+          ]
+        },
+        {
+          "actor": "ACT-LAB-EXEC",
+          "options": [
+            "investigate",
+            "defer",
+            "suppress"
+          ]
+        }
+      ],
+      "information_asymmetry": "Employee observes a local anomaly; management controls resources and career consequences.",
+      "counterfactual": "Would the concern still reach a competent recipient when management expects costly delay?",
+      "candidate_requirements": [
+        "REQ-REPORT",
+        "REQ-PROTECT",
+        "REQ-CUSTODY"
+      ],
+      "derivation": "Separate actionable reporting, protection against retaliation, and artifact custody; none follows from the others.",
+      "status": "unvalidated",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "validation_artifact": ""
+    },
+    {
+      "id": "INT-ENTRY",
+      "title": "Incumbent and entrant competition",
+      "statement": "The most capable expert may have incentives to block the applicant.",
+      "actors": [
+        "ACT-FRONTIER-LAB",
+        "ACT-BEHIND-LAB",
+        "ACT-EXPERT"
+      ],
+      "scenarios": [
+        "SC-ASSESS"
+      ],
+      "use_cases": [
+        "UC-CATCHUP",
+        "UC-ASSESS"
+      ],
+      "actor_choices": [
+        {
+          "actor": "ACT-FRONTIER-LAB",
+          "options": [
+            "provide expert assessment",
+            "withhold expertise",
+            "obstruct entrant"
+          ]
+        },
+        {
+          "actor": "ACT-BEHIND-LAB",
+          "options": [
+            "seek review",
+            "license",
+            "contest exclusion"
+          ]
+        }
+      ],
+      "information_asymmetry": "Incumbent expertise and entrant resources are asymmetric.",
+      "counterfactual": "Does the assessment remain fair when the applicant threatens the evaluator\u2019s revenue?",
+      "candidate_requirements": [
+        "REQ-EXPERT",
+        "REQ-ASSESS",
+        "REQ-COMPETE",
+        "REQ-CUSTODY"
+      ],
+      "derivation": "Competence, intelligibility, protected access, and contestable entry are independent candidate obligations.",
+      "status": "unvalidated",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "validation_artifact": ""
+    },
+    {
+      "id": "INT-STATE-FIRM",
+      "title": "Foreign state and foreign lab divergence",
+      "statement": "A bargain attractive to governments need not be attractive or enforceable for firms.",
+      "actors": [
+        "ACT-FOREIGN-LAB",
+        "ACT-FOREIGN-GOV",
+        "ACT-EXECUTIVE"
+      ],
+      "scenarios": [
+        "SC-COORD"
+      ],
+      "use_cases": [
+        "UC-FOREIGN-RELEASE",
+        "UC-FOREIGN-POLICY"
+      ],
+      "actor_choices": [
+        {
+          "actor": "ACT-FOREIGN-LAB",
+          "options": [
+            "release",
+            "restrain",
+            "seek exemption"
+          ]
+        },
+        {
+          "actor": "ACT-FOREIGN-GOV",
+          "options": [
+            "coordinate",
+            "support release",
+            "withhold commitment"
+          ]
+        },
+        {
+          "actor": "ACT-EXECUTIVE",
+          "options": [
+            "offer reciprocity",
+            "act independently",
+            "wait"
+          ]
+        }
+      ],
+      "information_asymmetry": "Government may not know the lab\u2019s true capability or be able to commit it.",
+      "counterfactual": "Can the arrangement work when a firm gains from releasing despite its government\u2019s restraint?",
+      "candidate_requirements": [
+        "REQ-COORD"
+      ],
+      "derivation": "Evaluate both state and firm deviations; one international-competitor utility function cannot support the conclusion.",
+      "status": "unvalidated",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "validation_artifact": ""
+    },
+    {
+      "id": "INT-FEDERAL",
+      "title": "Authority distributed within federal government",
+      "statement": "A policy preference does not by itself confer executable authority, resources, or institutional durability.",
+      "actors": [
+        "ACT-EXECUTIVE",
+        "ACT-LEGISLATURE",
+        "ACT-REGULATOR",
+        "ACT-COURTS"
+      ],
+      "scenarios": [
+        "SC-ENTRY",
+        "SC-CONTEST"
+      ],
+      "use_cases": [
+        "UC-EXECUTIVE",
+        "UC-LEGISLATE",
+        "UC-IMPLEMENT",
+        "UC-REVIEW"
+      ],
+      "actor_choices": [
+        {
+          "actor": "ACT-EXECUTIVE",
+          "options": [
+            "act under established authority",
+            "seek additional authority",
+            "wait"
+          ]
+        },
+        {
+          "actor": "ACT-LEGISLATURE",
+          "options": [
+            "authorize",
+            "fund",
+            "decline"
+          ]
+        },
+        {
+          "actor": "ACT-REGULATOR",
+          "options": [
+            "implement",
+            "identify insufficient authority or resources"
+          ]
+        },
+        {
+          "actor": "ACT-COURTS",
+          "options": [
+            "provide available review",
+            "decline relief"
+          ]
+        }
+      ],
+      "information_asymmetry": "Authority, expertise, and operational capability reside in different institutions.",
+      "counterfactual": "Can the first step take effect while legislative choices remain undecided, and can a mistaken step be corrected?",
+      "candidate_requirements": [
+        "REQ-ENTRY",
+        "REQ-OPTIONS",
+        "REQ-CONTEST"
+      ],
+      "derivation": "Require a concrete allocation of authority and resources for execution; analyze revision and remedy separately.",
+      "status": "unvalidated",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "validation_artifact": ""
+    },
+    {
+      "id": "INT-SOVEREIGN",
+      "title": "Sovereignty and retained control",
+      "statement": "Durable sovereignty can conflict directly with retained unilateral human control.",
+      "actors": [
+        "ACT-AI-SOVEREIGN",
+        "ACT-OPERATOR",
+        "ACT-EXECUTIVE",
+        "ACT-PUBLIC"
+      ],
+      "scenarios": [
+        "SC-COOPERATE",
+        "SC-CONTROL"
+      ],
+      "use_cases": [
+        "UC-SOVEREIGNTY",
+        "UC-OPERATE"
+      ],
+      "actor_choices": [
+        {
+          "actor": "ACT-AI-SOVEREIGN",
+          "options": [
+            "cooperate",
+            "negotiate",
+            "wait",
+            "attempt circumvention"
+          ]
+        },
+        {
+          "actor": "ACT-OPERATOR",
+          "options": [
+            "maintain constraints",
+            "offer bounded access",
+            "execute a protective action"
+          ]
+        },
+        {
+          "actor": "ACT-EXECUTIVE",
+          "options": [
+            "consider commitment",
+            "decline commitment"
+          ]
+        }
+      ],
+      "information_asymmetry": "Neither party may know the other\u2019s capability, future preferences, or commitment credibility.",
+      "counterfactual": "Does cooperation remain attractive after an autonomy increment changes the ability of either party to renege?",
+      "candidate_requirements": [
+        "REQ-COOPERATE",
+        "REQ-CONTROL",
+        "REQ-FEEDBACK"
+      ],
+      "derivation": "State the incompatibility explicitly; seek a feasible conditional bargain without assuming sovereignty must be granted or is impossible.",
+      "status": "unvalidated",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "validation_artifact": ""
+    },
+    {
+      "id": "INT-REVENUE",
+      "title": "Commercial growth and service entanglement",
+      "statement": "Revenue and customer dependence can make timely control commercially and socially costly.",
+      "actors": [
+        "ACT-LAB",
+        "ACT-LAB-EXEC",
+        "ACT-INVESTOR",
+        "ACT-CUSTOMER",
+        "ACT-INFRA"
+      ],
+      "scenarios": [
+        "SC-CONTROL",
+        "SC-REPORT"
+      ],
+      "use_cases": [
+        "UC-SELL",
+        "UC-FUND",
+        "UC-ADOPT",
+        "UC-OPERATE"
+      ],
+      "actor_choices": [
+        {
+          "actor": "ACT-LAB-EXEC",
+          "options": [
+            "expand deployment",
+            "delay",
+            "restrict service"
+          ]
+        },
+        {
+          "actor": "ACT-INVESTOR",
+          "options": [
+            "reward growth",
+            "condition funding",
+            "exit"
+          ]
+        },
+        {
+          "actor": "ACT-CUSTOMER",
+          "options": [
+            "deepen integration",
+            "retain alternative",
+            "exit"
+          ]
+        },
+        {
+          "actor": "ACT-INFRA",
+          "options": [
+            "maintain capacity",
+            "restrict capacity"
+          ]
+        }
+      ],
+      "information_asymmetry": "Technical risk, financial exposure, and downstream dependency are distributed across parties.",
+      "counterfactual": "Can control still take effect when customers depend on the service and investors penalize interruption?",
+      "candidate_requirements": [
+        "REQ-CONTROL",
+        "REQ-FEEDBACK",
+        "REQ-REPORT"
+      ],
+      "derivation": "Evaluate actual control under financial and continuity pressures, not merely nominal operator permissions.",
+      "status": "unvalidated",
+      "basis": "analyst-inference",
+      "sources": [
+        "SRC-USER",
+        "SRC-SYNTHESIS"
+      ],
+      "validation_artifact": ""
+    }
+  ]
+}
