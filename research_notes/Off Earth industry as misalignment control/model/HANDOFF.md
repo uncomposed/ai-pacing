@@ -207,3 +207,13 @@ Progress log (newest last):
 - 02:50 Test 3 full done (38 min). Continuity check passed (24 cases, 7.7e-7). Written up as `robust_design.md` section 11. Main points: the ratchet's own effect is small (2 of 252 cells per strength; +4 / +5 draws on the r0.1 box, none lost); softening the failure penalty with the ratchet off does create early strikes (baseline world: strike now once L_f is 0.3 or less).
 - 03:18 Full-box extension done (tests 2 and 4; 7 runs, 36 min). Added as `robust_design.md` 8.6 and 9.5. Re-solving the full-box baseline with the new code reproduces the cached run exactly.
 - 03:22 Final: `--report` re-run (exit 0); `--check` re-run, output identical to the start of the night. Nothing is running. Files added tonight: `overnight_tests.py`; `results/overnight_test{2,3,4,5}.json` and `_tables.md` (plus `_quick` smoke versions); logs `results/overnight_*.log`; new cached runs in `results/robust_runs/` (q_up, L_dn, k_rat, pf_bel, kill_pre=0, fractional q_red). Files edited: `equilibrium_model.py`, `robust_design.py` (KEEP only), `robust_report.py`, `results/robust_design.md`, this file. Backups of the three code files as they were before tonight's edits are in the session scratchpad only.
+
+## 7d. Follow-up on the three open items (2026-10-21 afternoon)
+
+[[ai gen]] Write-up: `results/robust_design.md` section 12. Scripts and outputs: `diagnostics/` (run from `model/`). No change to `equilibrium_model.py`, `robust_design.py` or the cache. Status: implemented + verified by identity checks; not human_validated.
+
+1. Rival-aware holds: near the baseline the best stack is unaffected (63 to 62 of 64). On the full box most "holds" are rival worlds (best stack 15 to 4 of 192; pf_bel 2 61 to 7). Moving fabs to orbit (seq b) gains in rank because it lowers rival odds.
+2. Retry artefact: real, and the whole cause in the baseline world (with retries blocked the pact holds at every kill_pre). It is a small part of the full-box failure (best stack 15 to 24 holds; 135 of 192 still strike at year 0). Correction: the pact holds in the baseline world down to kill_pre 0.4, so "any non-fatal failure means strike now everywhere" was too strong.
+3. The two L_dn draws: rival risk was the deterrent. No rival risk gives a strike at closure, some gives a strike now, more gives cooperation with a likely rival. Faster detection moves them from the third case to the second. Knife-edge on the grid.
+
+Decisions for Cole: (a) does a likely rival count as failure? (b) should a NORETRY option go into the model?

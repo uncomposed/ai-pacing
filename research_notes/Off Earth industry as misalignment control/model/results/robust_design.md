@@ -357,3 +357,66 @@ Softening the penalty for a failed strike can create early strikes on its own, s
 1. Human learning here is only a higher firing chance. Real learning after a failed strike could also mean rebuilt defences, a rebuilt Earth industry, or shutting the AI down by other means.
 2. The retry artefact (kill_pre below 1) dominates every world where it is present, so this test cannot say what a ratchet does when early failures are survivable but costly. A model where a failed early strike costs the AI capacity, as L_f does after closure, would be the next step.
 3. If more than two failure levels mattered, the truncation would bias the ratchet's effect downward.
+
+## 12. Follow-up on the three open items from the overnight tests [[ai gen]]
+
+Written 2026-10-21 (afternoon session). Scripts in `diagnostics/`; they run from `model/`. No change to `equilibrium_model.py`, `robust_design.py` or the cache.
+
+**Status: `implemented` and `verified` by identity checks (below). Not `human_validated`.**
+
+### 12.1 Item 1: "holds" ignores rival AIs, and that matters a lot
+
+Rescoring every cached run with a stricter test (the pact holds **and** P(rival within 300 years) < 0.5), from `diagnostics/rival_holds.py`:
+
+| box, design | holds (old) | holds and rival < 0.5 | holds and rival < 0.1 |
+|---|---|---|---|
+| r0.1, baseline design | 41 / 64 | 37 | 7 |
+| r0.1, best stack | 63 / 64 | 62 | 23 |
+| near, baseline design | 13 / 96 | 8 | 2 |
+| near, `T_reloc` 4 with seq b | 18 / 96 | 14 | 5 |
+| near, `d` 0.99 | 23 / 96 | 11 | 3 |
+| full, baseline design | 5 / 192 | 1 | 0 |
+| full, best stack | 15 / 192 | 4 | 0 |
+| full, best stack with pf_bel 2 | 61 / 192 | 7 | 1 |
+| full, `BR_mult` 0.25 on best stack | 22 / 192 | 6 | 2 |
+
+1. **Near the baseline the best stack is robust to the change** (63 becomes 62). Its held draws have a mean P(rival) of 0.19.
+2. **On the full box most "holds" are rival worlds.** Mean P(rival) among held draws is about 0.7. The best stack's 7.8% becomes about 2%. Underconfidence (test 4, 9.5) adds 46 "holds" to the best stack on the full box (15 to 61), but under the stricter test it adds only 3 (4 to 7). That confirms the suspicion in 9.5: the AI waits and a rival is born instead.
+3. **The lever ranking shifts toward moving fabs to orbit.** Designs with seq b (fabs to orbit) have lower rival odds (about 0.19 against 0.28 among held draws, r0.1 box). On the near box, `d` 0.99 falls from first (23) to third (11), and `T_reloc` 4 with seq b becomes first (14).
+4. **Nothing holds with confidence that no rival appears.** Even the best stack keeps P(rival) below 10% on only 23 of 64 draws near the baseline. In this model the pact mostly stops the AI from striking. It does much less to stop a human-built rival.
+5. Choice for Cole: whether a rival AI counts as failure depends on what a rival does to humans (`kap_coll`, and whether the rival is itself aligned). The 0.5 cut is a convenience, not a recommendation.
+
+### 12.2 Item 2: the retry artefact is real, but it is not why the full box fails
+
+`diagnostics/retry_baseline_world.py` and `diagnostics/noretry.py`. The second builds a patched copy of the solver with one switch: after a failed strike (the ratchet's failure modes, with k_rat = 1e-12 so q is unchanged) the AI may not strike again. Everything else is identical.
+
+1. **Correction to the overnight summary.** "Any non-fatal early failure means strike now in every world" is too strong. In the baseline world the pact holds down to kill_pre 0.4 and breaks at 0.3. With `d` 0.99 or 1 it holds even at kill_pre 0.
+2. **Baseline world: the retry is the whole cause.** With retries blocked, the pact holds at every kill_pre from 1 to 0 (`d` 0.9 and 0.99). With retries allowed, kill_pre 0.3 or below gives a strike now. A single strike at seed size is a bad bet here. Being able to keep trying until it wins is what makes it pay.
+3. **Radius-0.1 box with kill_pre forced to 0:** blocking retries takes the baseline design from 0 holding draws to 48 of 64 (no draw lost). The best stack holds on 63 of 64 either way, because `d` 0.99 already leaves a seized Earth worth little.
+4. **Full box (kill_pre sampled 0 to 1): the retry is a small part of the failure.** The baseline design goes from 5 to 7 holding draws, and the best stack from 15 to 24 (none lost). Strike-now draws fall only from 168 to 160 and from 145 to 135. The gain is concentrated where kill_pre is below 0.5 (best stack: 3 to 12 holds). So the scenario-discovery finding "kill_pre below 0.25 gives 0%" is mostly the retry. But even with retries blocked, the best stack still strikes at year 0 on 135 of 192 full-box draws, for other reasons.
+5. **Modelling decision for Cole:** is a free retry realistic? An AI whose failed strike is survived and not punished, and that can try again while humans rebuild nothing, seems unlikely. Test 3's ratchet was the stand-in for punishment, and it is too weak to stop retries (11.2). Options: (a) keep the retry; (b) make `NORETRY` a model option; (c) make each failure raise D or cut the prize. (b) is the cheapest; it would be a small, checked change to `equilibrium_model.py`.
+
+### 12.3 Item 3: the two faster-detection draws that flipped to "strike now"
+
+Draws 51 and 56 of the radius-0.1 box (`diagnostics/ldn_rival_sweep.py`). Both have no lasting rival danger (`ell_inf` 0), an AI indifferent to humans (`omega` 0) and no harvest motive.
+
+1. **Not the retry and not state temptation.** kill_pre 1, or B_R and B_Rc at 0, leave every result unchanged.
+2. **Rival risk is what held these draws.** Sweeping the rival hazard (mu times 0 to 2) gives the same non-monotone pattern in both draws:
+   - no rival risk: the AI cooperates, then strikes at closure (year 12 to 16) and almost surely wins;
+   - some rival risk: it strikes at year 0, a coin flip (success 0.47 to 0.55);
+   - more rival risk: it cooperates and does not strike, but a rival is 17 to 60% likely.
+3. Faster detection (`L_dn`) makes rival risk front-loaded and short-lived, which moves these draws from the third case to the second. So item 3 is a special case of item 1: the baseline "held" partly because a human rival stood in as the deterrent.
+4. **These draws are knife-edge cases.** Re-solving draw 56 on a slightly different A grid (another batch top) changed its result. With the original batch's grid it reproduces the cache exactly.
+5. Not explained: why a high constant rival risk makes the AI give up its closure strike altogether. My guess (inference, unchecked) is that rivals during the bootstrap lower the value of the closure strike more than they lower the value of cooperating, because a successful strike before closure is still a coin flip. A value decomposition at t = 0 (the `Q0` values) would settle it.
+
+### 12.4 Checks
+
+1. The patched solver with `NORETRY` off reproduces the cached runs exactly (max difference 0, same opening moves) for all four ensembles: r0.1 baseline and best stack with kill_pre 0; full box baseline and best stack.
+2. Draw 51 re-solved with its original batch's grid top reproduces the cache (P(strike) 0.023, P(rival) 0.409 at L_dn 0; strike now at 0.03).
+3. The baseline-world kill_pre sweep with retries allowed reproduces section 11.1 point 4 (strike now at kill_pre 0.3 and 0).
+
+### 12.5 What would show this wrong
+
+1. If a rival AI is harmless or good for humans, item 1's stricter test is wrong and the original hold shares stand.
+2. If blocking retries changed results through a path other than the retry (it touches only the post-failure modes), item 2's attribution would be wrong. The identity check rules out a coding slip, not a modelling one.
+3. A finer A grid could move the knife-edge draws in item 3 either way.
