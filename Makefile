@@ -1,5 +1,8 @@
 .PHONY: check validate accept generate test clean-room clean-room-audit
 
+# The tools read UTF-8 sources; without a UTF-8 locale Ruby defaults to US-ASCII.
+export LANG := C.UTF-8
+
 check: test
 	@ruby tools/spec_tool.rb check
 
