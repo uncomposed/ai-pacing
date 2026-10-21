@@ -16,9 +16,3 @@ Order: never ablated first, then partly ablated; within each, by how much the he
 | 10 | AS-DISCOVERY | partial | medium | H13 | cole_answer | Cole: a hidden motive is exposed later, with a hazard that rises as trace interrogation improves (h0 0.02, doubling about every 14 years in the runs). |
 | 11 | AS-MOVECOMPUTE | partial | low | H5 | cole_answer | Cole's lever: Earth's existing compute can be moved to orbit, where it is monitored and unusable by states (removes m_frac = 0.9 of the threat floor). |
 | 12 | AS-REACH | partial | low | H13 | cole_answer | Cole's pushback: a crackdown on the AI bites fully only while humans control its chips; after closure only s_reach = 0.2 of a capacity cut can be imposed. |
-
-## Priority flags (whatever their direction)
-
-| id | favours pact | ablation | priority |
-|---|---|---|---|
-| AS-CHI0 | unclear | partial | TOP: not ablated where it matters (chi0 0.5 to 1); the sign of its effect is itself in question |

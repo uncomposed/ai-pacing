@@ -336,16 +336,15 @@ assumptions:
       - {param: chi0, value: 0.15}
       - {param: chi_m, value: 0.5}
     source: {kind: agent_default, where: "PARAMS basis 'legacy chips, salvaged compute, slower designs'; challenged by docking.md 7 items 3-4 (Metzger)"}
-    favours_pact: unclear
-    why_favours: "Cole's hypothesis: a low chi0 overstates what denying chips does, so it favours the pact. The ensembles point the other way inside 0.02 to 0.5: on the r0.25 box, low chi0 (below about 0.22) is the main PRIM condition for the pact FAILING, for both the baseline design and the best stack (robust_design_tables.md section C). Inference: a higher chi0 makes the AI's own outside option better, so it is less tempted to grab the fabs. Neither direction has been checked near chi0 = 1."
-    priority: "TOP: not ablated where it matters (chi0 0.5 to 1); the sign of its effect is itself in question"
+    favours_pact: "yes"
+    why_favours: "Confirmed by the ablation: forcing chi0 up never gains a hold and only loses them. An earlier note here read a PRIM box (low chi0 among failing draws on the r0.25 box) as saying the opposite; that was a correlation inside a restricted box, and the paired run overrides it."
     ablation:
-      status: partial
-      where: "chi0 0.02 to 0.5 sampled in every ensemble; tornado at the baseline world shows no change (equilibrium_tables.md); PRIM on the r0.25 box (robust_design_tables.md C)"
-      survived: pending
-      note: "Not run: chi0 0.5 to 1 (Metzger's crude chips). Proposed as ablation 1 in results/assumptions_report.md."
+      status: run
+      where: "diagnostics/chi0_high.py, results/chi0_tables.md (chi0 forced to 0.5, 0.75, 1; paired against the breakout 'off' cache); robust_design.md 13.8"
+      survived: partly
+      note: "Baseline design near the baseline: 41 to 32 of 64 holds at chi0 1 (9 lost, none gained), WH -0.09. Best stack near the baseline: unchanged (63). Full box: baseline design 5 to 4, best stack 15 to 10. So the overstatement is real but moderate, and the best stack's near-baseline result does not rest on it."
     claims: [H2, H3, H9, H10]
-    dependence: high
+    dependence: medium
     status: verified
 
   # ---------------------------------------------------------------- scoring and structure
@@ -518,9 +517,9 @@ assumptions:
     why_favours: "Cole expected spillover to help. The run shows the opposite (see note), so 'yes' records the intent, not the result."
     ablation:
       status: run
-      where: "breakout configs 'spill' (cut and hardening) and 'spill_cut' (cut only), robust_design.md 13.5; the baseline-world spillover rows are wrong (13.6 item 4)"
+      where: "breakout configs 'spill' (cut and hardening) and 'spill_cut' (cut only), robust_design.md 13.5; corrected baseline-world rows, 13.8"
       survived: "no"
-      note: "A recurring mild cut on cooperators breaks the pact: r0.1 holds 41 to 2 (baseline design) and 63 to 32 with 0 rival-aware holds (best stack). The hardening part is worth about one draw."
+      note: "A recurring mild cut on cooperators breaks the pact: r0.1 holds 41 to 2 (baseline design) and 63 to 32 with 0 rival-aware holds (best stack). The hardening part is worth about one draw. Corrected baseline world: the baseline design strikes at year 0 from h_spill 0.02; the best stack does not strike but a rival becomes certain (P 1.00); hardening alone is harmless."
     claims: [H13]
     dependence: low
     status: implemented

@@ -523,7 +523,7 @@ Written 2026-10-21 from GitHub Actions run 39637590689 (branch `sims/breakout-20
 1. **Off rows against the committed cache.** The runner's `off` job did not re-solve anything (22 s): all four `off` ensembles were already in the committed cache, so the artifact's `off` rows *are* the committed files, and comparing them proves nothing. Instead, all four were re-solved without the cache in a Linux x86-64 container (Python 3.12.3, numpy 1.26.4, the CI pin). Opening move flips: none, in 64 + 64 + 192 + 192 draws. Holds flips: none. Largest absolute difference: 4e-13 (in P(strike within 100 years) and WH). The comparison of `t_mean` printed NaN because draws that never strike have NaN in both; those were not compared.
 2. **noretry on the full box** (new on the runner) reproduces section 12.2: 7 and 24 holds, against 7 and 24 from `diagnostics/out`.
 3. **Expected equalities.** `dis_smild1` (a hidden failure punished like an exposed one) equals `crack` in every printed column, for both designs: with no discount for hiding, the AI never disguises (0 disguised draws). `dep` and `dep_coll` are identical on the r0.1 box, because no draw exits.
-4. **Bug in the world sweeps (not in the solver or the ensembles).** In `breakout_options.world_sets`, the "crackdown only" disguise rows and all spillover rows put `TRACK` (c_cut = 1e-300) last, which overrides the crackdown's c_cut = 0.5. So those rows run *without* a capacity cut. The labels "full crackdown" and "cut only" are wrong, and "cut only" is in effect no spillover at all. That is why spillover looked harmless at the baseline world, while the ensembles (built correctly) show it breaking the pact. The disguise answers above do not depend on the "crackdown only" rows, because the ensembles carry them. Fix: put `TRACK` first (`dict(TRACK, **CR)`), then re-run `--worlds` (about 20 minutes on a runner). Not fixed yet.
+4. **Bug in the world sweeps (not in the solver or the ensembles).** In `breakout_options.world_sets`, the "crackdown only" disguise rows and all spillover rows put `TRACK` (c_cut = 1e-300) last, which overrides the crackdown's c_cut = 0.5. So those rows run *without* a capacity cut. The labels "full crackdown" and "cut only" are wrong, and "cut only" is in effect no spillover at all. That is why spillover looked harmless at the baseline world, while the ensembles (built correctly) show it breaking the pact. The disguise answers above do not depend on the "crackdown only" rows, because the ensembles carry them. **Fixed** in commit 7d48a1b (`TRACK` now comes first) and `--worlds` re-run; see 13.8.
 5. **The one open closed-form disagreement (13.2 item 4: spillover, cut only, h_spill 0.02) is grid error, not a solver bug.** The solver's P(strike) moves toward the closed form as the A grid gets finer: 0.330, 0.296, 0.253 and 0.249 at nA 80, 160, 320 and 640, against 0.244. The companion case with full crackdown is also grid-sensitive (0.187, 0.149, 0.165, 0.147 against 0.143) and fails the 0.02 tolerance at nA 320. Both are late (about year 240), small-probability strikes in a static world with repeated 10% capacity cuts, which land between grid points. Opening moves agree at every grid size.
 
 ### 13.7 What would show these answers wrong
@@ -533,3 +533,25 @@ Written 2026-10-21 from GitHub Actions run 39637590689 (branch `sims/breakout-20
 3. **Second-strike timing (i)** rests on the baseline-world rows. If the ensemble `t2_mean` showed second strikes years after the first, the "opens at once" answer would be wrong.
 4. **(iv) on the full box** compares draw means. A paired, draw-by-draw comparison (needs the `.npz` files) could show that the draws that lose visible warning shots are not the ones that keep their successes.
 5. **The world-sweep bug (13.6 item 4)** affects only the "crackdown only" and spillover world tables. If the corrected spillover worlds still showed no effect at the baseline world while the ensemble shows a collapse, the gap would need a separate explanation.
+
+### 13.8 Follow-up: corrected world sweeps and chi0 near 1 [[ai gen]]
+
+Written 2026-10-21 (late). Both runs were solved in the session's Linux container (Python 3.12.3, numpy 1.26.4, the CI pin), not on a runner. **Status: `implemented`; the world re-run is checked against the runner (item 2). Not `human_validated`.**
+
+**Corrected world sweeps** (`results/breakout_worlds.md`, `.json`).
+1. With the capacity cut restored, spillover breaks the baseline world, matching the ensembles. Baseline design: a strike at year 0 (coin flip) from h_spill 0.02, with the cut alone or with hardening. Best stack: no strike, but a rival AI becomes certain (P(rival) 1.00 against 0.16), so it fails the rival-aware test, as in the ensemble (32 holds, 0 rival-aware). Hardening alone (no cut) changes nothing. My inference, not checked: repeated cuts keep the AI small for longer, which keeps Earth's relative compute high and the rival window open.
+2. Check: every row not touched by the fix matches the runner's world table exactly, as printed by the `baseline-world sweeps` job, so it also serves as a runner-against-container check on the whole table. The "crackdown only" rows come out the same as before, because at kill_pre 1 nobody strikes and at kill_pre 0.3 the retry dominates either way. The disguise answers in 13.5 stand.
+
+**chi0 near 1: Cole's guess (a)** (`diagnostics/chi0_high.py`, `results/chi0_tables.md`; ablation of AS-CHI0). chi0 was forced to 0.5, 0.75 and 1 on every draw and paired against the `off` cache.
+
+| box, design | sampled chi0 (0.02-0.5) | 0.5 | 0.75 | 1 |
+|---|---|---|---|---|
+| r0.1, baseline design | 41 | 39 | 34 | 32 |
+| r0.1, best stack | 63 | 63 | 63 | 63 |
+| full, baseline design | 5 | 5 | 4 | 4 |
+| full, best stack | 15 | 13 | 13 | 10 |
+
+1. **Cole's guess (a) is right in direction, and the effect is moderate.** If crude chips carry growth (chi0 near 1), the pact loses holds and never gains them: 9 of 41 near the baseline for the baseline design (WH -0.09), 5 of 15 on the full box for the best stack. So a low chi0 does flatter the denial reserve and chip control.
+2. **The best stack's near-baseline result does not depend on chi0**: 63 of 64 at every level. Its other levers (more defence, relocation, d 0.99, two reserves) do not work through the AI's growth without chips.
+3. **Correction to my earlier reading.** In 13.5 and HANDOFF.md 9 I said PRIM suggested that higher chi0 helps (failures concentrated at chi0 below 0.22 on the r0.25 box). The paired run shows the opposite. The PRIM box was a correlation inside a restricted sample, and it should not have been read causally.
+4. What would show this wrong: a two-stage closure (crude chips early, leading-edge chips late) is not modelled. If crude chips carried growth but not AI capability, chi0 would be the wrong knob altogether (docking.md 7 item 3).

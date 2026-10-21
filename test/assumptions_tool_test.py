@@ -75,7 +75,11 @@ class AssumptionRegisterTest(unittest.TestCase):
         rows = tool.ranked(self.reg)
         statuses = [a['ablation']['status'] for a in rows]
         self.assertEqual(statuses, sorted(statuses, key=lambda s: s != 'not_run'))
-        self.assertIn('AS-CHI0', tool.report(self.reg))
+
+    def test_report_lists_priority_flags_whatever_the_direction(self):
+        a = self.entry('AS-ACLOSE')
+        a['priority'] = 'TEST FLAG'
+        self.assertIn('| AS-ACLOSE | unclear |', tool.report(self.reg))
 
     @unittest.skipUnless(shutil.which('ruby'), 'ruby not installed')
     def test_ruby_fallback_parses_the_same_register(self):
