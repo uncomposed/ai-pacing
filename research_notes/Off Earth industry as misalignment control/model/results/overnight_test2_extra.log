@@ -1,0 +1,66 @@
+harvest seizure lethal (w_seized 0) off att 0.34 riv 0.66 WH 0.985
+harvest seizure lethal (w_seized 0) L_dn 0.1 att 0.82 riv 0.18 WH 0.971
+harvest seizure survivable (w_seized 0.9) off att 0.82 riv 0.18 WH 1.025
+harvest seizure survivable (w_seized 0.9) L_dn 0.1 att 0.82 riv 0.18 WH 1.025
+L_dn draw 51 base act C att 0.02 t 19.2 riv 0.41 WH 1.001 | L_dn0.1 act S att 1.00 t 0.0 riv 0.00 WH 0.544
+L_dn draw 56 base act C att 0.00 t nan riv 0.17 WH 1.098 | L_dn0.1 act S att 1.00 t 0.0 riv 0.00 WH 0.472
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.0: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.005: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.01: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.02: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.05: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.1: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.0: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.005: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.01: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.02: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.05: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.1: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.0: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.005: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.01: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.02: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.05: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.0 | q_up 0.1: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.0: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.005: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.01: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.02: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.05: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.35 | w_seized 0.9 | q_up 0.1: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.0 | q_up 0.0: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.0 | q_up 0.005: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.0 | q_up 0.01: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.0 | q_up 0.02: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.0 | q_up 0.05: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.0 | q_up 0.1: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.239 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.9 | q_up 0.0: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.9 | q_up 0.005: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.9 | q_up 0.01: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.9 | q_up 0.02: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.9 | q_up 0.05: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0.3, B_R 0 | w_seized 0.9 | q_up 0.1: act0 S att 1.00 suc 0.77 fail 0.50 t 0.0 WH 0.922 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.0 | q_up 0.0: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.0 | q_up 0.005: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.0 | q_up 0.01: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.0 | q_up 0.02: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.0 | q_up 0.05: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.0 | q_up 0.1: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.9 | q_up 0.0: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.9 | q_up 0.005: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.9 | q_up 0.01: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.9 | q_up 0.02: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.9 | q_up 0.05: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0 | w_seized 0.9 | q_up 0.1: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.0 | q_up 0.0: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.0 | q_up 0.005: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.0 | q_up 0.01: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.0 | q_up 0.02: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.0 | q_up 0.05: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.0 | q_up 0.1: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.028 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.9 | q_up 0.0: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.9 | q_up 0.005: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.9 | q_up 0.01: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.9 | q_up 0.02: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.9 | q_up 0.05: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00
+kill_pre 0, B_R 0, q 0.5, A_close 1 | w_seized 0.9 | q_up 0.1: act0 S att 1.00 suc 1.00 fail 0.50 t 0.0 WH 0.903 riv 0.00

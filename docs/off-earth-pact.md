@@ -13,8 +13,8 @@ canonical editor and from the research report
 The thesis and the decisions in section 6 are the editor's. The analysis, pushback
 and reframing are AI-drafted and await the editor's acceptance.
 
-Evidence status: the one-sided decision model is `implemented` and `verified`. An
-equilibrium version is in progress (section 9). Nothing here is `human_validated`.
+Evidence status: the one-sided decision model and the equilibrium model (section 9)
+are `implemented` and `verified`. Nothing here is `human_validated`.
 
 ## 1. The thesis in one paragraph
 
@@ -69,8 +69,9 @@ These figures are from the research report, which cites its sources.
 1. **The pact.** Human states agree to stop automating and industrializing Earth and
    to direct that effort to space, until the off-Earth base rivals Earth's.
 2. **Relocate, then dismantle.** Fabs and compute move to orbit, or are dismantled
-   once off-Earth semiconductor production closes. The sequencing is still open
-   (question 2 in section 7).
+   once off-Earth semiconductor production closes. The equilibrium model favors
+   dismantling after closure or relocating to orbit; early dismantling fails
+   (section 9).
 3. **Plugging, not burning.** Denial makes seized capacity useless without valid
    authorization, and recoverable by its legitimate owners. Default-off chips with
    many independent licence blocks (Petrie, arXiv:2509.07637) are the closest
@@ -175,15 +176,64 @@ Each item ends with what result would settle it.
    off-Earth capacity" items no longer apply, and a hypothesis for the low-bar
    preference in section 5 should be added.
 
-## 9. Pending work
+## 9. Equilibrium model results
 
-An equilibrium version of the decision model is being built. It makes human
-choices (pact compliance, covert fabs, dismantling timing) best responses to the
-AI's choice and vice versa. It also tests the compute-ratio threshold, the minimum
-preference for humans that keeps Earth safe with and without the pact, and the
-break-even probability for the reputation argument. Results will be written to
+An equilibrium model now treats human states and the AI as players who each
+choose best responses. Full write-up:
 `research_notes/Off Earth industry as misalignment control/model/results/equilibrium.md`.
-This note should be updated when they land.
+Status: `implemented` and `verified` against closed forms, not `human_validated`.
+Every parameter value is an assumption.
+
+**The answer.** The pact can hold, but only in a narrow band. Inside that band, the
+AI needs to care about humans only a tiny amount for Earth to stay safe.
+
+What the pact needs:
+
+1. **Dismantle fabs after off-Earth chip production closes, or move them to orbit.**
+   Dismantling early fails at every setting tested: the AI seizes the fabs before
+   they are gone. This settles the sequencing question in section 7, item 2.
+2. **Keep the denial reserve.** It carries the growth phase. Trade barely changes
+   any outcome, consistent with the editor's view that trade is not a defense.
+3. **Keep each state's temptation to build its own AI low,** below about 8 years of
+   its welfare. Above that, the AI strikes pre-emptively, before any state has
+   actually defected.
+4. **A rival born on Earth must not stay dangerous to a much bigger AI.** If it keeps
+   any lasting danger, the AI waits decades and then strikes, or humans foresee
+   that, race, and the AI strikes at once.
+
+Tests of the editor's answers:
+
+1. **"100 times smaller is not a threat" holds** when no lasting rival danger
+   remains. At 1:100 a rival costs the AI about 1% of its value or less. Earth
+   passes 1:100 around year 20. Moving Earth's compute to orbit cuts the chance a
+   rival is ever born by a third to two-thirds. If any lasting danger remains, a
+   gravity-well blockade would have to stop all but about one escape in a million.
+2. **One covert fab is not a threat to the pact itself,** but each of the first few
+   adds about 6 points to the chance of a rival AI within 300 years. Five make a
+   rival more likely than not.
+3. **The pact lowers the preference for humans the AI needs by about 200 million
+   times.** With the pact, caring about humans about as much as Earth's share of
+   sunlight (about 3 parts in 10 billion) is enough. Without it, the AI needs about
+   5 to 6%, because otherwise it strikes early while Earth still holds the fabs.
+   This supports section 5: the pact makes a low alignment bar sufficient.
+4. **Reputation is a top-up, not a substitute.** Under the pact, a one-in-a-billion
+   belief in later judgement is enough. Without it, the AI would need more than a 5%
+   chance of losing everything. Discounting a far-off judgement raises the bar
+   sharply.
+
+Two cautions:
+
+1. **The band is fragile.** 19 of 36 single-parameter changes flip the baseline from
+   cooperation to a strike.
+2. **The main danger is human, not AI.** Under the pact, humans are the declining
+   power, and in Powell's terms the declining side is the one tempted to act
+   preventively. In the model, the AI strikes mostly to pre-empt human rival
+   programmes. Pact verification and enforcement among human states (section 7,
+   item 4) is therefore the load-bearing institution.
+
+**What would show this wrong:** a rival AI that stays dangerous however small,
+without a near-perfect blockade; an AI whose regard for humans is either zero or
+large, never tiny; or an AI that wants Earth's mass, not just its sunlight.
 
 ## Sources
 

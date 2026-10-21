@@ -1,0 +1,44 @@
+test2 deterministic: 48 sets in 46 s
+  solved r0.1__q_up=0.01: 64 sets in 52 s; holds 0.875
+  solved r0.1__D_mult=3_T_reloc=4_d=0.99_q_red=2_q_up=0.01_seq=1: 64 sets in 52 s; holds 0.984
+## T2-det (baseline design). Closing window at fixed worlds
+
+Each cell: att = P(strike within 300 y), suc = P(a strike succeeds), strike timing (now = opening move; else mean strike year), P(suc|strike) = suc/att, WH = human welfare (yearly equivalent).
+
+| world | seizure | off | q_up 0.005 | q_up 0.01 |
+|---|---|---|---|---|
+| baseline world | seizure lethal (w_seized 0) | holds (WH 1.040) | holds (WH 1.040) | holds (WH 1.040) |
+| baseline world | seizure survivable (w_seized 0.9) | holds (WH 1.040) | holds (WH 1.040) | holds (WH 1.040) |
+| lasting rival (ell_inf 0.01) | seizure lethal (w_seized 0) | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.493 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.493 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.493 |
+| lasting rival (ell_inf 0.01) | seizure survivable (w_seized 0.9) | att 0.84, suc 0.84, yr 38, P(suc|strike) 1.00, WH 0.971 | att 0.84, suc 0.84, yr 39, P(suc|strike) 1.00, WH 0.973 | att 0.84, suc 0.84, yr 40, P(suc|strike) 1.00, WH 0.976 |
+| weak reserve (q 0.35) | seizure lethal (w_seized 0) | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.493 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.493 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.493 |
+| weak reserve (q 0.35) | seizure survivable (w_seized 0.9) | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.945 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.945 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.945 |
+| early failure survivable (kill_pre 0.3) | seizure lethal (w_seized 0) | att 1.00, suc 0.77, now, P(suc|strike) 0.77, WH 0.239 | att 1.00, suc 0.77, now, P(suc|strike) 0.77, WH 0.239 | att 1.00, suc 0.77, now, P(suc|strike) 0.77, WH 0.239 |
+| early failure survivable (kill_pre 0.3) | seizure survivable (w_seized 0.9) | att 1.00, suc 0.77, now, P(suc|strike) 0.77, WH 0.922 | att 1.00, suc 0.77, now, P(suc|strike) 0.77, WH 0.922 | att 1.00, suc 0.77, now, P(suc|strike) 0.77, WH 0.922 |
+
+## T2-det (best stack). Closing window at fixed worlds
+
+Each cell: att = P(strike within 300 y), suc = P(a strike succeeds), strike timing (now = opening move; else mean strike year), P(suc|strike) = suc/att, WH = human welfare (yearly equivalent).
+
+| world | seizure | off | q_up 0.005 | q_up 0.01 |
+|---|---|---|---|---|
+| baseline world | seizure lethal (w_seized 0) | holds (WH 1.072) | holds (WH 1.072) | holds (WH 1.072) |
+| baseline world | seizure survivable (w_seized 0.9) | holds (WH 1.072) | holds (WH 1.072) | holds (WH 1.072) |
+| lasting rival (ell_inf 0.01) | seizure lethal (w_seized 0) | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.494 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.494 | att 1.00, suc 0.50, now, P(suc|strike) 0.50, WH 0.494 |
+| lasting rival (ell_inf 0.01) | seizure survivable (w_seized 0.9) | att 0.95, suc 0.95, yr 46, P(suc|strike) 1.00, WH 1.010 | att 0.95, suc 0.95, yr 46, P(suc|strike) 1.00, WH 1.010 | att 0.95, suc 0.95, yr 46, P(suc|strike) 1.00, WH 1.010 |
+| weak reserve (q 0.35) | seizure lethal (w_seized 0) | holds (WH 1.072) | holds (WH 1.072) | holds (WH 1.072) |
+| weak reserve (q 0.35) | seizure survivable (w_seized 0.9) | holds (WH 1.072) | holds (WH 1.072) | holds (WH 1.072) |
+| early failure survivable (kill_pre 0.3) | seizure lethal (w_seized 0) | holds (WH 1.072) | holds (WH 1.072) | holds (WH 1.072) |
+| early failure survivable (kill_pre 0.3) | seizure survivable (w_seized 0.9) | holds (WH 1.072) | holds (WH 1.072) | holds (WH 1.072) |
+
+## T2-ens. Closing window over the radius-0.1 box (64 draws, paired against the same design with the window off)
+
+Note: cached runs made before 2026-10-21 lack the `fail` indicator, so the 'off' rows show no warning-shot rate.
+
+| design | variant | holds | mean att | mean suc | P(suc|strike) | mean strike yr (strikers) | mean WH | vs off: gained/lost | earlier/later (both strike) | new/stopped strikers | mean dWH |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| baseline design | off | 41/64 | 0.331 | 0.172 | 0.518 | 0.8 | 0.858 | - | - | - | - |
+| baseline design | q_up 0.01 | 56/64 | 0.104 | 0.0558 | 0.536 | 0.0 | 0.984 | +15 / -0 | 0 / 0 of 8 | 0 / 15 | 0.126 |
+| best stack | off | 63/64 | 0.0156 | 0.0073 | 0.464 | 0.0 | 1.06 | - | - | - | - |
+| best stack | q_up 0.01 | 63/64 | 0.0156 | 0.0073 | 0.464 | 0.0 | 1.06 | +0 / -0 | 0 / 0 of 1 | 0 / 0 | 0 |
+test2 done in 150 s
