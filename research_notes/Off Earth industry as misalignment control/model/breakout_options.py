@@ -240,7 +240,7 @@ def world_sets():
         for nr in (0.0, 1.0):
             S.append(("noretry", f"kill_pre {kp:g}", "noretry" if nr else "retry", dict(kill_pre=kp, noretry=nr)))
     for kp in (1.0, 0.3):
-        for lab, op in (("crackdown only", dict(CR, **TRACK)), ("disguise, never exposed", dict(CR, dis=1.0)),
+        for lab, op in (("crackdown only", dict(TRACK, **CR)), ("disguise, never exposed", dict(CR, dis=1.0)),
                         ("disguise + discovery", dict(CR, dis=1.0, **DISC)), ("disguise + fast discovery", dict(CR, dis=1.0, h0=0.05, h_up=0.1)),
                         ("disguise + discovery, s_mild 1", dict(CR, dis=1.0, s_mild=1.0, **DISC))):
             for mh in (0.5, 0.9):
@@ -255,7 +255,7 @@ def world_sets():
             S.append(("amnesty", f"h_up {hu:g}", f"a_cred {a:g}", dict(CR, h_coop=1.0, h0=0.02, h_up=hu, a_cred=a)))
     for lab, op in (("full crackdown", CR), ("cut only", dict(c_cut=0.5)), ("hardening only", dict(k_rat=0.5, D_up=1.0))):
         for hs in (0.0, 0.02, 0.05, 0.1, 0.2):
-            S.append(("spillover", lab, f"h_spill {hs:g}", dict(op, h_spill=hs, **TRACK)))
+            S.append(("spillover", lab, f"h_spill {hs:g}", dict(TRACK, **op, h_spill=hs)))   # TRACK first: it must not override c_cut
     return S
 
 
