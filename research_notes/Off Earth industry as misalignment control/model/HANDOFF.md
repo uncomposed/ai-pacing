@@ -217,3 +217,45 @@ Progress log (newest last):
 3. The two L_dn draws: rival risk was the deterrent. No rival risk gives a strike at closure, some gives a strike now, more gives cooperation with a likely rival. Faster detection moves them from the third case to the second. Knife-edge on the grid.
 
 Decisions for Cole: (a) does a likely rival count as failure? (b) should a NORETRY option go into the model?
+
+## 8. Continuous integration (GitHub Actions, added 2026-10-21)
+
+[[ai gen]] Status: `implemented`; the commands were `verified` locally on the laptop; neither workflow has run on GitHub yet. Both workflows use only GitHub's free standard runners (the repo is public). They need no secrets, use a read-only token and pin every action by commit SHA. Versions are pinned in `.github/requirements-ci.txt`: Python 3.12.7, numpy 1.26.4 and matplotlib 3.9.2, the laptop's versions.
+
+**What runs where**
+1. `.github/workflows/check.yml` runs on every pull request and every push to main (Ubuntu 24.04).
+   - `make check` at the repo root, with `LANG` and `LC_ALL` set to C.UTF-8.
+   - `python robust_design.py --check`. This includes the round-1 regression (S1, S7, S14, S16 against `equilibrium_summary.json`).
+   - `python ci_sims.py compare-checks`. The new `robust_design_checks.md` must match the committed copy exactly, apart from its run-time line. The JSON must match exactly, apart from floats within 1e-9 relative, and those are still listed. Any other difference fails the check.
+   - `python ci_sims.py repro` re-solves one cached ensemble (r0.1 box, base design, 64 draws) on the runner and compares it with the laptop cache, draw by draw. The job fails if any outcome changes (`act0`, or `holds`), and every changed draw is printed in the job summary.
+2. `.github/workflows/sims.yml` runs only when started by hand, plus a weekly reproducibility run (Mondays 06:17 UTC: it re-solves `full__base` in 4 shards and compares it with the cache).
+   - The ensemble stages (box, oat_r, radius, factorial, ensemble, oat, pilot) are split into a matrix: one job per run and shard. A shard is a share of the solver batches, solved exactly as `run_design` solves them, so a merged run equals an unsplit run on the same machine. Each job has a 350-minute limit, under GitHub's 6-hour cap.
+   - The erosion and overnight-test stages run whole, in one job each.
+   - A final job merges the shards, runs `robust_design.py --report` and uploads one artifact, `sims-results-<run id>`. It holds every new or changed file under `model/`, plus `ci_manifest.json` (commit, Python, numpy, OS and runner image for every shard).
+   - **Nothing is committed.** Download the artifact, review it, copy the files into `model/` and commit them yourself.
+
+**Starting a simulation run**
+- In the browser: Actions tab, then `sims`, then "Run workflow". Pick the branch, the stage, the designs (a JSON list of lever dicts) and the number of shards.
+- From a terminal, with the GitHub CLI:
+
+```bash
+gh workflow run sims.yml --ref main -f stage=box -f box=full -f designs='[{"seq": 1}, {"q_red": 2}]' -f shards=4
+```
+
+```bash
+gh run watch
+```
+
+```bash
+gh run download --name sims-results-RUN_ID
+```
+
+- `force=true` re-solves runs that are already cached and compares them with the cache, without overwriting it. Use it to test whether runner results match the laptop.
+- `runner=macos-15` solves on Apple-silicon runners, which are closer to the laptop. On a public repo they are also free, but fewer can run at once.
+- Locally, the same steps are `python3 ci_sims.py plan | solve | merge | repro` (see its docstring).
+
+**Rules and known limits**
+- An already-cached run is never overwritten. A re-solve that differs from the cache is reported, never hidden.
+- Cross-platform floats: Linux x86-64 numpy and macOS arm64 numpy can differ in the last bits of `exp` and `log`. A draw that sits on a knife edge can then flip its outcome. The first real GitHub run will show whether this happens. If it does, the job summary lists each flipped draw with its strike probability on both machines. Decide then whether the cache should be re-solved on one platform. Do not loosen the check.
+- The cache name does not record the ensemble size. A non-default `n_full` or `n_near` therefore writes to its own folder (`results/robust_runs_nfull…`), and `--report` is skipped for it. `ci_sims.py` refuses to reuse a cached run whose size differs.
+- GitHub turns off scheduled workflows in a public repo after 60 days with no repository activity. Re-enable the workflow in the Actions tab if that happens.
