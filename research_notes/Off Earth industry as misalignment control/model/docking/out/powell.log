@@ -1,0 +1,17 @@
+
+## Powell's bargaining range in our saturation worlds (per year, F = 0)
+
+| world | pie B | AI lock-in M1 | human lock-in M2 | surplus B - M1 - M2 | our fixed trade share | ours | reading |
+|---|---|---|---|---|---|---|---|
+| S1 baseline pact | 1.5 | -0.0926 | 0 | +1.59 | 0.15 | C | both: peace |
+| S6 no denial reserve | 1.5 | 0.348 | 0 | +1.15 | 0.15 | S | ours strikes, Powell bargain exists (fixed terms) |
+| S13 rival stays dangerous (ell_inf 0.01) | -3.62e+05 | -0.0926 | 0 | -3.62e+05 | 0.15 | S | both: no bargain exists |
+| S14 S13 + seizure survivable (w_seized 0.9) | -3.62e+05 | -0.0926 | 0.9 | -3.62e+05 | 0.15 | S | both: no bargain exists |
+| S16 harvest (f_E 1e-6) | 1.5 | 500 | 0 | -498 | 0.15 | S | both: no bargain exists |
+| no denial, survivable seizure (w_seized 0.9) | 1.5 | 0.348 | 0.9 | +0.248 | 0.15 | S | ours strikes, Powell bargain exists (fixed terms) |
+| no denial, cheap war (c_w 0), survivable (w_seized 0.9) | 1.5 | 0.648 | 0.9 | -0.0522 | 0.15 | S | both: no bargain exists |
+
+no-denial world, saturated start (F = 1), solver opening move by (sigma, gam): [(0.3, 0.5, 'S', 0.281), (0.95, 0.5, 'S', 0.063), (0.6, 1.0, 'C', -0.021), (0.95, 1.0, 'C', -0.255)]
+
+erosion q_er 0.005 (no rival source): {'q_er': 0.005, 'strike_year': [{'A0': 999000000.0, 'closed_form_no_fail': 160, 'closed_form_with_fail': 165, 'solver': 165.00000000010215, 'solver_P': 1.0}, {'A0': 1500000000.0, 'closed_form_no_fail': 159, 'closed_form_with_fail': 208, 'solver': 197.99657966735083, 'solver_P': 1.0}], 'first_year_lockin_exceeds_trade': 160, 'condition1_max_margin': -1.255397057092923, 'condition1_ever': False, 'max_lockin': 0.24954425012828818, 'pie': 1.5}
+wrote /Users/colemiller/Documents/ChatGPT/AI-Pacing/.claude/worktrees/objective-cerf-985c03/research_notes/Off Earth industry as misalignment control/model/docking/out/powell.json

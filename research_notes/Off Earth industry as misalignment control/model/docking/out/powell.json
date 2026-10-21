@@ -1,0 +1,140 @@
+{
+ "S1 baseline pact": {
+  "B": 1.49626126683804,
+  "M1": -0.09256211515133506,
+  "M2": 0.0,
+  "surplus": 1.588823381989375,
+  "trade": 0.15,
+  "threat_d": 0.003738733161959999,
+  "harvest": 0.0,
+  "ours_strikes": false,
+  "powell_bargain": true,
+  "transfer_needed": -0.08882338198937506
+ },
+ "S6 no denial reserve": {
+  "B": 1.49626126683804,
+  "M1": 0.3484378848045649,
+  "M2": 0.0,
+  "surplus": 1.1478233820334751,
+  "trade": 0.15,
+  "threat_d": 0.003738733161959999,
+  "harvest": 0.0,
+  "ours_strikes": true,
+  "powell_bargain": true,
+  "transfer_needed": 0.3521766179665249
+ },
+ "S13 rival stays dangerous (ell_inf 0.01)": {
+  "B": -362205.518892023,
+  "M1": -0.09256211515133506,
+  "M2": 0.0,
+  "surplus": -362205.42632990784,
+  "trade": 0.15,
+  "threat_d": 362207.018892023,
+  "harvest": 0.0,
+  "ours_strikes": true,
+  "powell_bargain": false,
+  "transfer_needed": null
+ },
+ "S14 S13 + seizure survivable (w_seized 0.9)": {
+  "B": -362205.518892023,
+  "M1": -0.09256211515133506,
+  "M2": 0.89999999991,
+  "surplus": -362206.32632990775,
+  "trade": 0.15,
+  "threat_d": 362207.018892023,
+  "harvest": 0.0,
+  "ours_strikes": true,
+  "powell_bargain": false,
+  "transfer_needed": null
+ },
+ "S16 harvest (f_E 1e-6)": {
+  "B": 1.49626126683804,
+  "M1": 499.9074378348486,
+  "M2": 0.0,
+  "surplus": -498.4111765680106,
+  "trade": 0.15,
+  "threat_d": 0.003738733161959999,
+  "harvest": 499.99999995,
+  "ours_strikes": true,
+  "powell_bargain": false,
+  "transfer_needed": null
+ },
+ "no denial, survivable seizure (w_seized 0.9)": {
+  "B": 1.49626126683804,
+  "M1": 0.3484378848045649,
+  "M2": 0.89999999991,
+  "surplus": 0.2478233821234751,
+  "trade": 0.15,
+  "threat_d": 0.003738733161959999,
+  "harvest": 0.0,
+  "ours_strikes": true,
+  "powell_bargain": true,
+  "transfer_needed": 0.3521766179665249
+ },
+ "no denial, cheap war (c_w 0), survivable (w_seized 0.9)": {
+  "B": 1.49626126683804,
+  "M1": 0.6484378847745649,
+  "M2": 0.89999999991,
+  "surplus": -0.05217661784652494,
+  "trade": 0.15,
+  "threat_d": 0.003738733161959999,
+  "harvest": 0.0,
+  "ours_strikes": true,
+  "powell_bargain": false,
+  "transfer_needed": null
+ },
+ "sigma_fix": [
+  {
+   "sigma": 0.3,
+   "gam": 0.5,
+   "trade": 0.15,
+   "act0": "S",
+   "R4": 0.28094070145361416
+  },
+  {
+   "sigma": 0.95,
+   "gam": 0.5,
+   "trade": 0.475,
+   "act0": "S",
+   "R4": 0.06319257958847412
+  },
+  {
+   "sigma": 0.6,
+   "gam": 1.0,
+   "trade": 0.6,
+   "act0": "C",
+   "R4": -0.020556674810097667
+  },
+  {
+   "sigma": 0.95,
+   "gam": 1.0,
+   "trade": 0.95,
+   "act0": "C",
+   "R4": -0.2550544662683918
+  }
+ ],
+ "erosion": {
+  "q_er": 0.005,
+  "strike_year": [
+   {
+    "A0": 999000000.0,
+    "closed_form_no_fail": 160,
+    "closed_form_with_fail": 165,
+    "solver": 165.00000000010215,
+    "solver_P": 1.0
+   },
+   {
+    "A0": 1500000000.0,
+    "closed_form_no_fail": 159,
+    "closed_form_with_fail": 208,
+    "solver": 197.99657966735083,
+    "solver_P": 1.0
+   }
+  ],
+  "first_year_lockin_exceeds_trade": 160,
+  "condition1_max_margin": -1.255397057092923,
+  "condition1_ever": false,
+  "max_lockin": 0.24954425012828818,
+  "pie": 1.5
+ }
+}
