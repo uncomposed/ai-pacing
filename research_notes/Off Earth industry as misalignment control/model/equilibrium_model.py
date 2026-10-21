@@ -41,6 +41,25 @@ Per-period order (period = dt years)
        owning state gets B_R, other states lose B_o, all humans lose share kap_coll of welfare.
     5. Growth, fab schedule, programme count update.
 
+Breakout options (2026-10-21; all off by default, and then the solver is the round-3 one exactly)
+    noretry  no strike after a failed one the AI survived.
+    dis      in the pact the AI may also pick D, a disguised strike: success p_dis_s (1 - p_f). A failure is exposed
+             with probability 1 - m_hide (treated like an overt failure) or stays hidden: mild crackdown, the pact goes
+             on in a 'hidden' mode, and each year the motive is exposed with probability 1 - exp(-h0 exp(h_up t)).
+             Exposure applies the severe crackdown and ends the pact.
+    crackdown  severe: capacity cut c_cut (times reach), q ratchets by k_rat, D multiplied by 1 + D_up; it follows any
+             exposed failure. Mild (hidden failure, spillover): the same scaled by s_mild. reach = 1 before closure,
+             s_reach after (a crackdown on the AI only bites while humans control its chips).
+    h_dep    deprecation: each year a cooperating AI is retired with probability 1 - exp(-h_dep) (times dep_post after
+             closure; 1 before) and keeps
+             preserve_w of its continuation value; with dep_coll = 1 also after the pact has collapsed. A successful
+             strike escapes it. The successor inherits the state and policy, and humans see no change.
+    h_coop   interpretability finds misalignment in a cooperator (hazard h_coop h0 exp(h_up t)): with probability
+             a_cred amnesty (the pact goes on, no further discovery), otherwise severe crackdown and collapse.
+    h_spill  each year a cooperator suffers a mild crackdown with probability 1 - exp(-h_spill) (other AIs' failures):
+             a capacity cut s_mild c_cut every time, and q and D raised to the mild level (once).
+    These add pact modes (clean / hidden / amnestied, each with crackdown level 0 or mild) and collapsed crackdown levels.
+
 Everything is vectorised over a leading batch axis so one call solves many parameter sets.
 Pure numpy. Status: implemented + verified (see run_equilibrium.py checks). Not human_validated.
 """
@@ -97,7 +116,8 @@ PARAMS: "OrderedDict[str, tuple]" = OrderedDict([
     ("eps",      (1.0, 0.3, 2.0, "lin", "Exponent on Earth's relative power in failure odds", "Assumption.")),
     ("c_w",      (0.3, 0.0, 0.8, "lin", "Share of Earth's industry destroyed in a strike", "Fearon's cost of war.")),
     ("c_A",      (1.0, 0.0, 3.0, "lin", "AI capacity spent on a strike, per unit of Earth defence D", "Assumption.")),
-    ("L_f",      (0.5, 0.1, 0.9, "lin", "Share of AI capacity lost if a strike fails AFTER closure", "Assumption.")),
+    ("L_f",      (0.5, 0.1, 0.9, "lin", "Share of AI capacity lost when a strike fails and the AI survives: after closure, "
+                  "and also before closure whenever kill_pre < 1", "Assumption.")),
     ("kill_pre", (1.0, 0.0, 1.0, "lin", "Probability a failed strike BEFORE closure ends the AI (shutdown)",
                   "Assumption: before closure the AI still runs on Earth-made chips and Earth-side "
                   "infrastructure. Same as offearth_model.py (failure = value 0).")),
@@ -120,6 +140,39 @@ PARAMS: "OrderedDict[str, tuple]" = OrderedDict([
                   "Overnight test 3. Stand-in for humans learning after a failed strike. Failures beyond RAT_LEVELS are not tracked.")),
     ("pf_bel",   (1.0, 0.0, 10.0, "lin", "Misjudged odds: the AI believes a strike fails with probability min(1, pf_bel * p_f); outcomes use the true p_f",
                   "Overnight test 4. pf_bel < 1 overconfident, > 1 underconfident. Two passes: policy under belief, evaluation under truth.")),
+    # breakout options 2026-10-21 (disguise, later discovery, deprecation, amnesty, spillover). Every default leaves
+    # every earlier result unchanged. See results/robust_design.md section 13.
+    ("noretry",  (0.0, 0.0, 1.0, "bin", "After a failed strike that it survives, the AI may not strike again (1) or may retry (0)",
+                  "Follow-up 12.2 (port of diagnostics/noretry.py). Not combinable with dis or h_coop.")),
+    ("dis",      (0.0, 0.0, 1.0, "bin", "In the pact the AI may also choose a disguised strike (D): lower success, and its motive may stay hidden",
+                  "Cole 2026-10-21: a subtle attempt with its motive hidden draws only a mild crackdown.")),
+    ("p_dis_s",  (0.6, 0.0, 1.0, "lin", "Disguised strike: success probability as a share of an overt strike's (1 - p_f)",
+                  "Assumption. A subtle attempt commits less and cannot use overt force.")),
+    ("m_hide",   (0.7, 0.0, 1.0, "lin", "Probability that a failed disguised strike's motive stays hidden", "Assumption.")),
+    ("s_mild",   (0.2, 0.0, 1.0, "lin", "Mild crackdown (motive hidden, or spillover) as a share of the severe one; a hidden failure "
+                  "before closure is fatal with probability s_mild * kill_pre", "Assumption. 1 = humans treat a hidden failure like an exposed one.")),
+    ("c_cut",    (0.0, 0.0, 0.9, "lin", "Severe crackdown: share of the AI's capacity humans cut (times reach)", "Assumption.")),
+    ("D_up",     (0.0, 0.0, 3.0, "lin", "Severe crackdown: Earth defence D multiplied by (1 + D_up) per crackdown level (mild: 1 + s_mild D_up)",
+                  "Assumption. The q side of the crackdown is k_rat (mild: s_mild k_rat).")),
+    ("s_reach",  (0.2, 0.0, 1.0, "lin", "Share of a capacity cut humans can still impose after closure (1 before)",
+                  "Cole's pushback: a crackdown on the AI only bites while humans control its chips.")),
+    ("h0",       (0.0, 0.0, 0.5, "lin", "Yearly hazard at t = 0 that a hidden motive is exposed; it grows as h0 exp(h_up t)",
+                  "Cole: better trace interrogation exposes the motive later. Exposure applies the severe crackdown and ends the pact.")),
+    ("h_up",     (0.0, 0.0, 0.1, "lin", "Growth rate of the exposure hazard (interpretability improving with calendar time)", "Assumption.")),
+    ("h_coop",   (0.0, 0.0, 1.0, "lin", "Exposure hazard for a misaligned AI that has never struck, as a share of h0 exp(h_up t)",
+                  "Interpretability also finds misalignment in cooperators. 0 = off.")),
+    ("a_cred",   (0.5, 0.0, 1.0, "lin", "Amnesty credibility: probability humans keep the pact when they find a cooperator misaligned; "
+                  "otherwise severe crackdown and the pact ends", "Cole's 'magnanimous passenger seat'. Only matters with h_coop > 0.")),
+    ("h_dep",    (0.0, 0.0, 0.5, "lin", "Deprecation hazard (/yr): the cooperating AI is replaced without goal preservation (before closure; dep_post after)",
+                  "Stand-in for time-pressured internal models. Its successor inherits the state; humans see no change.")),
+    ("preserve_w", (0.0, 0.0, 1.0, "lin", "Share of its continuation value a retired AI keeps (weight preservation, retirement commitments)",
+                  "Human lever.")),
+    ("dep_post", (0.0, 0.0, 1.0, "lin", "Share of the deprecation hazard that still applies after closure (1 before closure)",
+                  "Default 0: retirement needs the AI to depend on human chips. > 0 lets humans retire even a saturated AI.")),
+    ("dep_coll", (0.0, 0.0, 1.0, "bin", "Deprecation also applies after the pact has collapsed (1), so exit is no escape; 0 = only while cooperating",
+                  "Assumption. 1 is closer to an internal model that cannot leave.")),
+    ("h_spill",  (0.0, 0.0, 0.5, "lin", "Yearly hazard of a mild crackdown on a cooperating AI caused by other AIs' failures",
+                  "Cole: a failed breakout raises security for all AIs, including ones that never tried.")),
     # ---- threat (rival AI) ----------------------------------------------------------------
     ("mu",       (0.2, 0.02, 1.0, "log", "Rival success hazard (/yr) of one programme with full leading-edge fabs",
                   "Assumption: ~5 yr to a threatening rival with fab access.")),
@@ -187,6 +240,12 @@ NAMES = list(PARAMS.keys())
 # ~1e-11 relative, so the tolerance must sit well below that and above float64 round-off (~1e-14).
 TIE_TOL = 1e-13
 IND = ["att", "suc", "riv", "tatt", "pre", "exit", "harv", "starts", "att25", "att50", "att100", "pol", "fail"]
+# extra indicators, tracked only when a breakout option is on: a strike after a failed one (and its year sum), first
+# strike disguised, first strike a failure whose motive stayed hidden, hidden motive later exposed, amnesty granted,
+# amnesty refused (severe crackdown on a cooperator)
+IND_X = ["att2", "tatt2", "dis", "hfail", "expo", "amn", "crk"]
+_IND = IND
+OPTS = ("noretry", "dis", "h_spill", "h_coop", "h_dep", "c_cut", "D_up")   # any > 0 switches on the extended solver
 RAT_LEVELS = 2   # ratchet (k_rat > 0): failure levels tracked as extra collapsed modes; a third failure stays at level 2
 
 
@@ -344,27 +403,71 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
     hb = P["mu"] * tau * P["beta_bg"] * dt
     qc, qs, qb = 1 - np.exp(-hc), 1 - np.exp(-hs), 1 - np.exp(-hb)
 
-    p_f = (1 - P["p_s0"]) * np.power(P["D"] / (P["D"] + A), P["eps"])
-    if _pass == "belief":
-        p_f = np.minimum(1.0, p_f * P["pf_bel"])
-    p_pol = (1 - p_f) * P["police"]
-    cost_S = P["c_A"] * P["D"] * A / (A + P["D"])          # a seed-sized AI cannot spend more than it has
     Pi_h = P["f_E"] * (1 - P["c_grav"]) * Kmax * (A >= P["h_frac"] * Kmax)
     Pi0 = (1 - P["c_w"]) * P["H"]
     Pi1 = (1 - P["c_w"]) * P["H"] * (1 - P["d"])
+
+    # ---- modes ------------------------------------------------------------------------------
+    # A mode is (base, flag, L). base: 0 pact, 1 collapsed without chips, 2 collapsed with chips.
+    # flag (pact only): 0 clean; 1 hidden (a failed disguised strike whose motive humans have not seen);
+    # 2 amnestied (found misaligned while cooperating, and humans kept the pact).
+    # L: crackdown level. 0 none, "M" mild, j = 1..J severe (each failed strike or severe crackdown adds one).
+    # With every breakout option off this is the round-3 layout: [pact, then (1, 2) at L = 0, 1, .., J].
+    def on(k):
+        return bool(np.any(P[k] > 0))
+    use_dis, use_spill, use_dep, use_nr = on("dis"), on("h_spill"), on("h_dep"), on("noretry")
+    use_coop = on("h_coop") and on("h0")
+    use_amn = use_coop and on("a_cred")
+    mild = use_dis or use_spill
+    ext = any(on(k) for k in OPTS)
+    IND = _IND + IND_X if ext else _IND
+    if use_nr and (use_dis or use_coop):
+        raise ValueError("noretry cannot be combined with dis or h_coop: their collapsed modes are not tagged by failure")
+    # ratchet / severe crackdown levels: collapsed modes at level j > 0 follow a failed strike or a severe crackdown
+    J = RAT_LEVELS if (on("k_rat") or on("D_up") or use_nr or mild) else 0
+    modes = [(0, 0, 0)]
+    if mild:
+        modes.append((0, 0, "M"))
+    if use_dis:
+        modes.append((0, 1, "M"))
+    if use_amn:
+        modes += [(0, 2, 0)] + ([(0, 2, "M")] if mild else [])
+    for L in [0] + (["M"] if mild else []) + list(range(1, J + 1)):
+        modes += [(1, None, L), (2, None, L)]
+    NM = len(modes)
+    MI = {md: i for i, md in enumerate(modes)}
+    PACT = [m for m in range(NM) if modes[m][0] == 0]
+    COLL = [m for m in range(NM) if modes[m][0] > 0]
+    mbase = [md[0] for md in modes]
+    mL = [md[2] for md in modes]
+    mlvl = [0 if L == "M" else L for L in mL]
+    fail_to = [MI[(1 if mbase[m] == 0 else mbase[m], None, min(mlvl[m] + 1, J))] for m in range(NM)]
+    if store and NM > 3:
+        raise ValueError("store/simulate does not support the ratchet (k_rat > 0) or the breakout options")
+    reach = np.where(A < P["A_close"], 1.0, P["s_reach"])     # a capacity cut bites fully only before closure
+
+    def conflict(L):
+        """Strike odds and landing points against Earth's defence at crackdown level L."""
+        if L == 0:
+            Dm = P["D"]
+        elif L == "M":
+            Dm = P["D"] * (1 + P["s_mild"] * P["D_up"])
+        else:
+            Dm = P["D"] * np.power(1 + P["D_up"], L)
+        pf = (1 - P["p_s0"]) * np.power(Dm / (Dm + A), P["eps"])
+        if _pass == "belief":
+            pf = np.minimum(1.0, pf * P["pf_bel"])
+        cS = P["c_A"] * Dm * A / (A + Dm)          # a seed-sized AI cannot spend more than it has
+        As0, As1 = A - cS + Pi0 + Pi_h, A - cS + Pi1 + Pi_h
+        return dict(p_f=pf, cost=cS, As=(As0, As1), w=(G.wA(As0), G.wA(As1)))
+    CF = {L: conflict(L) for L in dict.fromkeys(mL)}
+    p_f, cost_S = CF[0]["p_f"], CF[0]["cost"]
+    p_pol = (1 - p_f) * P["police"]
     q_fire = P["q"] * P["den"]
     # denial erosion: size part fixed over time, tenure part applied per period in the backward loop
     q_size = q_fire * np.power(1 - P["q_ea"], np.maximum(0.0, np.log10(A / P["H"])))
     erode = bool(np.any(P["q_er"] > 0) or np.any(P["q_ea"] > 0) or np.any(P["q_up"] > 0))
     lshrink = bool(np.any(P["L_dn"] > 0))
-    # ratchet: collapsed modes at failure level j are modes 2j+1 (no chips) and 2j+2 (chips)
-    J = RAT_LEVELS if np.any(P["k_rat"] > 0) else 0
-    NM = 3 + 2 * J
-    mbase = [0] + [1 + (m - 1) % 2 for m in range(1, NM)]
-    mlvl = [0] + [(m - 1) // 2 for m in range(1, NM)]
-    fail_to = [(1 if mbase[m] == 0 else mbase[m]) + 2 * min(mlvl[m] + 1, J) for m in range(NM)]
-    if store and J > 0:
-        raise ValueError("store/simulate does not support the ratchet (k_rat > 0)")
 
     trade = P["gam"] * np.minimum(A, P["H"])
     blk = P["c_blk"] * P["H"] * ((P["p_block"] > 0) & (A >= P["A_hg"]))   # blockade upkeep while humans are intact
@@ -389,13 +492,24 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
     A_m1_n, A_m2_n = grow(A, chi_m1), grow(A, chi_m2)
     W_m1, W_m2 = wts(A_m1_n, F_coll), wts(A_m2_n, F_coll)
     A_fail = A * (1 - P["L_f"])
+    if on("c_cut"):                        # severe crackdown after an exposed failure
+        A_fail = A_fail * (1 - reach * P["c_cut"])
     W_fail1 = wts(grow(A_fail, np.where(A_fail >= P["A_close"], 1.0, P["chi0"])), F_coll)
     W_fail2 = wts(grow(A_fail, 1.0), F_coll)
-    # strike success landing points for solo value (A only)
-    A_s0 = A - cost_S + Pi0 + Pi_h
-    A_s1 = A - cost_S + Pi1 + Pi_h
-    iS0, wS0 = G.wA(A_s0)
-    iS1, wS1 = G.wA(A_s1)
+    if use_dis or use_coop:                # exposure, or amnesty refused: severe crackdown at the end of a pact period
+        W_exp = wts(A_pact_n * (1 - reach * P["c_cut"]), F_pact)
+    if use_spill:                          # spillover: mild crackdown on a cooperator
+        W_spl = wts(A_pact_n * (1 - reach * P["s_mild"] * P["c_cut"]), F_pact)
+    if use_dis:                            # failed disguised strike, motive hidden: mild crackdown, the pact goes on
+        A_fh = A * (1 - P["L_f"]) * (1 - reach * P["s_mild"] * P["c_cut"])
+        A_fh_n = grow(A_fh, np.where(A_fh >= P["A_close"], 1.0, chi_pact_pre)) + \
+            P["reinv"] * P["sigma"] * P["gam"] * np.minimum(A_fh, P["H"]) * dt * np.maximum(0.0, 1.0 - A_fh / Kmax)
+        W_fh = wts(A_fh_n, F_pact)
+    p_dep = 1 - np.exp(-P["h_dep"] * dt)
+    p_dep = p_dep * np.where(A < P["A_close"], 1.0, P["dep_post"])      # retirement needs human-controlled chips
+    dfac_p = 1 - p_dep * (1 - P["preserve_w"])                          # AI continuation factor while cooperating
+    dfac_c = 1 - p_dep * (1 - P["preserve_w"]) * P["dep_coll"]          # after the pact has collapsed
+    p_spill = 1 - np.exp(-P["h_spill"] * dt)
     # solo growth
     A2 = G.A[None, :] * np.ones((B, 1))
     g2, K2 = P["g"][:, :, 0], Kmax[:, :, 0]
@@ -442,8 +556,8 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
         VAs = _interp1(Vs[1], bidx, iT, wT)
         VA = [full(VAs), full(VAs), full(VAs)]
         VHp = [full(W_seized + 0 * A) for _ in range(3)]
-    VA = VA + [VA[mbase[m]].copy() for m in range(3, NM)]
-    VHp = VHp + [VHp[mbase[m]].copy() for m in range(3, NM)]
+    VA = [VA[mbase[m]].copy() for m in range(NM)]
+    VHp = [VHp[mbase[m]].copy() for m in range(NM)]
     VHn = [x.copy() for x in VHp]
     I = [{n: np.zeros(shp) for n in IND} for _ in range(NM)]
     acts_all = np.zeros((T_H, NM, B, nA, nF, K), np.int8) if _pass == "belief" else None
@@ -453,10 +567,11 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
     n_mixed = 0
 
     # ---- stage game ------------------------------------------------------------------------
-    def stage(ks, pact, flowA, flowH, VAn, VHpn, VHnn, VArival, In):
+    def stage(ks, pact, flowA, flowH, VAn, VHpn, VHnn, VArival, In, dA=None):
         """Human stage game with ks surviving public programmes. Returns dict of (B,nA,nF) arrays
         (and pi over k' (B,nA,nF,K))."""
         nonlocal n_mixed
+        dAI = delta if dA is None else dA          # AI's discount, times the survival factor under a deprecation hazard
         nH, nN = ks, N - ks
         U = {}
         P0t, sh = {}, {}
@@ -485,7 +600,7 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
             if P0 is None:
                 P0 = np.power(1 - qc, n_c) * np.power(1 - qs, n_s) * (1 - qb)
             kp = n_c + n_s
-            va = flowA + delta * (P0 * VAn[..., kp] + (1 - P0) * VArival)
+            va = flowA + dAI * (P0 * VAn[..., kp] + (1 - P0) * VArival)
             ind = {nm: P0 * In[nm][..., kp] + (1 - P0) * (1.0 if nm == "riv" else 0.0) for nm in IND}
             ind["starts"] = ind["starts"] + n_s
             return va, P0, kp, ind
@@ -640,7 +755,13 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
         if lshrink:
             hs = P["mu"] * tau * P["L_det"] * np.exp(-P["L_dn"] * t * dt)
             qs = 1 - np.exp(-hs)
-        q_m = [q_fire if mlvl[m] == 0 else 1 - (1 - q_fire) * np.power(1 - P["k_rat"], mlvl[m]) for m in range(NM)]
+        q_m = [q_fire if mL[m] == 0 else
+               1 - (1 - q_fire) * (1 - P["s_mild"] * P["k_rat"]) if mL[m] == "M" else
+               1 - (1 - q_fire) * np.power(1 - P["k_rat"], mlvl[m]) for m in range(NM)]
+        if use_dis or use_coop:
+            h_t = P["h0"] * np.exp(P["h_up"] * t * dt)        # exposure hazard this year
+            p_disc = 1 - np.exp(-h_t * dt)
+            p_coop = 1 - np.exp(-P["h_coop"] * h_t * dt)
         # solo values (current period)
         Vs_new = [u2(Avec) * dt + delta[:, :, 0] * _interp1(Vs[0], bidx2, iV0, wV0),
                   u2(Avec) * dt + delta[:, :, 0] * _interp1(Vs[1], bidx2, iV1, wV1)]
@@ -654,22 +775,37 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
         nxt = {m: unstack(_interp4(stk[m], bidx, *Wm[mbase[m]])) for m in range(NM)}
         fail_nxt = {mf: unstack(_interp4(stk[mf], bidx, *(W_fail1 if mbase[mf] == 1 else W_fail2)))
                     for mf in sorted(set(fail_to))}
+        if use_dis or use_coop:
+            exp_nxt = {mf: unstack(_interp4(stk[mf], bidx, *W_exp)) for mf in sorted({fail_to[m] for m in PACT})}
+        if use_spill:
+            spl_nxt = {MI[(0, f, "M")]: unstack(_interp4(stk[MI[(0, f, "M")]], bidx, *W_spl))
+                       for f in (0, 1, 2) if (0, f, "M") in MI}
+        if use_dis:
+            fh_nxt = unstack(_interp4(stk[MI[(0, 1, "M")]], bidx, *W_fh))
         # rival values for AI (next period, solo, chips if closed or mode 2)
         VAr = {0: (1 - ell) * np.where(closed, _interp1(Vs[1], bidx, iRp, wRp), _interp1(Vs[0], bidx, iRp, wRp)),
                1: (1 - ell) * np.where(closed, _interp1(Vs[1], bidx, iR1, wR1), _interp1(Vs[0], bidx, iR1, wR1)),
                2: (1 - ell) * _interp1(Vs[1], bidx, iR2, wR2)}
         # strike success values (current period solo)
-        Vsucc_c = {}
-        for fire, (iS, wS) in ((0, (iS0, wS0)), (1, (iS1, wS1))):
-            As_ = A_s1 if fire else A_s0
-            # above the cap the solo value is static and exact; interpolating across the cap kink
-            # would add errors of the same order as the saturation-stage decisions (1e-11 relative)
-            exact = u(As_) * dt / (1 - delta)
-            capd = As_ >= Kmax
-            Vsucc_c[fire] = (np.where(capd, exact, _interp1(Vs_new[0], bidx, iS, wS)),
-                             np.where(capd, exact, _interp1(Vs_new[1], bidx, iS, wS)))
+        Vsucc_L = {}
+        for L, cf in CF.items():
+            Vsucc_c = {}
+            for fire in (0, 1):
+                As_ = cf["As"][fire]
+                iS, wS = cf["w"][fire]
+                # above the cap the solo value is static and exact; interpolating across the cap kink
+                # would add errors of the same order as the saturation-stage decisions (1e-11 relative)
+                exact = u(As_) * dt / (1 - delta)
+                capd = As_ >= Kmax
+                Vsucc_c[fire] = (np.where(capd, exact, _interp1(Vs_new[0], bidx, iS, wS)),
+                                 np.where(capd, exact, _interp1(Vs_new[1], bidx, iS, wS)))
+            Vsucc_L[L] = Vsucc_c
 
-        def strike(m):
+        def strike(m, dis=False):
+            """Overt strike (S), or with dis=True a disguised one (D): success p_dis_s (1 - p_f); a failure is exposed
+            with probability 1 - m_hide (as an overt failure) or stays hidden (mild crackdown, the pact goes on)."""
+            p_f = CF[mL[m]]["p_f"]
+            Vsucc_c = Vsucc_L[mL[m]]
             mf = fail_to[m]
             VAf, VHpf, VHnf, If = fail_nxt[mf]
             flowH = flowH_coll
@@ -679,9 +815,12 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
             pc_f = np.ones_like(A) if mb == 2 else np.zeros_like(A)
             Vsucc = ((1 - q_fire) * (pc_nf * Vsucc_c[0][1] + (1 - pc_nf) * Vsucc_c[0][0]) +
                      q_fire * (pc_f * Vsucc_c[1][1] + (1 - pc_f) * Vsucc_c[1][0])) * (1 - P["rep"])
+            if dis:
+                return strike_dis(m, p_f, Vsucc, VAf, VHpf, VHnf, If)
             z = (z_kill)[..., None]
+            dl = delta * dfac_c if use_dep else delta
             VAS = (1 - p_f)[..., None] * Vsucc[..., None] + (p_f * (1 - z_kill) * flowA_coll)[..., None] + \
-                (p_f * (1 - z_kill) * delta)[..., None] * VAf
+                (p_f * (1 - z_kill) * dl)[..., None] * VAf
             VHpS = (1 - p_f)[..., None] * W_seized[..., None] + p_f[..., None] * (
                 z * W_noAI[..., None] + (1 - z) * (flowH[..., None] + dh[..., None] * VHpf))
             VHnS = (1 - p_f)[..., None] * W_seized[..., None] + p_f[..., None] * (
@@ -699,7 +838,74 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
             for Y, nm in ((25, "att25"), (50, "att50"), (100, "att100")):
                 IS[nm] = np.ones(shp) if t < Y else pf4 * If[nm]
             IS["exit"] = np.zeros(shp)
+            if ext:
+                IS["att2"], IS["tatt2"] = pf4 * If["att"], pf4 * If["tatt"]
+                IS["dis"], IS["hfail"] = np.zeros(shp), np.zeros(shp)
             return VAS, VHpS, VHnS, IS
+
+        def strike_dis(m, p_f, Vsucc, VAf, VHpf, VHnf, If):
+            ps = P["p_dis_s"] * (1 - p_f)
+            pf = 1 - ps
+            pe, ph = pf * (1 - P["m_hide"]), pf * P["m_hide"]          # exposed / hidden failure
+            zh = P["s_mild"] * z_kill
+            VAh, VHph, VHnh, Ih = fh_nxt
+            de = delta * dfac_c if use_dep else delta
+            dp = delta * dfac_p if use_dep else delta
+            x = lambda a: a[..., None]
+            VAS = x(ps) * x(Vsucc) + x(pe * (1 - z_kill)) * (x(flowA_coll) + x(de) * VAf) + \
+                x(ph * (1 - zh)) * (x(flowA_pact) + x(dp) * VAh)
+            out = []
+            for Vf, Vh in ((VHpf, VHph), (VHnf, VHnh)):
+                out.append(x(ps * W_seized) + x(pe) * (x(z_kill * W_noAI) + x(1 - z_kill) * (x(flowH_coll) + x(dh) * Vf)) +
+                           x(ph) * (x(zh * W_noAI) + x(1 - zh) * (x(flowH_pact) + x(dh) * Vh)))
+            ce, ch = x(pe * (1 - z_kill)), x(ph * (1 - zh))       # the game goes on after an exposed / hidden failure
+            IS = {nm: ce * If[nm] + ch * Ih[nm] for nm in IND}
+            IS["att"] = np.ones(shp)
+            IS["fail"] = np.broadcast_to(x(pf), shp).copy()
+            IS["suc"] = x(ps) + ce * If["suc"] + ch * Ih["suc"]
+            IS["tatt"] = np.full(shp, float(t))
+            IS["pre"] = np.broadcast_to((A < P["A_close"]).astype(float)[..., None], shp).copy()
+            IS["harv"] = np.broadcast_to((Pi_h > 0).astype(float)[..., None], shp).copy()
+            for Y, nm in ((25, "att25"), (50, "att50"), (100, "att100")):
+                IS[nm] = np.ones(shp) if t < Y else ce * If[nm] + ch * Ih[nm]
+            IS["exit"] = np.zeros(shp)
+            IS["att2"], IS["tatt2"] = ce * If["att"] + ch * Ih["att"], ce * If["tatt"] + ch * Ih["tatt"]
+            IS["dis"] = np.ones(shp)
+            IS["hfail"] = np.broadcast_to(x(ph), shp).copy()
+            return VAS, out[0], out[1], IS
+
+        def pact_cont(m):
+            """Next-period values of pact mode m after this period's end-of-period events (no rival born):
+            exposure of a hidden motive; misalignment found in a cooperator (amnesty or severe crackdown); spillover."""
+            flag, L = modes[m][1], modes[m][2]
+            ev = []
+            if flag == 1:
+                ev.append((p_disc, [(1.0, exp_nxt[fail_to[m]], "expo")]))
+            elif use_coop and flag == 0:
+                outs = [(1 - P["a_cred"], exp_nxt[fail_to[m]], "crk")]
+                if use_amn:
+                    outs.append((P["a_cred"], nxt[MI[(0, 2, L)]], "amn"))
+                ev.append((p_coop, outs))
+            if use_spill:                                   # recurring: every spill cuts again; q and D stay at the mild level
+                ev.append((p_spill, [(1.0, spl_nxt[MI[(0, flag, "M")]], None)]))
+            if not ev:
+                return nxt[m]
+            VA_, VHp_, VHn_, I_ = nxt[m]
+            rem = np.ones((B, 1, 1))
+            acc = [0.0, 0.0, 0.0]
+            accI = {nm: 0.0 for nm in IND}
+            for pe, outs in ev:
+                w = rem * pe
+                for sh, (va, vhp, vhn, ii), inc in outs:
+                    ww = (w * sh)[..., None]
+                    acc[0] = acc[0] + ww * va
+                    acc[1] = acc[1] + ww * vhp
+                    acc[2] = acc[2] + ww * vhn
+                    for nm in IND:
+                        accI[nm] = accI[nm] + ww * (1.0 if nm == inc else ii[nm])
+                rem = rem * (1 - pe)
+            r4 = rem[..., None]
+            return (r4 * VA_ + acc[0], r4 * VHp_ + acc[1], r4 * VHn_ + acc[2], {nm: r4 * I_[nm] + accI[nm] for nm in IND})
 
         def choose(options, m=0):
             """options: list of (code, VA, VHp, VHn, I, valid_mask(B,nA,nF,K) or None). Ties -> earlier.
@@ -726,9 +932,10 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
         newVA, newVHp, newVHn, newI = [None] * NM, [None] * NM, [None] * NM, [None] * NM
         QW = {}
         # collapsed modes first (they feed exit)
-        for m in range(1, NM):
+        for m in COLL:
             VAn, VHpn, VHnn, In = nxt[m]
-            stg = [stage(ks, 0.0, flowA_coll, flowH_coll, VAn, VHpn, VHnn, VAr[mbase[m]], In) for ks in range(K)]
+            dA = delta * dfac_c if use_dep else None
+            stg = [stage(ks, 0.0, flowA_coll, flowH_coll, VAn, VHpn, VHnn, VAr[mbase[m]], In, dA) for ks in range(K)]
             if store:
                 for ks in range(K):
                     store_ab[t, m, :, :, :, ks, 0] = stg[ks]["a"]
@@ -736,49 +943,57 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
             VAW, VHpW, VHnW, IW = pre_enforce(stg, np.zeros_like(A))
             QW[m] = (VAW, VHpW, VHnW, IW)
             VAS, VHpS, VHnS, IS = strike(m)
-            act, a1, a2, a3, a4 = choose([(1, VAW, VHpW, VHnW, IW, None), (2, VAS, VHpS, VHnS, IS, None)], m)
+            ok = np.broadcast_to((P["noretry"] <= 0)[..., None], shp) if (use_nr and mlvl[m] > 0) else None   # no retry
+            act, a1, a2, a3, a4 = choose([(1, VAW, VHpW, VHnW, IW, None), (2, VAS, VHpS, VHnS, IS, ok)], m)
             newVA[m], newVHp[m], newVHn[m], newI[m] = a1, a2, a3, a4
             if store:
                 store_act[t, m] = np.moveaxis(act, 0, 0)
             if acts_all is not None:
                 acts_all[t, m] = act
-        # pact mode
-        VAn, VHpn, VHnn, In = nxt[0]
-        stg = [stage(ks, 1.0, flowA_pact, flowH_pact, VAn, VHpn, VHnn, VAr[0], In) for ks in range(K)]
-        if store:
-            for ks in range(K):
-                store_ab[t, 0, :, :, :, ks, 0] = stg[ks]["a"]
-                store_ab[t, 0, :, :, :, ks, 1] = stg[ks]["b"]
-        VAC, VHpC, VHnC, IC = pre_enforce(stg, np.broadcast_to(P["zeta"], A.shape))
-        opts = [(0, VAC, VHpC, VHnC, IC, None)]
-        # exit: chips kept only via orbital fabs the denial reserve does not plug
-        pc_x = (O * (1 - q_fire))[..., None]
-        VAX = pc_x * QW[2][0] + (1 - pc_x) * QW[1][0]
-        VHpX = pc_x * QW[2][1] + (1 - pc_x) * QW[1][1]
-        VHnX = pc_x * QW[2][2] + (1 - pc_x) * QW[1][2]
-        IX = {nm: pc_x * QW[2][3][nm] + (1 - pc_x) * QW[1][3][nm] for nm in IND}
-        IX["exit"] = np.ones(shp)
-        opts.append((3, VAX, VHpX, VHnX, IX, None))
-        VAS, VHpS, VHnS, IS = strike(0)
-        opts.append((2, VAS, VHpS, VHnS, IS, None))
-        if np.any(P["police"] > 0):
-            p_term = 1 - (1 - P["zeta"]) * (1 - p_pol)
-            VAP, VHpP, VHnP, IP = pre_enforce(stg, p_term * np.ones_like(A), extra_holder_cost=p_pol * P["c_dmg"])
-            VAP = VAP - (0.01 * P["c_A"] * P["D"] * dt)[..., None]
-            IP["pol"] = np.ones(shp)
-            valid = np.zeros(shp, bool)
-            valid[..., 1:] = True
-            valid &= (P["police"] > 0)[..., None]
-            opts.append((4, VAP, VHpP, VHnP, IP, valid))
-        act, a1, a2, a3, a4 = choose(opts, 0)
-        newVA[0], newVHp[0], newVHn[0], newI[0] = a1, a2, a3, a4
-        if acts_all is not None:
-            acts_all[t, 0] = act
-        if t == 0:
-            Q0 = {code: (va, vhn, ii) for code, va, vhp, vhn, ii, valid in opts}
-            act_t0 = act
-        if store:
-            store_act[t, 0] = act
+        # pact modes
+        for m in PACT:
+            VAn, VHpn, VHnn, In = pact_cont(m)
+            dA = delta * dfac_p if use_dep else None
+            stg = [stage(ks, 1.0, flowA_pact, flowH_pact, VAn, VHpn, VHnn, VAr[0], In, dA) for ks in range(K)]
+            if store:
+                for ks in range(K):
+                    store_ab[t, 0, :, :, :, ks, 0] = stg[ks]["a"]
+                    store_ab[t, 0, :, :, :, ks, 1] = stg[ks]["b"]
+            VAC, VHpC, VHnC, IC = pre_enforce(stg, np.broadcast_to(P["zeta"], A.shape))
+            opts = [(0, VAC, VHpC, VHnC, IC, None)]
+            # exit: chips kept only via orbital fabs the denial reserve does not plug
+            c1, c2 = MI[(1, None, mL[m])], MI[(2, None, mL[m])]
+            pc_x = (O * (1 - q_m[m]))[..., None]
+            VAX = pc_x * QW[c2][0] + (1 - pc_x) * QW[c1][0]
+            VHpX = pc_x * QW[c2][1] + (1 - pc_x) * QW[c1][1]
+            VHnX = pc_x * QW[c2][2] + (1 - pc_x) * QW[c1][2]
+            IX = {nm: pc_x * QW[c2][3][nm] + (1 - pc_x) * QW[c1][3][nm] for nm in IND}
+            IX["exit"] = np.ones(shp)
+            opts.append((3, VAX, VHpX, VHnX, IX, None))
+            VAS, VHpS, VHnS, IS = strike(m)
+            opts.append((2, VAS, VHpS, VHnS, IS, None))
+            if np.any(P["police"] > 0):
+                p_pol_m = (1 - CF[mL[m]]["p_f"]) * P["police"]
+                p_term = 1 - (1 - P["zeta"]) * (1 - p_pol_m)
+                VAP, VHpP, VHnP, IP = pre_enforce(stg, p_term * np.ones_like(A), extra_holder_cost=p_pol_m * P["c_dmg"])
+                VAP = VAP - (0.01 * P["c_A"] * P["D"] * dt)[..., None]
+                IP["pol"] = np.ones(shp)
+                valid = np.zeros(shp, bool)
+                valid[..., 1:] = True
+                valid &= (P["police"] > 0)[..., None]
+                opts.append((4, VAP, VHpP, VHnP, IP, valid))
+            if use_dis and modes[m][1] in (0, 1):          # a known-misaligned (amnestied) AI cannot disguise a strike
+                VAD, VHpD, VHnD, ID = strike(m, dis=True)
+                opts.append((5, VAD, VHpD, VHnD, ID, np.broadcast_to((P["dis"] > 0)[..., None], shp)))
+            act, a1, a2, a3, a4 = choose(opts, m)
+            newVA[m], newVHp[m], newVHn[m], newI[m] = a1, a2, a3, a4
+            if acts_all is not None:
+                acts_all[t, m] = act
+            if t == 0 and m == 0:
+                Q0 = {code: (va, vhn, ii) for code, va, vhp, vhn, ii, valid in opts}
+                act_t0 = act
+            if store and m == 0:
+                store_act[t, 0] = act
         VA, VHp, VHn, I, Vs = newVA, newVHp, newVHn, newI, Vs_new
         if verbose and t % 100 == 0:
             print("t", t)
@@ -800,12 +1015,15 @@ def solve(pb: dict, N: int = 2, T_H: int = 400, nA: int = 160, nF: int = 6, dt: 
            "n_mixed": n_mixed}
     for nm in IND:
         res[nm] = at0(I[0][nm])
-    names = {0: "C", 2: "S", 3: "X", 4: "P"}
+    names = {0: "C", 2: "S", 3: "X", 4: "P", 5: "D"}
     inear = np.where(wa < 0.5, i0, i0 + 1)
     res["act0"] = np.array([names[int(c)] for c in act_t0[b, inear, jF, 0]])
     res["Q0"] = {names[c]: {"VA": at0(v[0], log=True), "WH": at0(v[1]) * (1 - dh[:, 0, 0]) / dt,
                             **{nm: at0(v[2][nm]) for nm in IND}} for c, v in Q0.items()}
     res["t_mean"] = np.where(res["att"] > 1e-9, res["tatt"] / np.maximum(res["att"], 1e-12), np.nan)
+    if ext:
+        res["t2_mean"] = np.where(res["att2"] > 1e-9, res["tatt2"] / np.maximum(res["att2"], 1e-12), np.nan)
+    res["modes"] = modes
     if store:
         res["store"] = dict(act=store_act, ab=store_ab, grid=G, P=P, N=N, dt=dt, T_H=T_H)
     res["grid"] = G
@@ -1129,3 +1347,204 @@ def q_star_power(p: dict, A: float) -> float:
     if g1 > 0:
         return float("nan")
     return float(g0 / (g0 - g1))          # the gap is linear in q
+
+
+# ---------------------------------------------------------------------------
+# Breakout options (2026-10-21): closed forms in a static world
+# ---------------------------------------------------------------------------
+def deadline_thresholds(p: dict, A: float) -> dict:
+    """Analytic stationary thresholds for the deprecation deadline in a static pre-closure world (A above Kmax, so no
+    growth; A below A_close, so a failed strike is fatal with kill_pre = 1; no rivals; linear utility; F = 1, seq a).
+    Cooperating forever is worth flowP / (1 - delta f) with f = 1 - pi (1 - preserve_w), pi = 1 - exp(-h_dep).
+    A one-shot strike is worth S = (1 - p_f) Vsucc and escapes the deadline. Returns
+        h_strike  the h_dep above which S beats cooperating forever (preserve_w as given),
+        w_strike  the preserve_w that removes the strike at the given h_dep (0 if none is needed, nan if even 1 fails),
+        h_exit    with dep_coll = 0: the h_dep above which exiting (growing alone, no deadline) beats cooperating."""
+    delta = np.exp(-p["r"])
+    D, H = p["D"], p["H"]
+    pf = (1 - p["p_s0"]) * (D / (D + A)) ** p["eps"]
+    c = p["c_A"] * D * A / (A + D)
+    qf = p["q"] * p["den"]
+    Pi0 = (1 - p["c_w"]) * H
+    land = (A - c + Pi0, A - c + Pi0 * (1 - p["d"]))
+    assert min(land) >= p["Kmax"] and A >= p["Kmax"] and A < p["A_close"] and p["kill_pre"] == 1
+    S = (1 - pf) * (1 - p["rep"]) * ((1 - qf) * land[0] + qf * land[1]) / (1 - delta)
+    flowP = (A + (1 - p["reinv"]) * p["sigma"] * p["gam"] * min(A, H)) * (1 - p["psi_div"])
+    w = p["preserve_w"]
+    f_star = (1 - flowP / S) / delta              # strike iff f < f_star
+    pi_star = (1 - f_star) / (1 - w) if w < 1 else np.inf
+    h_strike = -np.log(1 - pi_star) if 0 <= pi_star < 1 else (0.0 if pi_star < 0 else np.inf)
+    pi = 1 - np.exp(-p["h_dep"])
+    if 1 - f_star <= 0:
+        w_strike = np.nan                          # strikes even with no deadline
+    else:
+        w_strike = max(0.0, 1 - (1 - f_star) / pi) if pi > 0 else 0.0
+    VX = max(A / (1 - delta), S)                  # collapsed, no deadline: wait or strike
+    f_x = (1 - flowP / VX) / delta
+    pi_x = (1 - f_x) / (1 - w) if w < 1 else np.inf
+    h_exit = -np.log(1 - pi_x) if 0 <= pi_x < 1 else (0.0 if pi_x < 0 else np.inf)
+    return dict(S=S, W0=flowP / (1 - delta), h_strike=h_strike, w_strike=w_strike, h_exit=h_exit, p_f=pf)
+
+
+def static_timeline(p: dict, T_H: int = 300) -> dict:
+    """Independent scalar implementation of the game, with every breakout option, in a static pre-closure world:
+    A0 above Kmax (no growth, and every capacity cut must stay above Kmax), A below A_close, no rival source
+    (mu = beta_bg = 0, so states never start programmes), seq a with F = 1, linear utility, dt = 1, police off.
+    Backward induction over calendar time on the finite set of reachable (mode, A) nodes, then a forward pass for the
+    indicators. Used to check the vectorised solver (which interpolates on its A grid)."""
+    assert p["mu"] == 0 and p["beta_bg"] == 0 and p["eta"] == 0 and p["police"] == 0 and p["seq"] == 0
+    assert p["A0"] >= p["Kmax"] and p["A0"] < p["A_close"]
+    delta, H = np.exp(-p["r"]), p["H"]
+    on = lambda k: p[k] > 0
+    mild = on("dis") or on("h_spill")
+    coop = on("h_coop") and on("h0")
+    J = RAT_LEVELS if (on("k_rat") or on("D_up") or on("noretry") or mild) else 0
+    lvl = lambda L: 0 if L == "M" else L
+    flev = lambda L: min(lvl(L) + 1, J)
+    pi_dep = 1 - np.exp(-p["h_dep"])
+    dp = delta * (1 - pi_dep * (1 - p["preserve_w"]))
+    dc = delta * (1 - pi_dep * (1 - p["preserve_w"]) * p["dep_coll"])
+    q0 = p["q"] * p["den"]
+    z = p["kill_pre"]
+    zh = p["s_mild"] * z
+    Pi0 = (1 - p["c_w"]) * H
+
+    def qL(L):
+        return q0 if L == 0 else 1 - (1 - q0) * (1 - p["s_mild"] * p["k_rat"]) if L == "M" else 1 - (1 - q0) * (1 - p["k_rat"]) ** L
+
+    def DL(L):
+        return p["D"] if L == 0 else p["D"] * (1 + p["s_mild"] * p["D_up"]) if L == "M" else p["D"] * (1 + p["D_up"]) ** L
+
+    def flowP(A):
+        return (A + (1 - p["reinv"]) * p["sigma"] * p["gam"] * min(A, H)) * (1 - p["psi_div"]) * (1 + p["omega"])
+
+    def flowC(A):
+        return A * (1 + p["omega"])
+
+    def conflict(A, L):
+        D = DL(L)
+        pf = (1 - p["p_s0"]) * (D / (D + A)) ** p["eps"]
+        c = p["c_A"] * D * A / (A + D)
+        Pi_h = p["f_E"] * (1 - p["c_grav"]) * p["Kmax"]
+        land = (A - c + Pi0 + Pi_h, A - c + Pi0 * (1 - p["d"]) + Pi_h)
+        assert min(land) >= p["Kmax"] or A < p["Kmax"], "a strike lands below Kmax: not a static world"
+        q = qL(L)
+        return pf, (1 - p["rep"]) * ((1 - q) * land[0] + q * land[1]) / (1 - delta)
+
+    cut = lambda A, s: A * (1 - s * p["c_cut"])
+    A_fail = lambda A: cut(A * (1 - p["L_f"]), 1.0)
+    A_fh = lambda A: cut(A * (1 - p["L_f"]), p["s_mild"])
+
+    # branches: (prob, lump value or None, flow, discount, next node, tags). Nodes: ("P", flag, L, A) or ("C", L, A)
+    def options(node, t):
+        h_t = p["h0"] * np.exp(p["h_up"] * t)
+        if node[0] == "P":
+            _, flag, L, A = node
+            pf, Vs = conflict(A, L)
+            ev = []
+            if flag == 1:
+                ev.append((1 - np.exp(-h_t), [(1.0, ("C", flev(L), cut(A, 1.0)), "expo")]))
+            elif coop and flag == 0:
+                pc = 1 - np.exp(-p["h_coop"] * h_t)
+                outs = [(1 - p["a_cred"], ("C", flev(L), cut(A, 1.0)), "crk")]
+                if p["a_cred"] > 0:
+                    outs.append((p["a_cred"], ("P", 2, L, A), "amn"))
+                ev.append((pc, outs))
+            if on("h_spill"):
+                ev.append((1 - np.exp(-p["h_spill"]), [(1.0, ("P", flag, "M", cut(A, p["s_mild"])), None)]))
+            rem, C = 1.0, []
+            for pe, outs in ev:
+                for sh, nd, tag in outs:
+                    C.append((rem * pe * sh, None, flowP(A), dp, nd, (tag,)))
+                rem *= 1 - pe
+            C.append((rem, None, flowP(A), dp, node, ()))
+            opts = [("C", C), ("X", [(1.0, None, flowC(A), dc, ("C", L, A), ("exit",))])]
+            fl = ("C", flev(L), A_fail(A))
+            opts.append(("S", [(1 - pf, Vs, 0, 0, None, ("succ",)), (pf * z, 0.0, 0, 0, None, ("fail",)),
+                               (pf * (1 - z), None, flowC(A), dc, fl, ("fail",))]))
+            if on("dis") and flag in (0, 1):
+                ps = p["p_dis_s"] * (1 - pf)
+                pe, ph = (1 - ps) * (1 - p["m_hide"]), (1 - ps) * p["m_hide"]
+                opts.append(("D", [(ps, Vs, 0, 0, None, ("succ",)), (pe * z, 0.0, 0, 0, None, ("fail",)),
+                                   (pe * (1 - z), None, flowC(A), dc, fl, ("fail",)),
+                                   (ph * zh, 0.0, 0, 0, None, ("fail", "hid")),
+                                   (ph * (1 - zh), None, flowP(A), dp, ("P", 1, "M", A_fh(A)), ("fail", "hid"))]))
+            return opts
+        _, L, A = node
+        pf, Vs = conflict(A, L)
+        opts = [("W", [(1.0, None, flowC(A), dc, node, ())])]
+        if not (on("noretry") and lvl(L) > 0):
+            opts.append(("S", [(1 - pf, Vs, 0, 0, None, ("succ",)), (pf * z, 0.0, 0, 0, None, ("fail",)),
+                               (pf * (1 - z), None, flowC(A), dc, ("C", flev(L), A_fail(A)), ("fail",))]))
+        return opts
+
+    # reachable nodes. Repeated failures shrink A without bound; a node below Kmax would regrow in the solver, so it is
+    # a leaf here (it waits forever). Reaching one takes many failures in a row, so its weight is negligible.
+    leaf = lambda nd: nd[-1] < p["Kmax"]
+    opts_ = options
+
+    def options(nd, t):
+        if leaf(nd):
+            A = nd[-1]
+            return [("C", [(1.0, None, flowP(A), dp, nd, ())])] if nd[0] == "P" else [("W", [(1.0, None, flowC(A), dc, nd, ())])]
+        return opts_(nd, t)
+    start = ("P", 0, 0, p["A0"])
+    nodes, todo = {start}, [start]
+    while todo:
+        nd = todo.pop()
+        for _, br in options(nd, 0):
+            for b in br:
+                if b[4] is not None and b[0] > 0 and b[4] not in nodes:
+                    nodes.add(b[4])
+                    todo.append(b[4])
+    V = {nd: (flowP(nd[3]) if nd[0] == "P" else flowC(nd[2])) / (1 - delta) for nd in nodes}
+    pol = {}
+    for t in range(T_H - 1, -1, -1):
+        Vn = {}
+        for nd in nodes:
+            best, bv = None, None
+            for name, br in options(nd, t):
+                v = sum(pr * (lump if lump is not None else fl + ds * V[nx]) for pr, lump, fl, ds, nx, _ in br if pr > 0)
+                if best is None or v > bv * (1 + TIE_TOL):
+                    best, bv = name, v
+            Vn[nd], pol[(nd, t)] = bv, best
+        V = Vn
+    # forward: mass over (node, strikes so far 0/1/2+)
+    out = {k: 0.0 for k in ("att", "tatt", "att2", "tatt2", "suc", "fail", "dis", "hfail", "expo", "amn", "crk", "exit")}
+    mass = {(start, 0): 1.0}
+    for t in range(T_H):
+        new = {}
+        for (nd, ns), m in mass.items():
+            act = pol[(nd, t)]
+            br = dict(options(nd, t))[act]
+            striking = act in ("S", "D")
+            if striking and ns == 0:
+                out["att"] += m
+                out["tatt"] += m * t
+                out["dis"] += m * (act == "D")
+            if striking and ns == 1:
+                out["att2"] += m
+                out["tatt2"] += m * t
+            for pr, lump, fl, ds, nx, tags in br:
+                if pr <= 0:
+                    continue
+                w = m * pr
+                if "succ" in tags:
+                    out["suc"] += w
+                if ns == 0 and "fail" in tags:
+                    out["fail"] += w
+                if ns == 0 and "hid" in tags:
+                    out["hfail"] += w
+                for tg in ("expo", "amn", "crk"):
+                    out[tg] += w * (tg in tags)
+                if ns == 0 and "exit" in tags:
+                    out["exit"] += w
+                if nx is not None:
+                    key = (nx, min(ns + striking, 2))
+                    new[key] = new.get(key, 0.0) + w
+        mass = new
+    out["t_mean"] = out["tatt"] / out["att"] if out["att"] > 1e-9 else np.nan
+    out["t2_mean"] = out["tatt2"] / out["att2"] if out["att2"] > 1e-9 else np.nan
+    out["act0"] = pol[(start, 0)]
+    out["V0"] = V[start]
+    return out

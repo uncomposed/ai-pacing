@@ -420,3 +420,48 @@ Draws 51 and 56 of the radius-0.1 box (`diagnostics/ldn_rival_sweep.py`). Both h
 1. If a rival AI is harmless or good for humans, item 1's stricter test is wrong and the original hold shares stand.
 2. If blocking retries changed results through a path other than the retry (it touches only the post-failure modes), item 2's attribution would be wrong. The identity check rules out a coding slip, not a modelling one.
 3. A finer A grid could move the knife-edge draws in item 3 either way.
+
+## 13. Breakout options: disguise, later discovery, deprecation, amnesty, spillover [[ai gen]]
+
+Written 2026-10-21. **Status: paused part-way, at Cole's request (runs only off work hours).** The options are `implemented` and `verified` (checks below). The experiments are not run yet, so there are no findings and no answers yet to questions (i) to (iv) of the brief.
+
+### 13.1 What was added
+
+1. `equilibrium_model.py`: new options, all off by default. With every option off the solver is the earlier one exactly. See the module docstring and `PARAMS`.
+   - `noretry`: no strike after a failed one (port of `diagnostics/noretry.py`).
+   - `dis`, `p_dis_s`, `m_hide`: a disguised strike (lower success; the motive may stay hidden).
+   - Crackdown: severe after an exposed failure (`c_cut`, `k_rat`, `D_up`); mild when the motive is hidden or after a spillover (`s_mild`). A capacity cut bites fully only before closure (`s_reach` after).
+   - `h0`, `h_up`: a hidden motive is exposed later, with a hazard that rises over time.
+   - `h_dep`, `preserve_w`, `dep_coll`, `dep_post`: a deprecation deadline, weight preservation, whether exiting escapes it, and whether it still reaches the AI after closure.
+   - `h_coop`, `a_cred`: interpretability finds misalignment in a cooperating AI; amnesty with credibility `a_cred`, otherwise a severe crackdown.
+   - `h_spill`: a recurring mild crackdown from other AIs' failures.
+   - L_f doc drift fixed: L_f applies whenever a failed strike is survived, including before closure when kill_pre < 1.
+2. New closed forms: `deadline_thresholds` (an analytic one-shot strike against waiting under a deadline) and `static_timeline` (an independent scalar implementation of every option in a static pre-closure world).
+3. `breakout_options.py`: `--check`, `--worlds`, `--ens`, `--report`. The cache is in `results/breakout_runs/`.
+
+### 13.2 Checks (results/breakout_checks.md)
+
+1. Round-1 regression with all options off: identical (max difference 0).
+2. Four cached ensembles (r0.1 and full box, baseline design and best stack) re-solved with the new code: max difference 0, and every opening move is the same. This also holds with the extra indicators switched on.
+3. `noretry` against `diagnostics/out`: max difference 0 on all six comparisons, including routing with k_rat = 0.
+4. Static-world closed forms against the solver: 66 of 67 cases agree. **Open:** one case disagrees and has not been looked at yet. It is listed in the table in the checks file.
+5. Identities (options that should change nothing): all exactly 0.
+
+### 13.3 Things learned while building it (from debugging runs, not from the planned experiments)
+
+1. **A deadline that also reaches a grown AI breaks the pact, and not at bad odds.** With retirement still possible after closure (`dep_post` > 0), a saturated AI prefers to seize Earth, because at that size a strike is nearly free. Humans anticipate this and race, a rival becomes likely, and that collapses the value of cooperating. In the best stack, an effective hazard of 0.0005 per year was enough. This is why `dep_post` defaults to 0 (retirement only while the AI depends on human chips). The 0.2 case is kept as the opposite. Inference: any permanent hazard that a strike escapes probably does the same thing at saturation.
+2. **In the static closed-form world, a deadline the AI can escape by exiting produces exits, not strikes.** It exits once h_dep is above about 0.003 per year. It strikes (at 58% odds) only when exit is blocked (`dep_coll` 1), and only above about 0.016 per year.
+3. Spillover was first written as a one-off event, and it had no effect. It now recurs.
+
+### 13.4 To resume (off hours)
+
+```
+cd "research_notes/Off Earth industry as misalignment control/model"
+/opt/anaconda3/bin/python3 breakout_options.py --ens
+/opt/anaconda3/bin/python3 breakout_options.py --worlds
+/opt/anaconda3/bin/python3 breakout_options.py --report
+```
+
+1. `--ens`: estimated 6 hours on this laptop. It resumes from the cache (`off` and `noretry` are partly done).
+2. `--worlds`: about 20 minutes.
+3. `--report`: then write 13.5 onward (answers to i to iv, and what would show them wrong), and look at the open closed-form case in 13.2 item 4.

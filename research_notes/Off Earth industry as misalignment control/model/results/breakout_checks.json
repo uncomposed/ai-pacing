@@ -1,0 +1,158 @@
+{
+ "regression": 0.0,
+ "cache": [
+  [
+   "r0.1",
+   "base",
+   "defaults",
+   "0",
+   true
+  ],
+  [
+   "r0.1",
+   "base",
+   "tracking on",
+   "0",
+   true
+  ],
+  [
+   "r0.1",
+   "best",
+   "defaults",
+   "0",
+   true
+  ],
+  [
+   "r0.1",
+   "best",
+   "tracking on",
+   "0",
+   true
+  ],
+  [
+   "full",
+   "base",
+   "defaults",
+   "0",
+   true
+  ],
+  [
+   "full",
+   "base",
+   "tracking on",
+   "0",
+   true
+  ],
+  [
+   "full",
+   "best",
+   "defaults",
+   "0",
+   true
+  ],
+  [
+   "full",
+   "best",
+   "tracking on",
+   "0",
+   true
+  ]
+ ],
+ "noretry": [
+  [
+   "r0.1",
+   "base kill_pre 0",
+   "k_rat 1e-12",
+   "0",
+   true,
+   48,
+   48
+  ],
+  [
+   "r0.1",
+   "base kill_pre 0",
+   "k_rat 0",
+   "0",
+   true,
+   48,
+   48
+  ],
+  [
+   "r0.1",
+   "best kill_pre 0",
+   "k_rat 1e-12",
+   "0",
+   true,
+   63,
+   63
+  ],
+  [
+   "r0.1",
+   "best kill_pre 0",
+   "k_rat 0",
+   "0",
+   true,
+   63,
+   63
+  ],
+  [
+   "full",
+   "base",
+   "k_rat 1e-12",
+   "0",
+   true,
+   7,
+   7
+  ],
+  [
+   "full",
+   "best",
+   "k_rat 1e-12",
+   "0",
+   true,
+   24,
+   24
+  ]
+ ],
+ "static": {
+  "agree": "66",
+  "n": 67,
+  "thresholds": {
+   "S": 1.9295845134643512,
+   "W0": 3.4846149992333313,
+   "h_strike": 0.01641400883519692,
+   "w_strike": 0.0,
+   "h_exit": 0.003034801358759342,
+   "p_f": 0.4166666666666667
+  },
+  "h_strike_w0.5": 0.0331019397687259,
+  "h_strike_w0.9": 0.17769268282594305
+ },
+ "identities": [
+  [
+   "dis with p_dis_s 0 and m_hide 0",
+   "0",
+   "C / C"
+  ],
+  [
+   "h_dep 0.2 with preserve_w 1",
+   "0",
+   "C / C"
+  ],
+  [
+   "h_coop 1 with a_cred 1 (amnesty certain)",
+   "0",
+   "C / C"
+  ],
+  [
+   "h_spill 0.2 with s_mild 0 and k_rat 0",
+   "0",
+   "C / C"
+  ],
+  [
+   "c_cut 0.5 with kill_pre 1 and A_close above Kmax (every failure fatal)",
+   "0",
+   "C / C"
+  ]
+ ]
+}
