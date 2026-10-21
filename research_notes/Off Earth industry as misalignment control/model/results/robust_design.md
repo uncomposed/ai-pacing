@@ -467,3 +467,69 @@ cd "research_notes/Off Earth industry as misalignment control/model"
 3. `--report`: then write 13.5 onward (answers to i to iv, and what would show them wrong), and look at the open closed-form case in 13.2 item 4.
 
 4. **Or run it on GitHub instead of the laptop** (added 2026-10-21): `.github/workflows/breakout.yml` runs each configuration as its own free-runner job, plus the world sweeps, then `--report`. Push any branch named `sims/breakout...` to start it. Results come back as the `breakout-results` artifact; review them, then commit by hand. Runner floats may differ slightly from the laptop's, so compare the `off` rows with the committed cache before trusting knife-edge draws.
+
+### 13.5 Results: answers to questions (i) to (iv) [[ai gen]]
+
+Written 2026-10-21 from GitHub Actions run 39637590689 (branch `sims/breakout-2026-10-21`, all 18 jobs green). Numbers are from the `merge and report` job's printed tables and the `baseline-world sweeps` job's printed tables. The `breakout-results` artifact itself was not downloaded in this session, so `t2_mean` (the year of a second strike) is not available per ensemble. Ensembles: r0.1 box 64 draws, full box 192 draws, baseline design and best stack, paired against `off`.
+
+**Status: `implemented`. The checks in 13.6 pass. One world-sweep bug was found (13.6 item 4). Not `human_validated`.**
+
+**Headline.** Every option that puts a recurring cost on an AI *that is cooperating* breaks the pact: a deprecation deadline, interpretability that finds misalignment without certain amnesty, and spillover crackdowns. The AI escapes the cost by striking, and it strikes at year 0 at coin-flip odds. Options that only act *after a failed strike* (crackdown, disguise, discovery) change little, and only where an early failure is survivable. Cole's whole picture (`cole`) leaves 0 of 64 draws holding near the baseline, for both designs (against 41 and 63 with every option off).
+
+| r0.1 box (64 draws) | baseline design: holds | best stack: holds | mechanism |
+|---|---|---|---|
+| off | 41 | 63 | |
+| noretry | 48 | 63 | no second strike |
+| crack (severe crackdown after a failure) | 48 | 63 | same as noretry: a costly failure ends the retry |
+| dis (disguise, never exposed) | 48 | 63 | 9 base draws strike disguised |
+| dis_disc (disguise + discovery) | 48 | 63 | 4 base draws strike disguised |
+| dis_reach0 (crackdown cannot bite after closure) | 46 | 63 | |
+| dep (h_dep 0.1, nothing preserved) | **0** | **5** | deadline on cooperators |
+| dep_w (same, 90% preserved) | 37 | 63 | |
+| dep_post (deadline also after closure) | **0** | **0** | |
+| amn (amnesty 90% credible) | **0** | **0** | discovery of cooperators |
+| amn0 (no amnesty) | **0** | **0** | |
+| spill (h_spill 0.05, cut and hardening) | 2 | 32 (0 rival-aware) | recurring cut on cooperators |
+| spill_cut (cut, no hardening) | 2 | 31 (0 rival-aware) | |
+| cole (all of Cole's picture) | **0** | **0** | |
+
+**(i) Does disguise plus later discovery create a second-attempt window, and when?**
+1. **Yes, but only where a failed early strike is survivable, and it opens at once, not later.** The chance of a second strike rises with disguise plus discovery: r0.1 baseline design 0.006 (crackdown only) to 0.031; full box 0.203 to 0.274 (baseline design) and 0.181 to 0.249 (best stack).
+2. In the baseline-world rows where it shows (kill_pre 0.3, m_hide 0.9), the first, disguised strike is at year 0 and the second at year 1. The AI retries straight after a hidden failure, before discovery can catch up. A rising discovery hazard does not delay the retry; inference: it hurries it.
+3. Discovery cuts how often disguise is used (r0.1: 9 disguised strike-now draws without discovery, 4 with). Discovery or no discovery, it adds no holds (48 either way) and loses none.
+4. With a failed early strike fatal (kill_pre 1) there is no window at all: every disguise row at the baseline world cooperates.
+5. Not answered here: the ensemble timing of second strikes (`t2_mean` is in the artifact's `.npz` files, not in the printed tables).
+
+**(ii) Does a deprecation deadline produce bad-odds strikes, and how much does preserve_w remove them?**
+1. **Yes. They are coin flips at year 0.** With a 10-year expected life (h_dep 0.1) and nothing preserved, all 64 r0.1 draws strike now under the baseline design (P(success | strike) 0.51). Under the best stack, 59 of 64 do. Human welfare falls by 0.36 and 0.53.
+2. At the baseline world the strike starts at h_dep 0.05 (baseline design) or 0.1 (best stack). Whether exit escapes the deadline (`dep_coll`) makes no difference in the ensembles: the AI strikes rather than exits.
+3. **Preservation removes most of it, if the deadline stops at closure.** With 90% preserved, the r0.1 baseline design keeps 37 of its 41 holds and the best stack all 63. At the baseline world, the threshold moves from h_dep 0.05 to 0.1 (preserve_w 0.5) and to 0.5 (0.9); best stack 0.1, 0.2 and above 0.5.
+4. **If the deadline still reaches the AI after closure (`dep_post` 0.2), preservation does not help.** At the baseline world even 90% preservation gives a strike now from h_dep 0.02. In the ensemble, `dep_post` leaves 0 of 64 holding for both designs. (`dep_post` was run without preservation in the ensembles; the preservation claim is from the baseline-world rows.)
+5. On the full box the effect is smaller in counts, because most draws strike anyway: deadline loses 4 of 5 holds (baseline design) and 13 of 15 (best stack); with 90% preserved, 1 and 1.
+
+**(iii) How high must a_cred be before better interpretability stops pushing a cooperating AI to strike?**
+1. **For the baseline design: certain amnesty (a_cred = 1).** At the baseline world, every a_cred from 0 to 0.9 gives a strike at year 0 when interpretability can find a cooperator misaligned (h_coop 1, h0 0.02), for h_up 0, 0.02 and 0.05. The one exception is the fastest-improving interpretability tested (h_up 0.1), where a_cred 0.9 gives cooperation with P(strike) 0.10. In the r0.1 ensemble at a_cred 0.9, 0 of 64 draws hold (43 strike now).
+2. **The best stack needs less, but a_cred 0.9 is still not enough by the 1% test.** Baseline world: it cooperates at a_cred 0.25 and above (0.5 and above when h_up is 0.1; also at a_cred 0 when h_up is 0), with P(strike) falling from 0.18 to 0.02 as a_cred goes from 0.25 to 0.9. The strikes are coin flips at about year 7. r0.1 ensemble at a_cred 0.9: 0 of 64 hold, but mean P(strike) is 0.07 (0.75 with no amnesty) and the strikes come at about year 18.
+3. So the answer is "close to 1". Better interpretability (higher h_up) helps only slightly, and only with the best stack. The pressure comes from the hazard on cooperators, not from interpretability as such: it is the same mechanism as the deadline in (ii).
+
+**(iv) Did fewer warning shots come with fewer, or only later, successful strikes?**
+1. **Near the baseline (r0.1, baseline design): fewer successes, and slightly later.** Visible warning shots fall from 0.163 (off) to 0.114 (crackdown) and 0.069 (disguise), and P(success) falls with them, from 0.172 to 0.114 and 0.090. The success-weighted strike year moves from 0 to 2.4 and 3.1.
+2. **On the full box, with disguise plus discovery: neither. The warning shots went hidden.** Visible warning shots fall from 0.403 to 0.279 (baseline design) and from 0.348 to 0.232 (best stack). Hidden failures appear instead (0.147 and 0.140), and P(success) is unchanged (0.668 to 0.669; 0.621 to 0.612). So a world with fewer visible warning shots is not, in this model, a world with fewer seizures.
+3. **Where the cooperating-AI hazards act (deadline, amnesty, spillover), warning shots rise together with successes.** Example: r0.1 baseline design under `dep`, visible warning shot 0.498 and P(success) 0.515, against 0.163 and 0.172.
+4. This sharpens section 9: a warning shot is the visible half of a coin-flip early strike. Its absence tells humans little unless they can also rule out hidden failures.
+
+### 13.6 Checks
+
+1. **Off rows against the committed cache.** The runner's `off` job did not re-solve anything (22 s): all four `off` ensembles were already in the committed cache, so the artifact's `off` rows *are* the committed files, and comparing them proves nothing. Instead, all four were re-solved without the cache in a Linux x86-64 container (Python 3.12.3, numpy 1.26.4, the CI pin). Opening move flips: none, in 64 + 64 + 192 + 192 draws. Holds flips: none. Largest absolute difference: 4e-13 (in P(strike within 100 years) and WH). The comparison of `t_mean` printed NaN because draws that never strike have NaN in both; those were not compared.
+2. **noretry on the full box** (new on the runner) reproduces section 12.2: 7 and 24 holds, against 7 and 24 from `diagnostics/out`.
+3. **Expected equalities.** `dis_smild1` (a hidden failure punished like an exposed one) equals `crack` in every printed column, for both designs: with no discount for hiding, the AI never disguises (0 disguised draws). `dep` and `dep_coll` are identical on the r0.1 box, because no draw exits.
+4. **Bug in the world sweeps (not in the solver or the ensembles).** In `breakout_options.world_sets`, the "crackdown only" disguise rows and all spillover rows put `TRACK` (c_cut = 1e-300) last, which overrides the crackdown's c_cut = 0.5. So those rows run *without* a capacity cut. The labels "full crackdown" and "cut only" are wrong, and "cut only" is in effect no spillover at all. That is why spillover looked harmless at the baseline world, while the ensembles (built correctly) show it breaking the pact. The disguise answers above do not depend on the "crackdown only" rows, because the ensembles carry them. Fix: put `TRACK` first (`dict(TRACK, **CR)`), then re-run `--worlds` (about 20 minutes on a runner). Not fixed yet.
+5. **The one open closed-form disagreement (13.2 item 4: spillover, cut only, h_spill 0.02) is grid error, not a solver bug.** The solver's P(strike) moves toward the closed form as the A grid gets finer: 0.330, 0.296, 0.253 and 0.249 at nA 80, 160, 320 and 640, against 0.244. The companion case with full crackdown is also grid-sensitive (0.187, 0.149, 0.165, 0.147 against 0.143) and fails the 0.02 tolerance at nA 320. Both are late (about year 240), small-probability strikes in a static world with repeated 10% capacity cuts, which land between grid points. Opening moves agree at every grid size.
+
+### 13.7 What would show these answers wrong
+
+1. **The hazard on cooperators.** All three pact-breaking options model the hazard as a fixed yearly rate that only a strike escapes. If a cooperating AI could escape it in another way (weight preservation that also covers discovery, appeal, a credible amnesty institution), the strike-now result would weaken. A run in which `amn` with a_cred 0.9 holds on most r0.1 draws would show (iii) wrong.
+2. **Strike odds at seed size.** The strikes these options cause are coin flips because p_s0 = 0.5 and D = 0.3. If early takeover odds are far below 0.5, a deadline or discovery hazard would push toward exit or toleration instead. The static-world closed form already shows exits when exit escapes the deadline (13.3 item 2).
+3. **Second-strike timing (i)** rests on the baseline-world rows. If the ensemble `t2_mean` showed second strikes years after the first, the "opens at once" answer would be wrong.
+4. **(iv) on the full box** compares draw means. A paired, draw-by-draw comparison (needs the `.npz` files) could show that the draws that lose visible warning shots are not the ones that keep their successes.
+5. **The world-sweep bug (13.6 item 4)** affects only the "crackdown only" and spillover world tables. If the corrected spillover worlds still showed no effect at the baseline world while the ensemble shows a collapse, the gap would need a separate explanation.

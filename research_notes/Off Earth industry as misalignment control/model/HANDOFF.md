@@ -259,3 +259,17 @@ gh run download --name sims-results-RUN_ID
 - Cross-platform floats: Linux x86-64 numpy and macOS arm64 numpy can differ in the last bits of `exp` and `log`. A draw that sits on a knife edge can then flip its outcome. The first real GitHub run will show whether this happens. If it does, the job summary lists each flipped draw with its strike probability on both machines. Decide then whether the cache should be re-solved on one platform. Do not loosen the check.
 - The cache name does not record the ensemble size. A non-default `n_full` or `n_near` therefore writes to its own folder (`results/robust_runs_nfull…`), and `--report` is skipped for it. `ci_sims.py` refuses to reuse a cached run whose size differs.
 - GitHub turns off scheduled workflows in a public repo after 60 days with no repository activity. Re-enable the workflow in the Actions tab if that happens.
+
+## 9. Assumption register and breakout results (2026-10-21 evening)
+
+[[ai gen]] Status: `implemented`; the register check is `verified` by its own tests; nothing `human_validated`.
+
+**Register.** `assumptions.yaml` has 49 entries covering all 83 PARAMS. `tools/assumptions_tool.py check` runs in `make check` and fails when a PARAMS entry is missing, when a Cole answer that favours the pact has no recorded ablation, when an encoded value drifts from its PARAMS baseline, or when `human_validated` is set without Cole. `make assumptions-report` writes the ranked list (copy in `results/assumptions_report.md`). It is a separate file rather than part of `systems/model.json`, because that file is the AI Pacing governance model with a strict schema and no place for parameters or ablations.
+
+**Breakout run** (GitHub Actions 39637590689; write-up `results/robust_design.md` 13.5 to 13.7). Any recurring cost on a cooperating AI that a strike escapes (deadline, discovery without certain amnesty, spillover) breaks the pact at year 0 with coin-flip strikes. Options acting only after a failed strike change little. Known bug: the "crackdown only" and spillover world-sweep rows lose their capacity cut (13.6 item 4).
+
+**Recommended next ablations** (ranked by how much a headline claim depends on them and how cheap they are):
+1. **chi0 from 0.5 to 1** on the r0.1 and full boxes, baseline design and best stack. No model change: `sims.yml` designs `[{"chi0": 0.75}, {"chi0": 1.0}]` plus the same on the best stack. Add `chi0` to `robust_report.py`'s test-variant list first, so the lever regret table is unchanged. PRIM already suggests higher chi0 *helps* inside 0.02 to 0.5, against Cole's guess (a).
+2. **A human-chosen preventive strike or shutdown on a cooperating AI** (Cole's guess (c)). Needs a model change (a human move). Three stand-ins (deadline, discovery, spillover) all break the pact, so this is probably the largest unmodelled risk to H1 and H9.
+3. **Two-sided Powell renegotiation** (Cole's guess (b)). Upward (humans pay to buy off prize-only strikes) is expected to help. Downward (humans squeeze the AI as they get stronger; AS-NOEXPLOIT, never ablated) is expected to hurt, by the same mechanism as item 2. Needs a model change. Run the downward side first.
+Not recommended next, though ranked first by the register: the swarm (AS-SINGLE-AI). No cheap stand-in represents many coordinating agents faithfully; it needs a design discussion first.

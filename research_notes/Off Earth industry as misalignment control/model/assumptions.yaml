@@ -58,8 +58,8 @@ claims:
     text: "A closing window (detection improving over time) never pulls an AI strike earlier."
     where: results/robust_design.md section 8
   - id: H13
-    text: "Breakout options (disguise, later discovery, deprecation, amnesty, spillover): answers to questions (i)-(iv)."
-    where: results/robust_design.md 13.5 onward (pending the GitHub Actions run)
+    text: "Breakout options: any recurring cost on a cooperating AI that a strike escapes (deadline, discovery without certain amnesty, spillover) breaks the pact; options acting only after a failed strike change little."
+    where: results/robust_design.md 13.5 to 13.7
 
 assumptions:
 
@@ -110,9 +110,9 @@ assumptions:
     why_favours: "Saklakov: a standing shutdown hazard makes a patient AI confront; Powell: the declining side (humans) is the one tempted to strike. The model has neither."
     ablation:
       status: partial
-      where: "breakout configs dep, dep_coll, dep_post (deprecation is a shutdown hazard on a cooperator) and amn0 (crackdown on a cooperator found misaligned); robust_design.md 13.3: dep_post > 0 breaks the pact"
-      survived: partly
-      note: "No human-chosen first strike or preventive shutdown has been run. docking.md 13 item 2."
+      where: "breakout configs dep, dep_coll, dep_post, amn, amn0, spill (each a hazard on a cooperating AI), robust_design.md 13.5"
+      survived: "no"
+      note: "Every hazard on a cooperating AI tried so far (deadline, discovery without certain amnesty, spillover) breaks the pact at year 0, which supports Cole's guess (c). Still not run: a human-chosen first strike or preventive shutdown (docking.md 13 item 2)."
     claims: [H1, H8, H9, H12]
     dependence: high
     status: implemented
@@ -413,8 +413,9 @@ assumptions:
     favours_pact: "yes"
     ablation:
       status: partial
-      where: "breakout config 'crack' against 'off' (GitHub Actions run 39637590689); test 3 ratchet (robust_design.md 11.2: small effect)"
-      survived: pending
+      where: "breakout config 'crack' against 'off' (GitHub Actions run 39637590689; robust_design.md 13.5); test 3 ratchet (11.2)"
+      survived: "yes"
+      note: "A severe crackdown helps a little and never hurts: r0.1 baseline design 41 to 48 holds, the same as blocking retries; full box best stack 15 to 17."
     claims: [H13]
     dependence: medium
     status: implemented
@@ -429,8 +430,9 @@ assumptions:
     why_favours: "A mild crackdown makes disguised attempts cheaper for the AI."
     ablation:
       status: partial
-      where: "breakout configs 'dis' and 'dis_smild1' (s_mild 1, the opposite), r0.1 box only (FULL_SKIP)"
-      survived: pending
+      where: "breakout configs 'dis' and 'dis_smild1' (s_mild 1, the opposite), r0.1 box only (FULL_SKIP); robust_design.md 13.5"
+      survived: partly
+      note: "Near the baseline disguise adds no strikes (48 holds either way) but hides failures: visible warning shots 0.114 to 0.069. With s_mild 1 the AI never disguises. Full box not run for 'dis' alone."
     claims: [H13]
     dependence: medium
     status: implemented
@@ -446,8 +448,9 @@ assumptions:
     favours_pact: "yes"
     ablation:
       status: partial
-      where: "breakout config 'dis_disc' against 'dis' (never exposed); breakout_checks.md static world h_up 0 and 0.05"
-      survived: pending
+      where: "breakout config 'dis_disc' against 'dis' (never exposed) and 'crack'; robust_design.md 13.5 (i)"
+      survived: partly
+      note: "Discovery changes no holds. It cuts disguise use (9 to 4 r0.1 draws) but raises second strikes (full box 0.203 to 0.274); on the full box visible warning shots go hidden while P(success) is unchanged."
     claims: [H13]
     dependence: medium
     status: implemented
@@ -461,8 +464,9 @@ assumptions:
     why_favours: "Any bite after closure (s_reach > 0) helps the pact; the opposite is s_reach 0."
     ablation:
       status: partial
-      where: "breakout config 'dis_reach0' (s_reach 0), r0.1 box only"
-      survived: pending
+      where: "breakout config 'dis_reach0' (s_reach 0), r0.1 box only; robust_design.md 13.5"
+      survived: "yes"
+      note: "s_reach 0 loses 2 of 48 r0.1 holds for the baseline design, none for the best stack."
     claims: [H13]
     dependence: low
     status: implemented
@@ -479,9 +483,10 @@ assumptions:
     favours_pact: "yes"
     why_favours: "dep_post = 0 is the default because dep_post > 0 broke the pact in debugging (13.3 item 1: an effective hazard of 0.0005 per year was enough for the best stack)."
     ablation:
-      status: partial
-      where: "breakout configs dep, dep_w, dep_coll, dep_post (dep_post 0.2 is the opposite)"
-      survived: pending
+      status: run
+      where: "breakout configs dep, dep_w, dep_coll, dep_post and baseline-world sweeps (robust_design.md 13.5 (ii))"
+      survived: "no"
+      note: "h_dep 0.1 with nothing preserved: r0.1 holds 41 to 0 (baseline design), 63 to 5 (best stack); coin-flip strikes at year 0. 90% preservation restores most (37 and 63) only if retirement stops at closure; with dep_post 0.2 nothing holds."
     claims: [H13]
     dependence: high
     status: implemented
@@ -495,9 +500,10 @@ assumptions:
     source: {kind: cole_answer, where: "PARAMS basis of a_cred ('Cole's magnanimous passenger seat')"}
     favours_pact: "yes"
     ablation:
-      status: partial
-      where: "breakout configs 'amn' (a_cred 0.9) against 'amn0' (no amnesty); breakout_checks.md static world a_cred 0 to 1"
-      survived: pending
+      status: run
+      where: "breakout configs 'amn' (a_cred 0.9) and 'amn0'; baseline-world a_cred grid 0 to 1 (robust_design.md 13.5 (iii))"
+      survived: "no"
+      note: "With interpretability able to find cooperators misaligned, the baseline design needs a_cred = 1; at 0.9, 0 of 64 r0.1 draws hold for either design (best stack P(strike) 0.07)."
     claims: [H13]
     dependence: medium
     status: implemented
@@ -509,10 +515,12 @@ assumptions:
       - {param: h_spill, value: 0.05, variant: true}
     source: {kind: cole_answer, where: "PARAMS basis of h_spill (Cole 2026-10-21)"}
     favours_pact: "yes"
+    why_favours: "Cole expected spillover to help. The run shows the opposite (see note), so 'yes' records the intent, not the result."
     ablation:
-      status: partial
-      where: "breakout configs 'spill' against 'spill_cut' (cuts the cooperator, no hardening)"
-      survived: pending
+      status: run
+      where: "breakout configs 'spill' (cut and hardening) and 'spill_cut' (cut only), robust_design.md 13.5; the baseline-world spillover rows are wrong (13.6 item 4)"
+      survived: "no"
+      note: "A recurring mild cut on cooperators breaks the pact: r0.1 holds 41 to 2 (baseline design) and 63 to 32 with 0 rival-aware holds (best stack). The hardening part is worth about one draw."
     claims: [H13]
     dependence: low
     status: implemented
