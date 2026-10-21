@@ -1,0 +1,129 @@
+# Breakout-option experiments (robust_design.md section 13) on GitHub's free runners (public repo).
+# About 6 hours on the laptop; here each configuration is its own job, so the run takes a couple of hours of wall time.
+# Start it by pushing any branch named sims/breakout... (workflow_dispatch also works once this file is on main).
+# Nothing is committed or pushed: download the "breakout-results" artifact, review it, then commit it by hand.
+# No secrets; read-only token; actions pinned by full commit SHA (tag in the trailing comment).
+name: breakout
+
+on:
+  push:
+    branches: ["sims/breakout**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12.7"
+  MODEL: "research_notes/Off Earth industry as misalignment control/model"
+
+jobs:
+  ens:
+    name: ensemble ${{ matrix.cfg }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg: [off, noretry, crack, dis, dis_disc, dis_smild1, dis_reach0, dep, dep_w, dep_coll, dep_post, amn, amn0, spill, spill_cut, cole]
+    defaults:
+      run:
+        working-directory: "research_notes/Off Earth industry as misalignment control/model"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - run: echo "BO_WORKERS=$(getconf _NPROCESSORS_ONLN)" >> "$GITHUB_ENV"
+      - name: Solve both designs on both boxes for this configuration (cached runs are skipped)
+        run: python -u breakout_options.py --ens --only "${{ matrix.cfg }}"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: breakout-ens-${{ matrix.cfg }}
+          retention-days: 30
+          if-no-files-found: error
+          path: ${{ env.MODEL }}/results/breakout_runs/*__${{ matrix.cfg }}.npz
+
+  worlds:
+    name: baseline-world sweeps
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: "research_notes/Off Earth industry as misalignment control/model"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - run: echo "BO_WORKERS=$(getconf _NPROCESSORS_ONLN)" >> "$GITHUB_ENV"
+      - run: python -u breakout_options.py --worlds
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: breakout-worlds
+          retention-days: 30
+          if-no-files-found: error
+          path: |
+            ${{ env.MODEL }}/results/breakout_worlds.md
+            ${{ env.MODEL }}/results/breakout_worlds.json
+
+  report:
+    name: merge and report
+    needs: [ens, worlds]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: "research_notes/Off Earth industry as misalignment control/model"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: breakout-ens-*
+          merge-multiple: true
+          path: ${{ env.MODEL }}/results/breakout_runs
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        continue-on-error: true
+        with:
+          name: breakout-worlds
+          path: ${{ env.MODEL }}/results
+      - run: python breakout_options.py --report
+      - name: Record provenance
+        run: |
+          python - <<'EOF' > results/breakout_provenance.json
+          import json, os, platform, sys, numpy
+          print(json.dumps(dict(commit=os.environ["GITHUB_SHA"], run_id=os.environ["GITHUB_RUN_ID"],
+                                python=sys.version.split()[0], numpy=numpy.__version__,
+                                os=platform.platform(), ens_result="${{ needs.ens.result }}",
+                                worlds_result="${{ needs.worlds.result }}"), indent=1))
+          EOF
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: breakout-results
+          retention-days: 30
+          path: |
+            ${{ env.MODEL }}/results/breakout_runs/
+            ${{ env.MODEL }}/results/breakout_tables.md
+            ${{ env.MODEL }}/results/breakout_summary.json
+            ${{ env.MODEL }}/results/breakout_worlds.md
+            ${{ env.MODEL }}/results/breakout_worlds.json
+            ${{ env.MODEL }}/results/breakout_provenance.json

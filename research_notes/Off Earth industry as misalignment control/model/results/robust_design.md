@@ -465,3 +465,5 @@ cd "research_notes/Off Earth industry as misalignment control/model"
 1. `--ens`: estimated 6 hours on this laptop. It resumes from the cache (`off` and `noretry` are partly done).
 2. `--worlds`: about 20 minutes.
 3. `--report`: then write 13.5 onward (answers to i to iv, and what would show them wrong), and look at the open closed-form case in 13.2 item 4.
+
+4. **Or run it on GitHub instead of the laptop** (added 2026-10-21): `.github/workflows/breakout.yml` runs each configuration as its own free-runner job, plus the world sweeps, then `--report`. Push any branch named `sims/breakout...` to start it. Results come back as the `breakout-results` artifact; review them, then commit by hand. Runner floats may differ slightly from the laptop's, so compare the `off` rows with the committed cache before trusting knife-edge draws.
