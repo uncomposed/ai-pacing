@@ -199,9 +199,15 @@ def batches_for(thetas: list[dict]) -> list[np.ndarray]:
     return [order[i:i + BATCH] for i in range(0, len(order), BATCH)]
 
 
+def run_tag(ens_name: str, design: dict, **kw) -> str:
+    """Cache name of one (ensemble, design, solver settings) run; ci_sims.py uses it too."""
+    cfg = dict(CFG, **kw)
+    return f"{ens_name}__{design_key(design)}" + ("" if cfg == CFG else "__" + "_".join(f"{k}{v}" for k, v in sorted(kw.items())))
+
+
 def run_design(ens_name: str, thetas: list[dict], design: dict, pool=None, **kw) -> dict:
     cfg = dict(CFG, **kw)
-    tag = f"{ens_name}__{design_key(design)}" + ("" if cfg == CFG else "__" + "_".join(f"{k}{v}" for k, v in sorted(kw.items())))
+    tag = run_tag(ens_name, design, **kw)
     path = os.path.join(RUNS, tag + ".npz")
     if os.path.exists(path):
         z = np.load(path)
