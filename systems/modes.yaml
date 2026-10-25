@@ -406,10 +406,10 @@ adapters:
       - "any statement about effective_control, custody or sovereignty"
     attach_point: "Evidence for rd_capability and cyber_capability; validation target for AD-AIFM via the #8 evidence protocol."
   - id: AD-GATE
-    source: "Epoch GATE integrated assessment model, arXiv:2503.04941 and epoch.ai/gate (version to pin in #13)"
+    source: "Epoch GATE integrated assessment model, arXiv:2503.04941 (abstract read 2026-10-25) and epoch.ai/gate; version to pin in #13"
     kind: model
-    entity_represented: "A macroeconomy with automatable tasks and compute investment; no labs or AI actors as decision-makers (to verify in #13)"
-    decision_authority: "Investment chosen by the model's representative optimizer, not by a lab, state or AI (to verify in #13)."
+    entity_represented: "A macroeconomy: compute-based AI development, task automation and a semi-endogenous growth model with endogenous investment and adjustment costs (abstract); no labs or AI actors as decision-makers (to verify in #13)"
+    decision_authority: "Investment is endogenous to the economic model, not a lab, state or AI decision; whose objective it optimizes is to verify in #13."
     quantities:
       - {name: "effective compute", unit: "source-native (FLOP)", owner: "economy aggregate", accounting: compute_training}
       - {name: "automated task share", unit: "fraction of tasks", owner: "economy aggregate", dimension: rd_capability}
@@ -424,14 +424,15 @@ adapters:
       - "using its optimizer's allocation as a lab, state or AI decision"
     attach_point: "Macro output and compute trajectories under MODE-HUMAN-LAB; coupling to the pact solver needs #11's quantity bridge."
   - id: AD-AIFM
-    source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public (commit to pin in #14)"
+    source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public; only its README was read (2026-10-25, main branch, commit not pinned); pin in #14"
     kind: model
-    entity_represented: "The leading AI project's research program: research labor, compute, software efficiency, coding automation milestones"
-    decision_authority: "Humans allocate compute and research; AI automation changes research speed (to verify in #14)."
+    entity_represented: "An AGI project's research program: forecasts of human labor and compute, coding automation and research judgment, cumulative effective compute, software efficiency"
+    decision_authority: "Labor and compute enter as forecasts, not as choices of a modelled actor; no AI objective is represented (to verify in #14)."
     quantities:
+      - {name: "cumulative effective compute", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability}
       - {name: "software efficiency", unit: "source-native multiplier", owner: lab, accounting: research_output}
-      - {name: "automation milestone attainment", unit: "date of latent milestone", owner: model_weights, dimension: rd_capability}
-      - {name: "experiment compute", unit: "source-native (FLOP)", owner: lab, accounting: compute_training}
+      - {name: "capability milestones (AC, SC, SAR, SIAR, TED-AI, ASI)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability}
+      - {name: "compute forecast", unit: "source-native (FLOP)", owner: lab, accounting: compute_training}
     inputs: [human_labor, agent_labor, compute_training]
     modes:
       MODE-HUMAN-LAB: {coverage: supported, reason: "Its core setting: human-allocated research with growing automation."}

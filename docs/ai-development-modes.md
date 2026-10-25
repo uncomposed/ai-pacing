@@ -158,8 +158,10 @@ authority, which is the #5 rule for rejecting an adapter.
 | AD-AIFM (#14) | supported | partial | unsupported | automation milestones as loss of control; double-counting compute feedback with GATE |
 | AD-PACT (this repo) | unsupported | unsupported | partial | capacity A as capability; scaling A for collectives; anything before t = 0 |
 
-The GATE and AI Futures entries describe those models as the issues do; their
-specifics are marked "to verify" in the YAML and are for #13 and #14 to pin.
+The GATE entry rests on the paper's abstract (arXiv:2503.04941) and the AI Futures
+entry on the repository README, both read 2026-10-25; neither model was run and no
+version is pinned. Claims about who allocates resources in them are marked "to verify"
+in the YAML and are for #13 and #14 to settle.
 
 ## 8. The pact solver on the contract
 
