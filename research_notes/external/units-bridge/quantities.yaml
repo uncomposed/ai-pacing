@@ -1,0 +1,495 @@
+# Quantity dictionary for the bridge from AI research progress to industrial growth and chip autonomy (issue #11).
+#
+# Status: proposed. [[ai gen]] Written 2026-10-25. Nothing here is human_validated or empirically validated.
+# Read with README.md (this folder). Shape: schema/units-bridge.schema.json. Rules: tools/units_tool.py
+# (`make units-check`, part of `make check`).
+#
+# What the checker enforces on this file:
+#   1. every unit string parses into the declared base dimensions;
+#   2. every category the issue names has at least one quantity;
+#   3. every mode-contract reference (accounting id, dimension, mode, adapter quantity) exists in systems/modes.yaml,
+#      and the adapter quantity's unit is the one declared here (normalized spelling compared by dimension);
+#   4. every pact parameter named exists in equilibrium_model.PARAMS;
+#   5. the four closure and sovereignty concepts are distinct, map to different contract elements, and none is
+#      reachable from another through a coupled conversion.
+#
+# Evidence status (per quantity, about the values this repository uses, not about the concept):
+#   normalization      a unit definition; needs no evidence and carries none
+#   observed_secondary a measured value cited here from a secondary summary; primary not read in this project
+#   source_model_output a published model's output (not an observation)
+#   source_model_assumption a published model's input
+#   project_assumption a value chosen in this project
+#   external_pending   an observable whose source is being pinned and replicated elsewhere (#12, #13, #14)
+#   not_collected      an observable is defined, but no data are in the repository
+#   scenario           a bounded scenario value (the coupling toy)
+
+schema_version: 0.1.0
+status: proposed
+
+# Base dimensions. Two of them are normalizations, not physical dimensions: earth_industry (the pact solver's
+# unit, H = 1) and le_capacity (today's world leading-edge chip capacity, F = 1). Converting either to a physical
+# unit needs an empirical scale estimate (conversions.yaml), never a definition.
+dimensions:
+  physical: [time, energy, mass, money, operation, person, agent, task]
+  normalized: [earth_industry, le_capacity]
+
+units:
+  "1": {factor: 1, dims: {}}
+  s: {factor: 1, dims: {time: 1}}
+  h: {factor: 3600, dims: {time: 1}}
+  yr: {factor: 31557600, dims: {time: 1}, note: "Julian year"}
+  J: {factor: 1, dims: {energy: 1}}
+  EJ: {factor: 1.0e+18, dims: {energy: 1}}
+  W: {factor: 1, dims: {energy: 1, time: -1}}
+  MW: {factor: 1.0e+6, dims: {energy: 1, time: -1}}
+  TW: {factor: 1.0e+12, dims: {energy: 1, time: -1}}
+  kg: {factor: 1, dims: {mass: 1}}
+  t: {factor: 1000, dims: {mass: 1}, note: "metric ton (Metzger's MT)"}
+  USD: {factor: 1, dims: {money: 1}, note: "price year to be stated by the source adapter"}
+  FLOP: {factor: 1, dims: {operation: 1}}
+  person: {factor: 1, dims: {person: 1}}
+  agent: {factor: 1, dims: {agent: 1}, note: "one running agent instance"}
+  task: {factor: 1, dims: {task: 1}}
+  EIU: {factor: 1, dims: {earth_industry: 1}, note: "Earth-industry unit: the pact solver's H = 1 (today's Earth industry)"}
+  LEC: {factor: 1, dims: {le_capacity: 1}, note: "today's world leading-edge chip-making capacity; the pact solver's F = 1"}
+
+categories: [capability_metric, research_labor, research_output, software_efficiency, compute_training, compute_inference,
+             energy, physical_capital, physical_output, supply_chain_closure, external_control]
+
+quantities:
+  # ---- capability metrics -------------------------------------------------------------------------------------
+  - id: QTY-METR-HORIZON
+    name: "METR 50% (or 80%) task time horizon"
+    category: capability_metric
+    unit: h
+    kind: state
+    semantic: "human completion time of tasks a model finishes with the stated success rate on a stated task suite and scaffold"
+    observable: "METR task-suite runs; logistic fit of success against human task time"
+    models: [AD-METR]
+    contract: {adapter_quantity: {adapter: AD-METR, name: "50% task time horizon"}, dimension: rd_capability}
+    evidence: {status: external_pending, ref: "#12 pins the source and replicates it under research_notes/external/"}
+    note: "A time, but not a duration of anything the model does in the world. Never converted to calendar time, research labor or strategic odds here."
+  - id: QTY-BENCH-SCORE
+    name: "Benchmark score (e.g. RE-Bench normalized score)"
+    category: capability_metric
+    unit: "1"
+    kind: share
+    semantic: "score on a fixed task suite, normalized by the source"
+    observable: "benchmark runs with a stated scaffold and budget"
+    models: [AD-METR]
+    contract: {dimension: rd_capability}
+    evidence: {status: external_pending, ref: "#12"}
+  - id: QTY-AIFM-MILESTONE
+    name: "AI Futures capability milestone date (AC, SC, SAR, SIAR, TED-AI, ASI)"
+    category: capability_metric
+    unit: yr
+    kind: date
+    semantic: "calendar date at which a threshold on the effective-compute scale is crossed"
+    observable: "none directly; a model output"
+    models: [AD-AIFM]
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)"}, dimension: rd_capability}
+    evidence: {status: external_pending, ref: "#14"}
+  # ---- research labor -----------------------------------------------------------------------------------------
+  - id: QTY-HUMAN-RESEARCH-LABOR
+    name: "Human research labor"
+    category: research_labor
+    unit: person*h/yr
+    kind: flow
+    semantic: "hours of human research and engineering work per year"
+    observable: "headcount times hours, from lab reports or surveys"
+    models: [AD-AIFM, AD-GATE]
+    contract: {accounting: human_labor}
+    evidence: {status: not_collected, ref: "no data in the repository"}
+  - id: QTY-AGENT-LABOR
+    name: "Agent research labor"
+    category: research_labor
+    unit: agent*h/yr
+    kind: flow
+    semantic: "hours of agent work per year; a use of inference compute"
+    observable: "deployment logs: agent instances times hours"
+    models: [AD-AIFM]
+    contract: {accounting: agent_labor}
+    evidence: {status: not_collected, ref: "no data in the repository"}
+    note: "Derived from compute_inference in the mode contract. A production function takes this or inference compute as input, never both."
+  - id: QTY-DEV-TIME-RATIO
+    name: "Realized developer task time ratio (with AI / without)"
+    category: research_labor
+    unit: "1"
+    kind: ratio
+    semantic: "measured change in human developer task time from AI assistance"
+    observable: "randomized developer-productivity studies"
+    models: [AD-METR]
+    contract: {adapter_quantity: {adapter: AD-METR, name: "realized developer task time ratio"}, accounting: human_labor}
+    evidence: {status: external_pending, ref: "#12"}
+    note: "The only measured link between AI capability and research labor in scope. It is about coding tasks, not about building factories."
+  # ---- research output ----------------------------------------------------------------------------------------
+  - id: QTY-RESEARCH-OUTPUT
+    name: "Research output as software-efficiency growth"
+    category: research_output
+    unit: 1/yr
+    kind: rate
+    semantic: "growth rate (ln per year) of the software-efficiency multiplier"
+    observable: "algorithmic-progress estimates (compute needed for fixed performance over time)"
+    models: [AD-AIFM]
+    contract: {accounting: research_output}
+    evidence: {status: external_pending, ref: "#14"}
+  # ---- software efficiency ------------------------------------------------------------------------------------
+  - id: QTY-SOFTWARE-EFFICIENCY
+    name: "Software efficiency"
+    category: software_efficiency
+    unit: "1"
+    kind: state
+    semantic: "multiplier: effective FLOP per physical FLOP, relative to a stated reference year"
+    observable: "compute-equivalent gains at fixed benchmark performance"
+    models: [AD-AIFM]
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "software efficiency"}, accounting: research_output}
+    evidence: {status: external_pending, ref: "#14"}
+  - id: QTY-AIFM-ECI
+    name: "Cumulative effective compute (AI Futures)"
+    category: software_efficiency
+    unit: "1"
+    kind: index
+    semantic: "log10 of effective training FLOP relative to a stated reference (orders of magnitude)"
+    observable: "none directly; a model state"
+    models: [AD-AIFM]
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "progress: log10 cumulative effective compute (latent)"}, dimension: rd_capability}
+    evidence: {status: external_pending, ref: "#14"}
+    note: "A log of a dimensional quantity, so it is meaningful only with its reference FLOP (conversion CV-OOM-TO-FLOP)."
+  # ---- compute ------------------------------------------------------------------------------------------------
+  - id: QTY-TRAINING-COMPUTE
+    name: "Training compute"
+    category: compute_training
+    unit: FLOP
+    kind: stock
+    semantic: "physical floating-point operations used to train one set of weights"
+    observable: "lab disclosures, Epoch estimates"
+    models: [AD-GATE, AD-AIFM]
+    contract: {accounting: compute_training}
+    evidence: {status: external_pending, ref: "#13, #14"}
+  - id: QTY-EFFECTIVE-COMPUTE
+    name: "Effective compute"
+    category: compute_training
+    unit: FLOP
+    kind: stock
+    semantic: "physical training FLOP times software efficiency (same dimension as FLOP, different meaning); each model's eFLOP is relative to its own software-efficiency base"
+    observable: "not observed; physical FLOP times an efficiency estimate"
+    models: [AD-GATE, AD-AIFM]
+    contract: {adapter_quantity: {adapter: AD-GATE, name: "largest training run C_T"}, accounting: capability}
+    evidence: {status: external_pending, ref: "#13 (GATE, S(start of 2025) = 1; epoch-gate/INTERFACES.md), #14"}
+    note: "GATE's and AI Futures' eFLOP must be re-based to one software-efficiency path before they are compared (epoch-gate/INTERFACES.md item 2)."
+  - id: QTY-TRAINING-COMPUTE-RATE
+    name: "Compute allocated to training"
+    category: compute_training
+    unit: FLOP/s
+    kind: stock
+    semantic: "installed FLOP/s assigned to training"
+    observable: "cluster inventories and schedules"
+    models: [AD-AIFM]
+    contract: {accounting: compute_training}
+    evidence: {status: not_collected, ref: "no data in the repository"}
+  - id: QTY-INFERENCE-COMPUTE-RATE
+    name: "Compute allocated to inference"
+    category: compute_inference
+    unit: FLOP/s
+    kind: stock
+    semantic: "installed FLOP/s assigned to running agents and products"
+    observable: "cluster inventories and schedules"
+    models: [AD-AIFM]
+    contract: {accounting: compute_inference}
+    evidence: {status: not_collected, ref: "no data in the repository"}
+  # ---- energy -------------------------------------------------------------------------------------------------
+  - id: QTY-WORLD-PRIMARY-POWER
+    name: "World primary energy use (as mean power)"
+    category: energy
+    unit: W
+    kind: flow
+    semantic: "world primary energy per year divided by the length of a year"
+    observable: "Energy Institute Statistical Review"
+    models: [AD-PACT]
+    contract: {}
+    evidence: {status: observed_secondary, ref: "620 EJ in 2023 = 19.6 TW (EI Review 2024 via DieselNet, decision_model.md); 592 EJ in 2024 = 18.8 TW (EI Review 2025, new 'total energy supply' method, physics_economics.md). Primary not read."}
+  - id: QTY-METZGER-GEN5-ENERGY
+    name: "Energy use of Metzger's Gen 5.0 lunar industry"
+    category: energy
+    unit: J/yr
+    kind: flow
+    semantic: "annual energy use of the modelled lunar industry at Gen 5.0, 70% solar duty cycle"
+    observable: "none; a model output"
+    models: [Metzger]
+    contract: {}
+    evidence: {status: source_model_output, ref: "EV-METZGER-2013, arXiv v1 p. 16: 'Figure 3 shows Gen. 5.0 (at 70% duty cycle) using 10^15 J of energy per year'"}
+  # ---- physical capital ---------------------------------------------------------------------------------------
+  - id: QTY-PACT-A
+    name: "AI capacity A (pact solver)"
+    category: physical_capital
+    unit: EIU
+    kind: stock
+    semantic: "the AI's off-Earth industrial base in units of today's Earth industry"
+    observable: "none directly; would need a declared bridge to energy, mass or output"
+    models: [AD-PACT]
+    contract: {adapter_quantity: {adapter: AD-PACT, name: "AI capacity A"}, accounting: industrial_output}
+    pact_params: [A0, A_close, Kmax]
+    evidence: {status: project_assumption, ref: "assumptions.yaml AS-A0, AS-ACLOSE, AS-SCALE"}
+    note: "A is a stock; the contract books it to industrial_output, a flow. The solver's implicit normalization is one EIU of capacity yields one EIU of output per year (CV-CAPACITY-TO-OUTPUT). Finding F2 in README.md."
+  - id: QTY-EARTH-INDUSTRY-H
+    name: "Earth's industry H"
+    category: physical_capital
+    unit: EIU
+    kind: stock
+    semantic: "today's Earth industry, frozen; the unit itself"
+    observable: "none; a definition"
+    models: [AD-PACT]
+    contract: {}
+    pact_params: [H]
+    evidence: {status: normalization, ref: "PARAMS H = 1 ('Normalisation')"}
+  - id: QTY-METZGER-ASSET-MASS
+    name: "Mass of lunar industrial assets (Metzger)"
+    category: physical_capital
+    unit: t
+    kind: stock
+    semantic: "mass of hardware brought from Earth and built on the Moon, per generation"
+    observable: "none; a model output"
+    models: [Metzger]
+    contract: {}
+    evidence: {status: source_model_output, ref: "EV-METZGER-2013 Fig. 2, re-digitized in metzger/fig2_digitized.json"}
+  # ---- physical output and growth -----------------------------------------------------------------------------
+  - id: QTY-INDUSTRIAL-OUTPUT
+    name: "Industrial output (pact units)"
+    category: physical_output
+    unit: EIU/yr
+    kind: flow
+    semantic: "output per year in units of today's Earth industry's annual output"
+    observable: "none directly"
+    models: [AD-PACT, toy]
+    contract: {accounting: industrial_output}
+    evidence: {status: normalization, ref: "defined through CV-CAPACITY-TO-OUTPUT"}
+  - id: QTY-GWP
+    name: "Gross world product"
+    category: physical_output
+    unit: USD/yr
+    kind: flow
+    semantic: "world output at market or PPP prices (adapter to state which)"
+    observable: "national accounts"
+    models: [AD-GATE]
+    contract: {adapter_quantity: {adapter: AD-GATE, name: "gross world product Y"}, accounting: industrial_output}
+    evidence: {status: external_pending, ref: "#13: 'real USD', price base not stated (epoch-gate/INTERFACES.md)"}
+  - id: QTY-GATE-COMPUTE-STOCK
+    name: "GATE physical compute stock Q"
+    category: compute_training
+    unit: FLOP/yr
+    kind: stock
+    semantic: "installed compute capacity, shared by training and runtime"
+    observable: "installed accelerator FLOP/s times seconds per year"
+    models: [AD-GATE]
+    contract: {accounting: compute_training}
+    evidence: {status: external_pending, ref: "#13 (epoch-gate/INTERFACES.md); the split into training and runtime is unresolved there (E7)"}
+  - id: QTY-GROWTH-RATE-G
+    name: "Off-Earth growth rate g (pact solver)"
+    category: physical_output
+    unit: 1/yr
+    kind: rate
+    semantic: "continuous growth rate of A with full chip access, below the cap"
+    observable: "none; a project assumption"
+    models: [AD-PACT]
+    contract: {}
+    pact_params: [g]
+    evidence: {status: project_assumption, ref: "Not a Metzger value: about half his max-rate fit, at a scale 1e2 to 1e5 times larger than he models (metzger/RECHECK.md)"}
+  - id: QTY-METZGER-GROWTH-RATE
+    name: "Growth rate of Metzger's max-rate case"
+    category: physical_output
+    unit: 1/yr
+    kind: rate
+    semantic: "log-linear fit to asset mass against time, Gen 1.0 to 6.0"
+    observable: "none; fitted to a model output"
+    models: [Metzger]
+    contract: {}
+    evidence: {status: source_model_output, ref: "fit to metzger/fig2_digitized.json: 0.647/yr (0.707 for Gen 4.0 to 6.0)"}
+  - id: QTY-METZGER-GEN-SPACING
+    name: "Generation spacing (Metzger)"
+    category: physical_output
+    unit: yr
+    kind: interval
+    semantic: "time between successive hardware generations"
+    observable: "none; a model input"
+    models: [Metzger]
+    contract: {}
+    evidence: {status: source_model_assumption, ref: "EV-METZGER-2013 Fig. 2 caption: 'generations in 2-year intervals'"}
+    note: "Not a doubling time; mass grows about 3.65x per generation in the max case (CV-GENSPACING-TO-DOUBLING is forbidden)."
+  - id: QTY-DOUBLING-TIME
+    name: "Doubling time"
+    category: physical_output
+    unit: yr
+    kind: interval
+    semantic: "time for a growing stock to double at a constant continuous rate"
+    observable: "derived from a rate"
+    models: [AD-PACT, Metzger]
+    contract: {}
+    evidence: {status: normalization, ref: "identity ln 2 / rate (CV-RATE-TO-DOUBLING)"}
+  # ---- supply-chain closure -----------------------------------------------------------------------------------
+  - id: QTY-LE-CLOSURE-THRESHOLD
+    name: "Leading-edge closure threshold A_close"
+    category: supply_chain_closure
+    unit: EIU
+    kind: threshold
+    semantic: "off-Earth base at which the AI makes leading-edge chips without Earth"
+    observable: "none; would need a bill of materials for a leading-edge supply chain"
+    models: [AD-PACT]
+    contract: {dimension: dependencies}
+    pact_params: [A_close]
+    evidence: {status: project_assumption, ref: "AS-ACLOSE"}
+  - id: QTY-LE-FAB-LEVEL-F
+    name: "Earth leading-edge fab level F"
+    category: supply_chain_closure
+    unit: LEC
+    kind: stock
+    semantic: "Earth's leading-edge chip-making capacity as a share of today's"
+    observable: "count of leading-edge fabs and wafer starts by node"
+    models: [AD-PACT]
+    contract: {adapter_quantity: {adapter: AD-PACT, name: "Earth fab level F"}, dimension: dependencies}
+    pact_params: [f_fab, n_cf, T_dis, T_reloc, T_rebuild]
+    evidence: {status: project_assumption, ref: "AS-COVERTFAB, AS-SEQUENCING"}
+  - id: QTY-CHI0
+    name: "Growth multiplier without leading-edge chips (chi0)"
+    category: supply_chain_closure
+    unit: "1"
+    kind: multiplier
+    semantic: "ratio of growth rate without leading-edge chips to growth rate with them, below A_close"
+    observable: "none; would need growth of an industry on non-leading-edge chips"
+    models: [AD-PACT]
+    contract: {dimension: dependencies}
+    pact_params: [chi0, chi_m]
+    evidence: {status: project_assumption, ref: "AS-CHI0; the toy (coupling_toy.py) shows a supply quota does not act as a constant multiplier"}
+  - id: QTY-LOCAL-CHIP-SHARE
+    name: "Share of electronics made locally (basic chip production)"
+    category: supply_chain_closure
+    unit: "1"
+    kind: share
+    semantic: "share of the industry's electronics made by its own (not leading-edge) fabrication"
+    observable: "bill of materials by origin"
+    models: [Metzger]
+    contract: {dimension: dependencies}
+    evidence: {status: source_model_assumption, ref: "EV-METZGER-2013 p. 8-9: targets 90%, 95%, 99%, 100% for Gen 3.0 to 6.0; chips 'adequate for appropriate technology', not leading edge"}
+  # ---- external control and ownership -------------------------------------------------------------------------
+  - id: QTY-RESOURCE-HOLDING-SHARE
+    name: "Share of a resource instance held"
+    category: external_control
+    unit: "1"
+    kind: share
+    semantic: "the holder's share of one resource instance (cluster, fab, energy plant, off-Earth base)"
+    observable: "ownership and custody records"
+    models: [AD-PACT, toy]
+    contract: {dimension: external_resources}
+    evidence: {status: not_collected, ref: "mode-contract traces use it as `holders` shares"}
+  - id: QTY-DENIAL-Q
+    name: "Denial reserve: firing probability q and dead share d"
+    category: external_control
+    unit: "1"
+    kind: probability
+    semantic: "probability the reserve fires, and the share of Earth capacity it kills"
+    observable: "none; a project assumption"
+    models: [AD-PACT]
+    contract: {adapter_quantity: {adapter: AD-PACT, name: "denial reserve firing probability q"}, dimension: effective_control}
+    pact_params: [q, d, kill_pre]
+    no_calibration_from_capability: true
+    evidence: {status: project_assumption, ref: "AS-DENIAL, AS-KILLPRE"}
+  - id: QTY-STRIKE-ODDS
+    name: "Strike (seizure) success odds"
+    category: external_control
+    unit: "1"
+    kind: probability
+    semantic: "probability a seizure attempt succeeds, by AI size and Earth defence"
+    observable: "none; a project assumption"
+    models: [AD-PACT]
+    contract: {dimension: strategic_capability}
+    pact_params: [p_s0, D, eps]
+    no_calibration_from_capability: true
+    evidence: {status: project_assumption, ref: "AS-CONFLICT; PARAMS p_s0 'unknowable'"}
+  - id: QTY-INTERVENTION-LATENCY
+    name: "Intervention latency"
+    category: external_control
+    unit: h
+    kind: interval
+    semantic: "time from a decision to intervene to the intervention taking effect"
+    observable: "drills, incident timelines"
+    models: []
+    contract: {dimension: intervention_latency}
+    evidence: {status: not_collected, ref: "mode contract dimension intervention_latency"}
+  # ---- the coupling toy (coupling_toy.py); every factor is measured in the EIU of output it can support ----------
+  - id: QTY-TOY-CAPITAL
+    name: "Toy: productive capital K"
+    category: physical_capital
+    unit: EIU
+    kind: stock
+    semantic: "machines and plant, in EIU of output capacity they support (Leontief normalization)"
+    observable: "none; a toy state"
+    models: [toy]
+    contract: {accounting: industrial_output}
+    evidence: {status: scenario, ref: "coupling_toy.py"}
+  - id: QTY-TOY-ENERGY
+    name: "Toy: energy capacity E"
+    category: energy
+    unit: EIU
+    kind: stock
+    semantic: "energy supply capacity, in EIU of output it supports"
+    observable: "none; a toy state"
+    models: [toy]
+    contract: {}
+    evidence: {status: scenario, ref: "coupling_toy.py"}
+  - id: QTY-TOY-COMPUTE
+    name: "Toy: compute C (operations share 1 - phi, research share phi)"
+    category: compute_inference
+    unit: EIU
+    kind: stock
+    semantic: "installed compute, in EIU of output its operations share supports; one ledger split by shares, never counted twice"
+    observable: "none; a toy state"
+    models: [toy]
+    contract: {accounting: compute_inference}
+    evidence: {status: scenario, ref: "coupling_toy.py"}
+  - id: QTY-TOY-DESIGN
+    name: "Toy: design and integration throughput D"
+    category: research_output
+    unit: EIU/yr
+    kind: flow
+    semantic: "new capacity per year that research and engineering can design and integrate; the only place coding speed enters"
+    observable: "none; a toy state"
+    models: [toy]
+    contract: {accounting: research_output}
+    evidence: {status: scenario, ref: "coupling_toy.py"}
+  - id: QTY-TOY-CHIP-SUPPLY
+    name: "Toy: chip supply for new compute"
+    category: supply_chain_closure
+    unit: EIU/yr
+    kind: flow
+    semantic: "imported chips (quota) plus local crude chips plus local leading-edge chips, per year"
+    observable: "none; a toy state"
+    models: [toy]
+    contract: {dimension: dependencies}
+    evidence: {status: scenario, ref: "coupling_toy.py"}
+
+# Issue #11 box 5: four things that are easy to merge and must stay apart. Each maps to a different element of the
+# mode contract. None implies another; the checker refuses a coupled conversion between their quantities.
+closure_and_sovereignty:
+  - id: CL-BASIC-CHIPS
+    name: "Basic chip production"
+    meaning: "The industry makes the chips it needs for its own machines, at any node. Metzger reaches it at Gen 5.0 (about 6,400 t, about 1.6e-6 EIU under the energy bridge)."
+    quantities: [QTY-LOCAL-CHIP-SHARE]
+    contract: {dimension: dependencies, element: "chips for industrial control"}
+    does_not_give: "leading-edge compute; AI capability growth; any change in who controls the system"
+  - id: CL-LEADING-EDGE-FAB
+    name: "Leading-edge fab independence"
+    meaning: "The industry makes leading-edge chips without any Earth input. The pact solver's A_close = 0.1 EIU."
+    quantities: [QTY-LE-CLOSURE-THRESHOLD, QTY-LE-FAB-LEVEL-F]
+    contract: {dimension: dependencies, element: "leading-edge compute"}
+    does_not_give: "ownership of the resources it runs on; effective sovereignty (objective selection and control are separate dimensions)"
+  - id: CL-RESOURCE-OWNERSHIP
+    name: "Resource ownership"
+    meaning: "Who holds the energy, materials, capital and compute, as shares of resource instances."
+    quantities: [QTY-RESOURCE-HOLDING-SHARE, QTY-PACT-A]
+    contract: {dimension: external_resources, element: "holders shares in trace resources"}
+    does_not_give: "independence from withheld inputs (a held base can still need imported chips); effective control"
+  - id: CL-EFFECTIVE-SOVEREIGNTY
+    name: "Effective sovereignty"
+    meaning: "A derived view, not a quantity: system-selected objectives, no effective human control, and substantial resources within a stated scope and horizon."
+    quantities: []
+    contract: {mode: MODE-SOVEREIGN, element: "derived view over objective_selection, effective_control, external_resources, strategic_capability"}
+    does_not_give: "complete material independence (listed under not_implied in MODE-SOVEREIGN)"

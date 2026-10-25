@@ -1,0 +1,70 @@
+# Pinned sources for the AI Futures Model replication (issue #14). [[ai gen]] Written 2026-10-25.
+# tests/test_aifm.py checks that the commit here matches fetch_upstream.sh and every committed result.
+
+upstream:
+  name: "AI Futures Model (model and website behind aifuturesmodel.com)"
+  url: "https://github.com/AI-Futures-Project/aifm-public"
+  commit: "1c40ecdb246c25980515441a66571931c5604e11"
+  commit_subject: "Initial release"
+  commit_date: "2026-09-09"
+  history_note: "The public repository has a single commit; earlier development history is not public."
+  accessed: "2026-10-25"
+  license: "MIT (LICENSE at the pinned commit, Copyright (c) 2026 AI Futures Project)"
+  vendored: false
+  fetch: "fetch_upstream.sh (git fetch --depth 1 of the commit; checkout is about 108 MB including the website, so it is not vendored)"
+  runtime_pins:
+    python: "3.14 (.python-version)"
+    numpy: "2.4.1 (requirements.txt)"
+    scipy: "1.17.0 (requirements.txt)"
+    pyyaml: ">=5.4.0 (requirements.txt; 6.0.3 used here)"
+    note: "Upstream warns that seeded multivariate_normal(method='svd') draws differ across CPUs even at identical numpy (requirements.txt comment), so seeded Monte Carlo output is not bit-reproducible across machines."
+  used:
+    - "progress_model/ (the model), scripts/pipelines/batch_rollout.py (seeded Monte Carlo), tests/ (golden data and loaders)"
+    - "tests/golden_data/default_trajectory.json and default_milestones.json: reference trajectory"
+    - "app/forecast/data/simulations/daniel-08-16-26/: published 10,000-sample forecast statistics, its exported sampling config and metadata (seed 20260810)"
+    - "progress_model/README.md: model guide (equations, calibration sequence, approximations)"
+    - "docs/input-series-provenance.md: units of the input series"
+
+config_inheritance:
+  defaults: "progress_model/config.py DEFAULT_PARAMETERS. Equal to the golden _generation_parameters at the pin."
+  chains:
+    # parent: chains as declared in the YAML files at the pinned commit
+    - config: config/sampling_config_q2_daniel.yaml
+      chain: [config/sampling_config_q2_daniel.yaml, config/sampling_config_daniel.yaml, config/sampling_config.yaml]
+      note: "Q2 2026 anchor blocks (uplift-solved 0.5 / time-horizon 0.25 / revenue 0.25) over Daniel's non-anchor beliefs over the base."
+    - config: config/sampling_config_q2_eli.yaml
+      chain: [config/sampling_config_q2_eli.yaml, config/sampling_config.yaml]
+    - config: config/sampling_config_q2_brendan.yaml
+      chain: [config/sampling_config_q2_brendan.yaml, config/sampling_config.yaml]
+    - config: "app/forecast/data/simulations/daniel-08-16-26/sampling_config.yaml"
+      chain: ["flattened export (no parent)"]
+      note: "Parameters, correlation matrix, time range and timeout are identical to the resolved q2_daniel chain at the pin; it differs only in input_data (inputs/2200.csv), seed (20260810) and num_samples (10000). Compared field by field on 2026-10-25."
+
+inputs:
+  - path: inputs/input_data.csv
+    sha256: dcfd7b15de148f35290b136066913984dd669c6b45aa948262a12d7cb184c94a
+    columns: "time (decimal year), L_HUMAN (FTEs, per the website's CSV editor), inference_H100e, experiment_H100e, training_H100e (instantaneous H100-equivalents, rates), world_H100e, total_ai_company_H100e (display only)"
+    span: "2017-2200, annual then sparser"
+    provenance: "Upstream workbook '[AI Futures Model] Input Time Series Forecasts.xlsx' (deleted upstream before the public release; see docs/input-series-provenance.md). Historical years are estimates, later years forecasts; no per-row provenance."
+    used_by: "default runs (reference, feedback-off, anchors) and the pinned-q2-daniel rollout preset"
+  - path: inputs/2200.csv
+    sha256: 15ce2d02121ad28545d720c42093b282cb65255e43fd7cf6e232c5d2ccbfdfcd
+    note: "Older vintage of the same series (values differ from input_data.csv in every row). The published Daniel 08-16-26 run used it."
+    used_by: "published-daniel-08-16-26 rollout preset"
+  - path: inputs/metr/benchmark_results_1_1.yaml
+    note: "METR-Horizon-v1.1 results (long_tasks_version 799cc9c4). Read by progress_model only to fill horizon parameters left as None (not the case at defaults) and for the diagnostic metr_mse. Overlaps #12."
+  - path: "inputs/epoch/epoch_capabilities_index.csv, epoch_openai_revenue.csv, epoch_anthropic_revenue.csv"
+    note: "Epoch data. Not read by progress_model at the pin; used by website charts and tests. The default present_revenue and eci_at_present_day are elicited values consistent with these series."
+
+published_reference:
+  id: daniel-08-16-26
+  path: app/forecast/data/simulations/daniel-08-16-26/
+  num_samples: 10000
+  seed: 20260810
+  exported_at: "2026-08-10T20:06:18 (metadata.json)"
+  note: "Exported about a month before the pinned commit from a run directory on the authors' machine. The model changed in between (e.g. the doubling-time correction moved from a 5% mismatch threshold to an explicit mode switch in September 2026, progress_model/README.md 'Development history'), so the published statistics are not guaranteed to be the pinned code's output."
+
+secondary:
+  - name: "GATE replication in this repository (#13)"
+    path: "research_notes/external/epoch-gate/ (INTERFACES.md, MODES.md) at main ef25aac"
+    used: "GATE side of GATE_OVERLAP.md; GATE was not run here"

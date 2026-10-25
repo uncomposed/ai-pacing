@@ -1,0 +1,151 @@
+{
+ "what": "Feedback-off baseline. Upstream default parameters over [2017, 2200]. 'feedback_on' is the full model; the two off runs are the upstream's own human-only counterfactual (automation fraction 0, aggregate taste 1, coding labor = human labor; compute and labor paths unchanged). 'off_same_calibration' keeps the r_software calibrated with AI uplift in the history; 'off_refit' rescales r_software so the human-only run hits the same elicited 2024 software-progress rate. Milestone columns give the date each run first reaches the progress level (log10 cumulative effective compute) at which the full run crosses that milestone; capability schedules are functions of progress, so this is the date the same capability level would be reached.",
+ "status": "counterfactual inside the source model; not empirical validation",
+ "r_software": {
+  "calibrated_with_uplift": 3.1393713670664853,
+  "refit_human_only": 3.1460673556052257
+ },
+ "software_progress_rate_2024": {
+  "target": 1.0,
+  "off_same_calibration": 0.9978716321737962,
+  "off_refit": 1.0
+ },
+ "milestone_dates": {
+  "AC": {
+   "progress_level_ooms": 37.610775233877234,
+   "feedback_on": 2027.7869747130487,
+   "off_same_calibration": 2028.074599033234,
+   "off_refit": 2028.0598156074898
+  },
+  "AI2027-SC": {
+   "progress_level_ooms": 39.42212527035126,
+   "feedback_on": 2028.4088893850992,
+   "off_same_calibration": 2029.545198577734,
+   "off_refit": 2029.523593570885
+  },
+  "AIR-5x": {
+   "progress_level_ooms": 38.230739168179056,
+   "feedback_on": 2028.0613584503171,
+   "off_same_calibration": 2028.5441016512955,
+   "off_refit": 2028.527647938212
+  },
+  "AIR-25x": {
+   "progress_level_ooms": 39.60121216485238,
+   "feedback_on": 2028.4433115971233,
+   "off_same_calibration": 2029.7180964047557,
+   "off_refit": 2029.6954832160848
+  },
+  "AIR-250x": {
+   "progress_level_ooms": 41.91962538338635,
+   "feedback_on": 2028.7474676713261,
+   "off_same_calibration": 2032.5229543799892,
+   "off_refit": 2032.485271050788
+  },
+  "AIR-2000x": {
+   "progress_level_ooms": 44.50719960191394,
+   "feedback_on": 2028.9461777163185,
+   "off_same_calibration": 2036.8323533090352,
+   "off_refit": 2036.7763237690413
+  },
+  "AIR-10000x": {
+   "progress_level_ooms": 46.95325149101398,
+   "feedback_on": 2029.1093161944384,
+   "off_same_calibration": 2041.966343329262,
+   "off_refit": 2041.8884296132637
+  },
+  "SAR-level-experiment-selection-skill": {
+   "progress_level_ooms": 39.27547232113189,
+   "feedback_on": 2028.3758541264474,
+   "off_same_calibration": 2029.407863623256,
+   "off_refit": 2029.3872363821035
+  },
+  "SIAR-level-experiment-selection-skill": {
+   "progress_level_ooms": 42.58394211329703,
+   "feedback_on": 2028.8073506408632,
+   "off_same_calibration": 2033.5190521896618,
+   "off_refit": 2033.4767672516605
+  },
+  "STRAT-AI": {
+   "progress_level_ooms": 42.58394211329703,
+   "feedback_on": 2028.8073506408632,
+   "off_same_calibration": 2033.5190521896618,
+   "off_refit": 2033.4767672516605
+  },
+  "TED-AI": {
+   "progress_level_ooms": 40.94599719752918,
+   "feedback_on": 2028.6456855354859,
+   "off_same_calibration": 2031.215540018065,
+   "off_refit": 2031.1845811873873
+  },
+  "ASI": {
+   "progress_level_ooms": 44.261968755218454,
+   "feedback_on": 2028.929945371884,
+   "off_same_calibration": 2036.3753503546475,
+   "off_refit": 2036.3211210588825
+  },
+  "Maximum possible experiment selection skill": {
+   "feedback_on": null,
+   "off_same_calibration": null,
+   "off_refit": null,
+   "progress_level_ooms": null
+  }
+ },
+ "progress_path": {
+  "year": [
+   2020.0,
+   2024.0,
+   2026.578082,
+   2030.0,
+   2035.0,
+   2040.0,
+   2050.0,
+   2075.0,
+   2100.0
+  ],
+  "feedback_on": [
+   25.37668060700669,
+   31.430569837871534,
+   35.52322805272468,
+   55.40152359304405,
+   67.25327113691506,
+   72.50308549099843,
+   79.29909836997018,
+   88.94893869578617,
+   94.35666071454747
+  ],
+  "off_same_calibration": [
+   25.375274176405497,
+   31.42938722451505,
+   35.44391639168688,
+   39.881629114932366,
+   43.48865061884661,
+   46.078571886363854,
+   49.761438106034504,
+   55.3354301818819,
+   58.542740770045015
+  ],
+  "off_refit": [
+   25.379956784656653,
+   31.44158578506231,
+   35.461358220192274,
+   39.90502820425106,
+   43.51709207831651,
+   46.11048063772808,
+   49.79803668321828,
+   55.37875276569416,
+   58.58980427354798
+  ]
+ },
+ "provenance": {
+  "upstream": "https://github.com/AI-Futures-Project/aifm-public",
+  "upstream_commit": "1c40ecdb246c25980515441a66571931c5604e11",
+  "upstream_tracked_files_modified": false,
+  "command": "aifm_runner.py feedback-off",
+  "python": "3.14.6",
+  "numpy": "2.4.1",
+  "scipy": "1.17.0",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "generated_utc": "2026-10-25T17:46:24Z"
+ }
+}

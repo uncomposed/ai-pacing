@@ -1,0 +1,347 @@
+{
+ "baseline": {
+  "mean_rate": 0.3499999748900281,
+  "years_to_A_close": 14
+ },
+ "baseline_chi0": {
+  "mean_rate": 0.05249999999982552,
+  "years_to_A_close": null
+ },
+ "kmax_term_max": 1.0043983681429225e-06,
+ "lam_star": 5.447878131712343,
+ "pact_params": {
+  "A0": 0.001,
+  "A_close": 0.1,
+  "Kmax": 1000000000.0,
+  "chi0": 0.15,
+  "g": 0.35
+ },
+ "reduction_max_rel_diff": 2.006839139312433e-12,
+ "scenarios": {
+  "energy": {
+   "overrides": {
+    "r_E": 0.1
+   },
+   "rows": [
+    {
+     "Y_final": 0.019381497738264718,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 40,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.21173706329640102,
+     "lam": 1,
+     "mean_rate": 0.07410797215381665,
+     "rate_first5": 0.0741079721539695,
+     "rate_last5": 0.07410797215374035,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.04525925556861839,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 0,
+      "energy": 40
+     },
+     "chi_eff_last5": 0.272314799441005,
+     "lam": 2,
+     "mean_rate": 0.09531017980456925,
+     "rate_first5": 0.09531017980508291,
+     "rate_last5": 0.09531017980435175,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.04525925556861839,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 0,
+      "energy": 40
+     },
+     "chi_eff_last5": 0.272314799441005,
+     "lam": 8,
+     "mean_rate": 0.09531017980456925,
+     "rate_first5": 0.09531017980508291,
+     "rate_last5": 0.09531017980435175,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.04525925556861839,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 0,
+      "energy": 40
+     },
+     "chi_eff_last5": 0.272314799441005,
+     "lam": 64,
+     "mean_rate": 0.09531017980456925,
+     "rate_first5": 0.09531017980508291,
+     "rate_last5": 0.09531017980435175,
+     "years_to_A_close": null
+    }
+   ],
+   "title": "Energy deployment capped at r_E = 0.10/yr"
+  },
+  "quota": {
+   "overrides": {
+    "Q_imp": 0.0001
+   },
+   "rows": [
+    {
+     "Y_final": 0.004200000000031992,
+     "binding_years": {
+      "budget": 0,
+      "chips": 40,
+      "design": 0,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.05719054774699014,
+     "lam": 2,
+     "mean_rate": 0.03587711313242349,
+     "rate_first5": 0.06729444732481396,
+     "rate_last5": 0.020016691711446547,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.004200000000031992,
+     "binding_years": {
+      "budget": 0,
+      "chips": 40,
+      "design": 0,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.05719054774699014,
+     "lam": 8,
+     "mean_rate": 0.03587711313242349,
+     "rate_first5": 0.06729444732481396,
+     "rate_last5": 0.020016691711446547,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.004200000000031992,
+     "binding_years": {
+      "budget": 0,
+      "chips": 40,
+      "design": 0,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.05719054774699014,
+     "lam": 64,
+     "mean_rate": 0.03587711313242349,
+     "rate_first5": 0.06729444732481396,
+     "rate_last5": 0.020016691711446547,
+     "years_to_A_close": null
+    }
+   ],
+   "title": "Chips: import quota 1e-4 EIU/yr, no local fabs below A_close"
+  },
+  "quota_crude": {
+   "overrides": {
+    "K_crude": 1.6e-06,
+    "Q_imp": 0.0001,
+    "eta_crude": 0.1
+   },
+   "rows": [
+    {
+     "Y_final": 0.04232525654652169,
+     "binding_years": {
+      "budget": 0,
+      "chips": 39,
+      "design": 1,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.2262604275181162,
+     "lam": 2,
+     "mean_rate": 0.09363459973370158,
+     "rate_first5": 0.13153341954393533,
+     "rate_last5": 0.07919114963134066,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.04244904299380679,
+     "binding_years": {
+      "budget": 0,
+      "chips": 40,
+      "design": 0,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.2262417430989349,
+     "lam": 8,
+     "mean_rate": 0.0937076092046931,
+     "rate_first5": 0.13239900574345256,
+     "rate_last5": 0.07918461008462721,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.04244904299380679,
+     "binding_years": {
+      "budget": 0,
+      "chips": 40,
+      "design": 0,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.2262417430989349,
+     "lam": 64,
+     "mean_rate": 0.0937076092046931,
+     "rate_first5": 0.13239900574345256,
+     "rate_last5": 0.07918461008462721,
+     "years_to_A_close": null
+    }
+   ],
+   "title": "Quota plus basic local chips (eta_crude 0.1/yr from K >= 1.6e-6 EIU)"
+  },
+  "resource": {
+   "overrides": {
+    "E_max": 0.02
+   },
+   "rows": [
+    {
+     "Y_final": 0.020000000000019984,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 20,
+      "energy": 20
+     },
+     "chi_eff_last5": 1.4274296030894515e-13,
+     "lam": 2,
+     "mean_rate": 0.07489330683887475,
+     "rate_first5": 0.14310084364087766,
+     "rate_last5": 4.9960036108130795e-14,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.020000000000031975,
+     "binding_years": {
+      "budget": 8,
+      "chips": 0,
+      "design": 0,
+      "energy": 32
+     },
+     "chi_eff_last5": 1.4274296030894515e-13,
+     "lam": 8,
+     "mean_rate": 0.07489330683888974,
+     "rate_first5": 0.3500000000003304,
+     "rate_last5": 4.9960036108130795e-14,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.020000000000031975,
+     "binding_years": {
+      "budget": 8,
+      "chips": 0,
+      "design": 0,
+      "energy": 32
+     },
+     "chi_eff_last5": 1.4274296030894515e-13,
+     "lam": 64,
+     "mean_rate": 0.07489330683888974,
+     "rate_first5": 0.3500000000003304,
+     "rate_last5": 4.9960036108130795e-14,
+     "years_to_A_close": null
+    }
+   ],
+   "title": "Energy resource capped at E_max = 0.02 EIU"
+  },
+  "slack": {
+   "overrides": {},
+   "rows": [
+    {
+     "Y_final": 0.004524979828356157,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 40,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.10782950852262951,
+     "lam": 0.5,
+     "mean_rate": 0.03774032798300274,
+     "rate_first5": 0.03774032798312209,
+     "rate_last5": 0.037740327982920326,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.019381497738264718,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 40,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.21173706329640102,
+     "lam": 1,
+     "mean_rate": 0.07410797215381665,
+     "rate_first5": 0.0741079721539695,
+     "rate_last5": 0.07410797215374035,
+     "years_to_A_close": null
+    },
+    {
+     "Y_final": 0.3061373157656437,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 40,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.4088595532590705,
+     "lam": 2,
+     "mean_rate": 0.1431008436407231,
+     "rate_first5": 0.14310084364087766,
+     "rate_last5": 0.14310084364067466,
+     "years_to_A_close": 33
+    },
+    {
+     "Y_final": 45.73227041989207,
+     "binding_years": {
+      "budget": 0,
+      "chips": 0,
+      "design": 40,
+      "energy": 0
+     },
+     "chi_eff_last5": 0.7664685331276557,
+     "lam": 4,
+     "mean_rate": 0.26826398659470435,
+     "rate_first5": 0.268263986594827,
+     "rate_last5": 0.2682639865946795,
+     "years_to_A_close": 18
+    },
+    {
+     "Y_final": 1202.6042841671858,
+     "binding_years": {
+      "budget": 40,
+      "chips": 0,
+      "design": 0,
+      "energy": 0
+     },
+     "chi_eff_last5": 1.0000000000000013,
+     "lam": 8,
+     "mean_rate": 0.3500000000000501,
+     "rate_first5": 0.3500000000003304,
+     "rate_last5": 0.3500000000000004,
+     "years_to_A_close": 14
+    },
+    {
+     "Y_final": 1202.6042841671858,
+     "binding_years": {
+      "budget": 40,
+      "chips": 0,
+      "design": 0,
+      "energy": 0
+     },
+     "chi_eff_last5": 1.0000000000000013,
+     "lam": 16,
+     "mean_rate": 0.3500000000000501,
+     "rate_first5": 0.3500000000003304,
+     "rate_last5": 0.3500000000000004,
+     "years_to_A_close": 14
+    }
+   ],
+   "title": "No physical cap; design binds below lam* (coding-limited regime)"
+  }
+ }
+}
