@@ -1,5 +1,15 @@
 # Canonicality and projection boundaries
 
+## Challenge workspace boundary
+
+`systems/model.json` is the editable draft for stakeholder challenges,
+requirements, and candidate solutions described in `docs/systems-engineering.md`.
+It is not a rendering of the AI Pacing proposal and does not inherit the proposal's
+kernel commitments. Its links to legacy proposition IDs record correspondence,
+not empirical support or requirement satisfaction. The authority order below
+continues to govern the existing AI Pacing proposal; no historical proposition
+is retyped by adding this separate workspace.
+
 AI Pacing separates normative content from editorial references and generated
 views so that a readable page cannot silently become the idea's authority.
 

@@ -1,0 +1,29 @@
+
+## Clark's removal row in our units (per year, saturated AI, fabs gone, F = 0)
+
+| world | d (veto discount) | S (substrate lost) | p4 = p_f | p4 (d'4 - d) | R4 (Clark) | cap_gap_fail (ours) | verdict |
+|---|---|---|---|---|---|---|---|
+| baseline pact (q 0.7, d 0.9) | 0.00374 | 0.191 | 1.0e-10 | 0.0516 | -0.239 | -0.239 | comply |
+| no denial reserve (den 0) | 0.00374 | -0.25 | 1.0e-10 | 0.0516 | +0.202 | +0.202 | strike |
+| full denial (q 1, d 1) | 0.00374 | 0.45 | 1.0e-10 | 0.0516 | -0.498 | -0.498 | comply |
+| rival stays dangerous (ell_inf 0.01) | 3.62e+05 | 0.191 | 1.0e-10 | 0.0516 | +3.62e+05 | +3.62e+05 | strike |
+| harvest motive (f_E 1e-6) | 0.00374 | -500 | 1.0e-10 | 0.0516 | +500 | +500 | strike |
+| no denial, AI share sigma 0.9 | 0.011 | 0.05 | 1.0e-10 | 0.0516 | -0.0906 | -0.0906 | comply |
+
+q where S = d (d plugged = 1, no rival source): 0.357143;  q_star_cap(fail=False): 0.357143
+
+solver vs Clark sign over 21 q values (F = 1, seq n, saturated start): 21/21 agree; solver strikes for q <= 0.4
+| q | R4 (Clark, per yr) | solver S - C (per yr, comply region) | solver act0 |
+|---|---|---|---|
+| 0.00 | +0.2809 | n/a | S |
+| 0.10 | +0.2179 | n/a | S |
+| 0.20 | +0.1549 | n/a | S |
+| 0.30 | +0.0919 | n/a | S |
+| 0.40 | +0.0289 | n/a | S |
+| 0.50 | -0.0341 | -0.0255 | C |
+| 0.60 | -0.0971 | -0.0888 | C |
+| 0.70 | -0.1601 | -0.1522 | C |
+| 0.80 | -0.2231 | -0.2155 | C |
+| 0.90 | -0.2861 | -0.2788 | C |
+| 1.00 | -0.3491 | -0.3421 | C |
+wrote /Users/colemiller/Documents/ChatGPT/AI-Pacing/.claude/worktrees/objective-cerf-985c03/research_notes/Off Earth industry as misalignment control/model/docking/out/clark.json

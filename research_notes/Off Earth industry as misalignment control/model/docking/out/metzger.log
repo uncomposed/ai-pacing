@@ -1,0 +1,29 @@
+
+## Growth rates (per year, continuous)
+
+| source | rate /yr | doubling (yr) |
+|---|---|---|
+| Metzger max case, Gen 1.0 to 6.0 (fit) | 0.65 | 1.07 |
+| Metzger max case, Gen 4.0 to 6.0 (fit) | 0.70 | 0.99 |
+| Metzger after Gen 5.0, '3x per year' (text) | 1.10 | 0.63 |
+| Metzger reduced case, plateau Gen 2.5 to 5.0 (fit) | 0.13 | 5.2 |
+| ours, g with chips (baseline) | 0.35 | 1.98 |
+| ours, g range swept | 0.07 to 0.69 | 1.0 to 9.9 |
+| ours, chi0 g without leading-edge chips | 0.052 | 13.2 |
+
+## Scale bridge (energy-based, assumption)
+
+| point | asset mass | Earth-industry units |
+|---|---|---|
+| Metzger seed, Gen 1.0 | 7 t | 1.7e-09 |
+| Metzger Gen 5.0 (local chips, max case) | 6600 t | 1.6e-06 |
+| Metzger Gen 6.0 (max case) | 23500 t | 5.8e-06 |
+| ours A0 | 4.1e+06 t | 1e-03 |
+| ours A_close (leading-edge closure) | 4.1e+08 t | 1e-01 |
+
+years from Metzger seed to our A0: {'ours g': 38.0, 'Metzger max fit': 20.4, 'Metzger 3x/yr': 12.1}
+years from our A0 to our A_close: {'ours g, chips': 13.2, 'ours chi0 g': 87.7, 'Metzger 3x/yr': 4.2}
+
+mass at year 12 starting from Metzger's 6.9 t seed (t): {'ours, g = 0.35, chips (chi = 1)': '460', 'ours, g = 0.35, no chips (chi0) below A_close': '13', 'ours, g = 0.69 (top of range), chips': '27215'} Metzger max 23500.0 reduced 154.0
+figure: /Users/colemiller/Documents/ChatGPT/AI-Pacing/.claude/worktrees/objective-cerf-985c03/research_notes/Off Earth industry as misalignment control/model/figures/dock_metzger.png
+wrote /Users/colemiller/Documents/ChatGPT/AI-Pacing/.claude/worktrees/objective-cerf-985c03/research_notes/Off Earth industry as misalignment control/model/docking/out/metzger.json

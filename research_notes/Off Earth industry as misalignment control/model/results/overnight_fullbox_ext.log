@@ -1,0 +1,7 @@
+  solved full__q_up=0.01: 192 sets in 303 s; holds 0.026
+  solved full__D_mult=3_T_reloc=4_d=0.99_q_red=2_q_up=0.01_seq=1: 192 sets in 202 s; holds 0.078
+  solved full__pf_bel=0.5: 192 sets in 392 s; holds 0.016
+  solved full__pf_bel=2: 192 sets in 394 s; holds 0.266
+  solved full__D_mult=3_T_reloc=4_d=0.99_pf_bel=0.5_q_red=2_seq=1: 192 sets in 395 s; holds 0.068
+  solved full__D_mult=3_T_reloc=4_d=0.99_pf_bel=2_q_red=2_seq=1: 192 sets in 396 s; holds 0.318
+  solved full__pf_bel=1: 192 sets in 202 s; holds 0.026

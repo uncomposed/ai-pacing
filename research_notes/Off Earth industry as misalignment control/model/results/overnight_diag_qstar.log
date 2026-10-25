@@ -1,0 +1,14 @@
+draw -1 eta 0.000 K 1e+09: solver largest striking q 0.375 (grid 0.025); closed form q* 0.389; acts SSSSSSSSSSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCCC
+draw -1 eta 0.000 K 1e+09: solver largest striking q 0.375 (grid 0.025); closed form q* 0.389; acts SSSSSSSSSSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 4 eta 0.085 K 2.06e+08: solver largest striking q 0.000 (grid 0.025); closed form q* 0.574; acts CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 4 eta 0.000 K 2.06e+08: solver largest striking q 0.000 (grid 0.025); closed form q* 0.574; acts CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 39 eta 0.088 K 2.27e+08: solver largest striking q 0.375 (grid 0.025); closed form q* 0.387; acts SSSSSSSSSSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 39 eta 0.000 K 2.27e+08: solver largest striking q 0.400 (grid 0.025); closed form q* 0.387; acts SSSSSSSSSSSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCC
+draw 20 eta 0.019 K 3.23e+08: solver largest striking q 0.000 (grid 0.025); closed form q* 0.257; acts CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 20 eta 0.000 K 3.23e+08: solver largest striking q 0.000 (grid 0.025); closed form q* 0.257; acts CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 61 eta 0.074 K 2.6e+09: solver largest striking q 0.175 (grid 0.025); closed form q* 0.242; acts SSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 61 eta 0.000 K 2.6e+09: solver largest striking q 0.175 (grid 0.025); closed form q* 0.244; acts SSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 7 eta 0.079 K 6.52e+08: solver largest striking q 0.375 (grid 0.025); closed form q* 0.349; acts SSSSSSSSSSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 7 eta 0.000 K 6.52e+08: solver largest striking q 0.375 (grid 0.025); closed form q* 0.349; acts SSSSSSSSSSSSSSSSCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 3 eta 0.003 K 2.75e+09: solver largest striking q 0.000 (grid 0.025); closed form q* 0.125; acts CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+draw 3 eta 0.000 K 2.75e+09: solver largest striking q 0.000 (grid 0.025); closed form q* 0.125; acts CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC

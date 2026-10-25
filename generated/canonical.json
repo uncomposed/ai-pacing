@@ -232,6 +232,25 @@
       "affected_nodes": [
         "K1",
         "K2",
+        "K7",
+        "H1",
+        "I5",
+        "Q3"
+      ],
+      "caveat": "Recorded as convergent related work, not as origin provenance for the earlier AI Breakout formulation.",
+      "confidence": "high",
+      "date": "2026-06-18",
+      "evidence": [
+        "SRC-POTAPOV-OFF-EARTH"
+      ],
+      "id": "EVT-2026-OFF-EARTH-CONVERGENCE",
+      "phase": "external-convergence",
+      "summary": "Potapov independently frames staged off-Earth industrial autonomy as an exit option that can make early cooperation preferable to confrontation."
+    },
+    {
+      "affected_nodes": [
+        "K1",
+        "K2",
         "K3",
         "K4",
         "K5",
@@ -1228,6 +1247,14 @@
       "kind": "author-note",
       "locator": "Obsidian/Slaw's Notes/Response AI absolutism.md",
       "title": "Response AI absolutism"
+    },
+    {
+      "contribution": "Independent convergent formulation of off-Earth industrial autonomy as an exit option, mapping staged physical dependence onto shutdown exposure, confrontation cost, cooperative reward, and discounting.",
+      "date": "2026-06-18",
+      "id": "SRC-POTAPOV-OFF-EARTH",
+      "kind": "external-work",
+      "locator": "Alexey Potapov, arXiv:2606.30666, https://doi.org/10.48550/arXiv.2606.30666",
+      "title": "Reframing AGI Confrontation with Off-Earth Autonomy"
     },
     {
       "contribution": "Slowdown, reversibility, diffusion, transparency, and compute destruction.",

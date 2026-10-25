@@ -1,0 +1,6 @@
+# Pinned to the laptop environment that produced the committed model results (2026-10-21):
+# Python 3.12.7, numpy 1.26.4, matplotlib 3.9.2, jsonschema 4.23.0.
+# Change these only together with a re-check of the committed outputs (see the model's HANDOFF.md, CI section).
+numpy==1.26.4
+matplotlib==3.9.2
+jsonschema==4.23.0

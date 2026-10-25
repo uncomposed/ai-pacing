@@ -1,0 +1,44 @@
+{
+ "rates": {
+  "max_all": 0.6508131294814476,
+  "max_gen4_6": 0.6980893268905517,
+  "red_plateau_gen25_5": 0.1329975219692449,
+  "metzger_post_closure": 1.0986122886681098,
+  "ours_g": 0.35,
+  "ours_g_range": [
+   0.07,
+   0.69
+  ],
+  "ours_chi0_g": 0.0525
+ },
+ "scale": {
+  "unit_per_tonne": 2.44960480937144e-10,
+  "A_seed": 1.6902273184662937e-09,
+  "A_gen5": 1.6167391741851505e-06,
+  "A_gen6": 5.756571302022884e-06,
+  "A0": 0.001,
+  "A_close": 0.1,
+  "A0_tonnes": 4082291.1360000004,
+  "A_close_tonnes": 408229113.6,
+  "ratio_Aclose_to_gen5": 61852.896,
+  "yrs_seed_to_A0": {
+   "ours g": 37.97327865744702,
+   "Metzger max fit": 20.421603265281583,
+   "Metzger 3x/yr": 12.097668729173986
+  },
+  "yrs_A0_to_close": {
+   "ours g, chips": 13.15762910282312,
+   "ours chi0 g": 87.71752735215414,
+   "Metzger 3x/yr": 4.19180654857877
+  }
+ },
+ "paths_t12": {
+  "ours, g = 0.35, chips (chi = 1)": 460.13568418238305,
+  "ours, g = 0.35, no chips (chi0) below A_close": 12.955512996923973,
+  "ours, g = 0.69 (top of range), chips": 27214.941235663977
+ },
+ "metzger_t12": {
+  "max": 23500.0,
+  "red": 154.0
+ }
+}
