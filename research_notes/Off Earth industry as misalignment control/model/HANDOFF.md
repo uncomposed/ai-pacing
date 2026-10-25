@@ -281,3 +281,27 @@ Not recommended next, though ranked first by the register: the swarm (AS-SINGLE-
 - `assumptions.yaml` now gives every PARAMS entry and other influential input a role (none is an observed measurement), links literature-based assumptions to dated records in `evidence/records.yaml`, labels AR-H10's shares (sampling measure, horizon, predicate, Wilson intervals, uncertainty types), and requires an admission record for any PARAMS entry added after 2026-10-25.
 - `measure_sensitivity.py` reweights the cached full-box runs under 31 alternative sampling measures (no solving): best-stack share 0.025 to 0.194 across the 28 identified measures; outputs `results/measure_sensitivity.{md,json}`, checked by `tests/test_measure_sensitivity.py` in `make check`.
 - Not done: fresh-draw runs under widened ranges or new point masses (needs `sims.yml`).
+
+## 11. Strategic omissions: bargaining, human preventive action, actor structures (issue #9, 2026-10-25)
+
+[[ai gen]] Status: `implemented`; reduced-game baselines `verified` against the solver's R6c brackets (4 of 5 cells) and the saturation closed form; nothing `human_validated`, nothing empirical. Write-up `results/variants.md`; matrix `omissions.yaml` (view `results/omissions.md`, checked by `tools/omissions_tool.py` in `make check`).
+- `equilibrium_model.py`, `robust_design.py` and `ci_sims.py` are unchanged. Variants live in `variants/` and import the solver read-only: `bargaining.py` (Powell-style saturation game; its fixed regime is the baseline recursion, strike year 165), `preventive.py` (reduced bootstrap game with a human shutdown move, learning and tightening), `run_variants.py` (runner; `selection` stage runs the full solver with `sel='worst'`), `actor_structures.yaml` (multi-agent and lab structures through the mode contract, design only). Fast tests: `tests/test_variants.py`.
+- Findings: fixed terms both cause prize-only strikes and act as a commitment device (renegotiation without commitment gives a preventive AI strike when human control jumps); a human preventive option helps or hurts humans depending on when the AI would strike; learning after a failed strike limits retries but never pulls strikes earlier; worst selection flips S4, S14, S16.
+- Open: the R6c cell A_close 0.03, L_f 0.9 disagrees (reduced game 0.19, solver 0.33), where saturation binds in the solver; see `results/variants.md` section 1. Seven omissions unresolved, one excluded by scope.
+
+## 12. The Earth-industry unit (issue #39, 2026-10-25)
+
+[[ai gen]] Documentation and checks only; no parameter value, solver line or committed output changed.
+- **Unit.** H = 1 is one Earth-industry unit (EIU): the whole world economy's productive capacity in the
+  reference year, a **stock**. Its output rate is 1/yr, which the solver leaves implicit (dt = 1 yr): A and H
+  are stocks in growth, seizure, reinvestment and defence, and their yearly output enters the AI's payoff,
+  human welfare and trade. Written once as `DEF-EIU` in
+  `research_notes/external/units-bridge/quantities.yaml`, with the rejected readings (industrial sector,
+  primary energy, GDP) and the equations behind the choice (`equations.yaml`, `PACT-*`).
+- **What it means for existing text.** "Earth's industry" in PARAMS and the notes is this unit's name, not
+  the industrial sector. The docking's "19.6 TW = one unit" and Kmax's "1e13 ~ Dyson-scale" are energy-intensity
+  estimates (`CV-EIU-TO-PRIMARY-POWER`), not the definition.
+- **Mode contract.** `systems/modes.yaml` 0.3.0 books A to `industrial_capacity` with `output_rate` 1 per year
+  to `industrial_output`; `make modes-check` and `make units-check` enforce the stock/flow split.
+- **GATE.** GATE's USD output reads in EIU/yr through measured world GDP (`CV-GWP-TO-EIU-OUTPUT`,
+  `EV-WB-WDI-GDP-2026`) and is not coupled to the solver: the pact freezes Earth at H = 1.

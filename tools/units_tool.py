@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the quantity dictionary, conversions and equations of the research-to-industry bridge (issue #11).
 
-    python3 tools/units_tool.py check     # schema, units, dimensions, links and the stopping rule (make check)
+    python3 tools/units_tool.py check     # schema, units, dimensions, links, stocks and flows, the stopping rule (make check)
     python3 tools/units_tool.py report    # quantities by category and conversions by class
 
 Files: research_notes/external/units-bridge/{quantities,conversions,equations}.yaml.
@@ -25,6 +25,7 @@ FILES = {'quantities': BRIDGE / 'quantities.yaml', 'conversions': BRIDGE / 'conv
          'equations': BRIDGE / 'equations.yaml'}
 SCHEMA = ROOT / 'schema/units-bridge.schema.json'
 MODES = ROOT / 'systems/modes.yaml'
+RECORDS = ROOT / 'evidence/records.yaml'
 
 _spec = importlib.util.spec_from_file_location('assumptions_tool', ROOT / 'tools/assumptions_tool.py')
 assumptions_tool = importlib.util.module_from_spec(_spec)
@@ -38,9 +39,12 @@ CONTRACT_UNITS = {
     "share of today's leading-edge capacity": 'LEC', 'source-native multiplier': '1',
     'date a threshold on the effective-compute scale is crossed': 'yr',
     'eFLOP (software-adjusted, S(0) = 1)': 'FLOP', 'real USD per year': 'USD/yr',
+    'Earth-industry units (EIU, a stock; H = 1)': 'EIU', 'per year': '1/yr',
 }
+# Quantity kinds that the stock/flow rule applies to (issue #39). Other kinds (rate, state, share, ...) are not checked.
+STOCK_FLOW = ('stock', 'flow')
 TIME = 'time'
-ESTIMATED = {'observed_secondary', 'source_model_output', 'external_pending'}
+ESTIMATED = {'observed_primary', 'observed_secondary', 'source_model_output', 'external_pending'}
 SCENARIO = {'scenario', 'project_assumption'}
 # Categories a capability metric must never reach through coupled conversions (#11 stopping rule).
 GUARDED = {'supply_chain_closure', 'external_control'}
@@ -172,7 +176,7 @@ def bridging(dims, physical, normalized):
     return bool(phys and norm) or len(phys) > 1
 
 
-def validate(q, c, e, modes, params):
+def validate(q, c, e, modes, params, records=None):
     errors = _schema('quantities_file', q) + _schema('conversions_file', c) + _schema('equations_file', e)
     if errors:
         return errors
@@ -389,6 +393,116 @@ def validate(q, c, e, modes, params):
                 if t.get('category') in GUARDED or t.get('no_calibration_from_capability'):
                     errors.append(f'stopping rule: capability metric {start} reaches {nxt} through coupled conversions')
                 queue.append(nxt)
+    errors += check_stock_flow(q, c, e, modes, units, qty, dims, normalized)
+    errors += check_primary_evidence(q, c, records if records is not None else load_yaml(RECORDS))
+    return errors
+
+
+def check_primary_evidence(q, c, records):
+    """A value marked observed_primary cites a dated evidence record that is an observation read in primary form."""
+    errors = []
+    recs = {r['id']: r for r in records['records']}
+    for x in q['quantities'] + c['conversions']:
+        ev = x.get('evidence', {})
+        if ev.get('status') != 'observed_primary':
+            continue
+        ids = re.findall(r'EV-[A-Z0-9-]*[A-Z0-9]', ev['ref'])
+        good = [i for i in ids if recs.get(i, {}).get('kind') == 'observation' and recs[i].get('reading') == 'read_primary']
+        if not good:
+            errors.append(f'{x["id"]}: observed_primary needs an evidence record in evidence/records.yaml that is an '
+                          f'observation read in primary form (cites {ids or "none"})')
+    return errors
+
+
+def check_stock_flow(q, c, e, modes, units, qty, dims, normalized):
+    """Issue #39: one definition per normalized unit, and stocks and flows kept apart in the dictionary and contract."""
+    errors = []
+    acc_kind = {a['id']: a['kind'] for a in modes['accounting']}
+    adapters = {a['id']: {qq['name']: qq for qq in a['quantities']} for a in modes['adapters']}
+    convs = {cv['id']: cv for cv in c['conversions']}
+    eqs = {x['id'] for x in e['equations']}
+    # definitions: exactly one per normalized dimension, a stock, with its links
+    defined = {}
+    for df in q['definitions']:
+        where = f'definition {df["id"]}'
+        if df['dimension'] not in normalized:
+            errors.append(f'{where}: {df["dimension"]} is not a normalized dimension')
+        if df['dimension'] in defined:
+            errors.append(f'{where}: {df["dimension"]} already has a definition ({defined[df["dimension"]]}); a unit is defined once')
+        defined[df['dimension']] = df['id']
+        try:
+            if parse_unit(df['unit'], units)[1] != {df['dimension']: 1}:
+                errors.append(f'{where}: unit {df["unit"]} is not one unit of {df["dimension"]}')
+        except UnitError as err:
+            errors.append(f'{where}: {err}')
+        for b in df['basis']:
+            if b['equation'] not in eqs:
+                errors.append(f'{where}: basis names unknown equation {b["equation"]}')
+        for cid in df['measured_by']:
+            if cid not in convs:
+                errors.append(f'{where}: measured_by names unknown conversion {cid}')
+        for r in df['rejects']:
+            if r.get('kept_as') and r['kept_as'] not in convs:
+                errors.append(f'{where}: rejected reading kept as unknown conversion {r["kept_as"]}')
+        flow_dims = {df['dimension']: 1, TIME: -1}
+        uses_flow = any(dims.get(x['id']) == flow_dims for x in q['quantities'])
+        rate = df.get('output_rate')
+        if uses_flow and not rate:
+            errors.append(f'{where}: quantities use {df["unit"]} per time, so the definition states its output rate')
+        if rate:
+            cv = convs.get(rate['conversion'])
+            if cv is None:
+                errors.append(f'{where}: output_rate names unknown conversion {rate["conversion"]}')
+            elif cv['class'] != 'normalization' or 'value' not in cv.get('factor', {}):
+                errors.append(f'{where}: output_rate {cv["id"]} must be a normalization with one value')
+            elif (qty.get(cv['from'], {}).get('kind') != 'stock' or qty.get(cv['to'], {}).get('kind') != 'flow'
+                  or dims.get(cv['from']) != {df['dimension']: 1} or dims.get(cv['to']) != flow_dims):
+                errors.append(f'{where}: output_rate {cv["id"]} must lead from a stock in {df["unit"]} to a flow in {df.get("flow_unit")}')
+            try:
+                if df.get('flow_unit') is None or parse_unit(df['flow_unit'], units)[1] != flow_dims:
+                    errors.append(f'{where}: flow_unit must be {df["unit"]} per time')
+            except UnitError as err:
+                errors.append(f'{where}: {err}')
+    for d in normalized:
+        if d not in defined:
+            errors.append(f'normalized dimension {d} has no definition; a normalized unit is defined once (#39)')
+    # stocks and flows
+    for x in q['quantities']:
+        ident, kind, d = x['id'], x['kind'], dims.get(x['id'])
+        ak = acc_kind.get(x['contract'].get('accounting'))
+        if kind in STOCK_FLOW and ak in STOCK_FLOW and kind != ak:
+            errors.append(f'{ident}: a {kind} is booked to {x["contract"]["accounting"]}, a {ak}; '
+                          f'book it to a {kind} and state the output rate between them (#39)')
+        if d is not None and any(k in normalized for k in d):
+            per_time = d.get(TIME, 0) == -1
+            if kind == 'flow' and not per_time:
+                errors.append(f'{ident}: a flow in a normalized unit is per time ({x["unit"]} is not)')
+            if kind in ('stock', 'threshold') and TIME in d:
+                errors.append(f'{ident}: a {kind} in a normalized unit carries no time dimension ({x["unit"]})')
+        aq = x['contract'].get('adapter_quantity')
+        found = adapters.get(aq['adapter'], {}).get(aq['name']) if aq else None
+        if found is None:
+            continue
+        if kind in STOCK_FLOW and acc_kind.get(found.get('accounting')) in STOCK_FLOW and found.get('kind') != kind:
+            errors.append(f'{ident}: the contract quantity {aq["adapter"]} {aq["name"]!r} must declare kind {kind} '
+                          f'(it declares {found.get("kind")})')
+        rate = found.get('output_rate')
+        if rate:
+            match = [cv for cv in c['conversions'] if cv['from'] == ident and cv['class'] == 'normalization'
+                     and qty.get(cv['to'], {}).get('contract', {}).get('accounting') == rate['accounting']]
+            if not match:
+                errors.append(f'{ident}: {aq["adapter"]} declares an output rate to {rate["accounting"]}, but no '
+                              f'normalization leads from {ident} to a quantity booked there')
+            for cv in match:
+                alias = CONTRACT_UNITS.get(rate['unit'])
+                if alias is None:
+                    errors.append(f'{ident}: cannot read the output-rate unit {rate["unit"]!r}; add it to CONTRACT_UNITS')
+                    continue
+                cs, cd = parse_unit(alias, units)
+                fs, fd = parse_unit(cv['factor']['unit'], units)
+                if cd != fd or not math.isclose(rate['value'] * cs, cv['factor']['value'] * fs, rel_tol=1e-9):
+                    errors.append(f'{ident}: {aq["adapter"]} output rate {rate["value"]} {rate["unit"]} differs from '
+                                  f'{cv["id"]} ({cv["factor"]["value"]} {cv["factor"]["unit"]})')
     return errors
 
 
@@ -420,7 +534,8 @@ def main():
         cls = {}
         for cv in files['conversions']['conversions']:
             cls[cv['class']] = cls.get(cv['class'], 0) + 1
-        print(f'units bridge: {len(files["quantities"]["quantities"])} quantities in {len(files["quantities"]["categories"])} categories, '
+        print(f'units bridge: {len(files["quantities"]["definitions"])} unit definitions (stocks; output rate stated), '
+              f'{len(files["quantities"]["quantities"])} quantities in {len(files["quantities"]["categories"])} categories, '
               f'{len(files["equations"]["equations"])} equations dimensionally consistent, conversions '
               + ', '.join(f'{v} {k}' for k, v in sorted(cls.items()))
               + '; no coupled path from capability metrics to closure or control; nothing validated empirically')

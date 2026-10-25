@@ -175,6 +175,7 @@ def _check_accounting_and_adapters(contract, errors):
                 errors.append(f'{ident}: quantity {q["name"]!r} names unknown dimension {q["dimension"]}')
             if 'accounting' in q and q['accounting'] not in acc:
                 errors.append(f'{ident}: quantity {q["name"]!r} names unknown accounting quantity {q["accounting"]}')
+            _check_stock_flow(ident, q, acc, errors)
         for i in ad['inputs']:
             if i not in acc:
                 errors.append(f'{ident}: input {i} is not an accounting quantity')
@@ -191,6 +192,32 @@ def _check_accounting_and_adapters(contract, errors):
             extra = set(entry) - {'coverage', 'reason'} - set(bad)
             if extra:
                 errors.append(f'{ident}: mode {m} has unknown fields {sorted(extra)}')
+
+
+def _check_stock_flow(ident, q, acc, errors):
+    """Issue #39: a declared kind matches the ledger it is booked to; an output rate leads from a stock to a flow derived from it."""
+    where = f'{ident}: quantity {q["name"]!r}'
+    led = acc.get(q.get('accounting'))
+    if 'kind' in q:
+        if 'accounting' not in q:
+            errors.append(f'{where} declares kind {q["kind"]} but is booked to no accounting quantity')
+        elif led is not None and led['kind'] != q['kind']:
+            errors.append(f'{where} is a {q["kind"]} booked to {q["accounting"]}, a {led["kind"]}; '
+                          f'book a stock to a stock and give its output_rate to the flow (#39)')
+    rate = q.get('output_rate')
+    if rate is None:
+        return
+    if q.get('kind') != 'stock' or (led is not None and led['kind'] != 'stock'):
+        errors.append(f'{where} has an output_rate, so it must be a stock booked to a stock accounting quantity')
+    if not str(rate['unit']).startswith('per '):
+        errors.append(f'{where}: output_rate unit {rate["unit"]!r} is not per unit of time ("per year")')
+    out = acc.get(rate['accounting'])
+    if out is None:
+        errors.append(f'{where}: output_rate names unknown accounting quantity {rate["accounting"]}')
+    elif out['kind'] != 'flow':
+        errors.append(f'{where}: output_rate leads to {rate["accounting"]}, a {out["kind"]}, not a flow')
+    elif q.get('accounting') not in out['derived_from']:
+        errors.append(f'{where}: output_rate leads to {rate["accounting"]}, which is not derived from {q.get("accounting")}')
 
 
 def _check_solver_mapping(contract, errors, register=None, params=None):
@@ -285,6 +312,9 @@ def _check_traces(contract, errors):
             for rid, r in step['resources'].items():
                 if r['accounting'] not in acc:
                     errors.append(f'{where}: resource {rid} names unknown accounting quantity {r["accounting"]}')
+                elif acc[r['accounting']]['kind'] != 'stock':
+                    errors.append(f'{where}: resource {rid} is held by shares, so it is a stock; {r["accounting"]} is a '
+                                  f'{acc[r["accounting"]]["kind"]} (#39)')
                 for h in r['holders']:
                     if h not in ents:
                         errors.append(f'{where}: resource {rid} held by {h}, which is not in the step')

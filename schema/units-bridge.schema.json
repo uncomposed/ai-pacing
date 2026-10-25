@@ -8,7 +8,7 @@
     "evidence": {
       "type": "object", "additionalProperties": false, "required": ["status", "ref"],
       "properties": {
-        "status": {"enum": ["normalization", "observed_secondary", "source_model_output", "source_model_assumption", "project_assumption",
+        "status": {"enum": ["normalization", "observed_primary", "observed_secondary", "source_model_output", "source_model_assumption", "project_assumption",
                             "external_pending", "not_collected", "scenario"]},
         "ref": {"$ref": "#/$defs/text"}
       }
@@ -37,6 +37,28 @@
         "note": {"type": "string"}
       }
     },
+    "definition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "unit", "dimension", "kind", "definition", "basis", "measured_by", "rejects"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^DEF-[A-Z0-9-]+$"},
+        "unit": {"type": "string"}, "dimension": {"type": "string"},
+        "kind": {"const": "stock"},
+        "definition": {"$ref": "#/$defs/text"},
+        "reference_year": {"$ref": "#/$defs/text"},
+        "flow_unit": {"type": "string"},
+        "output_rate": {"type": "object", "additionalProperties": false, "required": ["conversion"],
+                        "properties": {"conversion": {"type": "string"}, "note": {"type": "string"}}},
+        "basis": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["equation", "role", "reading"],
+          "properties": {"equation": {"type": "string"}, "role": {"enum": ["stock", "flow"]}, "reading": {"$ref": "#/$defs/text"}}}},
+        "measured_by": {"type": "array", "items": {"type": "string"}},
+        "rejects": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["reading", "reason"],
+          "properties": {"reading": {"$ref": "#/$defs/text"}, "reason": {"$ref": "#/$defs/text"}, "kept_as": {"type": "string"}}}},
+        "note": {"type": "string"}
+      }
+    },
     "concept": {
       "type": "object", "additionalProperties": false, "required": ["id", "name", "meaning", "quantities", "contract", "does_not_give"],
       "properties": {
@@ -47,7 +69,7 @@
     },
     "quantities_file": {
       "type": "object", "additionalProperties": false,
-      "required": ["schema_version", "status", "dimensions", "units", "categories", "quantities", "closure_and_sovereignty"],
+      "required": ["schema_version", "status", "dimensions", "units", "definitions", "categories", "quantities", "closure_and_sovereignty"],
       "properties": {
         "schema_version": {"type": "string"}, "status": {"const": "proposed"},
         "dimensions": {"type": "object", "additionalProperties": false, "required": ["physical", "normalized"],
@@ -57,6 +79,7 @@
           "type": "object", "additionalProperties": false, "required": ["factor", "dims"],
           "properties": {"factor": {"type": "number", "exclusiveMinimum": 0}, "dims": {"type": "object", "additionalProperties": {"type": "integer"}},
                          "note": {"type": "string"}}}},
+        "definitions": {"type": "array", "items": {"$ref": "#/$defs/definition"}},
         "categories": {"type": "array", "items": {"type": "string"}, "minItems": 1},
         "quantities": {"type": "array", "items": {"$ref": "#/$defs/quantity"}},
         "closure_and_sovereignty": {"type": "array", "items": {"$ref": "#/$defs/concept"}}

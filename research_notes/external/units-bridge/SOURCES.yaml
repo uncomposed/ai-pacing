@@ -34,6 +34,13 @@ sources:
     licence: not checked
     read: "no: values taken from the repository's own notes, which cite DieselNet summaries (secondary)"
     used_for: [QTY-WORLD-PRIMARY-POWER, CV-EIU-TO-PRIMARY-POWER]
+  - id: EV-WB-WDI-GDP-2026
+    title: "World Bank World Development Indicators: world GDP (NY.GDP.MKTP.CD, .KD, .PP.CD, .PP.KD) and industry share (NV.IND.TOTL.ZS, NV.IND.MANF.ZS)"
+    url: "https://api.worldbank.org/v2/country/WLD/indicator/{indicator}?format=json&date=2022:2025"
+    version: "vintage lastupdated 2026-10-08; SHA-256 per response in data/world_gdp_wdi.json"
+    licence: "CC BY 4.0"
+    read: "yes, primary: the API JSON values for 2022-2025, copied unchanged (#39)"
+    used_for: [data/world_gdp_wdi.json, CV-GWP-TO-EIU-OUTPUT, DEF-EIU rejected readings]
   - id: mode-contract
     title: "AI development mode and transition contract"
     url: systems/modes.yaml
