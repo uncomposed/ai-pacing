@@ -31,7 +31,8 @@ anything you did not mean to change.
 - Pins: Python 3.12, numpy 1.26.4, matplotlib 3.9.2, jsonschema 4.23.0
   (`.github/requirements-ci.txt`). A newer Python or numpy 2.x may give slightly
   different floats; use the pinned venv when exact numbers matter.
-- `LANG=C.UTF-8` is needed; the Ruby tools handle non-ASCII text.
+- `LANG=C.UTF-8` is needed; the Ruby tools handle non-ASCII text. The Makefile
+  exports it for `make` targets; set it yourself for direct `ruby`/`python` runs.
 - Rendering tests resolve historical commits, so the clone needs full history.
 
 ## Rules

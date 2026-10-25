@@ -49,7 +49,9 @@ specification; they can motivate a proposed change to it.
 ## Running the checks locally
 
 Requirements: Ruby (CI uses 4.0), Python 3.12 and the pinned packages. Use a
-UTF-8 locale; the Ruby tools read and write non-ASCII text.
+UTF-8 locale; the Ruby tools read and write non-ASCII text. The Makefile exports
+`LANG=C.UTF-8` for `make` targets, but set it in your shell too when you run
+`ruby tools/...` or the model scripts directly.
 
 ```sh
 python3 -m venv .venv
