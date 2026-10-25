@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/uncomposed/ai-pacing/schema/modes.schema.json",
+  "title": "AI development operating-mode and transition contract",
+  "description": "Shape of systems/modes.yaml. Referential and semantic rules are checked by tools/modes_tool.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "status", "entity_kinds", "dimensions", "modes", "stocks", "accounting", "transitions",
+               "adapters", "solver_mapping", "traces", "falsifiers", "omission_checks", "evidence_requirements"],
+  "properties": {
+    "contract_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "status": {"const": "proposed"},
+    "entity_kinds": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/named"}},
+    "dimensions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dimension"}},
+    "modes": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/mode"}},
+    "stocks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/named"}},
+    "accounting": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/quantity"}},
+    "transitions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/transition"}},
+    "adapters": {"type": "array", "items": {"$ref": "#/$defs/adapter"}},
+    "solver_mapping": {"$ref": "#/$defs/solver_mapping"},
+    "traces": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/trace"}},
+    "falsifiers": {"type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false, "required": ["id", "targets", "statement"],
+      "properties": {"id": {"type": "string", "pattern": "^F-"}, "targets": {"$ref": "#/$defs/ids"}, "statement": {"$ref": "#/$defs/text"}}}},
+    "omission_checks": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false, "required": ["id", "check", "status"],
+      "properties": {"id": {"type": "string", "pattern": "^OC-"}, "check": {"$ref": "#/$defs/text"},
+                     "status": {"enum": ["open", "excluded", "enforced"]}}}},
+    "evidence_requirements": {"type": "object", "additionalProperties": {"$ref": "#/$defs/text"}}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "named": {"type": "object", "additionalProperties": false, "required": ["id", "meaning"],
+              "properties": {"id": {"type": "string"}, "meaning": {"$ref": "#/$defs/text"}}},
+    "dimension": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "applies_to", "meaning", "levels", "native_units", "observables", "unknowns"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z_]+$"},
+        "applies_to": {"$ref": "#/$defs/ids"},
+        "meaning": {"$ref": "#/$defs/text"},
+        "levels": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z_]+$", "not": {"const": "unknown"}}},
+        "native_units": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "observables": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "unknowns": {"type": "array", "items": {"$ref": "#/$defs/text"}}
+      }
+    },
+    "mode": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "status", "definition", "applies_to", "requires_host", "criteria", "not_implied", "entry_evidence", "exit_evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^MODE-"},
+        "name": {"$ref": "#/$defs/text"},
+        "status": {"const": "proposed"},
+        "definition": {"$ref": "#/$defs/text"},
+        "applies_to": {"$ref": "#/$defs/ids"},
+        "requires_host": {"type": ["string", "null"]},
+        "requires_scope_and_horizon": {"type": "boolean"},
+        "criteria": {"type": "object", "minProperties": 1,
+                     "additionalProperties": {"type": "array", "minItems": 1, "items": {"type": "string"}}},
+        "not_implied": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "entry_evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "exit_evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}}
+      }
+    },
+    "quantity": {
+      "type": "object", "additionalProperties": false, "required": ["id", "unit", "kind", "ledger", "derived_from"],
+      "properties": {"id": {"type": "string"}, "unit": {"$ref": "#/$defs/text"}, "kind": {"enum": ["stock", "flow", "state"]},
+                     "ledger": {"$ref": "#/$defs/text"}, "derived_from": {"$ref": "#/$defs/ids"}, "note": {"$ref": "#/$defs/text"}}
+    },
+    "transition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "direction", "agency", "changes", "preconditions", "delay", "cost", "hysteresis", "persistence",
+                   "evidence_of_effective_control", "feasibility", "reversible_by", "identified"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^T-"},
+        "name": {"$ref": "#/$defs/text"},
+        "direction": {"enum": ["toward_autonomy", "toward_constraint"]},
+        "agency": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "changes": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "preconditions": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}}},
+        "delay": {"type": "object", "additionalProperties": false, "required": ["unit", "value"],
+                  "properties": {"unit": {"enum": ["hours", "days", "years"]},
+                                 "value": {"oneOf": [{"const": "unknown"}, {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}]}}},
+        "cost": {"$ref": "#/$defs/text"},
+        "hysteresis": {"$ref": "#/$defs/text"},
+        "persistence": {"$ref": "#/$defs/text"},
+        "evidence_of_effective_control": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "feasibility": {"type": "object", "additionalProperties": false, "required": ["status", "note"],
+                        "properties": {"status": {"enum": ["observed_instances", "assumed", "unidentified"]}, "note": {"$ref": "#/$defs/text"}}},
+        "reversible_by": {"$ref": "#/$defs/ids"},
+        "irreversible_reason": {"$ref": "#/$defs/text"},
+        "identified": {"type": "boolean"}
+      }
+    },
+    "adapter": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "source", "kind", "entity_represented", "decision_authority", "quantities", "inputs", "modes", "unsupported_extrapolations", "attach_point"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^AD-"},
+        "source": {"$ref": "#/$defs/text"},
+        "kind": {"enum": ["evidence", "model"]},
+        "entity_represented": {"$ref": "#/$defs/text"},
+        "decision_authority": {"$ref": "#/$defs/text"},
+        "quantities": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["name", "unit", "owner"],
+          "properties": {"name": {"$ref": "#/$defs/text"}, "unit": {"$ref": "#/$defs/text"}, "owner": {"$ref": "#/$defs/text"},
+                         "dimension": {"type": "string"}, "accounting": {"type": "string"}}}},
+        "inputs": {"$ref": "#/$defs/ids"},
+        "modes": {"type": "object", "additionalProperties": {
+          "type": "object", "required": ["coverage", "reason"],
+          "properties": {"coverage": {"enum": ["supported", "partial", "unsupported"]}, "reason": {"$ref": "#/$defs/text"}}}},
+        "unsupported_extrapolations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "attach_point": {"$ref": "#/$defs/text"}
+      }
+    },
+    "mapping_entry": {"type": "object", "additionalProperties": false, "required": ["params", "assumptions", "note"],
+                      "properties": {"params": {"$ref": "#/$defs/ids"}, "assumptions": {"$ref": "#/$defs/ids"}, "note": {"$ref": "#/$defs/text"}}},
+    "solver_mapping": {
+      "type": "object", "additionalProperties": false,
+      "required": ["register", "dimensions", "transitions", "outcomes_and_rivals", "excluded", "unsupported_in_solver"],
+      "properties": {
+        "register": {"$ref": "#/$defs/text"},
+        "dimensions": {"type": "object", "additionalProperties": {"$ref": "#/$defs/mapping_entry"}},
+        "transitions": {"type": "object", "additionalProperties": {"$ref": "#/$defs/mapping_entry"}},
+        "outcomes_and_rivals": {"type": "object", "additionalProperties": false, "required": ["assumptions", "note"],
+                                "properties": {"assumptions": {"$ref": "#/$defs/ids"}, "note": {"$ref": "#/$defs/text"}}},
+        "excluded": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["assumption", "reason"],
+                                                 "properties": {"assumption": {"type": "string"}, "reason": {"$ref": "#/$defs/text"}}}},
+        "unsupported_in_solver": {"$ref": "#/$defs/ids"}
+      }
+    },
+    "trace_entity": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "host", "state"],
+      "properties": {"kind": {"type": "string"}, "host": {"type": ["string", "null"]},
+                     "state": {"type": "object", "additionalProperties": {"type": "string"}},
+                     "stocks": {"type": "object", "additionalProperties": {"type": ["string", "array"]}}}
+    },
+    "trace": {
+      "type": "object", "additionalProperties": false, "required": ["id", "title", "purpose", "scope", "horizon", "steps"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^TR-"},
+        "title": {"$ref": "#/$defs/text"}, "purpose": {"$ref": "#/$defs/text"},
+        "scope": {"$ref": "#/$defs/text"}, "horizon": {"$ref": "#/$defs/text"},
+        "steps": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["label", "entities", "resources", "expected_views", "basis"],
+          "properties": {
+            "label": {"$ref": "#/$defs/text"},
+            "transitions": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["entity", "type"],
+                                                         "properties": {"entity": {"type": "string"}, "type": {"type": "string"}}}},
+            "entities": {"type": "object", "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/trace_entity"}},
+            "resources": {"type": "object", "additionalProperties": {
+              "type": "object", "additionalProperties": false, "required": ["accounting", "unit", "holders"],
+              "properties": {"accounting": {"type": "string"}, "unit": {"$ref": "#/$defs/text"},
+                             "holders": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "number", "exclusiveMinimum": 0}}}}},
+            "stock_changes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["entity", "stock", "cause"],
+                                                           "properties": {"entity": {"type": "string"}, "stock": {"type": "string"}, "cause": {"$ref": "#/$defs/text"}}}},
+            "expected_views": {"type": "object", "additionalProperties": {"$ref": "#/$defs/ids"}},
+            "undetermined_views": {"type": "object", "additionalProperties": {"$ref": "#/$defs/ids"}},
+            "basis": {"$ref": "#/$defs/text"}
+          }
+        }}
+      }
+    }
+  }
+}

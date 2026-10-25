@@ -21,6 +21,12 @@ mechanisms, and evaluation plans with
 `python3 tools/systems_tool.py trace --requirement REQ-COMPETE`.
 See [traceability examples and limitations](docs/requirement-traceability.md).
 
+The [AI development mode contract](docs/ai-development-modes.md) (proposed, issue #5)
+defines human-run lab, sovereign-capable and sovereign AI modes as derived views over
+a factored state, with bidirectional transitions and adapter boundaries for METR,
+GATE, AI Futures and the pact solver. `make modes-check` checks
+[`systems/modes.yaml`](systems/modes.yaml); `make check` includes it.
+
 ## Existing AI Pacing proposal
 
 This repository publishes AI Pacing as a versioned, machine-readable idea rather than a single privileged essay. Git is authoritative. Human-facing pages, PDFs, games, songs, simulations, critiques, and other works are renderings of an exact Git state.

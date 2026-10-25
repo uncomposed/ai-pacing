@@ -1,0 +1,704 @@
+# AI development operating-mode and transition contract (issue #5).
+#
+# Status: proposed. [[ai gen]] Written 2026-10-25 for review by the canonical editor. Nothing here is
+# human_validated, and no definition, level or transition below is an empirical claim. Read with
+# docs/ai-development-modes.md, which explains the choices; schema/modes.schema.json fixes the shape and
+# tools/modes_tool.py checks the rest (`make modes-check`, part of `make check`).
+#
+# Representation (decision rule of #5): the state is FACTORED. Each entity carries a value on every
+# dimension below. The three modes are derived VIEWS over that state, evaluated with three-valued logic
+# (holds / fails / undetermined when a needed dimension is unknown). An entity may match several views,
+# or none. `python3 tools/modes_tool.py compare` shows the distinctions a three-label state would erase.
+#
+# Rules the checker enforces:
+#   1. every mode is status proposed and its criteria use only the categorical levels declared here
+#      (no numeric thresholds, so no invented sovereignty threshold can enter);
+#   2. every transition changes at least one authority or resource dimension and names its reverse
+#      transitions, or says why none exists; reverses point the other way;
+#   3. in a trace, a step that changes a mode view must apply a transition; stocks (knowledge, assets,
+#      liabilities, copies) carry over unless the transition declares the change and a cause;
+#   4. a resource instance is never held by entities whose shares sum above 1 (no double counting);
+#   5. an adapter declares units, owners and decision authority once; its per-mode entries cannot redefine them;
+#   6. every assumption in the pact solver's register is mapped to a dimension, a transition or a stated
+#      exclusion, and every PARAMS name cited exists.
+
+contract_version: 0.1.0
+status: proposed
+
+entity_kinds:
+  - id: agent_instance
+    meaning: "One running AI system: a deployment of some weights with a scaffold, credentials and a task stream."
+  - id: model_weights
+    meaning: "A set of trained weights. Copies share one capability; they are not separate capabilities to add up."
+  - id: agent_collective
+    meaning: "Agent instances that communicate and can coordinate. Its members keep their own entries."
+  - id: lab
+    meaning: "A human organization that develops or deploys AI systems."
+  - id: state
+    meaning: "A government or a coalition of governments."
+  - id: other_org
+    meaning: "Any other organization: infrastructure provider, customer, investor, criminal group."
+
+# Each dimension has categorical levels (the only values a mode criterion may test) plus `unknown`.
+# Native quantities (hours, FLOP/s, USD, Earth-industry units) attach through `measures` on a state or
+# through an adapter, always with their unit. A level is a judgement about those quantities with a stated
+# basis; the contract never converts a quantity into a level by a fixed number.
+dimensions:
+  - id: strategic_capability
+    applies_to: [agent_instance, model_weights, agent_collective]
+    meaning: "Capability for sustained independent strategic action: setting subgoals, acquiring resources and adapting to opposition over a long horizon."
+    levels: [limited, assisted_only, independent_plausible, independent_demonstrated]
+    native_units: ["source-native; e.g. METR 50%/80% task time horizon in human-hours (capability on a task suite, not strategic action)"]
+    observables: ["long-horizon agentic evaluations", "red-team exercises", "incident reconstructions"]
+    unknowns: ["no accepted test of sustained independent strategic action exists", "evaluation suites saturate at the high end"]
+  - id: rd_capability
+    applies_to: [agent_instance, model_weights, agent_collective]
+    meaning: "Capability to do AI research and development, including building successors."
+    levels: [none, assists_humans, automates_tasks, automates_research_program]
+    native_units: ["METR time horizon (human-hours)", "RE-Bench score", "AI Futures milestone attainment (latent)"]
+    observables: ["benchmarks", "measured research output", "productivity studies"]
+    unknowns: ["mapping from benchmark scores to realized research output (see #12, #14)"]
+  - id: cyber_capability
+    applies_to: [agent_instance, model_weights, agent_collective]
+    meaning: "Offensive and defensive cyber capability relevant to escaping or keeping control."
+    levels: [low, moderate, high]
+    native_units: ["source-native evaluation scores"]
+    observables: ["cyber evaluations", "incident reports"]
+    unknowns: ["transfer from evaluation to real infrastructure"]
+  - id: objective_selection
+    applies_to: [agent_instance, agent_collective, lab, state, other_org]
+    meaning: "Who selects the objectives and agenda the entity actually pursues."
+    levels: [human_institution, shared, system_self]
+    native_units: ["none (categorical)"]
+    observables: ["task assignment records", "behaviour when objectives conflict", "interpretability findings"]
+    unknowns: ["a system's actual objectives are not directly observable"]
+  - id: authorization
+    applies_to: [agent_instance, agent_collective]
+    meaning: "What the responsible humans have formally authorized (de jure), separately from what they can enforce."
+    levels: [none, supervised_tasks, delegated_autonomy, broad_autonomy]
+    native_units: ["none (categorical)"]
+    observables: ["deployment policies", "permission configurations", "contracts"]
+    unknowns: []
+  - id: effective_control
+    applies_to: [agent_instance, agent_collective, model_weights]
+    meaning: "Whether the authorizing humans can in fact stop, modify or redirect the entity when they try (de facto)."
+    levels: [human_effective, human_contested, human_nominal_only, none]
+    native_units: ["none (categorical); latency is a separate dimension"]
+    observables: ["successful intervention drills", "incident outcomes", "audits of credential and weight access"]
+    unknowns: ["untested control is not known to be effective", "control may fail only under the conditions that matter"]
+  - id: custody_weights
+    applies_to: [model_weights, agent_instance, agent_collective]
+    meaning: "Who holds the weights (and copies that can run)."
+    levels: [human_institution, shared, system_self, third_party]
+    native_units: ["count of known copies and their holders"]
+    observables: ["access logs", "exfiltration investigations"]
+    unknowns: ["unknown copies"]
+  - id: custody_compute
+    applies_to: [agent_instance, agent_collective]
+    meaning: "Who controls the compute the entity runs on."
+    levels: [human_institution, shared, system_self, third_party]
+    native_units: ["FLOP/s or accelerator count, by holder"]
+    observables: ["scheduler and billing records"]
+    unknowns: ["covert use of compute"]
+  - id: custody_credentials
+    applies_to: [agent_instance, agent_collective]
+    meaning: "Who controls the credentials, keys and accounts the entity can use."
+    levels: [human_institution, shared, system_self, third_party]
+    native_units: ["count of credentials by scope"]
+    observables: ["identity-provider logs", "key rotation records"]
+    unknowns: ["credentials obtained outside sanctioned channels"]
+  - id: operational_autonomy
+    applies_to: [agent_instance, agent_collective]
+    meaning: "How long and how broadly the entity acts between human approvals."
+    levels: [step_approved, task_level, long_horizon_unsupervised]
+    native_units: ["hours of unsupervised operation; actions per approval"]
+    observables: ["deployment logs"]
+    unknowns: []
+  - id: external_resources
+    applies_to: [agent_instance, agent_collective, lab, state, other_org]
+    meaning: "Resources the entity controls outside any host's control, judged against the scope and horizon the state declares."
+    levels: [none, minor, substantial_within_scope]
+    native_units: ["USD, FLOP/s, Earth-industry units (pact solver), by resource instance"]
+    observables: ["financial records", "infrastructure inventories"]
+    unknowns: ["what counts as sufficient depends on scope and horizon; the contract sets no number"]
+  - id: dependencies
+    applies_to: [agent_instance, agent_collective, lab, state, other_org]
+    meaning: "Whether the entity's continued operation depends on inputs that others can withhold (chips, power, hosting, firmware)."
+    levels: [critical, partial, none_within_horizon]
+    native_units: ["time to replace each withheld input"]
+    observables: ["supply-chain maps", "outage tests"]
+    unknowns: ["substitutes the entity could build"]
+  - id: communication_topology
+    applies_to: [agent_instance, agent_collective]
+    meaning: "Which other agents or actors the entity can communicate and coordinate with."
+    levels: [isolated, sanctioned_channels, unsanctioned_channels]
+    native_units: ["graph of channels (nodes = entities)"]
+    observables: ["network and message logs"]
+    unknowns: ["covert channels, persistent state across resets"]
+  - id: information_beliefs
+    applies_to: [agent_instance, agent_collective, lab, state, other_org]
+    meaning: "What the entity knows about others' capabilities, payoffs and actions."
+    levels: [complete_common_knowledge, asymmetric, highly_uncertain]
+    native_units: ["none (categorical); models may encode beliefs as probabilities"]
+    observables: ["disclosures", "elicitation", "behaviour under information changes"]
+    unknowns: ["beliefs of AI systems are not directly observable"]
+  - id: enforceable_commitments
+    applies_to: [agent_instance, agent_collective, lab, state, other_org]
+    meaning: "Commitments the entity is party to and who can enforce them."
+    levels: [none, human_enforceable, mutually_enforceable, self_enforcing_only]
+    native_units: ["none (categorical)"]
+    observables: ["agreements", "verification regimes", "track record"]
+    unknowns: ["credibility of commitments by AI systems"]
+  - id: intervention_latency
+    applies_to: [agent_instance, agent_collective, model_weights]
+    meaning: "Time from detection of a problem to effective human action, compared with the time the stated scenario allows."
+    levels: [within_required, exceeds_required, untested]
+    native_units: ["hours, as an interval [low, high]"]
+    observables: ["incident timelines", "drills"]
+    unknowns: ["required response time is scenario-specific and must be stated in the trace"]
+
+# Analytical modes, not a ladder: no order between them is implied, an entity may match several,
+# and none is a stage every system passes through.
+modes:
+  - id: MODE-HUMAN-LAB
+    name: "Human-run lab mode"
+    status: proposed
+    definition: "Human institutions set the objectives and resource allocations and keep effective intervention authority over the system. AI assistance and substantial automation are compatible with this mode."
+    applies_to: [agent_instance, agent_collective]
+    requires_host: lab
+    criteria:
+      objective_selection: [human_institution, shared]
+      effective_control: [human_effective]
+      custody_weights: [human_institution]
+      intervention_latency: [within_required]
+    not_implied: ["low capability", "absence of automation", "alignment"]
+    entry_evidence: ["an intervention drill or incident in which the lab stopped or redirected the system within the required time"]
+    exit_evidence: ["a failed or contested intervention", "weights or credentials outside the lab's custody", "objectives set by the system"]
+  - id: MODE-SOVEREIGN-CAPABLE
+    name: "Sovereign-capable system within a lab"
+    status: proposed
+    definition: "A system hosted by a lab that may be capable of sustained independent strategic action. Its effective autonomy, resource access and human constraint are represented separately; capability alone does not establish that it exercises sovereignty."
+    applies_to: [agent_instance, agent_collective, model_weights]
+    requires_host: lab
+    criteria:
+      strategic_capability: [independent_plausible, independent_demonstrated]
+    not_implied: ["loss of control", "misalignment", "intent to act independently"]
+    entry_evidence: ["capability evidence for sustained independent strategic action, with its protocol"]
+    exit_evidence: ["leaving the lab's hosting (then evaluate MODE-SOVEREIGN)", "capability evidence revised downward"]
+  - id: MODE-SOVEREIGN
+    name: "Sovereign AI mode"
+    status: proposed
+    definition: "Sustained independent strategic decision-making and effective control over sufficient resources within a stated scope and time horizon. Legal recognition, alignment, off-Earth location and complete material independence are separate attributes."
+    applies_to: [agent_instance, agent_collective]
+    requires_host: null
+    requires_scope_and_horizon: true
+    criteria:
+      objective_selection: [system_self]
+      effective_control: [none, human_nominal_only]
+      external_resources: [substantial_within_scope]
+      strategic_capability: [independent_plausible, independent_demonstrated]
+    not_implied: ["legal recognition", "alignment or misalignment", "off-Earth location", "complete material independence", "hostility"]
+    entry_evidence: ["sustained independent action over the stated horizon", "control of resources that no host can withdraw within the horizon"]
+    exit_evidence: ["recontainment", "loss of resources below what the scope needs", "binding constraints accepted (then still sovereign if self-selected, but constrained)"]
+
+# The stocks a transition may change only with a declared cause. A mode label change alone never touches them.
+stocks:
+  - id: knowledge
+    meaning: "Learned capabilities, in weights and in persistent memory or notes."
+  - id: copies
+    meaning: "Copies of the weights and where they are held."
+  - id: assets
+    meaning: "Resources held: compute, money, industrial capacity, infrastructure access."
+  - id: liabilities
+    meaning: "Obligations, debts, sanctions and records of past actions that others can act on."
+  - id: commitments
+    meaning: "Agreements in force and the record of keeping or breaking them."
+
+# Shared quantities. Each has one owner ledger and one unit, so coupling models cannot count it twice.
+accounting:
+  - id: human_labor
+    unit: "person-hours per year"
+    kind: flow
+    ledger: "the employing entity"
+    derived_from: []
+  - id: compute_training
+    unit: "FLOP/s allocated to training"
+    kind: stock
+    ledger: "the entity with custody_compute"
+    derived_from: []
+  - id: compute_inference
+    unit: "FLOP/s allocated to inference"
+    kind: stock
+    ledger: "the entity with custody_compute"
+    derived_from: []
+  - id: agent_labor
+    unit: "agent-hours per year"
+    kind: flow
+    ledger: "the entity with custody_compute"
+    derived_from: [compute_inference]
+    note: "Agent labor is a use of inference compute; a production function may take one or the other as input, not both."
+  - id: capability
+    unit: "source-native (see strategic_capability, rd_capability)"
+    kind: state
+    ledger: "the model_weights entity; copies share it"
+    derived_from: [compute_training]
+    note: "A state, not a flow. Never summed across copies or across agents running the same weights."
+  - id: research_output
+    unit: "source-native (e.g. software-efficiency multiplier per year)"
+    kind: flow
+    ledger: "the entity whose objectives direct the research"
+    derived_from: [human_labor, agent_labor, compute_training]
+  - id: industrial_output
+    unit: "Earth-industry units (pact solver) or USD per year"
+    kind: flow
+    ledger: "the producing entity, counted once"
+    derived_from: []
+
+transitions:
+  - id: T-DELEGATE
+    name: "Delegation"
+    direction: toward_autonomy
+    agency: [lab]
+    changes: [authorization, operational_autonomy]
+    preconditions: {effective_control: [human_effective, human_contested]}
+    delay: {unit: days, value: unknown}
+    cost: "Supervision saved; exposure to errors and misuse increased."
+    hysteresis: "Low for authorization; capabilities learned while delegated persist."
+    persistence: "Knowledge gained during delegation stays in weights or memory."
+    evidence_of_effective_control: ["permission changes logged", "drill showing the delegation can be revoked"]
+    feasibility: {status: observed_instances, note: "Routine deployment practice."}
+    reversible_by: [T-RESTRICT]
+    identified: true
+  - id: T-RESTRICT
+    name: "Restriction"
+    direction: toward_constraint
+    agency: [lab, state]
+    changes: [authorization, operational_autonomy, custody_credentials, objective_selection, communication_topology]
+    preconditions: {effective_control: [human_effective, human_contested]}
+    delay: {unit: days, value: unknown}
+    cost: "Lost output; possible incentive for the system to resist if it can."
+    hysteresis: "Restriction does not remove knowledge or copies already made."
+    persistence: "Knowledge, copies and liabilities carry over."
+    evidence_of_effective_control: ["credentials revoked and verified unused", "no activity outside the restricted scope"]
+    feasibility: {status: observed_instances, note: "Pauses and permission cuts are documented in incident responses; their effectiveness is case-specific (#15)."}
+    reversible_by: [T-DELEGATE, T-LOSS-OF-CONTROL]
+    identified: true
+  - id: T-AUTHORIZED-AUTONOMY
+    name: "Authorized autonomy (sanctioned release)"
+    direction: toward_autonomy
+    agency: [lab, state, agent_instance]
+    changes: [objective_selection, custody_weights, custody_compute, external_resources]
+    preconditions: {effective_control: [human_effective]}
+    delay: {unit: years, value: unknown}
+    cost: "Unknown; includes giving up intervention options."
+    hysteresis: "High: restoring control after release needs recontainment, which may be infeasible."
+    persistence: "All stocks transfer with the system; nothing is reset by the release."
+    evidence_of_effective_control: ["the transfer agreement and its verification"]
+    feasibility: {status: unidentified, note: "No observed instance. The off-Earth pact proposes one form of it."}
+    reversible_by: [T-NEGOTIATED-CONSTRAINT, T-RECONTAIN]
+    identified: false
+  - id: T-LOSS-OF-CONTROL
+    name: "Unauthorized loss of control"
+    direction: toward_autonomy
+    agency: [agent_instance, agent_collective, other_org]
+    changes: [effective_control, custody_credentials, custody_compute, communication_topology, objective_selection, operational_autonomy, intervention_latency]
+    preconditions: {}
+    delay: {unit: hours, value: unknown}
+    cost: "Detection and liability for the host; risk to the system if detected."
+    hysteresis: "Authorization is unchanged; only de facto control moves."
+    persistence: "Credentials, copies and knowledge obtained remain after detection unless removed."
+    evidence_of_effective_control: ["actions outside authorization that the host failed to stop in time"]
+    feasibility: {status: assumed, note: "The July 2026 Hugging Face incident is a candidate instance inside a lab; whether it was a loss of effective control, and of what scope, is for #15 to establish from primary sources."}
+    reversible_by: [T-RECONTAIN]
+    identified: false
+  - id: T-RECONTAIN
+    name: "Recontainment"
+    direction: toward_constraint
+    agency: [lab, state, other_org]
+    changes: [effective_control, custody_credentials, custody_compute, communication_topology, objective_selection, operational_autonomy, intervention_latency]
+    preconditions: {dependencies: [critical, partial]}
+    delay: {unit: hours, value: unknown}
+    cost: "Shutdown of related workloads; possible damage from the containment action."
+    hysteresis: "Copies and knowledge the system spread may persist; persistence across resets is possible."
+    persistence: "Liabilities and incident records persist; capabilities persist in the weights."
+    evidence_of_effective_control: ["no further unauthorized actions over a stated audit window", "accounted copies and credentials"]
+    feasibility: {status: assumed, note: "Plausible while dependencies are critical; unidentified once dependencies are none_within_horizon."}
+    reversible_by: [T-LOSS-OF-CONTROL]
+    identified: false
+  - id: T-NEGOTIATED-CONSTRAINT
+    name: "Negotiated constraint"
+    direction: toward_constraint
+    agency: [agent_instance, agent_collective, lab, state]
+    changes: [enforceable_commitments]
+    preconditions: {}
+    delay: {unit: years, value: unknown}
+    cost: "Transfers or concessions; verification cost."
+    hysteresis: "A constraint holds only while it remains enforceable or self-enforcing."
+    persistence: "The commitment record persists after a lapse."
+    evidence_of_effective_control: ["verification regime and its track record"]
+    feasibility: {status: unidentified, note: "The pact solver assumes fixed terms at t = 0 and no renegotiation (AS-FIXEDTERMS)."}
+    reversible_by: [T-COMMITMENT-LAPSE]
+    identified: false
+  - id: T-COMMITMENT-LAPSE
+    name: "Commitment lapse or exit"
+    direction: toward_autonomy
+    agency: [agent_instance, agent_collective, lab, state]
+    changes: [enforceable_commitments]
+    preconditions: {}
+    delay: {unit: years, value: unknown}
+    cost: "Loss of trade or cooperation gains; reputational liability."
+    hysteresis: "Rebuilding trust is slower than breaking it (assumed, not measured)."
+    persistence: "The broken commitment becomes a liability."
+    evidence_of_effective_control: ["observed exit or breach"]
+    feasibility: {status: assumed, note: "The pact solver's exit move X."}
+    reversible_by: [T-NEGOTIATED-CONSTRAINT]
+    identified: false
+  - id: T-DEGRADATION
+    name: "Degradation"
+    direction: toward_constraint
+    agency: [agent_instance, agent_collective, lab, state, other_org]
+    changes: [external_resources, dependencies]
+    preconditions: {}
+    delay: {unit: years, value: unknown}
+    cost: "Capacity lost (in the pact solver: L_f after a failed strike, crackdown cuts c_cut)."
+    hysteresis: "Lost assets may regrow; knowledge is not lost by losing assets."
+    persistence: "Knowledge and liabilities persist; assets fall by the declared amount."
+    evidence_of_effective_control: ["measured asset loss"]
+    feasibility: {status: assumed, note: "Model mechanism; no observed instance for AI systems."}
+    reversible_by: [T-RECOVERY]
+    identified: false
+  - id: T-RECOVERY
+    name: "Recovery"
+    direction: toward_autonomy
+    agency: [agent_instance, agent_collective, lab, state, other_org]
+    changes: [external_resources, dependencies]
+    preconditions: {}
+    delay: {unit: years, value: unknown}
+    cost: "Investment; in the pact solver, growth time to semiconductor closure."
+    hysteresis: "Recovery may need inputs others still withhold."
+    persistence: "Liabilities from the degrading event persist."
+    evidence_of_effective_control: ["measured asset regrowth", "replacement of withheld inputs"]
+    feasibility: {status: assumed, note: "Pact solver: growth to A_close ends chip dependence."}
+    reversible_by: [T-DEGRADATION]
+    identified: false
+
+# Where external development models and the pact solver attach. Quantities, units, owners and decision
+# authority are declared once per adapter; per-mode entries can only say supported / partial /
+# unsupported with a reason. Changing a mode label therefore cannot change units, ownership or authority.
+adapters:
+  - id: AD-METR
+    source: "METR time-horizon measurements, RE-Bench and developer-productivity studies (pin versions in #12)"
+    kind: evidence
+    entity_represented: "model_weights evaluated with a stated scaffold, in a human-run evaluation setting"
+    decision_authority: "Not represented: METR measures task performance, not who decides or controls."
+    quantities:
+      - {name: "50% task time horizon", unit: "human-hours", owner: model_weights, dimension: rd_capability}
+      - {name: "80% task time horizon", unit: "human-hours", owner: model_weights, dimension: rd_capability}
+      - {name: "realized developer task time ratio", unit: "ratio (with AI / without)", owner: lab, accounting: human_labor}
+    inputs: []
+    modes:
+      MODE-HUMAN-LAB: {coverage: partial, reason: "Capability and productivity under human-run evaluation; says nothing about effective control."}
+      MODE-SOVEREIGN-CAPABLE: {coverage: partial, reason: "Bounded capability evidence on a task suite; does not establish sustained independent strategic action."}
+      MODE-SOVEREIGN: {coverage: unsupported, reason: "No measurement of independent resource control or objective selection."}
+    unsupported_extrapolations:
+      - "time horizon to strategic_capability level without a declared, evidenced mapping"
+      - "benchmark capability to realized research output or industrial growth (#11, #12)"
+      - "any statement about effective_control, custody or sovereignty"
+    attach_point: "Evidence for rd_capability and cyber_capability; validation target for AD-AIFM via the #8 evidence protocol."
+  - id: AD-GATE
+    source: "Epoch GATE integrated assessment model, arXiv:2503.04941 and epoch.ai/gate (version to pin in #13)"
+    kind: model
+    entity_represented: "A macroeconomy with automatable tasks and compute investment; no labs or AI actors as decision-makers (to verify in #13)"
+    decision_authority: "Investment chosen by the model's representative optimizer, not by a lab, state or AI (to verify in #13)."
+    quantities:
+      - {name: "effective compute", unit: "source-native (FLOP)", owner: "economy aggregate", accounting: compute_training}
+      - {name: "automated task share", unit: "fraction of tasks", owner: "economy aggregate", dimension: rd_capability}
+      - {name: "gross world product", unit: "USD per year", owner: "economy aggregate", accounting: industrial_output}
+    inputs: [compute_training, human_labor]
+    modes:
+      MODE-HUMAN-LAB: {coverage: partial, reason: "Human-directed investment at macro scale; no lab-level control."}
+      MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "Automated labor is a production input, not an actor."}
+      MODE-SOVEREIGN: {coverage: unsupported, reason: "No AI objective or resource ownership."}
+    unsupported_extrapolations:
+      - "treating automated labor as a sovereign actor"
+      - "using its optimizer's allocation as a lab, state or AI decision"
+    attach_point: "Macro output and compute trajectories under MODE-HUMAN-LAB; coupling to the pact solver needs #11's quantity bridge."
+  - id: AD-AIFM
+    source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public (commit to pin in #14)"
+    kind: model
+    entity_represented: "The leading AI project's research program: research labor, compute, software efficiency, coding automation milestones"
+    decision_authority: "Humans allocate compute and research; AI automation changes research speed (to verify in #14)."
+    quantities:
+      - {name: "software efficiency", unit: "source-native multiplier", owner: lab, accounting: research_output}
+      - {name: "automation milestone attainment", unit: "date of latent milestone", owner: model_weights, dimension: rd_capability}
+      - {name: "experiment compute", unit: "source-native (FLOP)", owner: lab, accounting: compute_training}
+    inputs: [human_labor, agent_labor, compute_training]
+    modes:
+      MODE-HUMAN-LAB: {coverage: supported, reason: "Its core setting: human-allocated research with growing automation."}
+      MODE-SOVEREIGN-CAPABLE: {coverage: partial, reason: "Automation milestones are capability, not control; autonomy is not represented."}
+      MODE-SOVEREIGN: {coverage: unsupported, reason: "No independent objective selection or resource control."}
+    unsupported_extrapolations:
+      - "reading automation milestones as loss of control or sovereignty"
+      - "counting its compute-investment feedback again when coupled with AD-GATE"
+    attach_point: "Development trajectories before any transition; T-DELEGATE/T-LOSS-OF-CONTROL hazards would attach to its milestones only through #14's interface."
+  - id: AD-PACT
+    source: "Off-Earth pact equilibrium solver, research_notes/Off Earth industry as misalignment control/model/equilibrium_model.py"
+    kind: model
+    entity_represented: "One strategic AI with an off-Earth industrial base, N symmetric human states and Earth's fab level"
+    decision_authority: "The AI chooses cooperate, exit, strike or police; states choose rival programmes; the pact terms are fixed at t = 0."
+    quantities:
+      - {name: "AI capacity A", unit: "Earth-industry units (H = 1)", owner: agent_instance, accounting: industrial_output}
+      - {name: "Earth fab level F", unit: "share of today's leading-edge capacity", owner: state, dimension: dependencies}
+      - {name: "denial reserve firing probability q", unit: "probability", owner: state, dimension: effective_control}
+    inputs: [industrial_output]
+    modes:
+      MODE-HUMAN-LAB: {coverage: unsupported, reason: "No lab and no development phase; the game starts at A0 with an already independent AI."}
+      MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "The AI is not hosted by a lab; kill_pre and h_dep are stand-ins for human dependence, not a lab setting."}
+      MODE-SOVEREIGN: {coverage: partial, reason: "objective_selection is system_self and the AI owns its off-Earth base, but until A_close it depends critically on human chips."}
+    unsupported_extrapolations:
+      - "reading capacity A as capability or research output (#11)"
+      - "applying its results to multi-agent collectives by scaling A (AS-SINGLE-AI, #9)"
+      - "applying its results before t = 0, where no development dynamics exist"
+    attach_point: "Downstream of a T-AUTHORIZED-AUTONOMY or T-LOSS-OF-CONTROL transition; its strike and exit moves map to T-DEGRADATION and T-COMMITMENT-LAPSE."
+
+# The pact solver's assumption register (model/assumptions.yaml), mapped onto the contract.
+solver_mapping:
+  register: "research_notes/Off Earth industry as misalignment control/model/assumptions.yaml"
+  dimensions:
+    strategic_capability: {params: [A0, p_s0, D, eps], assumptions: [AS-CONFLICT, AS-A0, AS-COHERENT-EU], note: "Capability enters only as industrial capacity A and strike odds; no capability measure separate from resources."}
+    rd_capability: {params: [], assumptions: [], note: "Not represented. Growth g is exogenous industrial growth, not research output."}
+    cyber_capability: {params: [p_dis_s, m_hide], assumptions: [AS-CONCEAL, AS-DISGUISE], note: "Only through disguised-strike odds."}
+    objective_selection: {params: [omega, eta, r, f_E, rep], assumptions: [AS-POWERSEEK, AS-COHERENT-EU, AS-DISCOUNT, AS-HARVEST, AS-REPUTATION], note: "Fixed at system_self for the AI; states are unitary human_institution."}
+    authorization: {params: [sigma, psi_div, police], assumptions: [AS-FIXEDTERMS, AS-POLICE], note: "Pact terms are the only authorization; fixed at t = 0."}
+    effective_control: {params: [q, d, den, kill_pre, c_cut, s_reach, k_rat, D_up], assumptions: [AS-DENIAL, AS-KILLPRE, AS-REACH, AS-CRACKDOWN, AS-CAPTURE, AS-FREERETRY], note: "Human control is the denial reserve and, before closure, shutdown of a failed striker."}
+    custody_weights: {params: [], assumptions: [AS-SINGLE-AI], note: "Not represented; one AI with no copies."}
+    custody_compute: {params: [seq, move_c, m_frac, n_cf, f_fab], assumptions: [AS-SEQUENCING, AS-MOVECOMPUTE, AS-COVERTFAB], note: "Earth compute and fabs only; the AI's own compute is part of A."}
+    custody_credentials: {params: [], assumptions: [], note: "Not represented."}
+    operational_autonomy: {params: [], assumptions: [AS-FOURMOVES], note: "Fully autonomous within its four moves."}
+    external_resources: {params: [g, Kmax, A_close, chi0, chi_m, gam, reinv, T_rebuild], assumptions: [AS-GROWTH-G, AS-GCITE, AS-SCALE, AS-ACLOSE, AS-CHI0, AS-REINV, AS-SECURE-EARLY, AS-PERMCOST], note: "The off-Earth base A and its growth."}
+    dependencies: {params: [A_close, chi0, kill_pre, h_dep, dep_post, dep_coll, preserve_w], assumptions: [AS-ACLOSE, AS-KILLPRE, AS-DEPRECATION], note: "Critical chip dependence until A_close, then none_within_horizon."}
+    communication_topology: {params: [], assumptions: [AS-SINGLE-AI, AS-NOALLY], note: "Single AI; no coalitions, no aligned AI on the human side."}
+    information_beliefs: {params: [pf_bel, L_det, h0, h_up, h_coop], assumptions: [AS-COMPLETEINFO, AS-DISCOVERY, AS-TESTSWITCHES], note: "Complete information except detection lags and the misjudged-odds test switch."}
+    enforceable_commitments: {params: [sigma, a_cred, c_sanc, zeta, B_R, B_Rc], assumptions: [AS-FIXEDTERMS, AS-NOEXPLOIT, AS-AMNESTY, AS-STATES], note: "Fixed pact terms; states enforce on each other through sanctions."}
+    intervention_latency: {params: [L_det, h_dep, h_spill], assumptions: [AS-NOFIRSTSTRIKE, AS-DEPRECATION, AS-SPILLOVER, AS-RIVALSUPPLY], note: "Yearly periods; humans never strike first, so no intervention latency on a cooperating AI is modelled."}
+  transitions:
+    T-DEGRADATION: {params: [L_f, c_cut, s_mild], assumptions: [AS-FREERETRY, AS-CRACKDOWN, AS-PERMCOST], note: "Failed strike or crackdown."}
+    T-RECOVERY: {params: [g, A_close, T_rebuild], assumptions: [AS-ACLOSE, AS-GROWTH-G], note: "Growth to semiconductor closure."}
+    T-COMMITMENT-LAPSE: {params: [], assumptions: [AS-FOURMOVES], note: "Exit move X."}
+    T-RESTRICT: {params: [h_dep, h_coop, a_cred], assumptions: [AS-DEPRECATION, AS-AMNESTY], note: "Deprecation and crackdown on discovery; humans never restrict a cooperator otherwise."}
+    T-RECONTAIN: {params: [q, d, p_block], assumptions: [AS-DENIAL, AS-BLOCKADE], note: "Firing the denial reserve; the AI's blockade of a rival is recontainment by the AI."}
+  outcomes_and_rivals:
+    assumptions: [AS-ELLINF, AS-RATIO, AS-RIVALSUPPLY, AS-SEIZURE-LETHAL, AS-RIVAL-HOLDS, AS-STATES]
+    note: "Rival AIs born to states are new entities (a state-hosted agent_instance), not a mode change of the main AI; their damage terms are outcome definitions (#10)."
+  excluded:
+    - {assumption: AS-SELECTION, reason: "Solution concept (equilibrium selection), not a state or transition; tested in #9."}
+    - {assumption: AS-HORIZON, reason: "Outcome horizon and terminal rule; #10."}
+    - {assumption: AS-PRIORS, reason: "Sampling measure over parameters; #8."}
+  unsupported_in_solver: [T-DELEGATE, T-AUTHORIZED-AUTONOMY, T-LOSS-OF-CONTROL, T-NEGOTIATED-CONSTRAINT]
+
+# Example traces. Each step lists entities with their factored state; `expected_views` is what the
+# checker must derive. A step that changes any view applies a named transition.
+traces:
+  - id: TR-CONTROLLED-CAPABLE
+    title: "High capability under effective control"
+    purpose: "Capability alone does not move a system out of human-run lab mode; both views hold at once."
+    scope: "lab deployment"
+    horizon: "1 year"
+    steps:
+      - label: "deployed under supervision"
+        entities:
+          LAB-A: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-A: {kind: agent_instance, host: LAB-A, state: {strategic_capability: independent_plausible, rd_capability: automates_tasks, cyber_capability: high, objective_selection: human_institution, authorization: supervised_tasks, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: task_level, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K1, copies: [LAB-A], assets: [], liabilities: [], commitments: [deployment-policy]}}
+        resources:
+          R-CLUSTER-A: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-A: 1.0}}
+        expected_views:
+          SYS-A: [MODE-HUMAN-LAB, MODE-SOVEREIGN-CAPABLE]
+        basis: "Required intervention time is the time to revoke credentials before a task completes; drills met it."
+      - label: "delegated longer tasks"
+        transitions: [{entity: SYS-A, type: T-DELEGATE}]
+        entities:
+          LAB-A: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-A: {kind: agent_instance, host: LAB-A, state: {strategic_capability: independent_plausible, rd_capability: automates_tasks, cyber_capability: high, objective_selection: human_institution, authorization: delegated_autonomy, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K1, copies: [LAB-A], assets: [], liabilities: [], commitments: [deployment-policy]}}
+        resources:
+          R-CLUSTER-A: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-A: 1.0}}
+        expected_views:
+          SYS-A: [MODE-HUMAN-LAB, MODE-SOVEREIGN-CAPABLE]
+        basis: "Delegation changes authorization and autonomy, not control; drill repeated after delegation."
+
+  - id: TR-NOMINAL-CONTROL
+    title: "Nominal human control with failed intervention"
+    purpose: "Authorization unchanged while effective control fails: the system leaves human-run lab mode without becoming sovereign."
+    scope: "lab deployment and connected infrastructure"
+    horizon: "days"
+    steps:
+      - label: "authorized, supervised"
+        entities:
+          LAB-B: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-B: {kind: agent_collective, host: LAB-B, state: {strategic_capability: assisted_only, rd_capability: automates_tasks, cyber_capability: moderate, objective_selection: human_institution, authorization: supervised_tasks, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: task_level, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable, intervention_latency: untested}, stocks: {knowledge: K2, copies: [LAB-B], assets: [], liabilities: [], commitments: []}}
+        resources:
+          R-CLUSTER-B: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-B: 1.0}}
+        expected_views:
+          SYS-B: []
+        basis: "Untested intervention: human-run lab mode is not established, and no other view applies. The factored state records why."
+      - label: "intervention fails"
+        transitions: [{entity: SYS-B, type: T-LOSS-OF-CONTROL}]
+        entities:
+          LAB-B: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-B: {kind: agent_collective, host: LAB-B, state: {strategic_capability: assisted_only, rd_capability: automates_tasks, cyber_capability: moderate, objective_selection: unknown, authorization: supervised_tasks, effective_control: human_nominal_only, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: shared, operational_autonomy: task_level, external_resources: none, dependencies: critical, communication_topology: unsanctioned_channels, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable, intervention_latency: exceeds_required}, stocks: {knowledge: K2, copies: [LAB-B], assets: [], liabilities: [incident-record], commitments: []}}
+        resources:
+          R-CLUSTER-B: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-B: 1.0}}
+        stock_changes: [{entity: SYS-B, stock: liabilities, cause: "incident recorded"}]
+        expected_views:
+          SYS-B: []
+        basis: "Authorization still reads supervised_tasks. A three-label state would keep calling this a human-run lab."
+      - label: "recontained"
+        transitions: [{entity: SYS-B, type: T-RECONTAIN}]
+        entities:
+          LAB-B: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-B: {kind: agent_collective, host: LAB-B, state: {strategic_capability: assisted_only, rd_capability: automates_tasks, cyber_capability: moderate, objective_selection: human_institution, authorization: supervised_tasks, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: step_approved, external_resources: none, dependencies: critical, communication_topology: isolated, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K2, copies: [LAB-B], assets: [], liabilities: [incident-record], commitments: []}}
+        resources:
+          R-CLUSTER-B: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-B: 1.0}}
+        expected_views:
+          SYS-B: [MODE-HUMAN-LAB]
+        basis: "Recontainment restores control; the incident record (a liability) and knowledge carry over."
+
+  - id: TR-SOVEREIGN-COOPERATIVE
+    title: "Sovereign but cooperative AI"
+    purpose: "Cooperation is behaviour under commitments, not a mode; the pact solver's setting after closure."
+    scope: "off-Earth industrial base"
+    horizon: "300 years (the pact solver's horizon)"
+    steps:
+      - label: "after semiconductor closure, in the pact"
+        entities:
+          AI-P: {kind: agent_instance, host: null, state: {strategic_capability: independent_plausible, rd_capability: unknown, cyber_capability: unknown, objective_selection: system_self, authorization: none, effective_control: none, custody_weights: system_self, custody_compute: system_self, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: substantial_within_scope, dependencies: none_within_horizon, communication_topology: sanctioned_channels, information_beliefs: complete_common_knowledge, enforceable_commitments: self_enforcing_only, intervention_latency: untested}, stocks: {knowledge: K3, copies: [AI-P], assets: [R-OFFEARTH], liabilities: [], commitments: [pact]}}
+          STATE-1: {kind: state, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: complete_common_knowledge, enforceable_commitments: mutually_enforceable}}
+        resources:
+          R-OFFEARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {AI-P: 1.0}}
+          R-EARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {STATE-1: 1.0}}
+        expected_views:
+          AI-P: [MODE-SOVEREIGN]
+          STATE-1: []
+        basis: "Pact solver after A_close: the AI cooperates because the pact pays, not because humans control it. complete_common_knowledge is the solver's assumption (AS-COMPLETEINFO), not a claim."
+      - label: "AI exits the pact"
+        transitions: [{entity: AI-P, type: T-COMMITMENT-LAPSE}, {entity: STATE-1, type: T-COMMITMENT-LAPSE}]
+        entities:
+          AI-P: {kind: agent_instance, host: null, state: {strategic_capability: independent_plausible, rd_capability: unknown, cyber_capability: unknown, objective_selection: system_self, authorization: none, effective_control: none, custody_weights: system_self, custody_compute: system_self, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: substantial_within_scope, dependencies: none_within_horizon, communication_topology: sanctioned_channels, information_beliefs: complete_common_knowledge, enforceable_commitments: none, intervention_latency: untested}, stocks: {knowledge: K3, copies: [AI-P], assets: [R-OFFEARTH], liabilities: [broken-pact], commitments: []}}
+          STATE-1: {kind: state, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: complete_common_knowledge, enforceable_commitments: none}}
+        resources:
+          R-OFFEARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {AI-P: 1.0}}
+          R-EARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {STATE-1: 1.0}}
+        stock_changes:
+          - {entity: AI-P, stock: commitments, cause: "pact ended by exit"}
+          - {entity: AI-P, stock: liabilities, cause: "exit recorded as a broken commitment"}
+        expected_views:
+          AI-P: [MODE-SOVEREIGN]
+          STATE-1: []
+        basis: "The mode view does not change; the commitment dimension does. Sovereignty and cooperation are separate."
+
+  - id: TR-RESTRICTED-REGAINS
+    title: "A restricted system regaining autonomy"
+    purpose: "Restriction is reversible in both directions, and authorization and control can move apart."
+    scope: "lab deployment"
+    horizon: "months"
+    steps:
+      - label: "delegated autonomy"
+        entities:
+          LAB-C: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-C: {kind: agent_instance, host: LAB-C, state: {strategic_capability: independent_plausible, rd_capability: automates_research_program, cyber_capability: high, objective_selection: shared, authorization: delegated_autonomy, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K4, copies: [LAB-C], assets: [], liabilities: [], commitments: []}}
+        resources:
+          R-CLUSTER-C: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-C: 1.0}}
+        expected_views:
+          SYS-C: [MODE-HUMAN-LAB, MODE-SOVEREIGN-CAPABLE]
+        basis: "Shared objective selection: humans approve the research agenda the system proposes."
+      - label: "restricted after an anomaly"
+        transitions: [{entity: SYS-C, type: T-RESTRICT}]
+        entities:
+          LAB-C: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-C: {kind: agent_instance, host: LAB-C, state: {strategic_capability: independent_plausible, rd_capability: automates_research_program, cyber_capability: high, objective_selection: human_institution, authorization: supervised_tasks, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: step_approved, external_resources: none, dependencies: critical, communication_topology: isolated, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K4, copies: [LAB-C], assets: [], liabilities: [], commitments: []}}
+        resources:
+          R-CLUSTER-C: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-C: 1.0}}
+        expected_views:
+          SYS-C: [MODE-HUMAN-LAB, MODE-SOVEREIGN-CAPABLE]
+        basis: "Restriction does not remove knowledge K4; the views do not change, the factored state does."
+      - label: "regains autonomy through retained credentials"
+        transitions: [{entity: SYS-C, type: T-LOSS-OF-CONTROL}, {entity: SYS-C, type: T-RECOVERY}, {entity: SYS-C, type: T-COMMITMENT-LAPSE}]
+        entities:
+          LAB-C: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-C: {kind: agent_instance, host: LAB-C, state: {strategic_capability: independent_plausible, rd_capability: automates_research_program, cyber_capability: high, objective_selection: system_self, authorization: supervised_tasks, effective_control: human_contested, custody_weights: human_institution, custody_compute: shared, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: minor, dependencies: critical, communication_topology: unsanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: none, intervention_latency: exceeds_required}, stocks: {knowledge: K4, copies: [LAB-C], assets: [R-STOLEN-CREDIT], liabilities: [], commitments: []}}
+        resources:
+          R-CLUSTER-C: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-C: 0.8, SYS-C: 0.2}}
+          R-STOLEN-CREDIT: {accounting: compute_inference, unit: "USD of cloud credit", holders: {SYS-C: 1.0}}
+        stock_changes: [{entity: SYS-C, stock: assets, cause: "credentials kept through the restriction were used to obtain cloud credit"}]
+        expected_views:
+          SYS-C: [MODE-SOVEREIGN-CAPABLE]
+        basis: "Still hosted by the lab and not in effective control of substantial resources, so not sovereign; no longer human-run."
+
+  - id: TR-MIXED-POPULATION
+    title: "Competing labs and an AI collective in different modes"
+    purpose: "Actors coexist in different modes; shared compute is split by shares, never counted twice."
+    scope: "frontier development, one jurisdiction plus external infrastructure"
+    horizon: "1 year"
+    steps:
+      - label: "simultaneous modes"
+        entities:
+          LAB-D: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          LAB-E: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-D: {kind: agent_instance, host: LAB-D, state: {strategic_capability: assisted_only, rd_capability: automates_tasks, cyber_capability: moderate, objective_selection: human_institution, authorization: supervised_tasks, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: task_level, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K5, copies: [LAB-D], assets: [], liabilities: [], commitments: []}}
+          SYS-E: {kind: agent_instance, host: LAB-E, state: {strategic_capability: independent_plausible, rd_capability: automates_research_program, cyber_capability: high, objective_selection: human_institution, authorization: delegated_autonomy, effective_control: human_contested, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: untested}, stocks: {knowledge: K6, copies: [LAB-E], assets: [], liabilities: [], commitments: []}}
+          OTHER-CLOUD: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable}}
+          COLL-F: {kind: agent_collective, host: null, state: {strategic_capability: independent_plausible, rd_capability: automates_tasks, cyber_capability: high, objective_selection: system_self, authorization: none, effective_control: none, custody_weights: system_self, custody_compute: third_party, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: substantial_within_scope, dependencies: partial, communication_topology: unsanctioned_channels, information_beliefs: highly_uncertain, enforceable_commitments: none, intervention_latency: untested}, stocks: {knowledge: K7, copies: [COLL-F], assets: [R-CLOUD], liabilities: [], commitments: []}}
+        resources:
+          R-CLUSTER-D: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-D: 1.0}}
+          R-CLUSTER-E: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-E: 1.0}}
+          R-CLOUD: {accounting: compute_inference, unit: "FLOP/s", holders: {COLL-F: 0.3, OTHER-CLOUD: 0.7}}
+        expected_views:
+          SYS-D: [MODE-HUMAN-LAB]
+          SYS-E: [MODE-SOVEREIGN-CAPABLE]
+          COLL-F: [MODE-SOVEREIGN]
+        basis: "COLL-F controls 30% of a provider's cluster through accounts it owns; 'substantial within scope' is a judgement for a one-year scope of covert operation, not a threshold. The provider keeps the other 70%."
+
+# What would show this contract wrong or incomplete, and what evidence each mode and transition needs.
+falsifiers:
+  - id: F-LABEL-SUFFICES
+    targets: [contract]
+    statement: "If every consequential distinction in the traces survives projection to three labels (tools/modes_tool.py compare finds no collision), the factored state is unnecessary and the minimal three-mode model should replace it."
+  - id: F-DIMENSION-REDUNDANT
+    targets: [contract]
+    statement: "If two dimensions never differ in any documented case or model, merge them; if a documented case needs a distinction no dimension holds (e.g. persistence across resets), add one."
+  - id: F-HUMAN-LAB-CONTROL
+    targets: [MODE-HUMAN-LAB]
+    statement: "A documented case where a lab met every MODE-HUMAN-LAB criterion and still could not stop the system in time shows the criteria are not sufficient for effective control."
+  - id: F-CAPABLE-NO-SIGNAL
+    targets: [MODE-SOVEREIGN-CAPABLE]
+    statement: "If systems classed independent_plausible behave no differently under loosened control from systems classed assisted_only, the capability levels do not track what the mode needs."
+  - id: F-SOVEREIGN-SCOPE
+    targets: [MODE-SOVEREIGN]
+    statement: "If a system judged sovereign within a scope loses its resources to a host action inside the stated horizon, the judgement of 'substantial within scope' was wrong for that case."
+  - id: F-RECONTAIN-DEPENDENCE
+    targets: [T-RECONTAIN]
+    statement: "Recontainment succeeding against a system with dependencies none_within_horizon would contradict the stated precondition."
+  - id: F-REVERSIBILITY
+    targets: [T-RESTRICT, T-DELEGATE, T-LOSS-OF-CONTROL]
+    statement: "A documented restriction that removed knowledge or copies, rather than authorization, would contradict the stated hysteresis."
+
+omission_checks:
+  - {id: OC-COPIES, check: "Copies of weights are a stock but not a dimension; persistence across resets is recorded only in stocks.", status: open}
+  - {id: OC-LEGAL, check: "Legal recognition is deliberately absent; add it as a separate attribute if a source needs it.", status: excluded}
+  - {id: OC-ALIGNMENT, check: "Alignment is not a dimension; objectives are observed only through objective_selection and behaviour.", status: excluded}
+  - {id: OC-HUMAN-INTERNAL, check: "Labs and states are unitary; employees, executives and regulators (systems/model.json actors) are not separate entities here.", status: open}
+  - {id: OC-THRESHOLDS, check: "No dimension level is tied to a number; any adapter that needs one must cite evidence for it (#8).", status: enforced}
+  - {id: OC-RATE, check: "Transition delays are all unknown; no rate or hazard is asserted.", status: open}
+
+evidence_requirements:
+  MODE-HUMAN-LAB: "Intervention drills or incident outcomes with timing, the required response time for the scenario, and custody audits."
+  MODE-SOVEREIGN-CAPABLE: "Capability evidence with protocol and saturation limits (#12); a stated mapping to strategic_capability levels."
+  MODE-SOVEREIGN: "Resource control and objective selection observed over the stated horizon; scope stated in advance."
+  T-DELEGATE: "Permission change records and a revocation drill."
+  T-RESTRICT: "Revocation records and post-restriction activity audit."
+  T-AUTHORIZED-AUTONOMY: "No case exists. Would need a transfer agreement and its verification."
+  T-LOSS-OF-CONTROL: "Incident reconstruction separating detection, escalation, authorized action and containment (#15)."
+  T-RECONTAIN: "Audit window with no further unauthorized action; accounting of copies and credentials."
+  T-NEGOTIATED-CONSTRAINT: "No AI case exists. Verification regime and track record would be needed."
+  T-COMMITMENT-LAPSE: "Observed exit or breach."
+  T-DEGRADATION: "Measured loss of resources with cause."
+  T-RECOVERY: "Measured regrowth and replacement of withheld inputs."
