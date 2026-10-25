@@ -111,6 +111,31 @@ class ExactIdentities(unittest.TestCase):
             self.assertLess(abs(tfp[2] / tfp[0] - 1), 5e-4, name)
 
 
+class ComputeSplit(unittest.TestCase):
+    """#35: E7 resolved. D + R = g(Q at the start of the step); the physical training run accumulates D."""
+
+    def test_split_exhausts_usable_compute(self):
+        import coupling_example as cx
+        for name in PRESETS:
+            r = cx.split_identities(JOBS[name])
+            self.assertGreaterEqual(r['consecutive_pairs'], 20, name)
+            self.assertLess(r['step0_rel_err'], EXACT, name)
+            self.assertLess(r['budget_max_rel_err'], EXACT, name)
+            self.assertLess(r['training_run_max_rel_err'], EXACT, name)
+
+    def test_heat_limit_explains_the_falling_share(self):
+        # The share (D + R) / Q falls to ~0 because g(Q) saturates at C_L, not because compute goes unused by the split.
+        t = JOBS['aggressive']['trajectory']
+        c_l = JOBS['aggressive']['args']['modelParams']['main']['physical_compute_limit']
+        i = JOBS['aggressive']['steps'].index(25)
+        self.assertLess((t['training_compute'][i] + t['runtime_compute'][i]) / t['compute'][i], 1e-4)
+        self.assertAlmostEqual((t['training_compute'][i] + t['runtime_compute'][i]) / c_l, 1.0, places=3)
+
+    def test_committed_example_is_current(self):
+        import coupling_example as cx
+        self.assertEqual(json.loads((HERE / 'coupling_example.json').read_text()), json.loads(json.dumps(cx.build())))
+
+
 class Automation(unittest.TestCase):
     def test_function_shape(self):
         f = g.automation_fraction

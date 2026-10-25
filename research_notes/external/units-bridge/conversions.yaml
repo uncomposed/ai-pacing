@@ -70,7 +70,7 @@ conversions:
     factor: {value: 1.0, unit: "1"}
     mechanism: "A change of time unit only (FLOP/yr to FLOP/s); the unit table carries the 3.156e7."
     delay: {kind: none, note: "identity"}
-    constraints: "Q is the shared stock; only its training share maps to compute_training. The share is unresolved in #13 (E7), so nothing is coupled through this yet."
+    constraints: "Q is the shared stock; only its training share maps to compute_training. The share is resolved in #35 (E7: D + R = g(Q) at the start of the step), so the training share is QTY-GATE-TRAINING-COMPUTE, not Q."
     evidence: {status: normalization, ref: "epoch-gate/INTERFACES.md"}
     coupled: false
     used_by: []
@@ -153,6 +153,17 @@ conversions:
     coupled: true
     used_by: [coupling_toy.py]
   # ---- unidentified: kept uncoupled -----------------------------------------------------------------------------
+  - id: CV-GATE-D-TO-FRONTIER-TRAINING
+    from: QTY-GATE-TRAINING-COMPUTE
+    to: QTY-TRAINING-COMPUTE-RATE
+    class: unidentified
+    form: linear
+    mechanism: "World training compute (GATE, economy aggregate) to one frontier project's training capacity (AIFM): the project's share s."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "s is in (0, 1]; s = 1 gives an upper bound only (systems/modes.yaml coupling XC-GATE-AIFM-TRAINING). The time-unit change is in the unit table; AIFM's own H100e rate (1.262e22 FLOP per H100e-year) is applied outside this dictionary."
+    evidence: {status: not_collected, ref: "#35; no source for the frontier share of world training compute is pinned"}
+    coupled: false
+    used_by: [epoch-gate/coupling_example.py (upper bound, s = 1)]
   - id: CV-HORIZON-TO-DEV-TIME
     from: QTY-METR-HORIZON
     to: QTY-DEV-TIME-RATIO

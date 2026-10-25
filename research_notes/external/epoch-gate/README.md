@@ -169,7 +169,8 @@ These are single runs, not the comparison #13 asks for; see "Not done".
 - **D6. `compute` is the physical stock.** The solver's `compute` follows the physical
   stock law Q (FLOP/year), not the effective-compute law C = Q S; effective compute is not
   reported as such. `training_compute + runtime_compute` is 19% of Q at step 0, peaks at 46% (step 10) and
-  is reported as 0 by step 25 in the default run; the relation is unexplained (E7). Q can exceed the 2e38 FLOP/year heat limit (Aggressive, step 20:
+  falls toward 0 later in the default run. Resolved in #35 (E7): the two exhaust usable compute g(Q) at the start of
+  each step, and the share falls once g(Q) saturates at the heat limit. Q can exceed the 2e38 FLOP/year heat limit (Aggressive, step 20:
   2.7e41); the paper caps only usable compute g(Q).
 - **D7. TFP after automation.** Y / (K^alpha T^(1-alpha)) with T read as the solver's
   `cognitive_ces_term` is constant (514.0) while f = f_init and drifts down once automation
@@ -203,8 +204,10 @@ These are single runs, not the comparison #13 asks for; see "Not done".
 4. Who allocates and whose objective: **done** (MODES.md).
 5. Mode mapping with unsupported modes marked: **done** (MODES.md, `AD-GATE`).
 6. Ownership/budget/compute/labor/physical/time interfaces; no double counting with AI
-   Futures: **drafted** (INTERFACES.md). It cannot be closed until #14 pins AI Futures and
-   #11 fixes the shared quantity bridge.
+   Futures: **specified** (INTERFACES.md, "Resolution (#35)"). The compute units are
+   resolved, each loop has one owner in `systems/modes.yaml`, and there is a checked worked
+   coupling (`coupling_example.py`). AIFM is not rerun on the passed series, and the
+   calendar mapping of step 0 is open.
 7. Bottleneck/partial-automation, allocation and feedback-off comparisons; do policy
    conclusions survive: **not done.** Three single exploratory runs above. GATE has no
    feedback-off switch; one would have to be built (e.g. fixing investment shares at their

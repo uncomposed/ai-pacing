@@ -4,8 +4,9 @@
 
 Architecture note for issue #5, written 2026-10-25; contract 0.2.0 adds the changes from
 #32 (section 12), 0.3.0 the stock/flow accounting of #39 (section 13), 0.4.0 a kind for
-every adapter quantity (#61, section 14), and 0.5.0 the milestone interface and experiment
-compute (#47, section 15). [[ai gen]] Status: `implemented`
+every adapter quantity (#61, section 14), 0.5.0 the milestone interface and experiment
+compute (#47, section 15), and 0.6.0 feedback-loop owners and the GATE-AIFM coupling (#35,
+section 16). [[ai gen]] Status: `implemented`
 (contract, checker and tests); nothing is `verified` against evidence and nothing is
 `human_validated`. Every definition, level and transition is **proposed**: an
 analytical device to review, not an empirical claim or a settled threshold.
@@ -446,3 +447,53 @@ H100e-to-FLOP/s rate is stated for it. GATE has no experiment-compute series.
 What this does not establish: no milestone was observed. The bindings are readings of
 AIFM's definitions, not calibrations. No transition is more or less likely after a
 milestone.
+
+## 16. Feedback-loop owners and the GATE-AIFM coupling (#35, contract 0.6.0)
+
+`research_notes/external/epoch-gate/INTERFACES.md` named five places where coupling GATE
+with AI Futures would close the same feedback twice. Contract 0.6.0 makes the
+one-owner-per-loop rule checkable.
+
+1. **GATE's compute split is resolved.** In the pinned solver output, training plus runtime
+   compute equals usable compute at the start of the step, g(Q) = Q/(Q/C_L + 1), to machine
+   precision, and the physical training run accumulates D (`epoch-gate/coupling_example.py`,
+   units-bridge equations `GATE-COMPUTE-SPLIT` and `GATE-TRAINING-RUN`). D and R are
+   therefore allocated capacity in physical FLOP/year: stocks, like their ledgers. The
+   `ambiguous` records from 0.4.0 are removed, and the units bridge links them as
+   `QTY-GATE-TRAINING-COMPUTE` and `QTY-GATE-RUNTIME-COMPUTE`. Q itself is not booked: D and
+   R exhaust it.
+2. **`feedback_loops`** lists the five loops, each with the ledgers it `carries`. Each
+   model adapter's `feedback_loops` entry gives every loop a role (`owner`, `yields`,
+   `absent`) with a rationale, and the checker requires exactly one owner per loop:
+   - GATE owns compute investment and agent labor.
+   - AIFM owns software efficiency, research automation and the capability mapping.
+
+   INTERFACES.md has the table and reasons.
+3. **`couplings`** declares worked couplings, and the checker enforces:
+   - a pass moves one quantity between ledgers of the same kind, both resolved, into an
+     input of the target, once;
+   - only the owner of every loop carrying that ledger may pass it;
+   - `capability`, `efficiency_level` and events never cross;
+   - a source never passes compute it already turns into a derived quantity on a loop it
+     owns (INTERFACES item 5);
+   - each input of a coupled model on a loop the other model owns is passed or declared
+     uncoupled;
+   - each yielded loop has a stated treatment.
+
+   Twelve mutation tests break one rule each.
+4. **`XC-GATE-AIFM-TRAINING`.** GATE's training compute D passes to AIFM's frontier
+   training capacity:
+   - **Share.** The frontier project's share of world training compute is unidentified, so
+     the pass gives an upper bound only.
+   - **Uncoupled.** Runtime, inference and experiment compute stay uncoupled. GATE's runtime
+     already runs its digital workers, and AIFM's research compute lies outside GATE's
+     dollar-funded R&D.
+   - **Bracketed (stopping rule).** GATE's own software-efficiency and capability loops shaped
+     D and cannot be switched off without re-solving GATE. Following the stopping rule, they
+     are bracketed by GATE's conservative and aggressive presets, a bounded scenario, rather
+     than counted as cleanly assigned inside D.
+   - **Not rerun.** AIFM is not rerun on the passed series.
+
+What this does not establish: no coupled trajectory exists. The coupling is a checked
+specification with upper-bound numbers. Loop ownership is a design choice with stated
+reasons, not a finding about which model is right.
