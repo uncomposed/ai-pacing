@@ -1,0 +1,158 @@
+{
+ "what": "Default parameters over [2017, 2200], varying only ac_anchor_mode. Each mode sets the AC progress threshold from a different belief (uplift schedule, METR p80 time horizon, revenue, Epoch Capabilities Index); the anchor beliefs are the upstream defaults (ac_time_horizon_minutes 120000, revenue_required_for_ac 1e12 USD, eci_required_for_ac 250).",
+ "status": "alternative calibration anchors inside the source model; not empirical validation",
+ "anchors": {
+  "uplift-solved": {
+   "progress_at_ac_ooms": 37.61077523387728,
+   "r_software": 3.1393713670664853,
+   "milestone_times": {
+    "AC": 2027.7869747130487,
+    "AI2027-SC": 2028.4088893850992,
+    "AIR-5x": 2028.0613584503171,
+    "AIR-25x": 2028.4433115971233,
+    "AIR-250x": 2028.7474676713261,
+    "AIR-2000x": 2028.9461777163185,
+    "AIR-10000x": 2029.1093161944384,
+    "SAR-level-experiment-selection-skill": 2028.3758541264474,
+    "SIAR-level-experiment-selection-skill": 2028.8073506408632,
+    "STRAT-AI": 2028.8073506408632,
+    "TED-AI": 2028.6456855354859,
+    "ASI": 2028.929945371884,
+    "Maximum possible experiment selection skill": null
+   },
+   "td_correction": {
+    "applied": false,
+    "reason": "ac_anchor_mode='uplift-solved' pins the schedule to the belief",
+    "believed": {
+     "serial_multiplier": 2.0,
+     "excess_doubling_time_months": 5.0,
+     "eval_date": 2026.578082
+    },
+    "measured": {
+     "serial_multiplier": 1.9999999999999984,
+     "excess_doubling_time_months": 4.974826947097782,
+     "eval_date": 2026.578082
+    },
+    "mismatch": 0.0050346105804437435
+   },
+   "progress_2026_578": 35.52322805272468
+  },
+  "time-horizon": {
+   "progress_at_ac_ooms": 38.57301033500018,
+   "r_software": 3.1393713670664853,
+   "milestone_times": {
+    "AC": 2028.3877064131184,
+    "AI2027-SC": 2029.0011012734788,
+    "AIR-5x": 2028.6489407490642,
+    "AIR-25x": 2029.0649247871404,
+    "AIR-250x": 2029.4084245866845,
+    "AIR-2000x": 2029.6414689021374,
+    "AIR-10000x": 2029.8396999647105,
+    "SAR-level-experiment-selection-skill": 2029.0022729053935,
+    "SIAR-level-experiment-selection-skill": 2029.4791246246684,
+    "STRAT-AI": 2029.4791246246684,
+    "TED-AI": 2029.2945845545441,
+    "ASI": 2029.622581814132,
+    "Maximum possible experiment selection skill": null
+   },
+   "td_correction": {
+    "applied": true,
+    "reason": null,
+    "believed": {
+     "serial_multiplier": 2.0,
+     "excess_doubling_time_months": 5.0,
+     "eval_date": 2026.578082
+    },
+    "measured": {
+     "serial_multiplier": 1.9999999874499128,
+     "excess_doubling_time_months": 7.170700666809335,
+     "eval_date": 2026.578082
+    },
+    "mismatch": 0.434140133361867
+   },
+   "progress_2026_578": 35.552101414137894
+  },
+  "revenue": {
+   "progress_at_ac_ooms": 38.20439429515003,
+   "r_software": 3.1393713670664853,
+   "milestone_times": {
+    "AC": 2028.1491072441147,
+    "AI2027-SC": 2028.764441616981,
+    "AIR-5x": 2028.4161289572855,
+    "AIR-25x": 2028.819707938628,
+    "AIR-250x": 2029.139043336009,
+    "AIR-2000x": 2029.357056173986,
+    "AIR-10000x": 2029.5432818255163,
+    "SAR-level-experiment-selection-skill": 2028.7557900322256,
+    "SIAR-level-experiment-selection-skill": 2029.2047811053133,
+    "STRAT-AI": 2029.2047811053133,
+    "TED-AI": 2029.033350723712,
+    "ASI": 2029.339759306341,
+    "Maximum possible experiment selection skill": null
+   },
+   "td_correction": {
+    "applied": true,
+    "reason": null,
+    "believed": {
+     "serial_multiplier": 2.0,
+     "excess_doubling_time_months": 5.0,
+     "eval_date": 2026.578082
+    },
+    "measured": {
+     "serial_multiplier": 1.9999999960903168,
+     "excess_doubling_time_months": 6.335015453761408,
+     "eval_date": 2026.578082
+    },
+    "mismatch": 0.2670030907522816
+   },
+   "progress_2026_578": 35.54184904504325
+  },
+  "eci": {
+   "progress_at_ac_ooms": 44.681214165146635,
+   "r_software": 3.1393713670664853,
+   "milestone_times": {
+    "AC": 2035.1370247329755,
+    "AI2027-SC": 2036.1179465550763,
+    "AIR-5x": 2035.5120935401796,
+    "AIR-25x": 2036.430042405826,
+    "AIR-250x": 2037.118849638832,
+    "AIR-2000x": 2037.5542527652203,
+    "AIR-10000x": 2037.9186932964349,
+    "SAR-level-experiment-selection-skill": 2036.3551939008591,
+    "SIAR-level-experiment-selection-skill": 2037.2632379591676,
+    "STRAT-AI": 2037.2632379591676,
+    "TED-AI": 2036.9197330946172,
+    "ASI": 2037.5235060370865,
+    "Maximum possible experiment selection skill": null
+   },
+   "td_correction": {
+    "applied": true,
+    "reason": null,
+    "believed": {
+     "serial_multiplier": 2.0,
+     "excess_doubling_time_months": 5.0,
+     "eval_date": 2026.578082
+    },
+    "measured": {
+     "serial_multiplier": 1.9999999938845578,
+     "excess_doubling_time_months": 22.11202599867596,
+     "eval_date": 2026.578082
+    },
+    "mismatch": 3.4224051997351914
+   },
+   "progress_2026_578": 35.640459608490616
+  }
+ },
+ "provenance": {
+  "upstream": "https://github.com/AI-Futures-Project/aifm-public",
+  "upstream_commit": "1c40ecdb246c25980515441a66571931c5604e11",
+  "upstream_tracked_files_modified": false,
+  "command": "aifm_runner.py anchors",
+  "python": "3.14.6",
+  "numpy": "2.4.1",
+  "scipy": "1.17.0",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "generated_utc": "2026-10-25T17:46:43Z"
+ }
+}

@@ -442,24 +442,32 @@ adapters:
       - "counting its compute-investment and software-efficiency feedback again when coupled with AD-AIFM"
     attach_point: "World-level output, compute and automation trajectories as an exogenous background for MODE-HUMAN-LAB entities, through #11's quantity bridge; see research_notes/external/epoch-gate/INTERFACES.md."
   - id: AD-AIFM
-    source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public; only its README was read (2026-10-25, main branch, commit not pinned); pin in #14"
+    source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public at commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09, MIT); code read and run in #14 (research_notes/external/ai-futures-model/, mapping in modes.md there)"
     kind: model
-    entity_represented: "An AGI project's research program: forecasts of human labor and compute, coding automation and research judgment, cumulative effective compute, software efficiency"
-    decision_authority: "Labor and compute enter as forecasts, not as choices of a modelled actor; no AI objective is represented (to verify in #14)."
+    entity_represented: "One aggregate frontier AGI project (the AC milestone is defined on 'an AGI project's coding work') and the capability of its model_weights on a single latent scale, log10 cumulative effective compute. No agent_instance, agent_collective, state or other_org entity, and no copies."
+    decision_authority: "None modelled. Human labor (FTEs) and inference, experiment and training compute (H100e) are exogenous input series; the model guide says the ODE 'does not itself decide future labor or compute budgets'. AI changes research productivity only. No objective is represented for any actor, human or AI. Verified in code at the pinned commit (progress_rate.py, progress_model/README.md 'Modeling assumptions')."
     quantities:
-      - {name: "cumulative effective compute", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability}
-      - {name: "software efficiency", unit: "source-native multiplier", owner: lab, accounting: research_output}
-      - {name: "capability milestones (AC, SC, SAR, SIAR, TED-AI, ASI)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability}
-      - {name: "compute forecast", unit: "source-native (FLOP)", owner: lab, accounting: compute_training}
-    inputs: [human_labor, agent_labor, compute_training]
+      - {name: "progress: log10 cumulative effective compute (latent)", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability}
+      - {name: "automation fraction of coding (latent schedule in progress)", unit: "fraction of coding tasks, 0 to 1", owner: model_weights, dimension: rd_capability}
+      - {name: "AI research taste (latent schedule in progress)", unit: "SDs of the human researcher taste distribution", owner: model_weights, dimension: rd_capability}
+      - {name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability}
+      - {name: "software efficiency", unit: "orders of magnitude (OOMs)", owner: lab, accounting: research_output}
+      - {name: "human coding labor", unit: "FTEs (input series)", owner: lab, accounting: human_labor}
+      - {name: "inference compute powering AI coding labor", unit: "H100-equivalents (input series)", owner: lab, accounting: compute_inference}
+      - {name: "frontier training capacity", unit: "H100-equivalents, converted to FLOP/yr at 1.262e22 FLOP per H100e-year (input series)", owner: lab, accounting: compute_training}
+    # AIFM takes inference compute and converts it to AI coding labor internally, so agent_labor is not an input.
+    # Its experiment-compute series has no accounting quantity in this contract yet (see research_notes/external/ai-futures-model/modes.md).
+    inputs: [human_labor, compute_inference, compute_training]
     modes:
-      MODE-HUMAN-LAB: {coverage: supported, reason: "Its core setting: human-allocated research with growing automation."}
-      MODE-SOVEREIGN-CAPABLE: {coverage: partial, reason: "Automation milestones are capability, not control; autonomy is not represented."}
-      MODE-SOVEREIGN: {coverage: unsupported, reason: "No independent objective selection or resource control."}
+      MODE-HUMAN-LAB: {coverage: supported, reason: "Its implicit setting: resources follow human-made forecasts and nothing in the model can stop or redirect them. Control is assumed by omission, not modelled, so the model cannot show the view failing."}
+      MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "The view's defining dimension, strategic_capability, has no counterpart. TED-AI and ASI are latent thresholds on a research-taste scale, not strategic action; authorization, operational autonomy and intervention are absent."}
+      MODE-SOVEREIGN: {coverage: unsupported, reason: "No objective selection, custody or external resources for any AI entity."}
     unsupported_extrapolations:
-      - "reading automation milestones as loss of control or sovereignty"
-      - "counting its compute-investment feedback again when coupled with AD-GATE"
-    attach_point: "Development trajectories before any transition; T-DELEGATE/T-LOSS-OF-CONTROL hazards would attach to its milestones only through #14's interface."
+      - "reading automation milestones (AC, SAR, TED-AI, ASI) as loss of control, autonomous successor development or sovereignty"
+      - "reading coding automation or research-effort growth as validated advances: effort converts to software efficiency with no review or integration stage"
+      - "adding a compute-investment feedback from GATE on top of AIFM's compute series without replacing them: AIFM's compute paths are forecasts that already embed investment beliefs"
+      - "counting AIFM's software-efficiency feedback and GATE's algorithmic-progress feedback as two separate accelerations of the same research"
+    attach_point: "Pre-transition development trajectories under MODE-HUMAN-LAB, as rd_capability levels for a lab's model_weights. T-DELEGATE or T-LOSS-OF-CONTROL hazards can attach to its milestones only through a transition interface that #14 has not defined yet."
   - id: AD-PACT
     source: "Off-Earth pact equilibrium solver, research_notes/Off Earth industry as misalignment control/model/equilibrium_model.py"
     kind: model
