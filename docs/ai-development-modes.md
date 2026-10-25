@@ -3,7 +3,8 @@
 ## Status
 
 Architecture note for issue #5, written 2026-10-25; contract 0.2.0 adds the changes from
-#32 (section 12), and 0.3.0 the stock/flow accounting of #39 (section 13). [[ai gen]] Status: `implemented`
+#32 (section 12), 0.3.0 the stock/flow accounting of #39 (section 13), and 0.4.0 a kind for
+every adapter quantity (#61, section 14). [[ai gen]] Status: `implemented`
 (contract, checker and tests); nothing is `verified` against evidence and nothing is
 `human_validated`. Every definition, level and transition is **proposed**: an
 analytical device to review, not an empirical claim or a settled threshold.
@@ -137,14 +138,17 @@ Actors coexist in different modes in one step (`TR-MIXED-POPULATION`: a human-ru
 system, a sovereign-capable system in a second lab, and a sovereign collective renting
 part of a provider's cluster). To prevent double counting:
 
-- each shared quantity (`human_labor`, `compute_training`, `compute_inference`,
-  `agent_labor`, `capability`, `research_output`, `industrial_capacity`,
-  `industrial_output`) has one unit, one kind (stock, flow or state) and one owner ledger;
-- `agent_labor` is derived from `compute_inference`, `capability` from
-  `compute_training`, and `industrial_output` from `industrial_capacity`, so an adapter
-  that takes a quantity and its parent as inputs is rejected;
-- stocks and flows stay apart (#39). An adapter quantity that declares its kind must
-  match the kind of the ledger it is booked to. A stock that yields a flow says so with an
+- each shared quantity (`human_workforce`, `human_labor`, `compute_training`,
+  `compute_inference`, `agent_workforce`, `agent_labor`, `capability`, `research_output`,
+  `efficiency_level`, `industrial_capacity`, `industrial_output`) has one unit, one kind
+  (stock, flow or state) and one owner ledger;
+- `human_labor` is derived from `human_workforce`, `agent_workforce` from
+  `compute_inference` and `agent_labor` from `agent_workforce`, `efficiency_level` from
+  `research_output`, `capability` from `compute_training` and `efficiency_level`, and
+  `industrial_output` from `industrial_capacity`, so an adapter that takes a quantity and
+  its parent as inputs is rejected;
+- stocks and flows stay apart (#39, #61). Every adapter quantity declares its kind; one
+  booked to a ledger must match the ledger's kind (section 14 lists the exceptions). A stock that yields a flow says so with an
   `output_rate` (value, unit per time, and the flow it leads to, which must be derived
   from the stock's ledger). The pact solver's capacity A is booked to
   `industrial_capacity` with an output rate of 1 per year to `industrial_output`: one
@@ -324,3 +328,48 @@ The unit is defined once (`DEF-EIU`): the world economy's productive capacity in
 reference year, so one EIU/yr is that year's gross world output. No parameter value or
 solver result changes; the definition fixes only what conversions to energy, mass and
 money mean.
+
+## 14. A kind for every adapter quantity (#61, contract 0.4.0)
+
+Section 13 left most adapter quantities without a kind, and two were booked against the
+wrong one: GATE's efficiency levels H and S (levels) to `research_output` (a flow), and
+GATE's digital workers (a worker-equivalent stock) to `agent_labor` (agent-hours per year).
+Changes:
+
+1. **`kind` is required** on every adapter quantity (schema and `tools/modes_tool.py`;
+   `tools/units_tool.py` also refuses a contract quantity booked to a ledger without a
+   kind, whether or not the dictionary links it). Kinds:
+
+   | kind | meaning | booked to a ledger? |
+   |---|---|---|
+   | stock, flow, state | as the accounting kinds | must equal the ledger's kind |
+   | ratio | a dimensionless modifier of the ledger (METR's developer time ratio on `human_labor`); never added to it or held | required |
+   | event | a dated occurrence (AIFM's milestones); see #47 | never |
+   | ambiguous | the source does not settle stock or flow | allowed if the ledger's kind is a candidate; needs `kind_ambiguity` with candidates, a source locator and a note |
+
+   A dimension-attached quantity (no ledger) may carry stock, flow, state, event or
+   ambiguous. `state` covers levels that are neither accumulated nor held by shares:
+   capability scores, fractions, probabilities.
+2. **New stock ledgers.** `efficiency_level` (derived from `research_output`: the level
+   that research changes), `agent_workforce` (derived from `compute_inference`;
+   `agent_labor` is now derived from it) and `human_workforce` (`human_labor` is derived
+   from it). Taking a level and its growth, or a workforce and its hours, as two inputs of
+   one adapter is rejected as double counting.
+3. **Rebooked.** GATE's H and S (now two entries) and AIFM's software efficiency (OOMs) to
+   `efficiency_level`; GATE's digital workers N_i to `agent_workforce`; GATE's input from
+   `human_labor` to `human_workforce`, because its L counts workers, not hours. No hours per
+   worker-year is stated by either source, so no output rate from a workforce to its labor
+   is given.
+4. **Recorded ambiguous (stopping rule of #61).** GATE's training compute D and runtime
+   compute: the paper writes D both as dC_T/dt and as a share of the compute budget, and
+   the solver's two series are 0.19-0.46 of the compute stock Q (EQUATIONS.md E3, E7); #35
+   resolves them. AIFM's human coding FTEs: an FTE series can be a headcount equivalent or
+   hours divided by full-time hours, and the input series does not say which. Each stays
+   on its previous ledger provisionally, with its locator.
+5. **Not changed.** The units-bridge dictionary entry `QTY-SOFTWARE-EFFICIENCY` still names
+   `research_output` as its contract ledger and `state` as its kind; it is an AIFM entry
+   being edited under #42 and is left for that work to align. `make units-check` does not
+   compare dictionary and contract ledgers, so the difference does not fail a check.
+
+Every trace is unchanged and still valid: no trace resource used a rebooked ledger. The
+Hugging Face trace is re-pinned to 0.4.0.

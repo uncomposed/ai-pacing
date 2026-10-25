@@ -243,6 +243,23 @@ class UnitsBridgeTest(unittest.TestCase):
         errors = tool.validate(self.q, self.c, self.e, modes, PARAMS)
         self.assertTrue(any("must declare kind stock (it declares None)" in x for x in errors), errors)
 
+    def test_unlinked_contract_quantity_must_declare_kind(self):
+        # #61: also for contract quantities the dictionary does not link (GATE's digital workers)
+        m = copy.deepcopy(MODES)
+        gate = next(a for a in m['adapters'] if a['id'] == 'AD-GATE')
+        del next(x for x in gate['quantities'] if x['name'] == 'digital workers N_i')['kind']
+        errors = tool.validate(self.q, self.c, self.e, m, PARAMS)
+        self.assertTrue(any("AD-GATE: contract quantity 'digital workers N_i' is booked to agent_workforce but declares no kind"
+                            in x for x in errors), errors)
+
+    def test_dictionary_cannot_resolve_an_ambiguity_to_another_kind(self):
+        modes, a = self.modes_copy()
+        a['kind'] = 'ambiguous'
+        a['kind_ambiguity'] = {'candidates': ['flow', 'state'], 'locator': 'x', 'note': 'x'}
+        del a['output_rate']
+        errors = tool.validate(self.q, self.c, self.e, modes, PARAMS)
+        self.assertTrue(any("is ambiguous between ['flow', 'state'], not stock" in x for x in errors), errors)
+
     def test_contract_output_rate_must_match_dictionary(self):
         modes, a = self.modes_copy()
         a['output_rate']['value'] = 0.3
