@@ -204,5 +204,49 @@ class TestEvidenceRecords(unittest.TestCase):
                 self.assertTrue(any("empirical support" in x for x in r["not_for"]), r["id"])
 
 
+class TestHeldOut(unittest.TestCase):
+    """#45: no METR observation is held out from AIFM yet; feedback on and off are not identifiable."""
+
+    def test_no_metr_record_is_held_out(self):
+        import heldout_audit as A
+
+        rows = A.audit()
+        self.assertEqual(len(rows), 15)
+        self.assertEqual([x for x in rows if x["held_out"]], [])
+        self.assertTrue(all(not x["available_after_aifm_cutoff"] for x in rows))
+        self.assertTrue(all(not x["independent_of_aifm_outputs"] for x in rows if x["suite"] == "TH1.1"))
+        self.assertEqual(A.AIFM_CUTOFF, load_yaml(HERE / "SOURCES.yaml")["upstream"]["commit_date"])
+
+    def test_outputs_cite_primary_metr_records(self):
+        recs = {r["id"]: r for r in load_yaml(HERE.parents[2] / "evidence" / "records.yaml")["records"]}
+        primary = {"EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15", "EV-METR-TH11-2026-05-08"}
+        for rid in ("EV-AIFM-REFERENCE-TRAJECTORY", "EV-AIFM-DANIEL-08-16-26"):
+            self.assertTrue(primary <= set(recs[rid]["fitted_to"]), rid)
+            self.assertIn("EV-METR-TH10-2026-03-03", recs[rid]["depends_on"])
+            self.assertNotIn("EV-AIFM-METR-HORIZON-V1-1", recs[rid]["depends_on"] + recs[rid]["fitted_to"])
+            for dep in recs[rid]["depends_on"] + recs[rid]["fitted_to"]:
+                self.assertIn(dep, recs)
+
+    def test_bundled_metr_file_is_metr_published_file(self):
+        h = result("horizon_identifiability.json")["bundled_metr_file_sha256"]
+        sums = (HERE.parent / "metr-time-horizons" / "sources.sha256").read_text()
+        self.assertIn(f"{h}  metr.org/benchmark_results_1_1.yaml", sums)
+
+    def test_identifiability_diagnostic(self):
+        d = result("horizon_identifiability.json")
+        self.assertIn("IN-SAMPLE", d["status"])
+        self.assertIn("not a held-out test", d["status"])
+        fit = d["in_sample_fit_p80"]
+        # The "on" curve is evaluated exactly as the upstream's own compute_metr_mse.
+        self.assertAlmostEqual(fit["feedback_on"]["mean_squared_log_error"], d["upstream_compute_metr_mse"], places=9)
+        self.assertEqual(fit["feedback_on"]["n"], len(d["observations"]))
+        # On and off are separated by far less than METR's own measurement uncertainty at every observed date.
+        sep = max(d["max_abs_log_separation_on_vs_off"].values())
+        self.assertLess(sep, 0.1)
+        self.assertLess(sep, d["median_half_width_ln_p80_ci95"] / 5)
+        mses = [v["mean_squared_log_error"] for v in fit.values()]
+        self.assertLess(max(mses) - min(mses), 0.05)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)
