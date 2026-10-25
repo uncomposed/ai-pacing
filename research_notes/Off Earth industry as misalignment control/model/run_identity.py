@@ -18,7 +18,9 @@ run being requested:
                    after dropping comments and blank lines (tokenize), so a comment edit keeps the cache;
                    in PARAMS only the numbers (baseline, range, scale) count, not the meaning/basis text
     dependencies   numpy version, Python major.minor
-    output_schema  field names and dtypes written to the .npz
+    output_schema  field names and dtypes written to the .npz, and (manifest schema 2, issue #10) what the
+                   outcome fields mean: horizon, predicate, thresholds, terminal rule, rival treatment and
+                   unresolved continuation (outcomes.outcome_metadata)
 
 The machine (OS, CPU, commit, runner) is recorded beside the identity, not in it: cross-platform last-bit
 differences are measured by `ci_sims.py repro`, not hidden by refusing to compare.
@@ -32,6 +34,11 @@ Legacy caches (made before 2026-10-25, no manifest) are classified in results/ca
 each file's SHA-256. Their producing identity cannot be established. Each one that maps to a current request
 records the identity that request had when the inventory was taken, so a later change is still caught. It is
 classified, never relabelled as verified. RD_REQUIRE_VERIFIED=1 refuses every legacy cache.
+
+Manifest schema 2 (issue #10, 2026-10-25) adds the outcome metadata to the output_schema part. Legacy inventory
+entries and schema-1 manifests recorded the output_schema part without it; they are compared on their own (schema-1)
+form of that part, so a request that is otherwise unchanged still matches them. They stay legacy: no outcome
+metadata is added to them, and a report reading them applies the current definition (outcomes.py), which it states.
 
     python3 run_identity.py inventory --write   # (re)classify committed caches; refuses to change recorded hashes
     python3 run_identity.py inventory --check   # every cache file has a valid manifest or a matching inventory entry
@@ -59,7 +66,11 @@ import tokenize
 
 import numpy as np
 
-SCHEMA = "offearth-run-manifest/1"
+import outcomes
+
+SCHEMA = "offearth-run-manifest/2"
+# schema 1 (issue #6): the output_schema part had no outcome metadata. Still read; compared on that form.
+SCHEMA_V1 = "offearth-run-manifest/1"
 HERE = os.path.dirname(os.path.abspath(__file__))
 INVENTORY = os.path.join(HERE, "results", "cache_provenance.json")
 INVENTORY_MD = os.path.join(HERE, "results", "cache_provenance.md")
@@ -261,13 +272,24 @@ def request(kind: str, ens_name: str, thetas, design: dict, cfg: dict, opts: dic
         solver={**{os.path.basename(f): source_digest(f) for f in SOLVER_FILES},
                 **{f"{fn.__module__}.{fn.__name__}": source_digest(fn) for fn in fns}},
         dependencies=dict(numpy=np.__version__, python=".".join(platform.python_version_tuple()[:2])),
-        output_schema=dict(fields=dict(sorted(fields.items()))),
+        output_schema=dict(fields=dict(sorted(fields.items())), outcome=outcomes.outcome_metadata(cfg, rd.STRIKE_TOL)),
     )
     spec = dict(kind=kind, ensemble=ens_name, design=_floats(design), cfg=dict(cfg), opts=_floats(opts or {}) or None,
                 sampling=None if not sampling else dict(box=sampling["box"], n=int(sampling["n"]),
                                                         seed=int(sampling["seed"])))
     return dict(schema=SCHEMA, request=spec, identity=ident, identity_sha256=digest(ident),
                 part_sha256={p: digest(ident[p]) for p in PARTS})
+
+
+def v1_form(want: dict) -> dict:
+    """The schema-1 identity of a request: the same, without the outcome metadata in output_schema. Legacy inventory
+    entries and schema-1 manifests recorded this form."""
+    ident = dict(want["identity"], output_schema=dict(fields=want["identity"]["output_schema"]["fields"]))
+    return dict(identity=ident, identity_sha256=digest(ident), part_sha256={p: digest(ident[p]) for p in PARTS})
+
+
+def _same_form(want: dict, recorded_schema: str) -> dict:
+    return v1_form(want) if recorded_schema == SCHEMA_V1 else want
 
 
 @functools.lru_cache(maxsize=64)
@@ -342,7 +364,7 @@ def describe(path: str) -> dict:
     if os.path.exists(sc):
         with open(sc, encoding="utf-8") as f:
             m = json.load(f)
-        if m.get("schema") != SCHEMA:
+        if m.get("schema") not in (SCHEMA, SCHEMA_V1):
             raise IdentityError(f"{relpath(sc)}: unknown manifest schema {m.get('schema')!r}")
         if m.get("artifact", {}).get("sha256") != sha:
             raise IdentityError(f"{relpath(path)}: bytes do not match its manifest (sha256 {sha[:12]} vs "
@@ -368,23 +390,28 @@ def load_cached(path: str, want: dict) -> dict | None:
     d = describe(path)
     if d["status"] == "manifest":
         m = d["manifest"]
+        want = _same_form(want, m["schema"])
         if m["identity_sha256"] != want["identity_sha256"]:
             parts = diff_parts(want, m["part_sha256"])
             raise IdentityError(f"cached {relpath(path)} was made by a different run; differs in: "
                                 f"{_explain(want, m, parts)}. Not reused and not overwritten: use another --runs-dir "
                                 "or move the old file aside.")
+        if m["schema"] == SCHEMA_V1:
+            _warn(f"reusing {relpath(path)}: manifest schema 1 records no outcome metadata; the current definition "
+                  "(outcomes.py) applies")
         return _load_npz(path)
     e = d["entry"]
     if os.environ.get("RD_REQUIRE_VERIFIED") == "1":
         raise IdentityError(f"{relpath(path)} is a legacy cache ({e['class']}) and RD_REQUIRE_VERIFIED=1")
     if e["class"] not in REUSABLE_LEGACY:
         raise IdentityError(f"{relpath(path)} is classified {e['class']} ({e.get('note', '')}); not reused")
-    if e.get("request_identity_sha256") != want["identity_sha256"]:
-        parts = diff_parts(want, e.get("request_part_sha256", {}))
+    if e.get("request_identity_sha256") not in (want["identity_sha256"], v1_form(want)["identity_sha256"]):
+        parts = diff_parts(v1_form(want), e.get("request_part_sha256", {}))
         raise IdentityError(f"legacy cache {relpath(path)}: the requested run differs from the one inventoried on "
                             f"{inventory().get('taken', '?')} in: {'; '.join(parts)}. Not reused and not overwritten.")
     _warn(f"reusing legacy cache {relpath(path)} ({e['class']}): bytes match the inventory and the request matches "
-          "the inventoried identity; what produced it was never recorded")
+          "the inventoried identity; what produced it was never recorded, and it carries no outcome metadata "
+          "(the current definition in outcomes.py applies)")
     return _load_npz(path)
 
 
@@ -398,7 +425,8 @@ def load_for_read(path: str, strict: bool = False) -> dict:
         want = rebuild(m.get("request"))
         if want is None:
             _warn(f"{relpath(path)}: draws were not declared, so only its bytes were checked")
-        elif want["identity_sha256"] != m["identity_sha256"]:
+        elif _same_form(want, m["schema"])["identity_sha256"] != m["identity_sha256"]:
+            want = _same_form(want, m["schema"])
             raise IdentityError(f"{relpath(path)} is stale; its run now differs in: "
                                 f"{_explain(want, m, diff_parts(want, m['part_sha256']))}")
         return _load_npz(path)

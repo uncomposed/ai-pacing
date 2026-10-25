@@ -2,6 +2,14 @@
 Tables, regret, scenario discovery and figures for the robust-design run. Reads only the cache in
 results/robust_runs/ (written by robust_design.py); never solves. Writes
 results/robust_design_tables.md, results/robust_design_summary.json and figures/rd_*.png.
+
+Every table carries an outcome label (issues #10, #26; outcomes.py): one line under its heading naming the label,
+the fixed interpretation (a share of draws under the stated sampling measure, not a calibrated probability), the
+sampling measure, predicate, horizon and terminal rule. The full label, with a Wilson 95% interval for every share
+the table reports, is `outcome_labels.<id>` in the summary JSON. The report refuses to write a table without one.
+Tables O and R (issue #10) split the outcomes (strike timing, seizure, rival, welfare, unresolved continuation) and
+compare the explicit outcome criteria; when the criterion changes the top design, the ranking is withheld.
+Row order and the best-design pick are deterministic: ties are broken by fewer levers, then by name.
 """
 from __future__ import annotations
 
@@ -16,6 +24,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
+import outcomes as oc
 import robust_design as rd
 import run_identity as ri
 
@@ -26,8 +35,25 @@ TABLES: list[str] = []
 OUT: dict = {}
 
 
-def section(title, body):
-    TABLES.append(f"## {title}\n\n{body}\n")
+def section(title, body, label_id, label, sampling, note=""):
+    """A table with its outcome label: one line on the page, the full label in OUT['outcome_labels']."""
+    OUT.setdefault("outcome_labels", {})[label_id] = label
+    TABLES.append(f"## {title}\n\n{oc.label_line(label_id, sampling, note)}\n\n{body}\n")
+
+
+def share_counts(prefix, rows):
+    """(quantity, k, n) for a label from (name, boolean array) pairs."""
+    return [(f"{prefix}{name}", int(np.sum(h)), len(h)) for name, h in rows]
+
+
+def nlevers(key):
+    return 0 if key == "base" else len(ri.parse_design_key(key) or {})
+
+
+def best_key(R):
+    """Most holding draws, then higher mean human welfare; exact ties go to the design with fewer levers, then
+    the first name (so the pick does not depend on file or hash order)."""
+    return min(R, key=lambda k: (-R[k]["holds"].mean(), -R[k]["WH"].mean(), nlevers(k), k))
 
 
 def load(ens, key):
@@ -143,7 +169,7 @@ def report():
     # ---- one lever at a time -------------------------------------------------------------
     oat = rd.oat_designs()
     base_f, base_n = load("full", "base"), load("near", "base")
-    rows, oat_out = [], []
+    rows, oat_out, cnt = [], [], []
     for d in oat:
         k = rd.design_key(d)
         rf, rn = load("full", k), load("near", k)
@@ -163,6 +189,10 @@ def report():
             t1 = f"{100 * h1:.0f}% (+{g1} / -{l1})"
         else:
             h1, t1 = np.nan, "-"
+        cnt += share_counts(f"{k}: ", [("holds, full box", rf["holds"] > 0.5), ("holds, near box", rn["holds"] > 0.5),
+                                       ("strike now, full box", fkf == 1), ("later strike or harvest, full box", fkf == 2)])
+        if r1 is not None:
+            cnt += share_counts(f"{k}: ", [("holds, r0.1 box", r1["holds"] > 0.5)])
         rows.append([label(d), t1, f"{100 * hf:.1f}% ({100 * lo:.0f}-{100 * hi:.0f})", f"+{gain_f} / -{lost_f}",
                      f"{100 * hn:.1f}%", f"+{gain_n} / -{lost_n}", f"{100 * (fkf == 1).mean():.0f}%",
                      f"{100 * (fkf == 2).mean():.0f}%", f"{100 * rf['riv'].mean():.0f}%", rf["WH"].mean(), rn["WH"].mean()])
@@ -175,7 +205,9 @@ def report():
             "Brackets: Wilson 90% interval.\n\n" +
             md_table(rows, ["design", "holds, r0.1 box (vs baseline)", "holds, full box", "vs baseline (full)", "holds, near box", "vs baseline (near)",
                             "strike now (full)", "later strike/harvest (full)", "mean P(rival) (full)",
-                            "mean human welfare (full)", "mean human welfare (near)"]))
+                            "mean human welfare (full)", "mean human welfare (near)"]),
+            "A", oc.share_label("; ".join(oc.box_sampling(b) for b in ("full", "near", "r0.1")), cnt),
+            "full, near and r0.1 boxes (AS-PRIORS)", "Brackets in this table are Wilson 90% intervals.")
     OUT["oat"] = oat_out
     if oat_out:
         fig_oat(oat_out)
@@ -193,16 +225,21 @@ def report():
     if Rn:
         regret_tables(Rn, "near")
     radius_table()
-    R1 = {k: load("r0.1", k) for k in {os.path.basename(p)[len("r0.1__"):-4] for p in glob.glob(os.path.join(rd.RUNS, "r0.1__*.npz"))}}
+    R1 = {k: load("r0.1", k) for k in sorted({os.path.basename(p)[len("r0.1__"):-4] for p in glob.glob(os.path.join(rd.RUNS, "r0.1__*.npz"))})}
     R1 = {k: v for k, v in R1.items() if v is not None and len(v["holds"]) == rd.N_RAD}
     test_tables(R1, "r0.1")
     R1 = {k: v for k, v in R1.items() if not is_test(k)}
     if len(R1) > 1:
         regret_tables(R1, "r0.1")
     # ---- scenario discovery -----------------------------------------------------------------
-    best = OUT["best_full"] = max(R, key=lambda k: (R[k]["holds"].mean(), R[k]["WH"].mean())) if R else "base"
+    best = OUT["best_full"] = best_key(R) if R else "base"
     R1d = {k: v for k, v in R1.items() if "q_er" not in k and "q_ea" not in k}   # erosion runs are scenarios, not designs
-    best1 = OUT["best_r0.1"] = max(R1d, key=lambda k: (R1d[k]["holds"].mean(), R1d[k]["WH"].mean())) if len(R1d) > 1 else "base"
+    best1 = OUT["best_r0.1"] = best_key(R1d) if len(R1d) > 1 else "base"
+    # ---- outcomes split apart, and the explicit outcome criteria (issue #10) -------------------
+    designs_o = list(dict.fromkeys(["base", BEST_STACK, best, best1]))
+    decomposition_table({"r0.1": R1d, "near": Rn, "full": R}, designs_o)
+    for ens, RR in (("r0.1", R1d), ("near", Rn), ("full", R)):
+        criteria_table(RR, ens)
     for ens, n, seed in (("r0.1", rd.N_RAD, 105), ("r0.25", rd.N_RAD, 255)):
         U, th = rd.ensemble(ens, n, seed=seed)
         for k in dict.fromkeys(["base", best1, best]):
@@ -216,9 +253,14 @@ def report():
             discovery(U_n, load("near", k), k, "near", th_n, "holds")
     # ---- erosion ------------------------------------------------------------------------
     erosion_report(OUT.get("best_lv"))
+    OUT["outcome_definition"] = oc.outcome_metadata(rd.CFG)
+    text = ("# Robust-design tables (auto-generated by robust_report.py from results/robust_runs/)\n\n"
+            + oc.definition_section() + "\n" + "\n".join(TABLES))
+    bad = oc.missing_labels(text)
+    if bad:
+        raise SystemExit("robust_report: tables without an outcome label (issue #26): " + "; ".join(bad))
     with open(os.path.join(rd.RES, "robust_design_tables.md"), "w") as f:
-        f.write("# Robust-design tables (auto-generated by robust_report.py from results/robust_runs/)\n\n"
-                + "\n".join(TABLES))
+        f.write(text)
     json.dump(OUT, open(os.path.join(rd.RES, "robust_design_summary.json"), "w"), indent=1, default=float)
     print("\n".join(TABLES))
     if ri.legacy_read_summary():
@@ -246,10 +288,11 @@ def test_tables(R, ens):
     keys = sorted(k for k in R if is_test(k))
     if not keys:
         return
-    rows = []
+    rows, cnt = [], []
     for k in keys:
         r = R[k]
         h = r["holds"] > 0.5
+        cnt += share_counts("", [(f"{k}: holds", h)])
         row = [k, f"{h.sum()}/{len(h)} ({100 * h.mean():.1f}%)"]
         for ref in ("base", BEST_STACK):
             if ref in R:
@@ -262,7 +305,9 @@ def test_tables(R, ens):
     section(f"T ({ens} box). Model-variant tests (overnight 2026-10-21), kept out of the regret pool",
             "Paired against the baseline design and the best lever stack on the same draws: draws gained / lost. "
             "att = mean P(strike within 300 y); suc = mean P(a strike succeeds).\n\n" +
-            md_table(rows, ["variant", "holds", "vs baseline design", "vs best stack", "mean human welfare", "mean att", "mean suc"]))
+            md_table(rows, ["variant", "holds", "vs baseline design", "vs best stack", "mean human welfare", "mean att", "mean suc"]),
+            f"T-{ens}", oc.share_label(oc.box_sampling(ens), cnt), f"{ens} box (AS-PRIORS)",
+            "att and suc are means over draws of model-internal probabilities within 300 years.")
     OUT[f"tests_{ens}"] = [dict(zip(["key", "holds", "vs_base", "vs_best", "WH", "att", "suc"], [str(x) if i < 4 else float(x) for i, x in enumerate(r)])) for r in rows]
 
 
@@ -273,7 +318,7 @@ def regret_tables(R, ens):
     WH = np.array([R[k]["WH"] for k in keys])           # (designs, draws)
     H = np.array([R[k]["holds"] for k in keys])
     reg = WH.max(axis=0)[None, :] - WH
-    order = np.argsort(reg.max(axis=1))
+    order = sorted(range(len(keys)), key=lambda i: (reg[i].max(), keys[i]))     # ties by name, not file order
     rows = []
     for i in order:
         rows.append([keys[i], f"{100 * H[i].mean():.1f}%", WH[i].mean(), reg[i].mean(), np.quantile(reg[i], 0.9),
@@ -283,7 +328,9 @@ def regret_tables(R, ens):
             "(yearly equivalent, 1 = today). Sorted by maximum regret (minimax regret first). 'best on' = draws "
             "where this design is the best (ties count for each). Excluded: erosion scenarios, and the tribute design "
             "(its welfare scales with the AI's size; see table A).\n\n" +
-            md_table(rows, ["design", "holds", "mean welfare", "mean regret", "90th pct regret", "max regret", "best on"]))
+            md_table(rows, ["design", "holds", "mean welfare", "mean regret", "90th pct regret", "max regret", "best on"]),
+            f"B-{ens}", oc.share_label(oc.box_sampling(ens), share_counts("", [(f"{keys[i]}: holds", H[i] > 0.5) for i in order])),
+            f"{ens} box (AS-PRIORS)")
     OUT[f"regret_{ens}"] = [dict(key=keys[i], hold=float(H[i].mean()), WH=float(WH[i].mean()), reg_mean=float(reg[i].mean()),
                                   reg_p90=float(np.quantile(reg[i], 0.9)), reg_max=float(reg[i].max())) for i in order]
 
@@ -347,21 +394,30 @@ def discovery(U, r, key, ens, thetas, target="fails"):
             f"\n\nChosen box (densest with coverage >= 50% and at most 3 restricted uncertainties): support {100 * b[4]:.0f}%, coverage {100 * b[2]:.0f}%, "
             f"density {100 * b[3]:.0f}%: {box_text(b[0], b[1], ens)}.\n\n"
             "Strongest single-uncertainty splits (target share below and above the cut, in sample quantiles):\n\n"
-            + md_table(rows1, ["uncertainty", "split", "target below", "target above"]) + tree_txt)
+            + md_table(rows1, ["uncertainty", "split", "target below", "target above"]) + tree_txt,
+            f"C-{ens}-{key}-{target}",
+            oc.share_label(oc.box_sampling(ens), share_counts("", [(f"target ({tname})", y > 0.5)]) +
+                           [("target inside the chosen box", int(round(b[3] * round(b[4] * len(y)))), int(round(b[4] * len(y))))],
+                           extra_normative="the PRIM box is fitted to this sample: in-sample, not a prediction"),
+            f"{ens} box (AS-PRIORS)", "Support, coverage and density are shares of this sample's draws; the box is fitted in sample.")
     OUT[f"prim_{ens}_{key}_{target}"] = dict(box=box_text(b[0], b[1], ens), support=b[4], coverage=b[2], density=b[3],
                                     top_splits=[(nm, cut, fl, fh) for _, nm, cut, fl, fh in top])
 
 
 def radius_table():
     keys = sorted({os.path.basename(p).split("__", 1)[1][:-4] for p in glob.glob(os.path.join(rd.RUNS, "r0.02__*.npz"))})
-    rows, data = [], {}
+    rows, data, cnt = [], {}, []
     for k in keys:
         hs = []
         for rad in rd.RADII:
             z = load(f"r{rad:g}", k)
             hs.append(np.nan if z is None else z["holds"].mean())
+            if z is not None:
+                cnt += share_counts("", [(f"{k}: holds, r{rad:g} box", z["holds"] > 0.5)])
         zf = load("full", k)
         hs.append(np.nan if zf is None else zf["holds"].mean())
+        if zf is not None:
+            cnt += share_counts("", [(f"{k}: holds, full box", zf["holds"] > 0.5)])
         rad = rd.RADII + [1.0]
         # radius where the hold share falls through 50%, interpolated in log radius
         r50 = np.nan
@@ -375,7 +431,9 @@ def radius_table():
             "Radius = half-width of the box as a share of each uncertainty's range, in its own scale (64 draws per box; "
             "the full box is 192 draws). In these radius boxes the three structural parameters (ell_inf, omega, f_E) are "
             "held at their baseline of 0, and reinv at 0. 'r50' = radius where the hold share falls through 50%, "
-            "interpolated in log radius.\n\n" + md_table(rows, ["design"] + [f"r {r:g}" for r in rd.RADII] + ["full box", "r50"]))
+            "interpolated in log radius.\n\n" + md_table(rows, ["design"] + [f"r {r:g}" for r in rd.RADII] + ["full box", "r50"]),
+            "D", oc.share_label(oc.box_sampling("radius") + "; and " + oc.box_sampling("full"), cnt),
+            "radius boxes r0.02 to r0.5 and the full box (AS-PRIORS)")
     OUT["radius"] = data
     if data:
         fig, ax = plt.subplots(figsize=(7, 4))
