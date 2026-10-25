@@ -29,6 +29,7 @@ test:
 	@python3 test/evidence_tool_test.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_measure_sensitivity.py"
 	@python3 research_notes/external/epoch-gate/tests/test_epoch_gate.py
+	@python3 research_notes/external/hugging-face-incident/test_hf_incident.py
 
 systems-check:
 	@python3 tools/systems_tool.py check

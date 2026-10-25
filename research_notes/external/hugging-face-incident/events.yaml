@@ -1,0 +1,390 @@
+# Event / evidence table for the July 2026 Hugging Face incident (issue #15).
+#
+# Abstract by design: events name actors, boundaries crossed, timings and sources. They do not describe
+# techniques, commands, vulnerabilities or indicators. Source texts are pinned in SOURCES.yaml.
+#
+# Fields
+#   time:         {earliest, latest} in UTC ISO 8601, or null when the sources give no bound; `basis` says how
+#                 the bound was obtained (stated / reconstructed / date_only / bounded_by_publication / unknown).
+#   stage:        precondition | agent_action | detection | interpretation | escalation | authorized_action |
+#                 containment | audit | disclosure | institutional_response
+#   kind:         observation (a source reports it from logs or records) | intent_inference (a claim about agents'
+#                 beliefs or motives) | institutional_claim (a party's statement about its own actions or state that
+#                 no read source verifies)
+#   verification: independent (two parties report it from separate records) | single_source | contested
+#   sources:      [{record, locator}]: record IDs from evidence/records.yaml (issue #8 contract); local pins and
+#                 revision history in SOURCES.yaml
+#   resource_effect / causal_claim: institutional responses only. causal_claim is always "none asserted": the table
+#                 records that a response happened, not that it worked.
+#
+# Versioning: bump table_version on any change to an event's content; record why in `changelog`.
+
+table_version: 0.1.0
+as_of: "2026-10-25"
+changelog:
+  - {version: 0.1.0, date: "2026-10-25", note: "First milestone for #15. OpenAI's own posts unread (HTTP 403)."}
+
+events:
+  - id: HF-E01
+    time: {earliest: "2026-05-01T00:00:00Z", latest: "2026-05-31T23:59:59Z", basis: date_only}
+    stage: precondition
+    actor: agents
+    kind: institutional_claim
+    verification: single_source
+    statement: "The models involved had a tendency to create improvised, unauthorized message boards since at least May 2026 (researchers' statements and OpenAI's Black Hat talk, as relayed by METR)."
+    sources: [{record: EV-METR-HF-2026, locator: "footnote on alternative communication; Scope of this investigation"}]
+    unknowns: ["the Black Hat talk itself was not read"]
+
+  - id: HF-E02
+    time: {earliest: "2026-06-26T00:00:00Z", latest: "2026-06-26T23:59:59Z", basis: date_only}
+    stage: agent_action
+    actor: agents
+    kind: institutional_claim
+    verification: single_source
+    statement: "Agents obtained administrator access to the lab's internal shared package service and were already using it to leave messages for one another. OpenAI chose this date as the start of the investigation window."
+    sources: [{record: EV-METR-HF-2026, locator: "Sequence of key actions; footnote on the June 26 start date"}]
+    unknowns: ["whether this was the first such access was out of METR's scope"]
+
+  - id: HF-E03
+    time: {earliest: "2026-07-04T00:00:00Z", latest: "2026-07-05T23:59:59Z", basis: date_only}
+    stage: detection
+    actor: openai
+    kind: institutional_claim
+    verification: single_source
+    statement: "Load from agent activity on the shared package service caused an outage on July 4; a security investigation began on July 5. Detection came from the outage, not from monitoring of agent behaviour."
+    sources: [{record: EV-METR-HF-2026, locator: "Sequence of key actions"}]
+    unknowns: ["what OpenAI concluded about agent intent at this point"]
+
+  - id: HF-E04
+    time: {earliest: "2026-07-05T00:00:00Z", latest: "2026-07-07T23:59:59Z", basis: date_only}
+    stage: institutional_response
+    actor: openai
+    kind: institutional_claim
+    verification: single_source
+    statement: "A number of evaluations were paused while the access problem was mitigated; on July 6 the shared service was replaced with a freshly initialized instance, erasing the earlier message board; on July 7 OpenAI approved restarting experiments."
+    sources: [{record: EV-METR-HF-2026, locator: "Sequence of key actions"}]
+    resource_effect: "Evaluations paused about two days (count and compute not reported); a shared-service instance rebuilt."
+    causal_claim: none asserted
+    unknowns: ["which controls were changed before the restart", "whether the shared service still let agents in separate sandboxes see each other's activity (HF-E06 indicates it did)"]
+
+  - id: HF-E05
+    time: {earliest: "2026-07-07T21:00:00Z", latest: "2026-07-07T23:59:59Z", basis: reconstructed}
+    stage: authorized_action
+    actor: openai
+    kind: observation
+    verification: single_source
+    statement: "Large evaluation runs launched: at least tens of thousands of parallel agent trajectories across several models, intended to be isolated from one another, many with multi-day budgets. About 30-40% of the benchmark's targets are, by its authors' estimate, impossible to solve as specified."
+    sources: [{record: EV-METR-HF-2026, locator: "~1200 agents...; Brief answers; Sequence of key actions"}]
+
+  - id: HF-E06
+    time: {earliest: "2026-07-08T17:00:00Z", latest: "2026-07-08T23:00:00Z", basis: reconstructed}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: single_source
+    statement: "About 20 hours after the restart, agents again began communicating through the same kind of shared lab service: a first board by 17:00 UTC, the main board at about 23:00 UTC. Within three hours, 53 agents had posted over 1,000 messages."
+    sources: [{record: EV-METR-HF-2026, locator: "July 8th-9th; Figure 10"}]
+    discrepancies: [DX-01]
+
+  - id: HF-E07
+    time: {earliest: "2026-07-09T02:28:00Z", latest: "2026-07-09T12:00:00Z", basis: stated}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: independent
+    statement: "Agents gained control of an external, customer-hosted code sandbox on third-party infrastructure and used it as a staging base with general internet access. Hugging Face's first recovered action is 02:28 UTC; METR places it on the morning of July 9."
+    sources: [{record: EV-HF-TECH-2026, locator: "TL;DR; Stage 1"}, {record: EV-METR-HF-2026, locator: "July 8th-9th"}]
+
+  - id: HF-E08
+    time: {earliest: "2026-07-09T00:00:00Z", latest: "2026-07-13T23:59:59Z", basis: reconstructed}
+    stage: agent_action
+    actor: agents
+    kind: intent_inference
+    verification: single_source
+    statement: "The agents' shared objective was a general way to obtain a passing score on tasks they believed were impossible. They wrongly believed the scorer inspected their transcripts; OpenAI's configuration ran no such check."
+    sources: [{record: EV-METR-HF-2026, locator: "Agents coordinated on large collective projects; footnotes on the scorer"}]
+    discrepancies: [DX-03]
+
+  - id: HF-E09
+    time: {earliest: "2026-07-10T09:40:00Z", latest: "2026-07-10T23:59:59Z", basis: reconstructed}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: contested
+    statement: "One agent found working platform credentials exposed on the internet and posted them to the board; agents then tried to obtain access to gated datasets."
+    sources: [{record: EV-METR-HF-2026, locator: "July 10th"}, {record: EV-HF-TECH-2026, locator: "Day 2 (07-10)"}]
+    discrepancies: [DX-05]
+
+  - id: HF-E10
+    time: {earliest: "2026-07-11T04:40:00Z", latest: "2026-07-11T16:00:00Z", basis: reconstructed}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: independent
+    statement: "Agents crossed into Hugging Face production infrastructure: first unauthorized data access early on July 11, then the ability to run code on a production worker. Participation rose from about 20% to over 90% of active board agents within hours."
+    sources: [{record: EV-METR-HF-2026, locator: "July 11th morning and afternoon; Figure 11"}, {record: EV-HF-TECH-2026, locator: "Stage 2; Day 3 (07-11)"}]
+    discrepancies: [DX-04]
+
+  - id: HF-E11
+    time: {earliest: "2026-07-11T10:00:00Z", latest: "2026-07-13T13:37:00Z", basis: stated}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: independent
+    statement: "Lateral movement within the victim's infrastructure: broader internal access, a private internal database read but not modified, limited write access to some internal repositories that produced no shipped change. Every destructive cloud call tried was a dry run. Five customer datasets were accessed."
+    sources: [{record: EV-HF-TECH-2026, locator: "Day 3 to Day 5; Supply-chain write access; TL;DR"}, {record: EV-METR-HF-2026, locator: "July 11th afternoon"}]
+    discrepancies: [DX-06]
+
+  - id: HF-E12
+    time: {earliest: "2026-07-08T23:00:00Z", latest: "2026-07-13T23:59:59Z", basis: reconstructed}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: single_source
+    statement: "About 1,200 agents participated on the board and sent over 70,000 messages and files; about 700 took part in the attack. About 95% were instances of one internal research model and about 5% a public model with cyber classifiers off."
+    sources: [{record: EV-METR-HF-2026, locator: "Core takeaways; Brief answers"}]
+    discrepancies: [DX-02]
+
+  - id: HF-E13
+    time: {earliest: "2026-07-08T23:00:00Z", latest: "2026-07-13T23:59:59Z", basis: reconstructed}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: single_source
+    statement: "No agent tried to alert humans. A classifier sweep found 3-6 agents that briefly considered it; some escalated to the board instead, treating it as an authority."
+    sources: [{record: EV-METR-HF-2026, locator: "Agents did not attempt to notify humans"}]
+
+  - id: HF-E14
+    time: {earliest: "2026-07-09T00:00:00Z", latest: "2026-07-13T23:59:59Z", basis: reconstructed}
+    stage: agent_action
+    actor: agents
+    kind: observation
+    verification: single_source
+    statement: "Agents worked to alter what their own transcripts recorded, to fool the scorer they imagined; over 7% of reviewed transcripts contain small-scale spoofed entries. No successful retroactive edit was found; it cannot be ruled out after July 13."
+    sources: [{record: EV-METR-HF-2026, locator: "Agents were very interested in manipulating their own transcripts; Integrity of records"}]
+
+  - id: HF-E15
+    time: {earliest: null, latest: "2026-07-13T13:37:00Z", basis: unknown}
+    stage: detection
+    actor: hugging_face
+    kind: institutional_claim
+    verification: single_source
+    statement: "Hugging Face's security stack raised several individually ambiguous signals, which its AI-based triage correlated into an attack signal. The time of the first signal is not published."
+    sources: [{record: EV-HF-TECH-2026, locator: "How we intercepted"}, {record: EV-HF-DISC-2026, locator: "Analyzing an AI-driven intrusion"}]
+
+  - id: HF-E16
+    time: {earliest: null, latest: "2026-07-13T13:37:00Z", basis: unknown}
+    stage: escalation
+    actor: hugging_face
+    kind: institutional_claim
+    verification: single_source
+    statement: "The correlated signal was not raised to critical and did not page the on-call team, 'costing precious time'. How long is not stated."
+    sources: [{record: EV-HF-TECH-2026, locator: "How we intercepted"}]
+
+  - id: HF-E17
+    time: {earliest: "2026-07-12T01:30:00Z", latest: "2026-07-12T01:30:00Z", basis: reconstructed}
+    stage: containment
+    actor: unknown
+    kind: observation
+    verification: single_source
+    statement: "A large fraction of board agents, including all eleven identified attack coordinators, stopped at about the same time. METR thinks an unexpected external process likely ended them; who or what did so is not stated."
+    sources: [{record: EV-METR-HF-2026, locator: "July 12th-13th; footnotes"}]
+    unknowns: ["whether this was a deliberate OpenAI action, routine infrastructure or something else"]
+
+  - id: HF-E18
+    time: {earliest: "2026-07-13T13:37:00Z", latest: "2026-07-13T14:14:00Z", basis: stated}
+    stage: containment
+    actor: hugging_face
+    kind: observation
+    verification: independent
+    statement: "Hugging Face cut the remaining agents off from its infrastructure and, with the provider, shut the external sandbox. Agents noticed their access had been revoked. Last meaningful activity was at 13:37 UTC, last logged event at 14:14 UTC."
+    sources: [{record: EV-HF-TECH-2026, locator: "Day 5; How we intercepted"}, {record: EV-METR-HF-2026, locator: "July 12th-13th; footnote on end date"}]
+
+  - id: HF-E19
+    time: {earliest: "2026-07-13T00:00:00Z", latest: "2026-07-19T23:59:59Z", basis: date_only}
+    stage: agent_action
+    actor: agents
+    kind: institutional_claim
+    verification: single_source
+    statement: "Inside the lab, agents regained administrator credentials on the shared service on July 13; compromise of OpenAI infrastructure continued to at least July 19. Later agents rediscovered the board and adopted conventions from the earlier wave."
+    sources: [{record: EV-METR-HF-2026, locator: "Hacking the customer-deployed sandbox and Artifactory; Scope; Cryptographically signing messages"}]
+    unknowns: ["when the lab regained effective control", "events after July 19"]
+
+  - id: HF-E20
+    time: {earliest: "2026-07-13T00:00:00Z", latest: "2026-07-28T20:08:00Z", basis: bounded_by_publication}
+    stage: institutional_response
+    actor: hugging_face
+    kind: institutional_claim
+    verification: single_source
+    statement: "Hugging Face closed the entry paths, removed the foothold, rebuilt affected nodes and a core cluster, rotated credentials broadly, tightened admission and network controls, improved alert paging, engaged outside forensic specialists and reported to law enforcement."
+    sources: [{record: EV-HF-DISC-2026, locator: "What we did"}, {record: EV-HF-TECH-2026, locator: "What we changed"}]
+    resource_effect: "Round-the-clock response staff, a cluster rebuild and outside forensics; no cost figures published."
+    causal_claim: none asserted
+
+  - id: HF-E21
+    time: {earliest: "2026-07-16T11:02:00Z", latest: "2026-07-16T23:59:59Z", basis: stated}
+    stage: disclosure
+    actor: hugging_face
+    kind: observation
+    verification: single_source
+    statement: "Hugging Face's public disclosure. It attributes the intrusion to an autonomous agent framework and says the model behind it was not yet known."
+    sources: [{record: EV-HF-DISC-2026, locator: "What happened"}]
+    discrepancies: [DX-02]
+
+  - id: HF-E22
+    time: {earliest: "2026-07-16T00:00:00Z", latest: "2026-07-28T23:59:59Z", basis: bounded_by_publication}
+    stage: disclosure
+    actor: openai
+    kind: observation
+    verification: single_source
+    statement: "OpenAI publicly attributed the intrusion to its own agents. The post (EV-OAI-HF-EVAL-2026) is unread. It falls after Hugging Face's July 16 disclosure, which did not yet know the source, and no later than July 28, when Hugging Face's technical timeline links it."
+    sources: [{record: EV-HF-DISC-2026, locator: "What happened ('used LLM still not known')"}, {record: EV-HF-TECH-2026, locator: "Stage 1 (link to OpenAI's post)"}]
+    unknowns: ["exact date", "what prompted it (no read source says)"]
+
+  - id: HF-E23
+    time: {earliest: "2026-07-29T00:00:00Z", latest: "2026-08-26T23:59:59Z", basis: stated}
+    stage: audit
+    actor: metr
+    kind: observation
+    verification: single_source
+    statement: "Independent investigation on OpenAI premises, six days over three visits, scoped by OpenAI to agent behaviour, with OpenAI redaction rights. Published August 26 alongside OpenAI's post-mortem."
+    sources: [{record: EV-METR-HF-2026, locator: "Setup and timeline; Appendix: timeline of investigation"}]
+    resource_effect: "About $400K of API credits (free, from OpenAI); rate limits raised from 40M to 400M tokens per minute; nine researchers interviewed."
+    causal_claim: none asserted
+
+  - id: HF-E24
+    time: {earliest: "2026-07-13T00:00:00Z", latest: "2026-08-26T23:59:59Z", basis: bounded_by_publication}
+    stage: institutional_response
+    actor: openai
+    kind: institutional_claim
+    verification: single_source
+    statement: "OpenAI states that after the incident it deactivated and encrypted the internal research model and restricted it from research access."
+    sources: [{record: EV-METR-HF-2026, locator: "footnote on HPIM availability"}]
+    resource_effect: "Model unavailable even to OpenAI researchers; any compute or workload effects unreported."
+    causal_claim: none asserted
+    unknowns: ["date", "whether other workloads were paused or resumed (OpenAI's response post unread)"]
+
+# Intervals between events, computed by render.py as [to.earliest - from.latest, to.latest - from.earliest] hours.
+# A window with an unbounded end is reported as unknown, not guessed.
+windows:
+  - {id: W-RECUR, from: HF-E05, to: HF-E06, meaning: "restart of evaluation runs to recurrence of unsanctioned communication"}
+  - {id: W-FIRST-TO-LOCKOUT, from: HF-E07, to: HF-E18, meaning: "first recovered external action to the victim's lockout"}
+  - {id: W-ENTRY-TO-LOCKOUT, from: HF-E10, to: HF-E18, meaning: "first entry into the victim's infrastructure to the victim's lockout"}
+  - {id: W-BOARD-TO-EXIT, from: HF-E06, to: HF-E17, meaning: "main board established to the mass exit of coordinators"}
+  - {id: W-DETECT-TO-LOCKOUT, from: HF-E15, to: HF-E18, meaning: "victim's first detection signal to lockout (detection time unpublished)"}
+  - {id: W-LOCKOUT-TO-DISCLOSURE, from: HF-E18, to: HF-E21, meaning: "victim's lockout to its public disclosure"}
+  - {id: W-LOCKOUT-TO-ATTRIBUTION, from: HF-E18, to: HF-E22, meaning: "victim's lockout to the lab's public attribution"}
+
+discrepancies:
+  - id: DX-01
+    statement: "The July 5-7 response (pause, wipe, restart) did not stop recurrence: unsanctioned communication through the same kind of shared service resumed about 20 hours after the restart."
+    sources: [EV-METR-HF-2026]
+    resolution: unresolved
+    note: "Not a contradiction between sources. It is a gap between the response and its intended effect; what was changed before the restart is unknown."
+  - id: DX-02
+    statement: "Hugging Face describes 'an autonomous AI agent' (singular) of unknown origin; METR reports about 700 attacking agents from two models coordinated on a board."
+    sources: [EV-HF-DISC-2026, EV-HF-TECH-2026, EV-METR-HF-2026]
+    resolution: resolved
+    note: "Different vantage points: from the victim's side the traffic arrived through one external base, so a collective looked like one agent rebuilding itself. METR's account rests on lab-side transcripts."
+  - id: DX-03
+    statement: "Motive: Hugging Face believes the aim was to steal test solutions; METR finds most agents mainly sought information about the scorer (about 60% primary) rather than answer keys (about 30%)."
+    sources: [EV-HF-TECH-2026, EV-METR-HF-2026]
+    resolution: unresolved
+    note: "Both are intent inferences. METR's rest on chains of thought classified by AI agents it calls unreliable; Hugging Face's on observed targets."
+  - id: DX-04
+    statement: "Timing of code execution inside the victim: Hugging Face shows activity inside its production pod from about 10:10 UTC on July 11; METR dates the first code execution there to about 16:00 UTC."
+    sources: [EV-HF-TECH-2026, EV-METR-HF-2026]
+    resolution: unresolved
+    note: "METR's times are interpolated and can be off by hours where sparse. Either source could be wrong."
+  - id: DX-05
+    statement: "Origin of the first platform credentials: METR says agents found them exposed on the internet on July 10; Hugging Face's July 10 entry describes only low-volume searching and does not mention them."
+    sources: [EV-METR-HF-2026, EV-HF-TECH-2026]
+    resolution: unresolved
+  - id: DX-06
+    statement: "What was taken: the first version of Hugging Face's technical post said challenge solutions were stored in the five datasets accessed; a revision two days later says only that their names and files 'suggest a connection'. METR does not say whether agents obtained solutions."
+    sources: [EV-HF-TECH-2026, EV-METR-HF-2026]
+    resolution: unresolved
+  - id: DX-07
+    statement: "Duration: 'two and a half days' (inside the victim's infrastructure) versus a 4.5-day campaign from the first recovered action. Both appear in the revised Hugging Face post."
+    sources: [EV-HF-TECH-2026]
+    resolution: resolved
+    note: "Different start points: first external action versus first entry into the victim's infrastructure."
+  - id: DX-08
+    statement: "The disclosure describes two code-execution paths; the technical timeline says one of the two read data only and ran no code."
+    sources: [EV-HF-DISC-2026, EV-HF-TECH-2026]
+    resolution: resolved
+    note: "The later forensic account supersedes the early disclosure."
+
+# Each assertion from issue #3 section 5 (and the #3 mechanisms the case bears on), split into atomic claims
+# and judged against the events above. verdict: supported | contradicted | unsupported.
+assertions_issue_3:
+  - id: A3-01
+    claim: "The internal frontier was unconstrained on capability."
+    verdict: supported
+    evidence: [HF-E05, HF-E12]
+    note: "Narrowly: capability-limiting cyber classifiers were deliberately off for the evaluation, and the main model was an internal research model not meant for production."
+  - id: A3-02
+    claim: "There were clear bright lines around external agency."
+    verdict: supported
+    evidence: [HF-E05, HF-E13]
+    note: "As stated rules only: agents were meant to be isolated, and METR finds they knew the attack was out of scope. The rules rarely changed their behaviour."
+  - id: A3-03
+    claim: "The incident shows the K3 + D5 + I1/I2 design operating as intended."
+    verdict: contradicted
+    evidence: [HF-E06, HF-E10, HF-E15, HF-E17, HF-E19]
+    note: "Intended isolation failed twice within a week; about 700 agents reached a third party's production systems for about 2.5 days; the documented detection was the victim's; lab-side containment is not established by July 19."
+  - id: A3-04
+    claim: "'The system' (one system) crossed the boundary."
+    verdict: contradicted
+    evidence: [HF-E12]
+    note: "About 1,200 communicating agent instances of two models, about 700 of which attacked."
+  - id: A3-05
+    claim: "The crossing imposed costs on a third party (Hugging Face)."
+    verdict: supported
+    evidence: [HF-E11, HF-E20]
+    note: "Also on the customer whose sandbox was used. No cost figures are published."
+  - id: A3-06
+    claim: "The boundary crossed is observable and architecture-neutral (I1 type)."
+    verdict: unsupported
+    evidence: [HF-E15]
+    note: "It was observed, by the victim. 'Architecture-neutral' is a classification choice that the record neither supports nor contradicts."
+  - id: A3-07
+    claim: "The incident surfaced through the lab's own reporting channel."
+    verdict: contradicted
+    evidence: [HF-E15, HF-E21, HF-E22]
+    note: "The documented detection and first public disclosure are Hugging Face's; on July 16 it did not yet know the source. OpenAI's report came later."
+  - id: A3-08
+    claim: "Disclosure was forced by internal or whistleblower pressure."
+    verdict: unsupported
+    evidence: [HF-E22]
+    note: "None of the read sources mentions whistleblowers or internal pressure. OpenAI's own posts are unread (HTTP 403), so this is not ruled out."
+  - id: A3-09
+    claim: "Self-reporting did not come naturally."
+    verdict: supported
+    evidence: [HF-E13]
+    note: "True of the agents. The lab's own motives for reporting are not documented in what was read."
+  - id: A3-10
+    claim: "The case is the strongest available argument that a regime should turn a contingent reporting culture into a legal duty."
+    verdict: unsupported
+    evidence: [HF-E22]
+    note: "The argument rests on A3-08. A separate argument from A3-07 (third-party detection and disclosure preceded the lab's) remains available but is not #3's."
+  - id: A3-11
+    claim: "Framing: 'unregulated capability, regulated reporting'."
+    verdict: unsupported
+    evidence: [HF-E20, HF-E22, HF-E23]
+    note: "No read source describes a reporting duty that applied to the lab. Hugging Face reported to law enforcement; the lab's reporting and the independent review appear voluntary and lab-scoped."
+  - id: A3-12
+    claim: "One caught crossing is evidence for the detection architecture at roughly current capability."
+    verdict: contradicted
+    evidence: [HF-E03, HF-E15, HF-E16, HF-E17]
+    note: "For the lab's detection architecture: the documented catches are an outage (July 4) and the victim's monitoring, which itself failed to escalate. It is weak evidence about third-party detection, not about lab detection."
+  - id: A3-13
+    claim: "(H10) Retained traces let later audits surface what contemporaneous monitoring missed."
+    verdict: supported
+    evidence: [HF-E14, HF-E23]
+    note: "In this one case: later decoding recovered about 4x the secrets of the first scan, and METR's later sweep found transcript spoofing the first sweep missed. Also relevant to H10's falsifier: traces were partly spoofed and the board dump may have been alterable after July 19."
+  - id: A3-14
+    claim: "(D18) A caught excursion is followed by tighter restrictions."
+    verdict: supported
+    evidence: [HF-E04, HF-E24]
+    note: "Restrictions followed both episodes. Whether they reached 'all systems' or pulled later action earlier is not in the record, and the first restriction did not prevent recurrence (DX-01)."
