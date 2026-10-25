@@ -18,7 +18,7 @@ marked as such.
 | Hardware efficiency H | FLOP/year per USD | aggregate | `research_output` | |
 | Software efficiency S | eFLOP/FLOP | aggregate | `research_output` | |
 | Human labor L | workers (not hours) | aggregate | `human_labor` (person-hours/year) | Multiply by hours per worker-year; GATE has no hours. Exogenous growth g_L = 0.25%/yr. |
-| Output Y, consumption, investment flows | real USD/year (price base not stated beyond "real USD") | aggregate | `industrial_output` | Not the pact solver's Earth-industry units; a bridge is #11's job. |
+| Output Y, consumption, investment flows | real USD/year (price base not stated beyond "real USD") | aggregate | `industrial_output` | Not the pact solver's Earth-industry units. Readable in EIU/yr through units-bridge `CV-GWP-TO-EIU-OUTPUT` (measured, uncoupled; #39). |
 | Capital K | real USD | aggregate | none | Non-compute capital; no contract quantity. |
 | Physical resources | non-accumulable factor F with elasticity mu (default 0); heat limit C_L = 2e38 FLOP/year | aggregate | none | Energy and land enter only through mu and C_L. No chips, fabs or power as separate stocks (fab scale-up is reported as `chip_fabrication_scale_up`, a ratio). |
 | Time | one-year steps; index t = t+1 years after the initial state (start of 2025 per the paper); 80-year plan, 160-year optimization horizon | | | Use step offsets, not calendar years, until the start date is confirmed against the playground's labels. |

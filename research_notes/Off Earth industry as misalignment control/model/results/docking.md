@@ -225,6 +225,8 @@ In our model the direction is **Potapov's, not Saklakov's**: impatient AIs (r â‰
 
 **Addendum 2026-10-25 (#11).** Rechecked against the arXiv manuscript and Crossref, and Fig. 2 re-digitized from its embedded raster: the values above agree within 5%, the max-case fit is 0.647/yr, and the published citation is *J. Aerospace Eng.* 26(1):18-29 (January 2013). The `g` basis text in PARAMS is corrected and `g` is now a project assumption. The tables above are left as written. See `research_notes/external/units-bridge/metzger/RECHECK.md`.
 
+**Addendum 2026-10-25 (#39).** "Today's Earth industry (our unit) is 19.6 TW of primary energy" above is an energy-intensity estimate, not the unit's definition. The unit (`DEF-EIU`) is the world economy's productive capacity, a stock with output rate 1/yr; the energy bridge is `CV-EIU-TO-PRIMARY-POWER` in `research_notes/external/units-bridge/conversions.yaml`. The numbers above are unchanged.
+
 ## 8. Turner et al.: power-seeking
 
 Turner, Smith, Shah, Critch and Tadepalli prove that for most reward functions, under symmetry conditions, optimal policies keep options open and avoid shutdown. It is a statement about distributions of goals, not a parametric model, so there is nothing to dock numerically. What the comparison exposes is that our model **assumes** what Turner derives: the AI's utility is increasing in its own capacity (linear at baseline, `eta = 0`). Every result in `equilibrium.md` is conditional on that one goal.

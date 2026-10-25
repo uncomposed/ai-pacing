@@ -101,5 +101,51 @@ class CouplingToy(unittest.TestCase):
         self.assertEqual(toy.OUT_MD.read_text(), toy.markdown(toy.compute()))
 
 
+class EarthIndustryUnit(unittest.TestCase):
+    """Issue #39: the measured scale of one EIU/yr, recomputed from the World Bank values committed in data/."""
+
+    @classmethod
+    def setUpClass(cls):
+        root = HERE.parents[2]
+        s = importlib.util.spec_from_file_location('assumptions_tool', root / 'tools/assumptions_tool.py')
+        at = importlib.util.module_from_spec(s)
+        s.loader.exec_module(at)
+        cls.cv = next(x for x in at.load_yaml(HERE / 'conversions.yaml')['conversions'] if x['id'] == 'CV-GWP-TO-EIU-OUTPUT')
+        cls.wdi = json.loads((HERE / 'data/world_gdp_wdi.json').read_text())['indicators']
+        cls.gate_y0 = json.loads((HERE.parent / 'epoch-gate/data/baseline_target.json').read_text())
+        cls.gate_y0 = next(v for k, v in _walk(cls.gate_y0) if k == 'gwp_init')
+
+    def gdp(self, ind):
+        return {int(y): v for y, v in self.wdi[ind]['values'].items()}
+
+    def test_factor_and_bounds_recompute_from_the_data(self):
+        cur, const = self.gdp('NY.GDP.MKTP.CD'), self.gdp('NY.GDP.MKTP.KD')
+        band = [cur[y] for y in (2023, 2024, 2025)] + [const[y] for y in (2023, 2024, 2025)]
+        f = self.cv['factor']
+        self.assertAlmostEqual(f['value'] * cur[2024], 1.0, places=12)
+        self.assertAlmostEqual(f['bounds'][0] * max(band), 1.0, places=12)
+        self.assertAlmostEqual(f['bounds'][1] * min(band), 1.0, places=12)
+
+    def test_gate_start_is_market_rate_not_ppp(self):
+        cur, const, ppp = self.gdp('NY.GDP.MKTP.CD'), self.gdp('NY.GDP.MKTP.KD'), self.gdp('NY.GDP.MKTP.PP.CD')
+        lo, hi = min(const[y] for y in (2023, 2024, 2025)), max(cur[y] for y in (2023, 2024, 2025))
+        self.assertTrue(lo <= self.gate_y0 <= hi, self.gate_y0)
+        self.assertLess(self.gate_y0, 0.6 * min(ppp[y] for y in (2023, 2024, 2025)))
+
+    def test_industry_is_a_quarter_of_world_value_added(self):
+        share = self.gdp('NV.IND.TOTL.ZS')[2024]
+        self.assertTrue(20 < share < 30, share)
+
+
+def _walk(node):
+    if isinstance(node, dict):
+        for k, v in node.items():
+            yield k, v
+            yield from _walk(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _walk(v)
+
+
 if __name__ == '__main__':
     unittest.main()

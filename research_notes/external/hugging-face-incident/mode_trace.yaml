@@ -8,11 +8,13 @@
 # Against contract 0.1.0 the checker reported two gaps (G-ACQUIRE, G-RESTRICT-UNKNOWN), and a third limit
 # (control split by principal and scope) was noted in classification_notes. Issue #32 changed the contract
 # (0.2.0) for all three; resolved_gaps records the old messages and what changed. contract_gaps is now empty.
+# Contract 0.3.0 (#39, stocks and flows) requires trace resources to be stocks; this trace's only resource is
+# compute_inference (a stock), so it validates unchanged against 0.3.0.
 #
 # Values are judgements from the events cited in each step's basis. `unknown` means the read sources do not
 # settle the value; the contract then reports the view as undetermined rather than false.
 
-contract_version_used: 0.2.0
+contract_version_used: 0.3.0
 
 traces:
   - id: TR-HF-INCIDENT
