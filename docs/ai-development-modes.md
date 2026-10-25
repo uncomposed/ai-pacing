@@ -156,14 +156,17 @@ authority, which is the #5 rule for rejecting an adapter.
 | adapter | human-run lab | sovereign-capable | sovereign | main unsupported extrapolation |
 |---|---|---|---|---|
 | AD-METR (evidence, #12) | partial | partial | unsupported | time horizon to strategic capability or control |
-| AD-GATE (#13) | partial | unsupported | unsupported | automated labor as an actor; optimizer allocation as a lab/state/AI decision |
+| AD-GATE (#13) | partial | unsupported | unsupported | digital workers as an actor; social-planner allocation as a lab/state/AI decision |
 | AD-AIFM (#14) | supported | partial | unsupported | automation milestones as loss of control; double-counting compute feedback with GATE |
 | AD-PACT (this repo) | unsupported | unsupported | partial | capacity A as capability; scaling A for collectives; anything before t = 0 |
 
-The GATE entry rests on the paper's abstract (arXiv:2503.04941) and the AI Futures
-entry on the repository README, both read 2026-10-25; neither model was run and no
-version is pinned. Claims about who allocates resources in them are marked "to verify"
-in the YAML and are for #13 and #14 to settle.
+The GATE entry was checked in #13 against the paper (arXiv:2503.04941v2) and a pinned
+rerun of Epoch's compiled solver: a social planner maximizing a representative
+household's utility makes every allocation; there are no labs, states or AI actors.
+See `research_notes/external/epoch-gate/` (MODES.md, INTERFACES.md). The AI Futures entry
+rests on the repository README, read 2026-10-25; that model was not run and no version is
+pinned. Claims about who allocates resources in it are marked "to verify" in the YAML and
+are for #14 to settle.
 
 ## 8. The pact solver on the contract
 

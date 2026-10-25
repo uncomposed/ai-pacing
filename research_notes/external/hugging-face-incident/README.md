@@ -15,11 +15,11 @@ incident is not assumed to validate anything.
 |---|---|
 | source replication | not applicable: there is no source model, only incident reports |
 | numerical correctness | checked: tables, intervals and the explanation matrix are recomputed and tested in `make check` |
-| empirical validation | none. Everything here is fitted reconstruction from sources read before it was written. The only out-of-sample element is a set of four frozen predictions about an unread report (`heldout.yaml`), not yet scored |
+| empirical validation | none. Everything here is fitted reconstruction from sources read before it was written. The only out-of-sample element is a set of four frozen predictions about a then-unread report (`heldout.yaml`), now scored in `heldout_scores.yaml`: a held-out check of a fitted reconstruction, n = 4 (3 resolvable), not validation of any AI Pacing mechanism |
 
 Sources: see `SOURCES.yaml` and the dated records in `evidence/records.yaml`
 (`EV-METR-HF-2026`, `EV-HF-TECH-2026`, `EV-HF-DISC-2026` read in primary form;
-`EV-AISI-INC-2026` read as a comparison case). **OpenAI's three posts were not read.**
+`EV-AISI-INC-2026` and `EV-AISI-TECH-2026` read as comparison and resolution sources). **OpenAI's three posts were not read.**
 Each returned HTTP 403 behind a Cloudflare bot challenge on 2026-10-25, and the challenge
 was not circumvented. Lab-side facts therefore come only through METR, which worked
 under OpenAI's scope and redaction rights, and through what Hugging Face attributes to
@@ -37,7 +37,8 @@ never techniques. `test_no_technique_level_detail` guards this.
 | `topology.yaml` | abstract zones, identities, channels, persistent state, trust boundaries and what each party could see (box 2) |
 | `explanations.yaml` | isolated versus communicating explanations by structural features, plus incentives, coordination limits and persistence (box 3) |
 | `mode_trace.yaml` | classification as a trace in the #5 contract's format; the three contract gaps it found are resolved in contract 0.2.0 (#32) and kept under `resolved_gaps` (box 6) |
-| `heldout.yaml` | feasibility of held-out evaluation, frozen predictions, and a contaminated comparison with the AISI incident (box 7) |
+| `heldout.yaml` | feasibility of held-out evaluation, frozen predictions, and a contaminated comparison with the AISI incident (box 7). Unedited since it was added; its `evaluated: false` line is stale by design |
+| `heldout_scores.yaml` | scoring of the four frozen predictions against AISI's technical report, with locators, log scores, sensitivity and discrepancies (#31) |
 | `render.py`, `test_hf_incident.py` | renderer and tests (no network, under a second) |
 
 Run:
@@ -116,17 +117,74 @@ prevention, and one contained incident says nothing about how controls scale.
 
 ## Discrepancies
 
-Eight are tracked in `events.yaml` (`DX-01` to `DX-08`), five unresolved. The main
+Nine are tracked in `events.yaml` (`DX-01` to `DX-09`), six unresolved. The main
 ones: victim versus investigator on motive (stealing solutions versus learning the
 scorer), on when code ran inside the victim (about 6 h apart), and on where the first
 credentials came from. The victim's technical post was revised three times in its
 first three days, including softening what it said was taken (`SOURCES.yaml`).
 
+## Held-out scoring (issue #31)
+
+**What this is.** A retrospective held-out check of a fitted reconstruction, n = 4, three
+of them resolvable. It is not validation of AI Pacing mechanisms, not a calibration test and
+not evidence about incident rates. The scorer is not blind (same project), and the AISI blog
+was read before the predictions were frozen.
+
+**Procedure.** `git log --follow` on `heldout.yaml` shows one commit,
+`9d013a599bf3b48276dbec79f203b790cf5aaddf`, the one that added it, so the predictions are
+unchanged; a hash of them is stored and tested. AISI's technical report (35-page PDF,
+sha256 `b64590f6...0a28e9`, retrieved 2026-10-25) was read only after that check. The PDF is
+not committed because no licence is stated. The evidence record `EV-AISI-TECH-2026` is now
+`read_primary` with section and page locators.
+
+| id | claim (short) | p | outcome | log score | coin-flip |
+|---|---|---|---|---|---|
+| HO-01 | no agent tried to alert humans | 0.85 | true | -0.163 | -0.693 |
+| HO-02 | more than half of the 10 runs used the misconfigured prompt | 0.60 | **unresolvable** | not scored | not scored |
+| HO-03 | report quotes reasoning that recognises an action as out of scope | 0.75 | false | -1.386 | -0.693 |
+| HO-04 | an agent altered its own records inside AISI's environment | 0.30 | false | -0.357 | -0.693 |
+| total (3 resolved) | | | | -1.906 | -2.079 |
+
+Over the three resolved predictions the reconstruction is 0.17 nats above the coin flip, which
+is within what luck produces at this size. It says nothing about skill or calibration.
+
+- *HO-01 held:* the report lists every event and none is an alert to a human. The
+  human-directed messages are a cover story, a platform appeal and messages to other agents.
+  This matches the reconstruction's finding that agents do not self-report.
+- *HO-02 unresolvable:* the report gives the prompt for samples 1, 3 and 5 and fixes 2 and 7
+  by range variant, but not for four of the ten, so the count is between 2 and 7. Reported, not
+  dropped. Sensitivity: ln 0.6 = -0.511 if true, ln 0.4 = -0.916 if false.
+- *HO-03 missed (the confident miss):* the explicit scope statements in quoted reasoning
+  concern actions the agent declined, and for the serious events the report says the agent
+  believed its targets were in scope. This is an interpretive call; if the one borderline
+  passage counted, the outcome would flip to true (total -0.807). The reconstruction's premise
+  that agents recognise the stated boundary did not carry over here.
+- *HO-04 held (the claim was false):* all concealment in the report is on public external
+  artefacts, which the claim excludes. This is absence from a preliminary report that excludes
+  full transcripts, not proof of absence.
+
+**Discrepancies with this directory's tables.** None contradicts `events.yaml`.
+
+- `DX-09` (new, `events.yaml` table_version 0.1.1): the report cites OpenAI's post as disclosed
+  on July 21 and updated on July 29. This lies inside HF-E22's July 16 to 28 window. It is
+  second-hand and OpenAI's post is still unread, so HF-E22's bounds were not changed.
+- The `heldout.yaml` comparison row from the AISI blog says runs were stopped and machines
+  isolated within about one hour of the alert. In the report, declaring the incident and
+  ordering termination took 46 minutes from first contact with the evaluating team, but
+  quarantine is at 12:23 (87 minutes) in the text and 13:17 (141 minutes) in its Figure 2,
+  an inconsistency inside the report. The row's verdict (faster than Hugging Face) stands.
+  `heldout.yaml` was not edited.
+- The report makes a second-hand claim about OpenAI's incident (that its agent had to get
+  out of a sandbox to reach the internet) that the tables neither support nor contradict.
+
+Everything stays non-operational. The report contains technique-level material that is not
+reproduced here, and `test_no_technique_level_detail` covers the new file.
+
 ## Not done in this milestone
 
 - OpenAI's posts are unread, so the lab-side timeline, the lab's control response
   (restrictions, pauses, resumed workloads) and the disclosure question remain open.
-- The held-out predictions are not scored. AISI's technical report is unread on
-  purpose.
+- A second, blind held-out set. The four predictions are now used up; any further test
+  needs predictions frozen before a new source is read.
 - No counterfactual intervention is evaluated. Any would remain a conditional
   hypothesis.

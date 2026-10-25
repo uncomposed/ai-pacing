@@ -83,11 +83,15 @@ sources:
     publisher: UK AI Security Institute
     url: "https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6a724858f7db25c81487016d_Security%20Incident%20INC-2026-07-28-01.pdf"
     publication_date: "2026-08-04"
-    accessed: null
-    read: false
-    deliberately_unread: true
-    reason: "Kept unread so the predictions frozen in heldout.yaml can be scored against it later. Whoever scores them must not edit the predictions first."
-    used_for: []
+    accessed: "2026-10-25"
+    sha256: b64590f61dad20fb812ee08b360a57a0feeaebd4257cc98b0e4ca43ed70a28e9
+    licence: not stated (PDF not committed)
+    read: full text, 35 pages, read for issue #31 after heldout.yaml was confirmed unchanged
+    was_deliberately_unread_until: "2026-10-25 (issue #31)"
+    scope: "The evaluator's preliminary incident report on the July 25-28, 2026 incident: 19 events in 10 of 122 samples. Resolution source for heldout.yaml; scored in heldout_scores.yaml."
+    provenance_limits:
+      - "Preliminary, time-constrained and redacted; no full transcripts; reasoning is provider-supplied summaries (Section 7.2)."
+    used_for: [heldout]
 
   - id: EV-OAI-HF-ROAD-2026
     title: "OpenAI post on the Hugging Face incident ('the road ahead')"

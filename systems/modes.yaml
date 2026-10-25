@@ -418,23 +418,29 @@ adapters:
       - "any statement about effective_control, custody or sovereignty"
     attach_point: "Evidence for rd_capability and cyber_capability; validation target for AD-AIFM via the #8 evidence protocol."
   - id: AD-GATE
-    source: "Epoch GATE integrated assessment model, arXiv:2503.04941 (abstract read 2026-10-25) and epoch.ai/gate; version to pin in #13"
+    source: "Epoch GATE, arXiv:2503.04941v2 (2025-03-12, TeX source read) and the compiled solver in the epoch.ai/gate playground bundle (sha256 c2104290..., fetched 2026-10-25), rerun under Node; pinned in research_notes/external/epoch-gate/SOURCES.yaml (#13)"
     kind: model
-    entity_represented: "A macroeconomy: compute-based AI development, task automation and a semi-endogenous growth model with endogenous investment and adjustment costs (abstract); no labs or AI actors as decision-makers (to verify in #13)"
-    decision_authority: "Investment is endogenous to the economic model, not a lab, state or AI decision; whose objective it optimizes is to verify in #13."
+    entity_represented: "One closed world economy (Ramsey-Cass-Koopmans) with a representative household; compute stock, hardware and software efficiency, largest training run, capital and labor are economy-wide stocks. No labs, states, firms or AI actors; AI enters only as 'digital workers' (runtime compute per task) in the production function (paper sections 2 and 5; verified in #13)."
+    decision_authority: "A social planner with perfect foresight (beliefs add-on: known prior over automation functions) chooses output shares (consumption, capital, compute, hardware R&D, software R&D) and the training/runtime compute split each year to maximize the representative household's discounted CRRA utility. Allocations are an optimizer's output, solved by sign-gradient descent over 160 years; they are not lab, state or AI decisions (paper sections 2, 5.1 and appendix B; verified in #13)."
     quantities:
-      - {name: "effective compute", unit: "source-native (FLOP)", owner: "economy aggregate", accounting: compute_training}
-      - {name: "automated task share", unit: "fraction of tasks", owner: "economy aggregate", dimension: rd_capability}
-      - {name: "gross world product", unit: "USD per year", owner: "economy aggregate", accounting: industrial_output}
-    inputs: [compute_training, human_labor]
+      - {name: "largest training run C_T", unit: "eFLOP (software-adjusted, S(0) = 1)", owner: "economy aggregate (planner)", accounting: capability}
+      - {name: "deployed automated task share f", unit: "fraction of a unit continuum of tasks", owner: "economy aggregate (planner)", accounting: capability}
+      - {name: "training compute D", unit: "solver-native; reported per one-year step (scale relative to the stock unresolved, see #13 EQUATIONS.md E7)", owner: "economy aggregate (planner)", accounting: compute_training}
+      - {name: "runtime compute (all automated tasks)", unit: "solver-native, same unit as training compute", owner: "economy aggregate (planner)", accounting: compute_inference}
+      - {name: "digital workers N_i", unit: "human-worker equivalents per task", owner: "economy aggregate (planner)", accounting: agent_labor}
+      - {name: "hardware efficiency H and software efficiency S", unit: "FLOP/year/$ and eFLOP/FLOP", owner: "economy aggregate (planner)", accounting: research_output}
+      - {name: "gross world product Y", unit: "real USD per year", owner: "economy aggregate (planner)", accounting: industrial_output}
+    inputs: [human_labor]
     modes:
-      MODE-HUMAN-LAB: {coverage: partial, reason: "Human-directed investment at macro scale; no lab-level control."}
-      MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "Automated labor is a production input, not an actor."}
-      MODE-SOVEREIGN: {coverage: unsupported, reason: "No AI objective or resource ownership."}
+      MODE-HUMAN-LAB: {coverage: partial, reason: "Its allocations can be read as an upper-envelope of what human institutions direct at world scale, but there is no lab entity, no custody, authorization or effective_control, and the planner is not a human institution's actual decision process."}
+      MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "No strategic_capability, objective_selection or control dimension; digital workers are a production input, not an entity."}
+      MODE-SOVEREIGN: {coverage: unsupported, reason: "No AI objective, no external_resources owned by an AI, no dependencies or enforceable_commitments; all output accrues to the representative household."}
     unsupported_extrapolations:
-      - "treating automated labor as a sovereign actor"
-      - "using its optimizer's allocation as a lab, state or AI decision"
-    attach_point: "Macro output and compute trajectories under MODE-HUMAN-LAB; coupling to the pact solver needs #11's quantity bridge."
+      - "treating automated labor (digital workers) as an agent_instance or agent_collective"
+      - "using the planner's optimal allocation as a lab, state or AI decision"
+      - "reading full automation (f = 1) as a mode change or loss of control"
+      - "counting its compute-investment and software-efficiency feedback again when coupled with AD-AIFM"
+    attach_point: "World-level output, compute and automation trajectories as an exogenous background for MODE-HUMAN-LAB entities, through #11's quantity bridge; see research_notes/external/epoch-gate/INTERFACES.md."
   - id: AD-AIFM
     source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public; only its README was read (2026-10-25, main branch, commit not pinned); pin in #14"
     kind: model
