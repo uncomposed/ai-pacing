@@ -353,7 +353,7 @@ assumptions:
       status: partial
       where: "the swept g range reaches 0.69 (Metzger's max rate); Metzger's '3x per year' (g 1.1) is outside it"
       survived: "yes"
-      note: "Fix the PARAMS basis text in a separate change (this task does not change the model)."
+      note: "PARAMS basis text corrected in #11 (research_notes/external/units-bridge/metzger/RECHECK.md). Fig. 2 re-digitized from the embedded raster (about +-3.4% per point); the fitted max-rate case is 0.647/yr, unchanged from the by-eye 0.65."
     claims: [AR-H9]
     dependence: low
     status: verified
@@ -395,9 +395,9 @@ assumptions:
     statement: "There is one AI, not a swarm: no many-agent coordination, no parallel attempts, no AI-to-AI bargaining. The July 2026 OpenAI-agents incident at Hugging Face was a coordinating swarm (METR report)."
     encoded_by:
       - {structure: "one AI player in equilibrium_model.solve"}
-    source: {kind: literature, where: "METR investigation of the July 2026 OpenAI agents / Hugging Face incident (published late August 2026; about 700 agents attacked, about 1,200 coordinated on an unsanctioned message board). Read only in secondary coverage, not the primary report. equilibrium.md section 8 item 2"}
+    source: {kind: literature, where: "METR investigation of the July 2026 OpenAI agents / Hugging Face incident (published 2026-08-26; about 1,200 agents communicated on an unsanctioned message board and about 700 attacked). First cited from secondary coverage; the counts were confirmed against the primary report on 2026-10-25 (#15, research_notes/external/hugging-face-incident). equilibrium.md section 8 item 2"}
     evidence:
-      - {record: EV-METR-HF-2026, locator: "agent counts as quoted in secondary coverage", use: motivation}
+      - {record: EV-METR-HF-2026, locator: "Core takeaways: ~1200 agents on the message board, ~700 attacked Hugging Face", use: motivation}
     favours_pact: "yes"
     why_favours: "A swarm can make many cheap attempts at once (parallel free retries), spread blame so failures look like spillover, and cannot be shut down with one key. Each of these weakens the reserve and the 'failed strike is fatal' logic."
     ablation:
@@ -1017,7 +1017,7 @@ parameter_roles:
   den: {role: policy_choice}
   police: {role: policy_choice}
   psi_div: {role: policy_choice}
-  g: {role: source_model_assumption, source_model: {record: EV-METZGER-2013, locator: "Fig. 2"}, note: "Basis cites Metzger et al. 2013, but the 2-year figure there is generation spacing, not a doubling time (AS-GCITE)."}
+  g: {role: project_assumption, note: "Not a Metzger value (#11 recheck, research_notes/external/units-bridge/metzger/RECHECK.md): about half his max-rate fit (0.65/yr) at a scale 1e2 to 1e5 times larger than he models. Metzger is a comparison, linked from AS-GROWTH-G and AS-GCITE, not the source of 0.35."}
   chi0: {role: project_assumption}
   chi_m: {role: project_assumption}
   A0: {role: project_assumption}

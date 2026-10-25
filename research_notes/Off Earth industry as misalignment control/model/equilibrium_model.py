@@ -88,7 +88,8 @@ PARAMS: "OrderedDict[str, tuple]" = OrderedDict([
                   "Variant only. 0 = pure free trade, which is Cole's stated design.")),
     # ---- growth / physics -----------------------------------------------------------------
     ("g",        (0.35, 0.07, 0.69, "log", "Off-Earth growth rate (/yr) with full chip access",
-                  "Same as offearth_model.py baseline (doubling ~2 yr; Metzger et al. 2013).")),
+                  "Project assumption (doubling ~2 yr). Not from Metzger et al. 2013, whose 2-yr figure is generation "
+                  "spacing; their max-rate case grows ~0.65/yr at far smaller scale (#11, units-bridge RECHECK.md).")),
     ("chi0",     (0.15, 0.02, 0.5, "lin", "Growth multiplier before semiconductor closure with NO leading-edge chips",
                   "Assumption: legacy chips, salvaged compute, slower designs.")),
     ("chi_m",    (0.5, 0.1, 0.9, "lin", "Growth multiplier while fabs are being moved to orbit (policy b)",

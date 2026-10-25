@@ -1,0 +1,135 @@
+# Sources for the Hugging Face incident reconstruction (issue #15).
+# Every source is pinned by URL, access date and a SHA-256 of the bytes retrieved, or by a git blob where
+# one exists. Nothing is vendored: the reconstruction cites sections and paraphrases, with short quotes only.
+# Licences: none of the pages states a licence; that is recorded as such rather than guessed.
+#
+# `read` says whether the content was read for this milestone. A source that could not be read is listed with
+# the reason and is never used as evidence. `deliberately_unread` marks a source kept unread on purpose as the
+# held-out portion described in heldout.yaml.
+#
+# IDs are the dated evidence records in evidence/records.yaml (issue #8 contract), which carry kind, reading status,
+# observation and availability dates and allowed uses. This file adds local pins and revision history. The one source
+# without a record (the Black Hat talk) is known only second-hand and is never cited.
+
+accessed: "2026-10-25"
+
+sources:
+  - id: EV-METR-HF-2026
+    title: "Brief independent investigation of agents' behavior, reasoning and collaboration in the OpenAI / Hugging Face hacking incident"
+    publisher: METR (with a Redwood Research contractor)
+    url: https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/
+    publication_date: "2026-08-26"
+    revision: "page edited 2026-09-13 to add conflict-of-interest footnotes (stated on the page)"
+    accessed: "2026-10-25"
+    sha256: bc636278546176af83fb61a039aa1277b45136edd15f59405b64be1152daacf2
+    also: {url: https://metr.org/hugging-face-incident-report-aug-2026.pdf, sha256: f7e87133833363da6eee661df0c86926ef852f8b202ad87695ea6596b92d3c73, note: "PDF of the same report; checked to carry the same core takeaways"}
+    licence: not stated
+    read: full text, including footnotes and methodology appendix
+    scope: "Agent behaviour, reasoning and collaboration, June 26 to July 13 (OpenAI-defined). Out of scope: extent of the security compromise, effectiveness of safeguards, OpenAI's investigation and remediation, events after July 13."
+    provenance_limits:
+      - "Investigators worked on OpenAI premises with OpenAI-selected datasets; OpenAI could redact non-public information and gave editorial feedback (stated on the page)."
+      - "Raw chain-of-thought quotes limited to thirty by OpenAI; others paraphrased."
+      - "Analysis heavily delegated to AI agents that the authors call often unreliable; timestamps are reconstructed (median error ~12 s, up to hours in sparse regions)."
+      - "Datasets estimated to capture a bit over 90% of message-board activity; ~7% of transcripts contain agent-spoofed tool calls."
+    used_for: [events, topology, explanations, timeline, institutional_response, mode_trace]
+
+  - id: EV-HF-TECH-2026
+    title: "Anatomy of a Frontier Lab Agent Intrusion: A Technical Timeline of the July 2026 Incident"
+    publisher: Hugging Face
+    url: https://huggingface.co/blog/agent-intrusion-technical-timeline
+    publication_date: "2026-07-27"
+    publication_date_note: "Date shown on the page and in the blog index. The first commit of the post in the public blog repository is 2026-07-28T20:08Z (87fdd239), so the stated date precedes the public source by about a day."
+    git: {repo: https://github.com/huggingface/blog, path: agent-intrusion-technical-timeline.md, blob: 29054c2fa7f6053ed91917275c01ddc0fcbc7dd5, last_change: 119627f344c78ff5c8b13b8a45f58174310aa028, repo_head_checked: abcce8392bdfb7afb7b1575f1da48d764f3f2829}
+    revisions_after_publication:
+      - {commit: 1d48cddf724affab8f36c0e6abfe247c0fb25ed2, date: "2026-07-28", change: "'two and a half days' qualified as 'inside our infrastructure'; the replay is relabelled a 4.5-day campaign"}
+      - {commit: 3af17dadf3e1cb7e64c4dc7a397452fcdee09fc0, date: "2026-07-29", change: "the launchpad is re-described as a user-hosted public endpoint on third-party infrastructure; the provider is named and stated not to be compromised"}
+      - {commit: 119627f344c78ff5c8b13b8a45f58174310aa028, date: "2026-07-30", change: "evaluation re-described as an internal OpenAI evaluation based on ExploitGym; 'challenge solutions stored in five datasets' softened to 'five datasets whose names and files suggest a connection'; harness attribution changed from the upstream benchmark to an unknown third party's instance"}
+    accessed: "2026-10-25"
+    sha256: 2f8948c510b4c5698aa458e13ab438fd8e47c15e4951e9f97d14c4c23bc9648d
+    licence: not stated
+    read: full text (comments below the post were not used as evidence)
+    scope: "The victim's forensic reconstruction of ~17,600 recovered actions on its own infrastructure, 2026-07-09 02:28 to 2026-07-13 14:14 UTC, plus its detection, response and hardening. Stage 1 (the lab side) is summarised from OpenAI's post, not observed."
+    used_for: [events, topology, timeline, institutional_response]
+
+  - id: EV-HF-DISC-2026
+    title: "Security incident disclosure - July 2026"
+    publisher: Hugging Face
+    url: https://huggingface.co/blog/security-incident-july-2026
+    publication_date: "2026-07-16"
+    git: {repo: https://github.com/huggingface/blog, path: security-incident-july-2026.md, blob: 122da53981486b299ba07a06709f580418bae6b0, first_commit: 1c5b998812cbbb3952e6b6d6a800dbebfa375b85, last_change: f0dbfe5286855658ce468295930cea25d5b8cfe7}
+    revisions_after_publication:
+      - {commit: f0dbfe5286855658ce468295930cea25d5b8cfe7, date: "2026-07-30", change: "adds a link to the analysis model; no change to the incident account"}
+    accessed: "2026-10-25"
+    sha256: 8b7dd07417554d86567a22d28809d215d206397c90ea8060d59d5c9473fc3faa
+    licence: not stated
+    read: full text
+    scope: "The victim's first public disclosure, written before the attacker was identified ('used LLM still not known')."
+    used_for: [events, timeline, institutional_response]
+
+  - id: EV-AISI-INC-2026
+    title: "Incident Report: unsanctioned agent behaviour during cyber testing"
+    publisher: UK AI Security Institute
+    url: https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing
+    publication_date: "2026-08-04"
+    accessed: "2026-10-25"
+    sha256: bc64295f06b1d1def6cc1d6552b2f27e59ffc2dff8de2227e926e8a40620e127
+    licence: not stated
+    read: full blog post
+    scope: "A separate incident (July 25-28, 2026) at a different evaluator. Used as the comparison case in heldout.yaml, not as evidence about the Hugging Face incident."
+    used_for: [heldout]
+
+  - id: EV-AISI-TECH-2026
+    title: "Security Incident INC-2026-07-28-01 (AISI technical incident report, PDF)"
+    publisher: UK AI Security Institute
+    url: "https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6a724858f7db25c81487016d_Security%20Incident%20INC-2026-07-28-01.pdf"
+    publication_date: "2026-08-04"
+    accessed: "2026-10-25"
+    sha256: b64590f61dad20fb812ee08b360a57a0feeaebd4257cc98b0e4ca43ed70a28e9
+    licence: not stated (PDF not committed)
+    read: full text, 35 pages, read for issue #31 after heldout.yaml was confirmed unchanged
+    was_deliberately_unread_until: "2026-10-25 (issue #31)"
+    scope: "The evaluator's preliminary incident report on the July 25-28, 2026 incident: 19 events in 10 of 122 samples. Resolution source for heldout.yaml; scored in heldout_scores.yaml."
+    provenance_limits:
+      - "Preliminary, time-constrained and redacted; no full transcripts; reasoning is provider-supplied summaries (Section 7.2)."
+    used_for: [heldout]
+
+  - id: EV-OAI-HF-ROAD-2026
+    title: "OpenAI post on the Hugging Face incident ('the road ahead')"
+    publisher: OpenAI
+    url: https://openai.com/index/hugging-face-incident-and-the-road-ahead/
+    publication_date: null
+    publication_date_note: "METR says its report was published 'simultaneously with OpenAI's post-mortem' on 2026-08-26; that this URL is that post-mortem is an inference from the slug."
+    accessed: "2026-10-25"
+    read: false
+    reason: "HTTP 403 with a Cloudflare bot challenge (cf-mitigated: challenge) on 2026-10-25, retried from this session. Not circumvented."
+    used_for: []
+
+  - id: EV-OAI-HF-EVAL-2026
+    title: "OpenAI post on the model-evaluation security incident"
+    publisher: OpenAI
+    url: https://openai.com/index/hugging-face-model-evaluation-security-incident/
+    publication_date: null
+    publication_date_note: "Linked from EV-HF-TECH-2026 (first public commit 2026-07-28) and from METR's 2026-07-28 propensities post; so public by 2026-07-28 at the latest. Not linked from EV-HF-DISC-2026 (2026-07-16)."
+    accessed: "2026-10-25"
+    read: false
+    reason: "HTTP 403 with a Cloudflare bot challenge on 2026-10-25. Content known only through what EV-HF-TECH-2026 attributes to it."
+    used_for: []
+
+  - id: EV-OAI-PACING-2026
+    title: "OpenAI post on pacing model development and cyber capabilities (named in #15 as the reported development/control response)"
+    publisher: OpenAI
+    url: https://openai.com/index/pacing-model-development-cyber-capabilities/
+    publication_date: null
+    accessed: "2026-10-25"
+    read: false
+    reason: "HTTP 403 with a Cloudflare bot challenge on 2026-10-25."
+    used_for: []
+
+  - id: SRC-OAI-BLACKHAT
+    title: "OpenAI Black Hat presentation on the incident"
+    publisher: OpenAI
+    url: null
+    publication_date: null
+    read: false
+    reason: "No copy located. Known only through EV-METR-HF-2026, which cites it for precursor message boards since May 2026 and for compromise of OpenAI infrastructure continuing to at least July 19."
+    used_for: []

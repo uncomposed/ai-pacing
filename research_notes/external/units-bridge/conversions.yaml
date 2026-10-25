@@ -1,0 +1,278 @@
+# Cross-model conversions for issue #11. [[ai gen]] Written 2026-10-25. Status: proposed; nothing validated.
+#
+# Every conversion between two dictionary quantities (quantities.yaml) is listed here with its units, mechanism,
+# delay, constraints and evidence status, or listed as forbidden with a reason. tools/units_tool.py checks it.
+#
+# class
+#   normalization            a unit definition with an exact factor (choice of reference); no evidence needed
+#   identity                 a mathematical identity (doubling time = ln 2 / rate)
+#   empirical_scale_estimate a factor that bridges a normalized unit and a physical one, or two physical dimensions,
+#                            estimated from data; needs bounds and an evidence status
+#   bounded_scenario         a bridge that cannot be estimated; only its bounds are used, as a scenario
+#   unidentified             no estimate and no defensible bounds; must stay uncoupled (coupled: false)
+#   forbidden                must never be used, with the reason (the stopping rule of #11)
+# form: linear (to = factor * from), reciprocal (to = factor / from), log10 (to = log10(from / factor)),
+#       exp10 (to = factor * 10 ** from)
+# coupled: true when a model in this repository actually uses the conversion to pass a value between modules.
+#
+# Rules the checker enforces: dimensions of from, factor and to agree for the form; a factor that bridges a
+# normalized and a physical dimension (or two physical dimensions other than time) is never a normalization or an
+# identity; a derivation, when given, reproduces the factor's value and unit; unidentified and forbidden entries
+# are uncoupled; no chain of coupled conversions leads from a capability metric to supply-chain closure or external
+# control, or to a quantity marked no_calibration_from_capability.
+
+schema_version: 0.1.0
+status: proposed
+
+conversions:
+  # ---- identities and normalizations ----------------------------------------------------------------------------
+  - id: CV-RATE-TO-DOUBLING
+    from: QTY-GROWTH-RATE-G
+    to: QTY-DOUBLING-TIME
+    class: identity
+    form: reciprocal
+    factor: {value: 0.6931471805599453, unit: "1"}
+    mechanism: "ln 2 divided by a constant continuous growth rate"
+    delay: {kind: none, note: "identity"}
+    constraints: "Only for a constant rate below the cap; with chi < 1 the rate is chi g."
+    evidence: {status: normalization, ref: "mathematics"}
+    coupled: true
+    used_by: [metzger/RECHECK.md, docking.md section 7]
+  - id: CV-CAPACITY-TO-OUTPUT
+    from: QTY-PACT-A
+    to: QTY-INDUSTRIAL-OUTPUT
+    class: normalization
+    form: linear
+    factor: {value: 1.0, unit: 1/yr}
+    mechanism: "One EIU of capacity yields one EIU of output per year: the reading of 'Earth industry = 1' under which the solver's per-year trade term (gam times the smaller economy) is a flow."
+    delay: {kind: none, note: "definition"}
+    constraints: "The solver never states it; A is used as both a stock (growth) and a flow (trade, prize). The mode contract books A to industrial_output (a flow) without this factor."
+    evidence: {status: normalization, ref: "PARAMS H ('Normalisation'), gam; README finding F2"}
+    coupled: true
+    used_by: [coupling_toy.py]
+  - id: CV-TOY-DESIGN-TO-CAPITAL
+    from: QTY-TOY-DESIGN
+    to: QTY-TOY-CAPITAL
+    class: identity
+    form: linear
+    factor: {value: 1.0, unit: yr}
+    mechanism: "Integration over one step: new capacity of all kinds per step is at most design throughput times dt."
+    delay: {kind: fixed, value: 1.0, unit: yr, note: "one model step"}
+    constraints: "An upper bound, not an equality: investment, energy and chip supply cap the same additions."
+    evidence: {status: normalization, ref: "coupling_toy.py, equation TOY-DESIGN-CAP"}
+    coupled: true
+    used_by: [coupling_toy.py]
+  - id: CV-GATE-Q-TO-FLOPS
+    from: QTY-GATE-COMPUTE-STOCK
+    to: QTY-TRAINING-COMPUTE-RATE
+    class: identity
+    form: linear
+    factor: {value: 1.0, unit: "1"}
+    mechanism: "A change of time unit only (FLOP/yr to FLOP/s); the unit table carries the 3.156e7."
+    delay: {kind: none, note: "identity"}
+    constraints: "Q is the shared stock; only its training share maps to compute_training. The share is unresolved in #13 (E7), so nothing is coupled through this yet."
+    evidence: {status: normalization, ref: "epoch-gate/INTERFACES.md"}
+    coupled: false
+    used_by: []
+  # ---- empirical scale estimates --------------------------------------------------------------------------------
+  - id: CV-EIU-TO-PRIMARY-POWER
+    from: QTY-EARTH-INDUSTRY-H
+    to: QTY-WORLD-PRIMARY-POWER
+    class: empirical_scale_estimate
+    form: linear
+    factor: {value: 1.96e+13, bounds: [1.88e+13, 1.97e+13], unit: W/EIU}
+    derivation: P_earth
+    mechanism: "Identify one EIU with today's world primary energy use, as the Metzger docking does."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "The bounds span the 2023 and 2024 Energy Institute figures and their change of method; the identification of industry with energy use is itself an assumption (energy intensity differs between Earth and off-Earth industry)."
+    evidence: {status: observed_secondary, ref: "decision_model.md (EI Review 2024 via DieselNet); physics_economics.md (EI Review 2025)"}
+    coupled: false
+    used_by: [docking/metzger.py]
+  - id: CV-METZGER-ENERGY-TO-EIU
+    from: QTY-METZGER-GEN5-ENERGY
+    to: QTY-PACT-A
+    class: empirical_scale_estimate
+    form: linear
+    factor: {value: 5.102040816326531e-14, bounds: [5.076e-14, 5.319e-14], unit: EIU/W}
+    derivation: 1 / P_earth
+    mechanism: "Energy use divided by Earth's energy use per EIU; J/yr over W is a pure number (s per yr)."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "Inherits CV-EIU-TO-PRIMARY-POWER. Assumes a lunar industry uses as much energy per unit of 'industry' as Earth's."
+    evidence: {status: observed_secondary, ref: "as CV-EIU-TO-PRIMARY-POWER"}
+    coupled: false
+    used_by: [docking/metzger.py]
+  - id: CV-TRAINING-TO-EFFECTIVE-COMPUTE
+    from: QTY-TRAINING-COMPUTE
+    to: QTY-EFFECTIVE-COMPUTE
+    class: empirical_scale_estimate
+    form: linear
+    factor: {unit: "1"}
+    mechanism: "Effective compute is physical compute times the software-efficiency multiplier (QTY-SOFTWARE-EFFICIENCY)."
+    delay: {kind: unknown, note: "efficiency gains apply to runs after they are found; lag to pin in #14"}
+    constraints: "The multiplier is relative to a reference year the adapter must state; same dimension as FLOP, different meaning."
+    evidence: {status: external_pending, ref: "#13, #14"}
+    coupled: false
+    used_by: []
+  # ---- bounded scenarios ----------------------------------------------------------------------------------------
+  - id: CV-METZGER-T-TO-EIU
+    from: QTY-METZGER-ASSET-MASS
+    to: QTY-PACT-A
+    class: bounded_scenario
+    form: linear
+    factor: {value: 2.5128e-10, bounds: [2.5e-11, 2.5e-9], unit: EIU/t}
+    derivation: E_gen5 / P_earth / m_gen5
+    mechanism: "Asset mass to EIU through Gen 5.0's energy use per tonne of assets."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "One generation's energy per tonne, applied to all; the bounds (a factor of 10 each way) are a scenario band, not an estimate. The docking's 2.4e-10 used the by-eye 6,600 t; the re-digitized 6,434 t gives 2.51e-10."
+    evidence: {status: scenario, ref: "docking.md section 7; metzger/RECHECK.md"}
+    coupled: false
+    used_by: [docking/metzger.py]
+  - id: CV-TOY-COMPUTE-TO-DESIGN
+    from: QTY-TOY-COMPUTE
+    to: QTY-TOY-DESIGN
+    class: bounded_scenario
+    form: linear
+    factor: {value: 1.0, bounds: [0.1, 100.0], unit: 1/yr}
+    mechanism: "lam: design and integration throughput per unit of research compute (the coding-speed lever), plus a constant human term D_h."
+    delay: {kind: bounded, bounds: [0.0, 5.0], unit: yr, note: "years from research output to designs used in construction; not modelled (0) in the toy, since with constant lam a delay only shifts the design-bound path and cannot lift a physical cap"}
+    constraints: "Applies to the research share phi of compute only. It cannot raise energy capacity, chip supply or the investment budget."
+    evidence: {status: scenario, ref: "coupling_toy.py; no observable fixes lam (CV-HORIZON-TO-DEV-TIME and CV-DEV-TIME-TO-RESEARCH are unidentified)"}
+    coupled: true
+    used_by: [coupling_toy.py]
+  # ---- unidentified: kept uncoupled -----------------------------------------------------------------------------
+  - id: CV-HORIZON-TO-DEV-TIME
+    from: QTY-METR-HORIZON
+    to: QTY-DEV-TIME-RATIO
+    class: unidentified
+    form: linear
+    mechanism: "Longer task horizons might shorten realized developer task time."
+    delay: {kind: unknown, note: "adoption lag"}
+    constraints: "Measured productivity effects can have the opposite sign to benchmark gains; #12 decides what METR data identify."
+    evidence: {status: external_pending, ref: "#12"}
+    coupled: false
+    used_by: []
+  - id: CV-DEV-TIME-TO-RESEARCH
+    from: QTY-DEV-TIME-RATIO
+    to: QTY-RESEARCH-OUTPUT
+    class: unidentified
+    form: linear
+    mechanism: "Faster coding might raise software-efficiency growth, limited by compute for experiments."
+    delay: {kind: unknown, note: "research lag"}
+    constraints: "Compute-bound research does not speed up with labor alone (AI Futures and GATE treat this differently; #13, #14)."
+    evidence: {status: external_pending, ref: "#14"}
+    coupled: false
+    used_by: []
+  - id: CV-INFERENCE-TO-AGENT-LABOR
+    from: QTY-INFERENCE-COMPUTE-RATE
+    to: QTY-AGENT-LABOR
+    class: unidentified
+    form: linear
+    mechanism: "Agent-hours per year that an inference allocation can run."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "Depends on model size, tokens per agent-hour and utilization; a production function uses this or the compute, not both (mode contract accounting)."
+    evidence: {status: not_collected, ref: "no data in the repository"}
+    coupled: false
+    used_by: []
+  - id: CV-OOM-TO-FLOP
+    from: QTY-AIFM-ECI
+    to: QTY-EFFECTIVE-COMPUTE
+    class: unidentified
+    form: exp10
+    factor: {unit: FLOP}
+    mechanism: "Effective FLOP = reference FLOP times 10 to the OOM index."
+    delay: {kind: none, note: "definition"}
+    constraints: "The reference FLOP and year must come from the pinned AI Futures version (#14)."
+    evidence: {status: external_pending, ref: "#14"}
+    coupled: false
+    used_by: []
+  - id: CV-METZGER-RATE-TO-G
+    from: QTY-METZGER-GROWTH-RATE
+    to: QTY-GROWTH-RATE-G
+    class: unidentified
+    form: linear
+    factor: {unit: "1"}
+    mechanism: "Would carry the bootstrap rate over to the pact's scale."
+    delay: {kind: none, note: "none"}
+    constraints: "Metzger models 7 to 23,000 t (1e-9 to 6e-6 EIU under CV-METZGER-T-TO-EIU); the pact starts at 1e-3 EIU. The g sweep 0.07 to 0.69 is the bounded scenario in use; Metzger's 0.65 sits near its top."
+    evidence: {status: source_model_output, ref: "metzger/RECHECK.md"}
+    coupled: false
+    used_by: []
+  - id: CV-LOCAL-CHIPS-TO-CHI0
+    from: QTY-LOCAL-CHIP-SHARE
+    to: QTY-CHI0
+    class: unidentified
+    form: linear
+    factor: {unit: "1"}
+    mechanism: "Crude local chips might keep growth near full speed (Metzger), raising chi0 toward 1."
+    delay: {kind: unknown, note: "time to build crude fabs"}
+    constraints: "The toy shows a supply limit does not act as a constant multiplier at all (results/coupling_toy.md); chi0 stays a swept project assumption."
+    evidence: {status: source_model_assumption, ref: "EV-METZGER-2013 p. 8-9"}
+    coupled: false
+    used_by: []
+  - id: CV-GWP-TO-EIU-OUTPUT
+    from: QTY-GWP
+    to: QTY-INDUSTRIAL-OUTPUT
+    class: unidentified
+    form: linear
+    factor: {unit: EIU/USD}
+    mechanism: "Would set one EIU per year equal to the reference year's gross world product."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "Two definitions of the unit conflict: the solver's EIU is 'Earth's industry', the docking reads it as primary energy, and GDP-based output includes services. GATE's price base is not stated. Until the EIU is defined once, GATE output stays in USD (README finding F3)."
+    evidence: {status: external_pending, ref: "#13 (price base); this issue (EIU definition)"}
+    coupled: false
+    used_by: []
+  # ---- forbidden: the stopping rule of #11 ----------------------------------------------------------------------
+  - id: CV-NO-GENSPACING-AS-DOUBLING
+    from: QTY-METZGER-GEN-SPACING
+    to: QTY-DOUBLING-TIME
+    class: forbidden
+    reason: "Same unit, different meaning: mass grows about 3.65x per 2-year generation in Metzger's max case. This was the g citation error (AS-GCITE)."
+    coupled: false
+  - id: CV-NO-HORIZON-TO-STRIKE-ODDS
+    from: QTY-METR-HORIZON
+    to: QTY-STRIKE-ODDS
+    class: forbidden
+    reason: "Task capability on a suite is not the odds of seizing control from defended states (#11 stopping rule; AD-METR unsupported extrapolation)."
+    coupled: false
+  - id: CV-NO-BENCHMARK-TO-STRIKE-ODDS
+    from: QTY-BENCH-SCORE
+    to: QTY-STRIKE-ODDS
+    class: forbidden
+    reason: "#11 stopping rule: seizure odds are not calibrated from coding benchmark scores."
+    coupled: false
+  - id: CV-NO-HORIZON-TO-DENIAL
+    from: QTY-METR-HORIZON
+    to: QTY-DENIAL-Q
+    class: forbidden
+    reason: "Capability says nothing about whether humans can fire a denial reserve (mode contract: capability alone does not establish sovereignty)."
+    coupled: false
+  - id: CV-NO-BENCHMARK-TO-CLOSURE
+    from: QTY-BENCH-SCORE
+    to: QTY-LE-CLOSURE-THRESHOLD
+    class: forbidden
+    reason: "#11 stopping rule: industrial closure is not calibrated from coding benchmarks; it is a bill-of-materials question."
+    coupled: false
+  - id: CV-NO-MILESTONE-TO-CLOSURE
+    from: QTY-AIFM-MILESTONE
+    to: QTY-LE-CLOSURE-THRESHOLD
+    class: forbidden
+    reason: "A capability milestone date is not a date of supply-chain closure (AD-AIFM unsupported extrapolation)."
+    coupled: false
+  - id: CV-NO-BASIC-CHIPS-AS-LEADING-EDGE
+    from: QTY-LOCAL-CHIP-SHARE
+    to: QTY-LE-CLOSURE-THRESHOLD
+    class: forbidden
+    reason: "Basic chip production (CL-BASIC-CHIPS) is not leading-edge fab independence (CL-LEADING-EDGE-FAB); they differ by about 6e4 in scale in the docking."
+    coupled: false
+  - id: CV-NO-OWNERSHIP-AS-INDEPENDENCE
+    from: QTY-RESOURCE-HOLDING-SHARE
+    to: QTY-LE-FAB-LEVEL-F
+    class: forbidden
+    reason: "Holding resources (CL-RESOURCE-OWNERSHIP) does not remove dependence on withheld chips (CL-LEADING-EDGE-FAB)."
+    coupled: false
+  - id: CV-NO-CAPACITY-AS-CAPABILITY
+    from: QTY-PACT-A
+    to: QTY-METR-HORIZON
+    class: forbidden
+    reason: "AD-PACT unsupported extrapolation: industrial capacity A is not AI capability."
+    coupled: false

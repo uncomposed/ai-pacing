@@ -1,0 +1,75 @@
+# Dimensional consistency of the equations used across the bridge (issue #11). [[ai gen]] Written 2026-10-25.
+#
+# tools/units_tool.py parses every equation with Python's ast, gives each symbol its declared unit and checks that
+# both sides, every term of a sum and every argument of min/max carry the same dimensions, that exp/log arguments
+# are dimensionless, and that a `check_value` equation reproduces the declared value (in SI-scaled units).
+# Inequalities (<=) are checked like equations. Symbols may point at a dictionary quantity; then their units must
+# have the quantity's dimensions.
+
+schema_version: 0.1.0
+
+symbols:
+  # pact solver (equilibrium_model.py, unchanged)
+  A: {unit: EIU, quantity: QTY-PACT-A}
+  A_next: {unit: EIU, quantity: QTY-PACT-A}
+  Kmax: {unit: EIU, quantity: QTY-PACT-A}
+  g: {unit: 1/yr, quantity: QTY-GROWTH-RATE-G}
+  chi: {unit: "1", quantity: QTY-CHI0}
+  dt: {unit: yr}
+  T_double: {unit: yr, quantity: QTY-DOUBLING-TIME}
+  # Metzger docking bridge
+  E_gen5: {unit: J/yr, value: 1.0e+15, quantity: QTY-METZGER-GEN5-ENERGY}
+  P_earth: {unit: W/EIU, value: 1.96e+13}
+  m_gen5: {unit: t, value: 6434.0, quantity: QTY-METZGER-ASSET-MASS}
+  u_t: {unit: EIU/t, value: 2.5128e-10}
+  A_gen5: {unit: EIU, value: 1.6167e-6, quantity: QTY-PACT-A}
+  r_metzger: {unit: 1/yr, value: 0.6474, quantity: QTY-METZGER-GROWTH-RATE}
+  T_gen: {unit: yr, value: 2.0, quantity: QTY-METZGER-GEN-SPACING}
+  # coupling toy (coupling_toy.py)
+  Y: {unit: EIU/yr, quantity: QTY-INDUSTRIAL-OUTPUT}
+  nu: {unit: 1/yr}
+  K: {unit: EIU, quantity: QTY-TOY-CAPITAL}
+  E: {unit: EIU, quantity: QTY-TOY-ENERGY}
+  E_max: {unit: EIU, quantity: QTY-TOY-ENERGY}
+  C: {unit: EIU, quantity: QTY-TOY-COMPUTE}
+  C_ops: {unit: EIU, quantity: QTY-TOY-COMPUTE}
+  C_res: {unit: EIU, quantity: QTY-TOY-COMPUTE}
+  phi: {unit: "1"}
+  D: {unit: EIU/yr, quantity: QTY-TOY-DESIGN}
+  D_h: {unit: EIU/yr, quantity: QTY-TOY-DESIGN}
+  lam: {unit: 1/yr}
+  s: {unit: "1"}
+  kappa: {unit: "1"}
+  c_K: {unit: "1"}
+  c_E: {unit: "1"}
+  c_C: {unit: "1"}
+  dK: {unit: EIU}
+  dE: {unit: EIU}
+  dC: {unit: EIU}
+  r_E: {unit: 1/yr}
+  Q_imp: {unit: EIU/yr, quantity: QTY-TOY-CHIP-SUPPLY}
+  eta_crude: {unit: 1/yr}
+  eta_le: {unit: 1/yr}
+  crude: {unit: "1"}
+  le: {unit: "1"}
+  delta: {unit: 1/yr}
+  K_next: {unit: EIU, quantity: QTY-TOY-CAPITAL}
+
+equations:
+  - {id: PACT-GROWTH, model: AD-PACT, text: "A_next = A * exp(g * chi * dt * (1 - A / Kmax))"}
+  - {id: PACT-DOUBLING, model: AD-PACT, text: "T_double = log(2) / g"}
+  - {id: METZGER-BRIDGE, model: docking, text: "u_t = E_gen5 / P_earth / m_gen5", check_value: u_t}
+  - {id: METZGER-GEN5-EIU, model: docking, text: "A_gen5 = E_gen5 / P_earth", check_value: A_gen5}
+  - {id: METZGER-PER-GENERATION, model: Metzger, text: "T_gen * r_metzger = log(3.65)", note: "ln of the growth factor per generation is dimensionless; 3.65 = exp(2 x 0.647)"}
+  - {id: TOY-OUTPUT, model: toy, text: "Y = nu * min(K, E, C_ops)"}
+  - {id: TOY-COMPUTE-SPLIT, model: toy, text: "C = C_ops + C_res"}
+  - {id: TOY-RESEARCH-SHARE, model: toy, text: "C_res = phi * C"}
+  - {id: TOY-DESIGN, model: toy, text: "D = D_h + lam * C_res"}
+  - {id: TOY-BUDGET, model: toy, text: "c_K * dK + c_E * dE + c_C * dC <= s * Y * dt"}
+  - {id: TOY-DESIGN-CAP, model: toy, text: "dK + dE + dC <= D * dt"}
+  - {id: TOY-ENERGY-RATE-CAP, model: toy, text: "dE <= r_E * E * dt"}
+  - {id: TOY-ENERGY-RESOURCE-CAP, model: toy, text: "E + dE <= E_max"}
+  - {id: TOY-CHIP-CAP, model: toy, text: "dC <= (Q_imp + eta_crude * crude * K + eta_le * le * K) * dt"}
+  - {id: TOY-CAPITAL, model: toy, text: "K_next = K * (1 - delta * dt) + dK"}
+  - {id: TOY-COST-NORMALIZATION, model: toy, text: "kappa = c_K + c_E + c_C / (1 - phi)"}
+  - {id: TOY-REDUCES-TO-PACT, model: toy, text: "s / kappa = exp(g * dt) - 1", note: "with every cap slack, toy output grows exactly like PACT-GROWTH with chi = 1 and A << Kmax"}

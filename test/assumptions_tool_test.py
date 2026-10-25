@@ -112,8 +112,13 @@ class AssumptionRegisterTest(unittest.TestCase):
         self.rejects('EV-METZGER-2013 is a source_model_output, which cannot be cited as empirical_support')
 
     def test_secondary_reading_is_not_empirical_support(self):
+        # The committed record has been read in primary form (#15); test the rule on a secondary-only copy.
+        recs = copy.deepcopy(tool.evidence_tool.records_by_id())
+        recs['EV-METR-HF-2026']['reading'] = 'read_secondary_only'
         self.entry('AS-SINGLE-AI')['evidence'][0]['use'] = 'empirical_support'
-        self.rejects('EV-METR-HF-2026 is read_secondary_only; only a record read in primary form can be empirical support')
+        errors = tool.validate(self.reg, self.params, recs)
+        self.assertTrue(any('EV-METR-HF-2026 is read_secondary_only; only a record read in primary form can be empirical support'
+                            in e for e in errors), errors)
 
     def test_unread_source_only_motivates(self):
         self.entry('AS-POWERSEEK')['evidence'][0]['use'] = 'source_model_basis'
@@ -130,7 +135,7 @@ class AssumptionRegisterTest(unittest.TestCase):
         self.rejects('cites unknown evidence record EV-NOPE')
 
     def test_source_model_assumption_names_its_record(self):
-        del self.reg['parameter_roles']['g']['source_model']
+        self.reg['parameter_roles']['g'] = {'role': 'source_model_assumption'}
         self.rejects('input g: a source-model assumption names its source_model record')
 
     def test_derived_input_needs_known_parents(self):

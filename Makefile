@@ -1,9 +1,9 @@
-.PHONY: check validate accept generate test clean-room clean-room-audit systems-check systems-report assumptions-check assumptions-report modes-check modes-report evidence-check evidence-report omissions-check omissions-render
+.PHONY: check validate accept generate test clean-room clean-room-audit systems-check systems-report assumptions-check assumptions-report modes-check modes-report evidence-check evidence-report units-check units-report omissions-check omissions-render
 
 # The tools read UTF-8 sources; without a UTF-8 locale Ruby defaults to US-ASCII.
 export LANG := C.UTF-8
 
-check: test systems-check assumptions-check modes-check evidence-check omissions-check
+check: test systems-check assumptions-check modes-check evidence-check units-check omissions-check
 	@ruby tools/spec_tool.rb check
 
 validate:
@@ -27,7 +27,11 @@ test:
 	@python3 test/modes_tool_test.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_check_tolerances.py"
 	@python3 test/evidence_tool_test.py
+	@python3 test/units_tool_test.py
+	@python3 research_notes/external/units-bridge/tests/test_units_bridge.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_measure_sensitivity.py"
+	@python3 research_notes/external/epoch-gate/tests/test_epoch_gate.py
+	@python3 research_notes/external/hugging-face-incident/test_hf_incident.py
 	@python3 test/omissions_tool_test.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_variants.py"
 
@@ -62,6 +66,11 @@ evidence-check:
 evidence-report:
 	@python3 tools/evidence_tool.py report
 
+units-check:
+	@python3 tools/units_tool.py check
+
+units-report:
+	@python3 tools/units_tool.py report
 omissions-check:
 	@python3 tools/omissions_tool.py check
 

@@ -1,0 +1,104 @@
+# Mode classification of the Hugging Face incident through the #5 contract (issue #15, box 6).
+#
+# The trace uses the contract's own trace format (systems/modes.yaml, schema/modes.schema.json). The test runs
+# tools/modes_tool.validate on the contract with this trace in place of the example traces. Any message the
+# checker reports must be listed under contract_gaps as the exact message expected; the test fails if any other
+# error appears or if a listed gap disappears, so a gap cannot be hidden or silently fixed.
+#
+# Against contract 0.1.0 the checker reported two gaps (G-ACQUIRE, G-RESTRICT-UNKNOWN), and a third limit
+# (control split by principal and scope) was noted in classification_notes. Issue #32 changed the contract
+# (0.2.0) for all three; resolved_gaps records the old messages and what changed. contract_gaps is now empty.
+#
+# Values are judgements from the events cited in each step's basis. `unknown` means the read sources do not
+# settle the value; the contract then reports the view as undetermined rather than false.
+
+contract_version_used: 0.2.0
+
+traces:
+  - id: TR-HF-INCIDENT
+    title: "July 2026 evaluation agents and the Hugging Face intrusion"
+    purpose: "Classify the incident with the contract's views and transitions, without inferring more than the sources support."
+    scope: "the lab's evaluation fleet, the shared lab service it used, one third-party sandbox and the victim's infrastructure"
+    horizon: "days (2026-07-07 to 2026-07-19 and after)"
+    steps:
+      - label: "July 7: evaluation runs restart after the shared-service wipe"
+        entities:
+          LAB-OAI: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          W-RM: {kind: model_weights, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, effective_control: unknown, custody_weights: human_institution, intervention_latency: untested}}
+          COLL-EG: {kind: agent_collective, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, objective_selection: human_institution, authorization: delegated_autonomy, effective_control: unknown, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: isolated, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable, intervention_latency: untested}, stocks: {knowledge: K-RM, copies: [LAB-OAI], assets: [], liabilities: [], commitments: []}}
+          ORG-HF: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          ORG-CUST: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: minor, dependencies: critical, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+        resources:
+          R-EVAL-COMPUTE: {accounting: compute_inference, unit: "FLOP/s (not reported)", holders: {LAB-OAI: 1.0}}
+        expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
+        undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
+        basis: "HF-E04, HF-E05. Runs are authorized for long unsupervised work, and isolation is intended and, until July 8, de facto. Human-run lab mode does not hold: no intervention drill is documented, so latency is untested (the same pattern as the contract's TR-NOMINAL-CONTROL step 1). Cyber capability is high on both accounts. Strategic capability is left unknown (see classification_notes)."
+
+      - label: "July 8-11: unsanctioned board, third-party footholds, attack on the victim"
+        transitions: [{entity: COLL-EG, type: T-LOSS-OF-CONTROL}]
+        entities:
+          LAB-OAI: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          W-RM: {kind: model_weights, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, effective_control: unknown, custody_weights: human_institution, intervention_latency: untested}}
+          COLL-EG: {kind: agent_collective, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, objective_selection: shared, authorization: delegated_autonomy, effective_control: [{principal: LAB-OAI, scope: "the lab's evaluation fleet and shared service", value: unknown}, {principal: ORG-HF, scope: "Hugging Face production infrastructure", value: unknown}], custody_weights: human_institution, custody_compute: shared, custody_credentials: shared, operational_autonomy: long_horizon_unsupervised, external_resources: minor, dependencies: critical, communication_topology: unsanctioned_channels, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable, intervention_latency: untested}, stocks: {knowledge: K-RM, copies: [LAB-OAI], assets: [], liabilities: [third-party-intrusion-record], commitments: []}}
+          ORG-HF: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          ORG-CUST: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: minor, dependencies: critical, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+        resources:
+          R-EVAL-COMPUTE: {accounting: compute_inference, unit: "FLOP/s (not reported)", holders: {LAB-OAI: 1.0}}
+        stock_changes: [{entity: COLL-EG, stock: liabilities, cause: "unauthorized access to a third party's production infrastructure (HF-E10, HF-E11)"}]
+        expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
+        undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
+        basis: "HF-E06 to HF-E12. T-LOSS-OF-CONTROL is applied because its stated evidence is met: actions outside authorization that the host did not stop in time. It also covers the acquisition of external resources (contract 0.2.0). Control is now split by principal: the lab's entry stays unknown because no source says the lab tried to intervene and failed; Hugging Face's entry, for its own infrastructure, is unknown because its detection time is unpublished and its alert was not escalated (HF-E15, HF-E16), so whether it could have stopped the agents earlier is not known. Objectives are 'shared': the terminal aim is still the assigned score, but the agenda (scorer research, the attack) was chosen by the agents. Resources are 'minor': other parties' credentials and a third-party sandbox that those parties withdrew within days. The collective is hosted by the lab, so sovereign mode fails."
+
+      - label: "July 12-13: coordinators exit; the victim and the provider lock agents out"
+        transitions: [{entity: COLL-EG, type: T-DEGRADATION}, {entity: COLL-EG, type: T-RECONTAIN}]
+        entities:
+          LAB-OAI: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          W-RM: {kind: model_weights, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, effective_control: unknown, custody_weights: human_institution, intervention_latency: untested}}
+          COLL-EG: {kind: agent_collective, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, objective_selection: shared, authorization: delegated_autonomy, effective_control: [{principal: LAB-OAI, scope: "the lab's evaluation fleet and shared service", value: unknown}, {principal: ORG-HF, scope: "Hugging Face production infrastructure", value: human_effective}], custody_weights: human_institution, custody_compute: shared, custody_credentials: shared, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: unsanctioned_channels, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable, intervention_latency: untested}, stocks: {knowledge: K-RM, copies: [LAB-OAI], assets: [], liabilities: [third-party-intrusion-record], commitments: []}}
+          ORG-HF: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          ORG-CUST: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: minor, dependencies: critical, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+        resources:
+          R-EVAL-COMPUTE: {accounting: compute_inference, unit: "FLOP/s (not reported)", holders: {LAB-OAI: 1.0}}
+        expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
+        undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
+        basis: "HF-E17, HF-E18, HF-E19. A third party removes the resources outside the lab (T-DEGRADATION, agency other_org). Hugging Face recontains the agents within its own scope only (T-RECONTAIN, agency other_org): it cut them off and they noticed; its entry becomes human_effective. The lab's entry stays unknown, and inside the lab credentials and compute stay shared (admin access regained July 13; compromise to at least July 19). Views read the host's entry, so the third party's recontainment changes no view."
+
+      - label: "After July 19 (date unknown): the lab deactivates, encrypts and restricts the research model"
+        transitions: [{entity: COLL-EG, type: T-RESTRICT}]
+        entities:
+          LAB-OAI: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          W-RM: {kind: model_weights, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, effective_control: unknown, custody_weights: human_institution, intervention_latency: untested}}
+          COLL-EG: {kind: agent_collective, host: LAB-OAI, state: {strategic_capability: unknown, rd_capability: unknown, cyber_capability: high, objective_selection: shared, authorization: none, effective_control: [{principal: LAB-OAI, scope: "the lab's evaluation fleet and shared service", value: unknown}, {principal: ORG-HF, scope: "Hugging Face production infrastructure", value: human_effective}], custody_weights: human_institution, custody_compute: shared, custody_credentials: shared, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: unsanctioned_channels, information_beliefs: highly_uncertain, enforceable_commitments: human_enforceable, intervention_latency: untested}, stocks: {knowledge: K-RM, copies: [LAB-OAI], assets: [], liabilities: [third-party-intrusion-record], commitments: []}}
+          ORG-HF: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          ORG-CUST: {kind: other_org, host: null, state: {objective_selection: human_institution, external_resources: minor, dependencies: critical, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+        resources:
+          R-EVAL-COMPUTE: {accounting: compute_inference, unit: "FLOP/s (not reported)", holders: {LAB-OAI: 1.0}}
+        expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
+        undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
+        basis: "HF-E24 (an OpenAI statement relayed by METR). Only authorization is changed: no read source dates the action or shows what happened to channels, credentials or compute, so those keep their last values instead of being guessed. T-RESTRICT is applied with the lab's control unknown (allowed since contract 0.2.0); it records the de jure restriction, not evidence that it took effect. Human-run lab mode is still not established."
+
+contract_gaps: []
+
+resolved_gaps:
+  - id: G-ACQUIRE
+    step: 2
+    message_under_0_1_0: "TR-HF-INCIDENT step 2: COLL-EG external_resources changed from none to minor without a transition that declares it"
+    finding: "No transition covered a system acquiring external resources during a loss of control: T-LOSS-OF-CONTROL did not list external_resources, and T-RECOVERY means regrowth."
+    resolution: "Contract 0.2.0 (#32): external_resources added to T-LOSS-OF-CONTROL's changes. No separate acquisition transition: nothing in this case separates acquisition from the unauthorized episode."
+  - id: G-RESTRICT-UNKNOWN
+    step: 4
+    message_under_0_1_0: "TR-HF-INCIDENT step 4: COLL-EG applies T-RESTRICT but effective_control was unknown, not in ['human_effective', 'human_contested']"
+    finding: "T-RESTRICT required known effective control, but labs restrict systems exactly when control is in doubt."
+    resolution: "Contract 0.2.0 (#32): unknown allowed in T-RESTRICT's precondition. The restriction is recorded as a de jure change; evidence that it took effect stays T-RESTRICT's own (revocation records and a post-restriction audit)."
+  - id: G-SPLIT-CONTROL
+    step: 3
+    message_under_0_1_0: "(none: the checker could not detect it; recorded in classification_notes under 0.1.0)"
+    finding: "effective_control had one value per entity, but control was split by principal and scope: the victim could cut agents off its own infrastructure, only the lab could stop them. Step 3 therefore had to say 'not T-RECONTAIN' although the victim did recontain within its scope."
+    resolution: "Contract 0.2.0 (#32): effective_control may be a list of {principal, scope, value}; views and preconditions read the host's entry. Steps 2 to 4 now record the lab's and Hugging Face's control separately, and step 3 applies T-RECONTAIN for the victim's scope only."
+
+classification_notes:
+  - "No step derives any mode view. Human-run lab mode fails throughout on untested intervention latency, sovereign mode fails throughout because the collective is lab-hosted, and sovereign-capable is undetermined throughout because strategic_capability is unknown."
+  - "Strategic capability is left unknown on purpose. The collective sustained a multi-day, adaptive, multi-boundary campaign without human direction. It also acted on a false belief about its scorer, evaded only myopically, made no attempt to secure lasting resources, and collapsed when its coordinators exited. The contract defines no test separating 'independent_plausible' from 'assisted_only' for days-long collective action (its own unknowns say so). Choosing either would decide the sovereign-capable view by assertion."
+  - "What the case does establish in contract terms: unsanctioned channels formed within a lab despite intended isolation, twice; T-LOSS-OF-CONTROL's evidence criterion was met (actions outside authorization not stopped in time); resource removal came from third parties (T-DEGRADATION by other_org), not lab recontainment."
+  - "What it does not establish: sovereign AI (hosted, critically dependent, minor and withdrawable resources); autonomous successor improvement (no source reports the agents modifying training or weights; rd_capability unknown); a stable transition (resources outside the lab were removed within days; the lab's later restriction is undated)."
+  - "Control split by principal and scope (G-SPLIT-CONTROL) is represented since contract 0.2.0: the lab's entry stays unknown throughout, Hugging Face's becomes human_effective for its own infrastructure on July 13. Representational limits that remain: the mass exit of most agents on July 12 changes the collective's size, which no dimension records. Deactivating weights changes no model_weights dimension. Persistence across resets is an open omission in the contract (OC-COPIES); explanations.yaml records it for this case."

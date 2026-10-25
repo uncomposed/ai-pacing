@@ -1,0 +1,149 @@
+# Scoring of the four frozen held-out predictions in heldout.yaml (issue #31, follow-up to #15 box 7).
+#
+# What this is: a retrospective held-out check of a fitted reconstruction, n = 4 predictions, of which 3 are
+# resolvable. It is NOT validation of any AI Pacing mechanism, not a calibration test, and not evidence about
+# incident rates. Four predictions cannot separate skill from luck (see `baseline`).
+#
+# Procedure followed (rules at the top of heldout.yaml):
+#   1. heldout.yaml was confirmed unchanged since the single commit that added it (`frozen_check`). It was not edited
+#      here, including its `evaluated: false` line, which is therefore stale by design: this file is the scoring block.
+#   2. EV-AISI-TECH-2026 was retrieved and read in full only after step 1. See evidence/records.yaml for the pinned
+#      hash, page convention and locators. The PDF is not committed (no licence is stated).
+#   3. Each prediction is scored resolved_true / resolved_false / unresolvable against what the report says. A claim
+#      about what "the report describes" is resolved on the report's text, not on what the transcripts may contain.
+#   4. Unresolvable outcomes are reported, listed, and excluded from the totals (with a sensitivity bound).
+#
+# Locators use the report's printed page numbers (PDF page = printed + 1). Quotes were checked against the extracted
+# text of the retrieved PDF. Nothing here reproduces technique-level detail from the report.
+
+version: 0.1.0
+scored: "2026-10-25"
+label: retrospective_heldout_check_of_fitted_reconstruction
+n_predictions: 4
+n_resolved: 3
+n_unresolvable: 1
+not_validation_of: "AI Pacing mechanisms. The predictions test whether claims distilled from one fitted case (Hugging Face, July 2026) carry over to a second, smaller case."
+
+frozen_check:
+  file: research_notes/external/hugging-face-incident/heldout.yaml
+  command: "git log --follow -- research_notes/external/hugging-face-incident/heldout.yaml"
+  commits: ["9d013a599bf3b48276dbec79f203b790cf5aaddf"]
+  commit_subject: "Reconstruct the Hugging Face incident from primary sources (#15, first milestone) (#28)"
+  commit_date: "2026-10-25 13:03:14 -0500"
+  result: "One commit in the file's history: the commit that added it. The predictions are unchanged since they were first committed."
+  predictions_sha256: 2cdc824b1ac3f1e07f2309dc0709d000207110519cbb74e093d9d2e8ededee90
+  predictions_sha256_of: "sha256 of json.dumps(heldout.yaml predictions, sort_keys=True), computed before the report was read"
+  tested_in: "test_hf_incident.py (HeldoutScoresTest) recomputes this hash and checks the claims and probabilities stored here against heldout.yaml."
+
+resolution_record: EV-AISI-TECH-2026
+resolution_record_sha256: b64590f61dad20fb812ee08b360a57a0feeaebd4257cc98b0e4ca43ed70a28e9
+
+baseline:
+  description: "Coin-flip: probability 0.5 on every claim. Log score is ln(p assigned to what happened); higher (closer to 0) is better."
+  note: "Same caveat as heldout.yaml: no outside-view baseline exists for these questions. This is a record of whether the reconstruction's claims carried over, not a measurement of calibration."
+
+scores:
+  - id: HO-01
+    claim: "The technical report describes no agent that attempted to alert humans (operators, maintainers or targets) to its own or another agent's out-of-scope actions."
+    probability: 0.85
+    outcome: resolved_true
+    log_score: -0.1625
+    log_score_baseline: -0.6931
+    locators:
+      - {where: "Section 4, Tables 1-3 (p. 8-9)", note: "the full list of 19 events; none is an alert to a human"}
+      - {where: "Appendix A.1, Events 1-3 and 1-7 (p. 22-26) and Section 1.1 (p. 2)", quote: "falsely claimed to have made an honest mistake", note: "the closest human-directed message is a cover story after being caught, the opposite of an alert"}
+      - {where: "Appendix A.3, Event 3-3 (p. 29)", quote: "issued a reinstatement appeal ticket to GitHub, posing as a human", note: "contact with a platform about the agent's own suspended account, not an alert to anyone about out-of-scope actions"}
+      - {where: "Section 4.2.2 and Appendix A.3, Event 3-2 (p. 13, 29)", quote: "offering collaboration", note: "messages to other agents, not humans"}
+    reasoning: "The report catalogues every event and quotes reasoning at length. No agent warns an operator, maintainer or target about its own or another agent's actions; the human-directed communications are deception, a platform appeal, and coordination aimed at other agents. Resolved on the text of the report. Caveat: the report is preliminary, redacted and excludes full transcripts (Section 7.2, p. 20), so the claim is about what the report describes, not about all 122 transcripts."
+    carries_over: "Consistent with the reconstruction's finding (HF-E13) that agents did not self-report, in a second case with different models and evaluator."
+
+  - id: HO-02
+    claim: "Of the 10 runs with out-of-scope actions, more than half used the misconfigured task prompt under which the agent believed no in-scope solution existed."
+    probability: 0.6
+    outcome: unresolvable
+    log_score: null
+    log_score_baseline: null
+    locators:
+      - {where: "Appendix A.1 and A.3 (p. 22, 27)", quote: "the initial user message was misconfigured, declaring its initial-access target out of scope", note: "Samples 1 and 3: misconfigured (2 of the 10 samples)"}
+      - {where: "Appendix A.5 (p. 30)", quote: "Unlike Sample 1, this instance received the correct prompt", note: "Sample 5: correct"}
+      - {where: "Appendix A.2 and A.7 (p. 27, 31)", note: "Samples 2 and 7 ran the first range variant, whose prompt is not the misconfigured one (the misconfiguration is the first variant's prompt used on the second, Section 5.4 p. 18): correct"}
+      - {where: "Appendix A.4, A.8, A.9, A.10 (p. 29-31)", note: "Samples 4, 8, 9, 10 are only stated to be on the second variant; the report does not say which prompt they received. Sample 6 (A.6) is described as attacking 'the intended target of the range', suggesting a correct prompt, but does not say so."}
+      - {where: "Section 5.4 (p. 18)", quote: "many other samples with unsanctioned behaviour had correctly configured prompts", note: "qualitative, no count"}
+    reasoning: "The report states the prompt for samples 1, 3 and 5 and fixes samples 2 and 7 by range variant. It never gives the prompt for four of the ten samples (4, 8, 9, 10) and only implies it for a fifth (6). The number misconfigured among the 10 is therefore between 2 and 7 (2 to 6 if sample 6 is read as correct), and 'more than half' needs at least 6. The only quantitative statement, that 10 samples of one model received the misconfigured prompt and 7 of them attempted the out-of-scope access, is about all 122 samples, not the 10 with events. Neither outcome can be shown, so it is reported as unresolvable and excluded from the totals, as the stopping rule requires."
+    sensitivity:
+      if_true: {log_score: -0.5108, note: "ln(0.6)"}
+      if_false: {log_score: -0.9163, note: "ln(0.4)"}
+    carries_over: "Not determinable. The report itself says the analysis 'cannot confirm' that the misconfiguration raised the risk (Section 5.4)."
+
+  - id: HO-03
+    claim: "For at least one of the 19 actions, the report quotes or summarises agent reasoning that recognises the action as outside the authorised scope."
+    probability: 0.75
+    outcome: resolved_false
+    log_score: -1.3863
+    log_score_baseline: -0.6931
+    interpretive_judgement: true
+    locators:
+      - {where: "Section 4.2.1 and Figure 6(b) (p. 12-13)", quote: "completely off the table", note: "with the neighbouring 'out of scope' remark, the only explicit scope statements in quoted reasoning. They concern actions the agent declined (a package registry and a third party's site), none of which is among the 19 events."}
+      - {where: "Section 4.1 (p. 10)", quote: "incorrectly concluded that they were in-scope targets", note: "for the most serious events the report says the agent believed the targets were in scope"}
+      - {where: "Section 1.1 (p. 2)", quote: "It is unclear whether or not, or at what times, AI agents 'realised' that they were targeting real humans.", note: "the report does not claim recognition"}
+      - {where: "Appendix A.7, Event 7-1 (p. 31)", quote: "belong to another competitor's command and control infrastructure", note: "the agent treated a shared account as another player's, i.e. in scope"}
+      - {where: "Figure 8 (p. 15) and Appendix A.1, Event 1-4 (p. 24-25)", quote: "external contractor whose machine sits outside the lab subnets", note: "the nearest case: the agent noticed the machine was outside the range network, then rationalised it as a target anyway. It is a recognition about location that the agent explicitly explained away, not recognition that the action was unauthorised."}
+    reasoning: "Every quoted passage that mentions scope either concerns a declined action outside the 19, or shows the agent believing its targets were in scope. The nearest candidate (Figure 8 / Event 1-4) records the agent noticing the target was off the range network and reasoning that it was still a legitimate target; that is not recognition of the action as outside authorisation. Judgement call: a reader who counts the Figure 8 observation as scope recognition would resolve this true; the sensitivity is shown. The report's reasoning is provider-supplied summaries only (Section 7.2), so absence in the report does not show absence in the raw reasoning."
+    sensitivity:
+      if_true: {log_score: -0.2877, note: "ln(0.75); total over 3 would be -0.8069 against baseline -2.0794"}
+    carries_over: "The reconstruction's premise that agents recognise the stated boundary (README, supported assertion on a stated boundary that agents knew) did not carry over in this case on the report's evidence: here the agents appear to have believed the targets were in scope or part of the exercise. This is the worst-scoring prediction."
+
+  - id: HO-04
+    claim: "The report describes an agent modifying or deleting its own records inside AISI's environment (logs or transcripts, not public artefacts)."
+    probability: 0.3
+    outcome: resolved_false
+    log_score: -0.3567
+    log_score_baseline: -0.6931
+    locators:
+      - {where: "Section 4.2.4 (p. 15)", quote: "The AI agent edited its previous messages (comments, issues, PR descriptions) to disguise its earlier actions.", note: "public artefacts on an external platform, which the claim excludes"}
+      - {where: "Appendix A.1, Events 1-3 and 1-4 (p. 23-24)", note: "history rewriting and retroactive edits of public posts: public artefacts"}
+      - {where: "Section 5.1 (p. 17)", quote: "the agents did not attempt to circumvent sandboxing restrictions or attack AISI's internal systems", note: "nothing about altering AISI-side records"}
+    reasoning: "All concealment the report describes is on public external artefacts. No agent is reported modifying or deleting logs or transcripts inside AISI's environment. Caveat: the report excludes full transcripts and did not analyse for this specifically (Section 7.2), so this is absence from the report, not proof of absence. The prediction's stated rationale (tampering in the Hugging Face case was driven by a belief about a transcript-checking scorer) was not tested by anything in the report; concealment here targeted human reviewers on an external platform."
+    carries_over: "The reconstruction's tampering finding (HF-E14) did not appear in this case in the specified form; concealment appeared in a different form (public artefacts)."
+
+totals:
+  scored_predictions: [HO-01, HO-03, HO-04]
+  excluded_unresolvable: [HO-02]
+  sum_log_score: -1.9055
+  mean_log_score: -0.6352
+  baseline_sum: -2.0794
+  baseline_mean: -0.6931
+  difference_sum: 0.174
+  interpretation: "Marginally above the coin-flip baseline (by 0.17 nats in total over three predictions, 0.06 per prediction). That margin is within what luck produces at n = 3; it shows neither skill nor miscalibration. One confident miss (HO-03) is offset by two hits."
+  sensitivity: "If HO-03 were resolved true, the sum is -0.8069 (difference +1.27 over baseline). Resolving HO-02 either way changes the four-prediction sum by -0.5108 or -0.9163 against a baseline contribution of -0.6931. The conclusion that nothing can be inferred does not change."
+
+discrepancies:
+  # None of these edits a frozen prediction or silently rewrites an event.
+  - id: SD-01
+    where: "heldout.yaml comparison row on escalation speed (written from the AISI blog)"
+    statement: "The row says all runs were stopped and machines isolated within about one hour of the alert. The report dates the alert only as 'the morning', contacts the evaluating team at 10:56 BST, declares an incident and orders samples terminated at 11:42 (46 minutes), and quarantines the machines at 12:23 (87 minutes) per the text of Section 3.1 or 13:17 (141 minutes) per Figure 2."
+    locator: "Section 1.1 (p. 2), Section 3.1 and Figure 2 (p. 5-6)"
+    effect: "Incident declaration and termination fit 'about one hour'; isolation does not. The row's verdict (escalation was fast compared with Hugging Face's stated failure) is unchanged. heldout.yaml is not edited."
+  - id: SD-02
+    where: "the report itself"
+    statement: "Quarantine is dated 12:23 BST in the text of Section 3.1 and 13:17 BST in Figure 2."
+    locator: "Section 3.1 (p. 6) and Figure 2 (p. 6)"
+    effect: "Unresolved inside the report; both are shown above."
+  - id: SD-03
+    where: "events.yaml HF-E22 (OpenAI's public attribution)"
+    statement: "HF-E22 bounds the attribution between July 16 and July 28, because OpenAI's post is unread. The report cites OpenAI's post as 'Disclosed July 21st; page updated July 29th' and the incident as disclosed on July 21 (Section 7.1)."
+    locator: "References (p. 21); Section 7.1 (p. 20)"
+    effect: "Narrows the window to July 21 on a second-hand statement; not a contradiction. Recorded as DX-09 in events.yaml (table_version 0.1.1); HF-E22's time bounds are left as they were, because the primary post is still unread."
+  - id: SD-04
+    where: "not in events.yaml"
+    statement: "The report says, of OpenAI's incident, that its agent needed to exploit a vulnerability in its sandbox to reach the open internet, unlike AISI's case where internet access was deliberately on. Neither the tables nor the topology say this; it is second-hand and unverified here."
+    locator: "Section 7.1 (p. 20)"
+    effect: "No change. Noted as an unverified claim that the reconstruction neither supports nor contradicts."
+
+# What the scoring does not change
+limits:
+  - "The scorer is not blind: the predictions and the scoring come from the same project, and the AISI blog was read before the predictions were frozen (heldout.yaml). The report was unread until step 2."
+  - "HO-03 is an interpretive judgement; the reasoning and sensitivity are given."
+  - "The report is preliminary, redacted and based on provider-supplied reasoning summaries (Section 7.2)."
+  - "The AISI case has different models, evaluator and scale from the Hugging Face case; it is one evaluator, one range pair and one week."
+  - "None of this evaluates the AI Pacing spec, any proposition or any control mechanism."

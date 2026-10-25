@@ -32,8 +32,8 @@ from them) has exactly one role:
 | role | needs | count now |
 |---|---|---|
 | observed_measurement | `empirical_support`: observation records read in primary form | 0 |
-| source_model_assumption | `source_model`: a record of the source model, with locator | 1 (`g`, Metzger; its citation error is AS-GCITE) |
-| project_assumption | nothing beyond its register entry | 75 |
+| source_model_assumption | `source_model`: a record of the source model, with locator | 0 (`g` was one until the #11 recheck showed 0.35 is not a Metzger value) |
+| project_assumption | nothing beyond its register entry | 76 |
 | policy_choice | nothing; a human lever | 16 |
 | derived | `derived_from`: other inputs | 3 |
 
@@ -76,9 +76,15 @@ records are seeded from what the register already cites:
 
 - Metzger et al.: a source-model output, read, Fig. 2 digitized;
 - Turner et al.: a formal result, not read, so it may only motivate;
-- the METR Hugging Face investigation: read only in secondary coverage, so not yet
-  empirical support;
+- the METR Hugging Face investigation: seeded as read only in secondary coverage, then
+  read in primary form by #15 on 2026-10-25 (the counts matched);
 - Cole's round-2 answers: a stakeholder statement.
+
+#15 added seven records for the Hugging Face incident and its comparison case: the two
+Hugging Face posts and the AISI incident blog (read in primary form), three OpenAI posts
+(not read: HTTP 403), and the AISI technical report (kept unread on purpose as a
+held-out resolution source). See
+`research_notes/external/hugging-face-incident/`.
 
 Model predictions and observations stay separate by kind. Two records are not
 independent if one depends on the other, if they share an ancestor, or if they were
@@ -179,7 +185,8 @@ ranges.
 
 - No empirical likelihood, calibration or hindcast has been run. The protocol is
   machinery until #12 uses it.
-- The evidence records describe how sources were read by earlier sessions; three of the
-  four are not usable as empirical support.
+- The evidence records describe how sources were read. Of the four seeded records, only
+  the METR investigation (after #15's primary reading) is usable as empirical support,
+  and then only for the uses its record allows.
 - Reweighting explores alternative measures only within the sampled support, with the
   precision its ESS allows.
