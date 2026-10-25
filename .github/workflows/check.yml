@@ -21,7 +21,7 @@ env:
 
 jobs:
   make-check:
-    name: make check (spec, renderings, systems model)
+    name: "software: make check (spec, renderings, systems model, model unit tests)"
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -41,8 +41,10 @@ jobs:
       - run: python -m pip install -r .github/requirements-ci.txt
       - run: make check
 
+  # Model gates, one evidence category per command (model_gates.py; HANDOFF.md section 8c). The categories are
+  # reported separately; none of them is empirical validation.
   model-check:
-    name: equilibrium model checks against committed outputs
+    name: "model: numerical checks and software regression"
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     defaults:
@@ -59,18 +61,17 @@ jobs:
           cache-dependency-path: .github/requirements-ci.txt
       - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
       - run: echo "RD_WORKERS=$(getconf _NPROCESSORS_ONLN)" >> "$GITHUB_ENV"
-      - name: Run identity (stale-cache and mixed-shard tests; every cache has a manifest or an inventory entry)
-        run: |
-          python tests/test_run_identity.py
-          python run_identity.py inventory --check
-      - name: Unit tests for the check comparison (no solving)
-        run: python tests/test_check_tolerances.py
-      - name: robust_design.py --check (round-1 regression S1/S7/S14/S16, identities, closed form; error measures fail above CHECK_TOL)
-        run: python robust_design.py --check
-      - name: Compare --check output with the committed reference
-        run: python ci_sims.py compare-checks
-      - name: Re-solve a cached ensemble (r0.1 box, base design) and compare with the laptop cache
-        run: python ci_sims.py repro --args "--stage oat_r --designs '[{}]'" --manifest repro_r0.1_base.json
+      - name: "numerics: identities and closed forms against CHECK_TOL and invariants (robust_design.py --check)"
+        run: python model_gates.py numerics
+      - name: "software: unit tests, cache provenance, drift against committed outputs, cache re-solve"
+        if: always()
+        run: python model_gates.py software
+      - name: "empirical validation: not established (reported, never pass)"
+        if: always()
+        run: python model_gates.py empirical
+      - name: Status by category
+        if: always()
+        run: python model_gates.py report
       - name: Keep the outputs
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -81,3 +82,36 @@ jobs:
           path: |
             research_notes/Off Earth industry as misalignment control/model/results/robust_design_checks.*
             research_notes/Off Earth industry as misalignment control/model/repro_*.json
+            research_notes/Off Earth industry as misalignment control/model/gate_status/
+
+  model-replication:
+    name: "model: external-model replication (Saklakov, Clark)"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: "research_notes/Off Earth industry as misalignment control/model"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - run: echo "RD_WORKERS=$(getconf _NPROCESSORS_ONLN)" >> "$GITHUB_ENV"
+      - name: "replication: pinned Saklakov and Clark checks, then a deliberately broken dock that must fail"
+        run: python model_gates.py replication
+      - name: Status by category
+        if: always()
+        run: python model_gates.py report
+      - name: Keep the outputs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: model-replication
+          retention-days: 14
+          if-no-files-found: warn
+          path: research_notes/Off Earth industry as misalignment control/model/gate_status/

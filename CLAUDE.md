@@ -18,10 +18,12 @@ Model checks (CI job `model-check`), from
 `research_notes/Off Earth industry as misalignment control/model/`:
 
 ```sh
-python robust_design.py --check
-python ci_sims.py compare-checks
-python ci_sims.py repro --args "--stage oat_r --designs '[{}]'" --manifest repro_r0.1_base.json
+python model_gates.py numerics      # robust_design.py --check: thresholds and closed-form invariants
+python model_gates.py software      # unit tests, cache provenance, compare-checks, cache re-solve
+python model_gates.py replication   # pinned Saklakov/Clark replication (docking/replication.py)
 ```
+
+Report each category separately (`docs/ci-gates.md`); empirical validation is never established by CI.
 
 These overwrite files under `results/`. Check `git status` afterwards and restore
 anything you did not mean to change.
