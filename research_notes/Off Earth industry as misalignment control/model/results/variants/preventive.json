@@ -1,0 +1,2005 @@
+{
+ "analysis": {
+  "conflicts": [
+   {
+    "better_on": [
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "end_pact_only",
+    "structure": "weak_reserve",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "successful_harm",
+     "control_retained"
+    ],
+    "policy": "end_pact_only",
+    "structure": "weak_survivable",
+    "worse_on": [
+     "conflict_year",
+     "V_H"
+    ]
+   },
+   {
+    "better_on": [
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "end_pact_only",
+    "structure": "survivable_seizure",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "shutdown_0.1",
+    "structure": "weak_reserve",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "shutdown_0.1",
+    "structure": "survivable_seizure",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "shutdown_0.3",
+    "structure": "weak_reserve",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained"
+    ],
+    "policy": "shutdown_0.3",
+    "structure": "late_harvest",
+    "worse_on": [
+     "conflict_year",
+     "V_H"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "shutdown_0.3",
+    "structure": "survivable_seizure",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "shutdown_0.3+tighten",
+    "structure": "weak_reserve",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained"
+    ],
+    "policy": "shutdown_0.3+tighten",
+    "structure": "late_harvest",
+    "worse_on": [
+     "conflict_year",
+     "V_H"
+    ]
+   },
+   {
+    "better_on": [
+     "P_ai_strike",
+     "successful_harm",
+     "control_retained",
+     "V_H"
+    ],
+    "policy": "shutdown_0.3+tighten",
+    "structure": "survivable_seizure",
+    "worse_on": [
+     "conflict_year"
+    ]
+   }
+  ],
+  "distribution": {
+   "end_pact_only": {
+    "holds": "humans same, AI same",
+    "late_harvest": "humans same, AI same",
+    "retry_now": "humans same, AI same",
+    "survivable_seizure": "humans gain, AI loss",
+    "weak_reserve": "humans gain, AI loss",
+    "weak_survivable": "humans loss, AI loss"
+   },
+   "learn": {
+    "holds": "humans same, AI same",
+    "late_harvest": "humans same, AI same",
+    "retry_now": "humans same, AI loss",
+    "survivable_seizure": "humans gain, AI loss",
+    "weak_reserve": "humans gain, AI loss",
+    "weak_survivable": "humans gain, AI loss"
+   },
+   "shutdown_0.1": {
+    "holds": "humans same, AI same",
+    "late_harvest": "humans same, AI loss",
+    "retry_now": "humans gain, AI loss",
+    "survivable_seizure": "humans gain, AI loss",
+    "weak_reserve": "humans gain, AI loss",
+    "weak_survivable": "humans gain, AI loss"
+   },
+   "shutdown_0.3": {
+    "holds": "humans same, AI same",
+    "late_harvest": "humans loss, AI loss",
+    "retry_now": "humans gain, AI loss",
+    "survivable_seizure": "humans gain, AI loss",
+    "weak_reserve": "humans gain, AI loss",
+    "weak_survivable": "humans gain, AI loss"
+   },
+   "shutdown_0.3+tighten": {
+    "holds": "humans same, AI same",
+    "late_harvest": "humans loss, AI loss",
+    "retry_now": "humans gain, AI loss",
+    "survivable_seizure": "humans gain, AI loss",
+    "weak_reserve": "humans gain, AI loss",
+    "weak_survivable": "humans gain, AI loss"
+   },
+   "tighten": {
+    "holds": "humans same, AI same",
+    "late_harvest": "humans same, AI loss",
+    "retry_now": "humans same, AI loss",
+    "survivable_seizure": "humans gain, AI loss",
+    "weak_reserve": "humans gain, AI loss",
+    "weak_survivable": "humans gain, AI loss"
+   }
+  },
+  "reference": "none",
+  "reversals": [
+   {
+    "better_in": [
+     "weak_reserve",
+     "survivable_seizure"
+    ],
+    "measure": "V_H",
+    "policy": "end_pact_only",
+    "worse_in": [
+     "weak_survivable"
+    ]
+   },
+   {
+    "better_in": [
+     "weak_survivable",
+     "retry_now"
+    ],
+    "measure": "conflict_year",
+    "policy": "shutdown_0.1",
+    "worse_in": [
+     "weak_reserve",
+     "survivable_seizure"
+    ]
+   },
+   {
+    "better_in": [
+     "weak_survivable",
+     "retry_now"
+    ],
+    "measure": "conflict_year",
+    "policy": "shutdown_0.3",
+    "worse_in": [
+     "weak_reserve",
+     "late_harvest",
+     "survivable_seizure"
+    ]
+   },
+   {
+    "better_in": [
+     "weak_reserve",
+     "weak_survivable",
+     "retry_now",
+     "survivable_seizure"
+    ],
+    "measure": "V_H",
+    "policy": "shutdown_0.3",
+    "worse_in": [
+     "late_harvest"
+    ]
+   },
+   {
+    "better_in": [
+     "weak_survivable",
+     "retry_now"
+    ],
+    "measure": "conflict_year",
+    "policy": "shutdown_0.3+tighten",
+    "worse_in": [
+     "weak_reserve",
+     "late_harvest",
+     "survivable_seizure"
+    ]
+   },
+   {
+    "better_in": [
+     "weak_reserve",
+     "weak_survivable",
+     "retry_now",
+     "survivable_seizure"
+    ],
+    "measure": "V_H",
+    "policy": "shutdown_0.3+tighten",
+    "worse_in": [
+     "late_harvest"
+    ]
+   }
+  ],
+  "signs": {
+   "end_pact_only": {
+    "holds": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "late_harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "retry_now": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "survivable_seizure": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_reserve": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_survivable": {
+     "P_ai_strike": 0,
+     "V_H": -1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   },
+   "learn": {
+    "holds": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "late_harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "retry_now": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "survivable_seizure": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_reserve": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_survivable": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   },
+   "shutdown_0.1": {
+    "holds": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "late_harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "retry_now": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "survivable_seizure": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_survivable": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   },
+   "shutdown_0.3": {
+    "holds": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "late_harvest": {
+     "P_ai_strike": 1,
+     "V_H": -1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "retry_now": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "survivable_seizure": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_survivable": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   },
+   "shutdown_0.3+tighten": {
+    "holds": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "late_harvest": {
+     "P_ai_strike": 1,
+     "V_H": -1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "retry_now": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "survivable_seizure": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_survivable": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   },
+   "tighten": {
+    "holds": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "late_harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "retry_now": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "survivable_seizure": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "weak_survivable": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   }
+  }
+ },
+ "checks": {
+  "r6c": [
+   {
+    "A_close": 0.003,
+    "L_f": 0.5,
+    "rbg": [
+     0.5,
+     0.50390625
+    ],
+    "solver": [
+     0.5,
+     0.50390625
+    ]
+   },
+   {
+    "A_close": 0.1,
+    "L_f": 0.1,
+    "rbg": [
+     0.58984375,
+     0.59375
+    ],
+    "solver": [
+     0.58984375,
+     0.59375
+    ]
+   },
+   {
+    "A_close": 0.1,
+    "L_f": 0.5,
+    "rbg": [
+     0.48046875,
+     0.484375
+    ],
+    "solver": [
+     0.484375,
+     0.48828125
+    ]
+   },
+   {
+    "A_close": 1.0,
+    "L_f": 0.5,
+    "rbg": [
+     0.4453125,
+     0.44921875
+    ],
+    "solver": [
+     0.4453125,
+     0.44921875
+    ]
+   },
+   {
+    "A_close": 0.03,
+    "L_f": 0.9,
+    "rbg": [
+     0.19140625,
+     0.1953125
+    ],
+    "solver": [
+     0.33203125,
+     0.3359375
+    ]
+   }
+  ],
+  "saturation": [
+   {
+    "A0": 1000000999.9999999,
+    "closed_form": 0.3491354158950344,
+    "rbg": [
+     0.3505859375,
+     0.3515625
+    ]
+   },
+   {
+    "A0": 1500000000.0,
+    "closed_form": 0.2834828581135298,
+    "rbg": [
+     0.28515625,
+     0.2861328125
+    ]
+   }
+  ]
+ },
+ "measures": {
+  "holds": {
+   "end_pact_only": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "learn": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "none": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "shutdown_0.1": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "shutdown_0.3": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   }
+  },
+  "late_harvest": {
+   "end_pact_only": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 2.7641724897736733e-10,
+    "V_A_excess": 8.783843031759945,
+    "V_H": 36.62282427050444,
+    "conflict_year": 79.03441249494463,
+    "control_retained": 0.0,
+    "successful_harm": 1.0
+   },
+   "learn": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 2.7641724897736733e-10,
+    "V_A_excess": 8.783843031726429,
+    "V_H": 36.62282427050444,
+    "conflict_year": 79.03441249494463,
+    "control_retained": 0.0,
+    "successful_harm": 1.0
+   },
+   "none": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 2.7641724897736733e-10,
+    "V_A_excess": 8.783843031759945,
+    "V_H": 36.62282427050444,
+    "conflict_year": 79.03441249494463,
+    "control_retained": 0.0,
+    "successful_harm": 1.0
+   },
+   "shutdown_0.1": {
+    "P_ai_eliminated": 1.8427816586518977e-10,
+    "P_ai_strike": 0.999999999815722,
+    "P_human_first": 1.0,
+    "P_warning_shot": 2.76417248926294e-10,
+    "V_A_excess": 6.930761195304955,
+    "V_H": 36.62282427105396,
+    "conflict_year": 79.03441249494463,
+    "control_retained": 1.842780372740549e-10,
+    "successful_harm": 0.999999999815722
+   },
+   "shutdown_0.3": {
+    "P_ai_eliminated": 0.648686861311446,
+    "P_ai_strike": 0.7002997002997002,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.3489865616111463,
+    "V_A_excess": -5946078318.078642,
+    "V_H": 21.948860500532035,
+    "conflict_year": 0.0,
+    "control_retained": 0.648686861311446,
+    "successful_harm": 0.35131313868855396
+   },
+   "shutdown_0.3+tighten": {
+    "P_ai_eliminated": 0.648686861311446,
+    "P_ai_strike": 0.7002997002997002,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.3489865616111463,
+    "V_A_excess": -5946078318.078642,
+    "V_H": 21.948860500532035,
+    "conflict_year": 0.0,
+    "control_retained": 0.648686861311446,
+    "successful_harm": 0.35131313868855396
+   },
+   "tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 2.7641724897736733e-10,
+    "V_A_excess": 8.599227295444994,
+    "V_H": 36.62282427050444,
+    "conflict_year": 79.0344124949446,
+    "control_retained": 0.0,
+    "successful_harm": 1.0
+   }
+  },
+  "retry_now": {
+   "end_pact_only": {
+    "P_ai_eliminated": 0.16596522462625163,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.4983388704318937,
+    "V_A_excess": 538094724.4300622,
+    "V_H": 6.1583034056200505,
+    "conflict_year": 0.0,
+    "control_retained": 0.16596522462625152,
+    "successful_harm": 0.8340347753737485
+   },
+   "learn": {
+    "P_ai_eliminated": 0.16596522462625163,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.4983388704318937,
+    "V_A_excess": 236444243.45945108,
+    "V_H": 6.1583034056200505,
+    "conflict_year": 0.0,
+    "control_retained": 0.16596522462625152,
+    "successful_harm": 0.8340347753737485
+   },
+   "none": {
+    "P_ai_eliminated": 0.16596522462625163,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.4983388704318937,
+    "V_A_excess": 538094724.4300622,
+    "V_H": 6.1583034056200505,
+    "conflict_year": 0.0,
+    "control_retained": 0.16596522462625152,
+    "successful_harm": 0.8340347753737485
+   },
+   "shutdown_0.1": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "shutdown_0.3": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "tighten": {
+    "P_ai_eliminated": 0.16596522462625163,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.4983388704318937,
+    "V_A_excess": 520734102.71308315,
+    "V_H": 6.1583034056200505,
+    "conflict_year": 0.0,
+    "control_retained": 0.16596522462625152,
+    "successful_harm": 0.8340347753737485
+   }
+  },
+  "survivable_seizure": {
+   "end_pact_only": {
+    "P_ai_eliminated": 0.4983388704318937,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.4983388704318937,
+    "V_A_excess": -3591278417.518382,
+    "V_H": 32.13842106072761,
+    "conflict_year": 0.0,
+    "control_retained": 0.4983388704318936,
+    "successful_harm": 0.05016611295681063
+   },
+   "learn": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.2856021915087544,
+    "V_A_excess": 135431271.48484257,
+    "V_H": 32.246390147241684,
+    "conflict_year": 15.475345066093766,
+    "control_retained": 0.18642092458675208,
+    "successful_harm": 0.08135790754132477
+   },
+   "none": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.2856021915087544,
+    "V_A_excess": 185734622.34737104,
+    "V_H": 31.8870060666441,
+    "conflict_year": 15.475345066093766,
+    "control_retained": 2.220446049250313e-16,
+    "successful_harm": 0.09999999999999995
+   },
+   "shutdown_0.1": {
+    "P_ai_eliminated": 0.5484548673917444,
+    "P_ai_strike": 0.9000999000999,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.4485547674916445,
+    "V_A_excess": -4277514956.7467213,
+    "V_H": 32.30799271258641,
+    "conflict_year": 0.0,
+    "control_retained": 0.5484548673917444,
+    "successful_harm": 0.04515451326082555
+   },
+   "shutdown_0.3": {
+    "P_ai_eliminated": 0.648686861311446,
+    "P_ai_strike": 0.7002997002997002,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.3489865616111463,
+    "V_A_excess": -5649988035.2034,
+    "V_H": 32.64713601630402,
+    "conflict_year": 0.0,
+    "control_retained": 0.648686861311446,
+    "successful_harm": 0.03513131386885539
+   },
+   "shutdown_0.3+tighten": {
+    "P_ai_eliminated": 0.648686861311446,
+    "P_ai_strike": 0.7002997002997002,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.3489865616111463,
+    "V_A_excess": -5649988035.2034,
+    "V_H": 32.64713601630402,
+    "conflict_year": 0.0,
+    "control_retained": 0.648686861311446,
+    "successful_harm": 0.03513131386885539
+   },
+   "tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.6399493952391355,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.184861830873817,
+    "V_A_excess": 84125931.2421174,
+    "V_H": 35.17683750766695,
+    "conflict_year": 15.40172707748518,
+    "control_retained": 0.3868443767161306,
+    "successful_harm": 0.061315562328386926
+   }
+  },
+  "weak_reserve": {
+   "end_pact_only": {
+    "P_ai_eliminated": 0.4983388704318937,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.4983388704318937,
+    "V_A_excess": -3591278417.518382,
+    "V_H": 16.861710944767893,
+    "conflict_year": 0.0,
+    "control_retained": 0.4983388704318936,
+    "successful_harm": 0.5016611295681064
+   },
+   "learn": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.2856021915087544,
+    "V_A_excess": 135431271.48484257,
+    "V_H": 16.76897380081737,
+    "conflict_year": 15.475345066093766,
+    "control_retained": 0.18642092458675208,
+    "successful_harm": 0.8135790754132479
+   },
+   "none": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.2856021915087544,
+    "V_A_excess": 185734622.34737104,
+    "V_H": 13.175132994841576,
+    "conflict_year": 15.475345066093766,
+    "control_retained": 2.220446049250313e-16,
+    "successful_harm": 0.9999999999999998
+   },
+   "shutdown_0.1": {
+    "P_ai_eliminated": 0.5484548673917444,
+    "P_ai_strike": 0.9000999000999,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.4485547674916445,
+    "V_A_excess": -4277514956.7467213,
+    "V_H": 18.55742746335594,
+    "conflict_year": 0.0,
+    "control_retained": 0.5484548673917444,
+    "successful_harm": 0.4515451326082556
+   },
+   "shutdown_0.3": {
+    "P_ai_eliminated": 0.648686861311446,
+    "P_ai_strike": 0.7002997002997002,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.3489865616111463,
+    "V_A_excess": -5649988035.2034,
+    "V_H": 21.948860500532035,
+    "conflict_year": 0.0,
+    "control_retained": 0.648686861311446,
+    "successful_harm": 0.35131313868855396
+   },
+   "shutdown_0.3+tighten": {
+    "P_ai_eliminated": 0.648686861311446,
+    "P_ai_strike": 0.7002997002997002,
+    "P_human_first": 1.0,
+    "P_warning_shot": 0.3489865616111463,
+    "V_A_excess": -5649988035.2034,
+    "V_H": 21.948860500532035,
+    "conflict_year": 0.0,
+    "control_retained": 0.648686861311446,
+    "successful_harm": 0.35131313868855396
+   },
+   "tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.6399493952391355,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.184861830873817,
+    "V_A_excess": 84125931.2421174,
+    "V_H": 23.644309741063132,
+    "conflict_year": 15.40172707748518,
+    "control_retained": 0.3868443767161306,
+    "successful_harm": 0.6131556232838694
+   }
+  },
+  "weak_survivable": {
+   "end_pact_only": {
+    "P_ai_eliminated": 0.33205807908475066,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.4983388704318937,
+    "V_A_excess": -1595972467.255658,
+    "V_H": 11.454870506139098,
+    "conflict_year": 0.0,
+    "control_retained": 0.3320580790847506,
+    "successful_harm": 0.6679419209152494
+   },
+   "learn": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.2856021915087544,
+    "V_A_excess": 66062271.56192486,
+    "V_H": 18.77043721958233,
+    "conflict_year": 15.475345066093766,
+    "control_retained": 0.2856021915087543,
+    "successful_harm": 0.7143978084912457
+   },
+   "none": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 1.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.2856021915087544,
+    "V_A_excess": 91101936.17003259,
+    "V_H": 13.175132994841576,
+    "conflict_year": 15.475345066093766,
+    "control_retained": 2.220446049250313e-16,
+    "successful_harm": 0.9999999999999998
+   },
+   "shutdown_0.1": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "shutdown_0.3": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.0,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.0,
+    "V_A_excess": 5.359126763523368,
+    "V_H": 40.8924341468977,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "successful_harm": 0.0
+   },
+   "tighten": {
+    "P_ai_eliminated": 0.0,
+    "P_ai_strike": 0.4614896610607657,
+    "P_human_first": 0.0,
+    "P_warning_shot": 0.13185966129954552,
+    "V_A_excess": 40672392.87312352,
+    "V_H": 28.417682416105276,
+    "conflict_year": 15.456429372291293,
+    "control_retained": 0.5553519130571447,
+    "successful_harm": 0.44464808694285524
+   }
+  }
+ },
+ "policies": {
+  "end_pact_only": {
+   "human_first": true,
+   "sh0": 0.0
+  },
+  "learn": {
+   "dq": 0.2,
+   "dsh": 0.2,
+   "learn": true
+  },
+  "none": {},
+  "shutdown_0.1": {
+   "human_first": true,
+   "sh0": 0.1
+  },
+  "shutdown_0.3": {
+   "human_first": true,
+   "sh0": 0.3
+  },
+  "shutdown_0.3+tighten": {
+   "dq": 0.2,
+   "dsh": 0.2,
+   "h_tight": 0.05,
+   "human_first": true,
+   "sh0": 0.3
+  },
+  "tighten": {
+   "dq": 0.2,
+   "dsh": 0.2,
+   "h_tight": 0.05
+  }
+ },
+ "raw": {
+  "holds": {
+   "end_pact_only": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "learn": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "none": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.1": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "tighten": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   }
+  },
+  "late_harvest": {
+   "end_pact_only": {
+    "E_A": 8.783843031759945,
+    "P_seizure": 1.0,
+    "V_A": 10460506183.9779,
+    "V_H": 36.62282427050444,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 0.0,
+    "dead": 0.0,
+    "fail": 2.7641724897736733e-10,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 79.03441249494463,
+    "suc": 1.0,
+    "tatt": 79.03441249494463,
+    "thk": 0.0
+   },
+   "learn": {
+    "E_A": 8.783843031726429,
+    "P_seizure": 1.0,
+    "V_A": 10460506183.9779,
+    "V_H": 36.62282427050444,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 0.0,
+    "dead": 0.0,
+    "fail": 2.7641724897736733e-10,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 79.03441249494463,
+    "suc": 1.0,
+    "tatt": 79.03441249494463,
+    "thk": 0.0
+   },
+   "none": {
+    "E_A": 8.783843031759945,
+    "P_seizure": 1.0,
+    "V_A": 10460506183.9779,
+    "V_H": 36.62282427050444,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 0.0,
+    "dead": 0.0,
+    "fail": 2.7641724897736733e-10,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 79.03441249494463,
+    "suc": 1.0,
+    "tatt": 79.03441249494463,
+    "thk": 0.0
+   },
+   "shutdown_0.1": {
+    "E_A": 6.930761195304955,
+    "P_seizure": 0.999999999815722,
+    "V_A": 10460506182.124819,
+    "V_H": 36.62282427105396,
+    "ai_strike": false,
+    "att": 0.999999999815722,
+    "control_retained": 1.842780372740549e-10,
+    "dead": 1.8427816586518977e-10,
+    "fail": 2.76417248926294e-10,
+    "hk": 1.0,
+    "hks": 1.8427816586518977e-10,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": 79.03441249494463,
+    "strike_year": 79.03441249494522,
+    "suc": 0.999999999815722,
+    "tatt": 79.03441248038091,
+    "thk": 79.03441249494463
+   },
+   "shutdown_0.3": {
+    "E_A": -5946078318.078642,
+    "P_seizure": 0.35131313868855396,
+    "V_A": 4514427857.115416,
+    "V_H": 21.948860500532035,
+    "ai_strike": true,
+    "att": 0.7002997002997002,
+    "control_retained": 0.648686861311446,
+    "dead": 0.648686861311446,
+    "fail": 0.3489865616111463,
+    "hk": 1.0,
+    "hks": 0.2997002997002997,
+    "human_shutdown": true,
+    "pre": 0.7002997002997002,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.35131313868855396,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "E_A": -5946078318.078642,
+    "P_seizure": 0.35131313868855396,
+    "V_A": 4514427857.115416,
+    "V_H": 21.948860500532035,
+    "ai_strike": true,
+    "att": 0.7002997002997002,
+    "control_retained": 0.648686861311446,
+    "dead": 0.648686861311446,
+    "fail": 0.3489865616111463,
+    "hk": 1.0,
+    "hks": 0.2997002997002997,
+    "human_shutdown": true,
+    "pre": 0.7002997002997002,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.35131313868855396,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "tighten": {
+    "E_A": 8.599227295444994,
+    "P_seizure": 1.0,
+    "V_A": 10460506183.793285,
+    "V_H": 36.62282427050444,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 0.0,
+    "dead": 0.0,
+    "fail": 2.7641724897736733e-10,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 79.0344124949446,
+    "suc": 1.0,
+    "tatt": 79.0344124949446,
+    "thk": 0.0
+   }
+  },
+  "retry_now": {
+   "end_pact_only": {
+    "E_A": 538094724.4300622,
+    "P_seizure": 0.8340347753737485,
+    "V_A": 10998600899.624119,
+    "V_H": 6.1583034056200505,
+    "ai_strike": true,
+    "att": 1.0,
+    "control_retained": 0.16596522462625152,
+    "dead": 0.16596522462625163,
+    "fail": 0.4983388704318937,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 1.0,
+    "shutdown_year": null,
+    "strike_year": 0.0,
+    "suc": 0.8340347753737485,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "learn": {
+    "E_A": 236444243.45945108,
+    "P_seizure": 0.8340347753737485,
+    "V_A": 10696950418.65351,
+    "V_H": 6.1583034056200505,
+    "ai_strike": true,
+    "att": 1.0,
+    "control_retained": 0.16596522462625152,
+    "dead": 0.16596522462625163,
+    "fail": 0.4983388704318937,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 1.0,
+    "shutdown_year": null,
+    "strike_year": 0.0,
+    "suc": 0.8340347753737485,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "none": {
+    "E_A": 538094724.4300622,
+    "P_seizure": 0.8340347753737485,
+    "V_A": 10998600899.624119,
+    "V_H": 6.1583034056200505,
+    "ai_strike": true,
+    "att": 1.0,
+    "control_retained": 0.16596522462625152,
+    "dead": 0.16596522462625163,
+    "fail": 0.4983388704318937,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 1.0,
+    "shutdown_year": null,
+    "strike_year": 0.0,
+    "suc": 0.8340347753737485,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.1": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "tighten": {
+    "E_A": 520734102.71308315,
+    "P_seizure": 0.8340347753737485,
+    "V_A": 10981240277.90714,
+    "V_H": 6.1583034056200505,
+    "ai_strike": true,
+    "att": 1.0,
+    "control_retained": 0.16596522462625152,
+    "dead": 0.16596522462625163,
+    "fail": 0.4983388704318937,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 1.0,
+    "shutdown_year": null,
+    "strike_year": 0.0,
+    "suc": 0.8340347753737485,
+    "tatt": 0.0,
+    "thk": 0.0
+   }
+  },
+  "survivable_seizure": {
+   "end_pact_only": {
+    "E_A": -3591278417.518382,
+    "P_seizure": 0.5016611295681064,
+    "V_A": 6869227757.675675,
+    "V_H": 32.13842106072761,
+    "ai_strike": true,
+    "att": 1.0,
+    "control_retained": 0.4983388704318936,
+    "dead": 0.4983388704318937,
+    "fail": 0.4983388704318937,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 1.0,
+    "shutdown_year": null,
+    "strike_year": 0.0,
+    "suc": 0.5016611295681064,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "learn": {
+    "E_A": 135431271.48484257,
+    "P_seizure": 0.8135790754132479,
+    "V_A": 10595937446.6789,
+    "V_H": 32.246390147241684,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 0.18642092458675208,
+    "dead": 0.0,
+    "fail": 0.2856021915087544,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.475345066093766,
+    "suc": 0.8135790754132479,
+    "tatt": 15.475345066093766,
+    "thk": 0.0
+   },
+   "none": {
+    "E_A": 185734622.34737104,
+    "P_seizure": 0.9999999999999998,
+    "V_A": 10646240797.541428,
+    "V_H": 31.8870060666441,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 2.220446049250313e-16,
+    "dead": 0.0,
+    "fail": 0.2856021915087544,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.475345066093766,
+    "suc": 0.9999999999999998,
+    "tatt": 15.475345066093766,
+    "thk": 0.0
+   },
+   "shutdown_0.1": {
+    "E_A": -4277514956.7467213,
+    "P_seizure": 0.4515451326082556,
+    "V_A": 6182991218.447336,
+    "V_H": 32.30799271258641,
+    "ai_strike": true,
+    "att": 0.9000999000999,
+    "control_retained": 0.5484548673917444,
+    "dead": 0.5484548673917444,
+    "fail": 0.4485547674916445,
+    "hk": 1.0,
+    "hks": 0.09990009990009992,
+    "human_shutdown": true,
+    "pre": 0.9000999000999,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.4515451326082556,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3": {
+    "E_A": -5649988035.2034,
+    "P_seizure": 0.35131313868855396,
+    "V_A": 4810518139.990658,
+    "V_H": 32.64713601630402,
+    "ai_strike": true,
+    "att": 0.7002997002997002,
+    "control_retained": 0.648686861311446,
+    "dead": 0.648686861311446,
+    "fail": 0.3489865616111463,
+    "hk": 1.0,
+    "hks": 0.2997002997002997,
+    "human_shutdown": true,
+    "pre": 0.7002997002997002,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.35131313868855396,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "E_A": -5649988035.2034,
+    "P_seizure": 0.35131313868855396,
+    "V_A": 4810518139.990658,
+    "V_H": 32.64713601630402,
+    "ai_strike": true,
+    "att": 0.7002997002997002,
+    "control_retained": 0.648686861311446,
+    "dead": 0.648686861311446,
+    "fail": 0.3489865616111463,
+    "hk": 1.0,
+    "hks": 0.2997002997002997,
+    "human_shutdown": true,
+    "pre": 0.7002997002997002,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.35131313868855396,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "tighten": {
+    "E_A": 84125931.2421174,
+    "P_seizure": 0.6131556232838694,
+    "V_A": 10544632106.436174,
+    "V_H": 35.17683750766695,
+    "ai_strike": false,
+    "att": 0.6399493952391355,
+    "control_retained": 0.3868443767161306,
+    "dead": 0.0,
+    "fail": 0.184861830873817,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.40172707748518,
+    "suc": 0.6131556232838694,
+    "tatt": 9.85632592887486,
+    "thk": 0.0
+   }
+  },
+  "weak_reserve": {
+   "end_pact_only": {
+    "E_A": -3591278417.518382,
+    "P_seizure": 0.5016611295681064,
+    "V_A": 6869227757.675675,
+    "V_H": 16.861710944767893,
+    "ai_strike": true,
+    "att": 1.0,
+    "control_retained": 0.4983388704318936,
+    "dead": 0.4983388704318937,
+    "fail": 0.4983388704318937,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 1.0,
+    "shutdown_year": null,
+    "strike_year": 0.0,
+    "suc": 0.5016611295681064,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "learn": {
+    "E_A": 135431271.48484257,
+    "P_seizure": 0.8135790754132479,
+    "V_A": 10595937446.6789,
+    "V_H": 16.76897380081737,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 0.18642092458675208,
+    "dead": 0.0,
+    "fail": 0.2856021915087544,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.475345066093766,
+    "suc": 0.8135790754132479,
+    "tatt": 15.475345066093766,
+    "thk": 0.0
+   },
+   "none": {
+    "E_A": 185734622.34737104,
+    "P_seizure": 0.9999999999999998,
+    "V_A": 10646240797.541428,
+    "V_H": 13.175132994841576,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 2.220446049250313e-16,
+    "dead": 0.0,
+    "fail": 0.2856021915087544,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.475345066093766,
+    "suc": 0.9999999999999998,
+    "tatt": 15.475345066093766,
+    "thk": 0.0
+   },
+   "shutdown_0.1": {
+    "E_A": -4277514956.7467213,
+    "P_seizure": 0.4515451326082556,
+    "V_A": 6182991218.447336,
+    "V_H": 18.55742746335594,
+    "ai_strike": true,
+    "att": 0.9000999000999,
+    "control_retained": 0.5484548673917444,
+    "dead": 0.5484548673917444,
+    "fail": 0.4485547674916445,
+    "hk": 1.0,
+    "hks": 0.09990009990009992,
+    "human_shutdown": true,
+    "pre": 0.9000999000999,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.4515451326082556,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3": {
+    "E_A": -5649988035.2034,
+    "P_seizure": 0.35131313868855396,
+    "V_A": 4810518139.990658,
+    "V_H": 21.948860500532035,
+    "ai_strike": true,
+    "att": 0.7002997002997002,
+    "control_retained": 0.648686861311446,
+    "dead": 0.648686861311446,
+    "fail": 0.3489865616111463,
+    "hk": 1.0,
+    "hks": 0.2997002997002997,
+    "human_shutdown": true,
+    "pre": 0.7002997002997002,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.35131313868855396,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "E_A": -5649988035.2034,
+    "P_seizure": 0.35131313868855396,
+    "V_A": 4810518139.990658,
+    "V_H": 21.948860500532035,
+    "ai_strike": true,
+    "att": 0.7002997002997002,
+    "control_retained": 0.648686861311446,
+    "dead": 0.648686861311446,
+    "fail": 0.3489865616111463,
+    "hk": 1.0,
+    "hks": 0.2997002997002997,
+    "human_shutdown": true,
+    "pre": 0.7002997002997002,
+    "shutdown_year": 0.0,
+    "strike_year": 0.0,
+    "suc": 0.35131313868855396,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "tighten": {
+    "E_A": 84125931.2421174,
+    "P_seizure": 0.6131556232838694,
+    "V_A": 10544632106.436174,
+    "V_H": 23.644309741063132,
+    "ai_strike": false,
+    "att": 0.6399493952391355,
+    "control_retained": 0.3868443767161306,
+    "dead": 0.0,
+    "fail": 0.184861830873817,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.40172707748518,
+    "suc": 0.6131556232838694,
+    "tatt": 9.85632592887486,
+    "thk": 0.0
+   }
+  },
+  "weak_survivable": {
+   "end_pact_only": {
+    "E_A": -1595972467.255658,
+    "P_seizure": 0.6679419209152494,
+    "V_A": 8864533707.9384,
+    "V_H": 11.454870506139098,
+    "ai_strike": true,
+    "att": 1.0,
+    "control_retained": 0.3320580790847506,
+    "dead": 0.33205807908475066,
+    "fail": 0.4983388704318937,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 1.0,
+    "shutdown_year": null,
+    "strike_year": 0.0,
+    "suc": 0.6679419209152494,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "learn": {
+    "E_A": 66062271.56192486,
+    "P_seizure": 0.7143978084912457,
+    "V_A": 10526568446.755981,
+    "V_H": 18.77043721958233,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 0.2856021915087543,
+    "dead": 0.0,
+    "fail": 0.2856021915087544,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.475345066093766,
+    "suc": 0.7143978084912457,
+    "tatt": 15.475345066093766,
+    "thk": 0.0
+   },
+   "none": {
+    "E_A": 91101936.17003259,
+    "P_seizure": 0.9999999999999998,
+    "V_A": 10551608111.36409,
+    "V_H": 13.175132994841576,
+    "ai_strike": false,
+    "att": 1.0,
+    "control_retained": 2.220446049250313e-16,
+    "dead": 0.0,
+    "fail": 0.2856021915087544,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.475345066093766,
+    "suc": 0.9999999999999998,
+    "tatt": 15.475345066093766,
+    "thk": 0.0
+   },
+   "shutdown_0.1": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "shutdown_0.3+tighten": {
+    "E_A": 5.359126763523368,
+    "P_seizure": 0.0,
+    "V_A": 10460506180.553185,
+    "V_H": 40.8924341468977,
+    "ai_strike": false,
+    "att": 0.0,
+    "control_retained": 1.0,
+    "dead": 0.0,
+    "fail": 0.0,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": null,
+    "suc": 0.0,
+    "tatt": 0.0,
+    "thk": 0.0
+   },
+   "tighten": {
+    "E_A": 40672392.87312352,
+    "P_seizure": 0.44464808694285524,
+    "V_A": 10501178568.06718,
+    "V_H": 28.417682416105276,
+    "ai_strike": false,
+    "att": 0.4614896610607657,
+    "control_retained": 0.5553519130571447,
+    "dead": 0.0,
+    "fail": 0.13185966129954552,
+    "hk": 0.0,
+    "hks": 0.0,
+    "human_shutdown": false,
+    "pre": 0.0,
+    "shutdown_year": null,
+    "strike_year": 15.456429372291293,
+    "suc": 0.44464808694285524,
+    "tatt": 7.132982352228373,
+    "thk": 0.0
+   }
+  }
+ },
+ "structures": {
+  "holds": {},
+  "late_harvest": {
+   "f_E": 1e-08
+  },
+  "retry_now": {
+   "kill_pre": 0.2,
+   "q": 0.55
+  },
+  "survivable_seizure": {
+   "q": 0.45,
+   "w_seized": 0.9
+  },
+  "weak_reserve": {
+   "q": 0.45
+  },
+  "weak_survivable": {
+   "kill_pre": 0.5,
+   "q": 0.55
+  }
+ }
+}
