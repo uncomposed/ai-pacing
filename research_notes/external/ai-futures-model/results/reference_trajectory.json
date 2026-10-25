@@ -1,0 +1,489 @@
+{
+ "what": "Upstream default parameters (tests/golden_data/default_trajectory.json _generation_parameters), time range [2015, 2050], initial_progress 0.0, compared with the upstream golden files.",
+ "status": "source-model replication of the upstream's own golden output; not empirical validation",
+ "tolerance": {
+  "series_rtol": 0.001,
+  "series_atol": 1e-09,
+  "milestone_time_atol_years": 0.01,
+  "progress_atol_ooms": 0.001,
+  "multiplier_rtol": 0.001,
+  "basis": "series_rtol matches the upstream's own TRAJECTORY_RTOL (ODE solver rtol 1e-3 to 1e-4). Milestone times use an absolute 0.01 year (about 4 days) instead of the upstream's relative 1e-3, which on a calendar year allows about 2 years."
+ },
+ "pass": true,
+ "series": {
+  "times": {
+   "n": 351,
+   "max_abs_diff": 0.0,
+   "max_rel_diff": 0.0,
+   "pass": true
+  },
+  "progress": {
+   "n": 351,
+   "max_abs_diff": 7.816055358489393e-09,
+   "max_rel_diff": 1.1206608545533226e-10,
+   "pass": true
+  },
+  "research_stock": {
+   "n": 351,
+   "max_abs_diff": 5827284.0,
+   "max_rel_diff": 2.4160332200735726e-09,
+   "pass": true
+  },
+  "progress_rates": {
+   "n": 351,
+   "max_abs_diff": 5.127456859099766e-08,
+   "max_rel_diff": 1.253656758986221e-08,
+   "pass": true
+  },
+  "etsp_rates": {
+   "n": 351,
+   "max_abs_diff": 1.5103911010783122e-08,
+   "max_rel_diff": 1.5737366173461453e-09,
+   "pass": true
+  },
+  "research_efforts": {
+   "n": 351,
+   "max_abs_diff": 627758.5,
+   "max_rel_diff": 2.0920474586879417e-09,
+   "pass": true
+  },
+  "automation_fractions": {
+   "n": 351,
+   "max_abs_diff": 7.26264604011817e-11,
+   "max_rel_diff": 9.289487302260326e-11,
+   "pass": true
+  },
+  "ai_research_tastes": {
+   "n": 351,
+   "max_abs_diff": 0.021993979811668396,
+   "max_rel_diff": 2.0920475334628634e-09,
+   "pass": true
+  },
+  "ai_research_taste_sds": {
+   "n": 351,
+   "max_abs_diff": 1.4499867972972424e-08,
+   "max_rel_diff": 4.341308213500566e-09,
+   "pass": true
+  },
+  "aggregate_research_tastes": {
+   "n": 351,
+   "max_abs_diff": 0.021993979811668396,
+   "max_rel_diff": 2.0920475334628634e-09,
+   "pass": true
+  },
+  "coding_labors": {
+   "n": 351,
+   "max_abs_diff": 100489981952.0,
+   "max_rel_diff": 7.980915373510975e-09,
+   "pass": true
+  },
+  "serial_coding_labors": {
+   "n": 351,
+   "max_abs_diff": 14.10981035232544,
+   "max_rel_diff": 3.990457773011628e-09,
+   "pass": true
+  },
+  "software_progress_rates": {
+   "n": 351,
+   "max_abs_diff": 1.5103911010783122e-08,
+   "max_rel_diff": 1.6742788544765908e-09,
+   "pass": true
+  },
+  "software_efficiency": {
+   "n": 351,
+   "max_abs_diff": 3.372473855733915e-09,
+   "max_rel_diff": 3.4292225299487046e-10,
+   "pass": true
+  },
+  "effective_compute": {
+   "n": 351,
+   "max_abs_diff": 7.8460686836479e-09,
+   "max_rel_diff": 1.2550683969429555e-10,
+   "pass": true
+  },
+  "training_compute": {
+   "n": 351,
+   "max_abs_diff": 7.105427357601002e-15,
+   "max_rel_diff": 2.3767086735689887e-16,
+   "pass": true
+  },
+  "horizon_lengths": {
+   "n": 351,
+   "max_abs_diff": 4.6832550126907556e+19,
+   "max_rel_diff": 1.573833153610706e-06,
+   "pass": true
+  },
+  "experiment_capacity": {
+   "n": 351,
+   "max_abs_diff": 4.642501880880445e-05,
+   "max_rel_diff": 3.558315659544355e-10,
+   "pass": true
+  },
+  "human_only_progress_rates": {
+   "n": 351,
+   "max_abs_diff": 3.903095624480102e-10,
+   "max_rel_diff": 4.4321243553767955e-10,
+   "pass": true
+  },
+  "ai_coding_labor_multipliers": {
+   "n": 351,
+   "max_abs_diff": 6530813.75,
+   "max_rel_diff": 7.980915361566406e-09,
+   "pass": true
+  },
+  "ai_sw_progress_mult_ref_present_day": {
+   "n": 351,
+   "max_abs_diff": 0.27260422706604004,
+   "max_rel_diff": 2.0920466315112248e-09,
+   "pass": true
+  }
+ },
+ "scalars": {
+  "aa_time": {
+   "ours": 2027.7859260747582,
+   "golden": 2027.785926074832,
+   "abs_diff": 7.389644451905042e-11,
+   "tolerance": 0.01,
+   "pass": true
+  },
+  "ai2027_sc_time": {
+   "ours": 2028.404265860114,
+   "golden": 2028.404265860005,
+   "abs_diff": 1.0913936421275139e-10,
+   "tolerance": 0.01,
+   "pass": true
+  },
+  "progress_at_aa": {
+   "ours": 37.75243377625027,
+   "golden": 37.752433776244054,
+   "abs_diff": 6.217248937900877e-12,
+   "tolerance": 0.001,
+   "pass": true
+  },
+  "final_progress": {
+   "ours": 80.07378465784032,
+   "golden": 80.0737846585168,
+   "abs_diff": 6.76479317007761e-10,
+   "tolerance": 0.001,
+   "pass": true
+  },
+  "sc_sw_multiplier": {
+   "ours": 2.696010573492054,
+   "golden": 2.696010573475257,
+   "abs_diff": 1.679723027336877e-11,
+   "tolerance": 0.002696010573475257,
+   "pass": true
+  }
+ },
+ "r_software_calibrated": 3.1855182751207756,
+ "milestones": {
+  "AC": {
+   "metric": "progress",
+   "target": 37.75243377625027,
+   "time": 2027.7859260747582,
+   "effective_compute_ooms": 30.522446721663957
+  },
+  "AI2027-SC": {
+   "metric": "ai_coding_labor_mult_ref_present_day",
+   "target": 675000.0,
+   "time": 2028.404265860114,
+   "effective_compute_ooms": 32.3478653701617
+  },
+  "AIR-5x": {
+   "metric": "ai_sw_progress_mult_ref_present_day",
+   "target": 5,
+   "time": 2028.05887485985,
+   "effective_compute_ooms": 31.147174020429894
+  },
+  "AIR-25x": {
+   "metric": "ai_sw_progress_mult_ref_present_day",
+   "target": 25,
+   "time": 2028.4378871317342,
+   "effective_compute_ooms": 32.52835100083829
+  },
+  "AIR-250x": {
+   "metric": "ai_sw_progress_mult_ref_present_day",
+   "target": 250,
+   "time": 2028.737850336382,
+   "effective_compute_ooms": 34.864870613022546
+  },
+  "AIR-2000x": {
+   "metric": "ai_sw_progress_mult_ref_present_day",
+   "target": 2000,
+   "time": 2028.9324980852273,
+   "effective_compute_ooms": 37.47159659956991
+  },
+  "AIR-10000x": {
+   "metric": "ai_sw_progress_mult_ref_present_day",
+   "target": 10000,
+   "time": 2029.0905911300613,
+   "effective_compute_ooms": 39.938288742544096
+  },
+  "SAR-level-experiment-selection-skill": {
+   "metric": "ai_research_taste_sd",
+   "target": 3.090232306167813,
+   "time": 2028.3711404715307,
+   "effective_compute_ooms": 32.18953843543138
+  },
+  "SIAR-level-experiment-selection-skill": {
+   "metric": "ai_research_taste_sd",
+   "target": 9.27069691850344,
+   "time": 2028.7964597188209,
+   "effective_compute_ooms": 35.52372186296622
+  },
+  "STRAT-AI": {
+   "metric": "ai_research_taste_sd",
+   "target": 9.27069691850344,
+   "time": 2028.7964597188209,
+   "effective_compute_ooms": 35.52372186296622
+  },
+  "TED-AI": {
+   "metric": "ai_research_taste_sd",
+   "target": 6.180830165196273,
+   "time": 2028.6376777155924,
+   "effective_compute_ooms": 33.85682735448454
+  },
+  "ASI": {
+   "metric": "ai_research_taste_sd",
+   "target": 12.361294777531901,
+   "time": 2028.916126412103,
+   "effective_compute_ooms": 37.191010782019376
+  },
+  "Maximum possible experiment selection skill": {
+   "metric": "ai_research_taste_sd",
+   "target": 1e+31,
+   "time": null,
+   "effective_compute_ooms": null
+  }
+ },
+ "milestone_progress_ooms": {
+  "AC": 37.75243377625014,
+  "AI2027-SC": 39.577852424748045,
+  "AIR-5x": 38.377161075015934,
+  "AIR-25x": 39.75833805542504,
+  "AIR-250x": 42.09485766761002,
+  "AIR-2000x": 44.70158365415595,
+  "AIR-10000x": 47.16827579713114,
+  "SAR-level-experiment-selection-skill": 39.431610283690844,
+  "SIAR-level-experiment-selection-skill": 42.758818972778535,
+  "STRAT-AI": 42.758818972778535,
+  "TED-AI": 41.11326408455436,
+  "ASI": 44.44372374390891,
+  "Maximum possible experiment selection skill": null
+ },
+ "sampled_path": {
+  "year": [
+   2016.0,
+   2018.0,
+   2020.0,
+   2022.0,
+   2024.0,
+   2026.0,
+   2028.0,
+   2030.0,
+   2032.0,
+   2034.0,
+   2036.0,
+   2038.0,
+   2040.0,
+   2042.0,
+   2044.0,
+   2046.0,
+   2048.0,
+   2050.0
+  ],
+  "progress_ooms": [
+   22.025560859941592,
+   23.443224414928626,
+   25.707542620931783,
+   28.464094521704695,
+   31.54007476787191,
+   34.73902760814864,
+   38.22503783745911,
+   56.025306544238035,
+   62.98514179176993,
+   66.55672900146635,
+   69.17138202441448,
+   71.3336166452072,
+   73.2250548885383,
+   74.9215754467805,
+   76.4220662957804,
+   77.75691795742905,
+   78.9645114688434,
+   80.07378465784032
+  ],
+  "software_efficiency_ooms": [
+   -6.589061774675944,
+   -5.718597937690912,
+   -4.504219598581624,
+   -2.955082180541872,
+   -1.137558960512119,
+   0.8582405506099207,
+   3.464412244735941,
+   20.958899886579797,
+   27.045959497185333,
+   30.044272095343285,
+   32.1856144859599,
+   33.925436557521934,
+   35.426063751008996,
+   36.75822007462827,
+   37.93099878526314,
+   38.96796575218755,
+   39.89983212159217,
+   40.75041506184738
+  ],
+  "training_compute_ooms": [
+   21.92615066656023,
+   22.361045092960957,
+   23.32593286730973,
+   24.548971286293327,
+   25.844030159086678,
+   27.08072831212375,
+   28.20106631864518,
+   29.075995451050773,
+   29.655698497138957,
+   30.11847663306585,
+   30.52976425482515,
+   30.911637378003423,
+   31.273349511843435,
+   31.617192736876717,
+   31.93258812105597,
+   32.22030861348278,
+   32.486552763505756,
+   32.736423989034925
+  ],
+  "research_stock": [
+   15.815322632593578,
+   29.67116771034504,
+   71.37614501891414,
+   218.7053108962897,
+   813.6121368617784,
+   3443.024543733683,
+   22650.15912429707,
+   7029952130.674354,
+   572540403049.1431,
+   5000787607824.475,
+   23509859119608.613,
+   82682979854651.2,
+   244621147616807.75,
+   640745244912863.5,
+   1495701258234920.0,
+   3164974489619379.0,
+   6207294058924014.0,
+   1.147936534116741e+16
+  ],
+  "automation_fraction": [
+   1.6273212690947557e-06,
+   6.716436932246393e-06,
+   6.463559096795822e-05,
+   0.00101676400996146,
+   0.021619618224483318,
+   0.36237798432299195,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   1.0
+  ],
+  "ai_research_taste_sd": [
+   -29.152379775881354,
+   -26.524504128297846,
+   -22.32721299317371,
+   -17.217484675859804,
+   -11.515642688799172,
+   -5.585850505626223,
+   0.876050385178405,
+   33.871814782475596,
+   46.77302924471069,
+   53.39356132974955,
+   58.24025643008935,
+   62.24831862817209,
+   65.75441461340985,
+   68.8991981870203,
+   71.68060802692041,
+   74.15497802990393,
+   76.39345384432568,
+   78.4496765564267
+  ],
+  "aggregate_research_taste": [
+   1.0000000000000044,
+   1.0000000000000044,
+   1.0000000000000044,
+   1.0000000000000044,
+   1.0000000000000044,
+   1.0000000000000044,
+   1.429707113587076,
+   79595.54646847612,
+   1189049.4070914888,
+   3734664.7417829176,
+   7897179.748884782,
+   13935086.985400354,
+   22109617.432496678,
+   32589609.919729646,
+   45052869.786780976,
+   59234822.05503577,
+   75034708.82867381,
+   92408384.96904574
+  ],
+  "serial_coding_labor": [
+   6.05163139535218,
+   6.819984977203696,
+   8.66167048903052,
+   11.006949651600994,
+   20.708246571513552,
+   71.36506210488129,
+   6866.771150005511,
+   15049300356.891506,
+   20369952475.937767,
+   26312391815.716606,
+   32361687151.69701,
+   37801026090.530525,
+   41817600233.27906,
+   44305742512.79888,
+   46853317459.52414,
+   49453671034.07388,
+   52099436571.369194,
+   54782551360.94223
+  ],
+  "ai_sw_progress_mult_ref_present_day": [
+   1.0000451117303166,
+   1.0000522867302695,
+   1.000063746846704,
+   1.0002702474276273,
+   1.0056379421567565,
+   1.120414893688426,
+   4.2034937886664245,
+   986549.3005777583,
+   14737707.233194213,
+   46289410.05333224,
+   97881822.5826835,
+   172718838.28804055,
+   274038292.1136192,
+   403932861.8108651,
+   558409096.3528068,
+   734187713.5222378,
+   930019866.6680645,
+   1145358397.5937455
+  ]
+ },
+ "wall_seconds": 0.89,
+ "provenance": {
+  "upstream": "https://github.com/AI-Futures-Project/aifm-public",
+  "upstream_commit": "1c40ecdb246c25980515441a66571931c5604e11",
+  "upstream_tracked_files_modified": false,
+  "command": "aifm_runner.py reference",
+  "python": "3.14.6",
+  "numpy": "2.4.1",
+  "scipy": "1.17.0",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "generated_utc": "2026-10-25T17:46:16Z"
+ }
+}

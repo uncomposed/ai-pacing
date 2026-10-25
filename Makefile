@@ -25,6 +25,7 @@ test:
 	@python3 test/systems_tool_test.py
 	@python3 test/assumptions_tool_test.py
 	@python3 test/modes_tool_test.py
+	@python3 research_notes/external/ai-futures-model/tests/test_aifm.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_check_tolerances.py"
 	@python3 test/evidence_tool_test.py
 	@python3 test/units_tool_test.py

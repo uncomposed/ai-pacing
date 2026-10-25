@@ -229,7 +229,7 @@ class ModeContractTest(unittest.TestCase):
         self.rejects('AD-PACT: mode MODE-SOVEREIGN redefines')
 
     def test_adapter_double_counting_inputs_is_rejected(self):
-        self.adapter('AD-AIFM')['inputs'].append('compute_inference')
+        self.adapter('AD-AIFM')['inputs'].append('agent_labor')
         self.rejects('input agent_labor is derived from')
 
     def test_adapter_must_cover_every_mode(self):

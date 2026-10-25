@@ -87,7 +87,7 @@ quantities:
     semantic: "calendar date at which a threshold on the effective-compute scale is crossed"
     observable: "none directly; a model output"
     models: [AD-AIFM]
-    contract: {adapter_quantity: {adapter: AD-AIFM, name: "capability milestones (AC, SC, SAR, SIAR, TED-AI, ASI)"}, dimension: rd_capability}
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)"}, dimension: rd_capability}
     evidence: {status: external_pending, ref: "#14"}
   # ---- research labor -----------------------------------------------------------------------------------------
   - id: QTY-HUMAN-RESEARCH-LABOR
@@ -152,7 +152,7 @@ quantities:
     semantic: "log10 of effective training FLOP relative to a stated reference (orders of magnitude)"
     observable: "none directly; a model state"
     models: [AD-AIFM]
-    contract: {adapter_quantity: {adapter: AD-AIFM, name: "cumulative effective compute"}, dimension: rd_capability}
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "progress: log10 cumulative effective compute (latent)"}, dimension: rd_capability}
     evidence: {status: external_pending, ref: "#14"}
     note: "A log of a dimensional quantity, so it is meaningful only with its reference FLOP (conversion CV-OOM-TO-FLOP)."
   # ---- compute ------------------------------------------------------------------------------------------------
