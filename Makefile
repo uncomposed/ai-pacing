@@ -1,9 +1,9 @@
-.PHONY: check validate accept generate test clean-room clean-room-audit systems-check systems-report assumptions-check assumptions-report
+.PHONY: check validate accept generate test clean-room clean-room-audit systems-check systems-report assumptions-check assumptions-report modes-check modes-report
 
 # The tools read UTF-8 sources; without a UTF-8 locale Ruby defaults to US-ASCII.
 export LANG := C.UTF-8
 
-check: test systems-check assumptions-check
+check: test systems-check assumptions-check modes-check
 	@ruby tools/spec_tool.rb check
 
 validate:
@@ -24,6 +24,7 @@ test:
 	@python3 test/json_schema_test.py
 	@python3 test/systems_tool_test.py
 	@python3 test/assumptions_tool_test.py
+	@python3 test/modes_tool_test.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_check_tolerances.py"
 
 systems-check:
@@ -43,3 +44,10 @@ clean-room:
 
 clean-room-audit:
 	@ruby tools/clean_room_tool.rb audit
+
+modes-check:
+	@python3 tools/modes_tool.py check
+
+modes-report:
+	@python3 tools/modes_tool.py report
+	@python3 tools/modes_tool.py compare
