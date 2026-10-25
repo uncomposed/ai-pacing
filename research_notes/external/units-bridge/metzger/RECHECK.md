@@ -32,6 +32,32 @@ said nothing about which version was read; it was this manuscript.
 - p. 8-9: local chips from Gen 5.0, "adequate for 'appropriate technology'", lacking Earth's
   transistor density; leading-edge parity is "not modeled here".
 
+## #40: publisher copy, issue number and the abstract's 40,000 t
+
+[[ai gen]] 2026-10-25. Evidence records `EV-ASCE-METZGER-VOR-NOT-READ` and `EV-METZGER-2013`.
+
+- **Publisher copy: not read.** `ascelibrary.org` and `doi.org` return HTTP 403 with a browser user agent.
+  Only the abstract was compared, through OpenAlex's copy (W2135062463): the numbers are identical to the
+  arXiv abstract (156 t, 60 robots, 40,000 t, 100,000 robots, 41 t, 12 t) and the wording differs only
+  editorially. Whether the body, figures or tables changed after the manuscript is unknown.
+- **Issue number: 26(1).** arXiv's journal-ref ("26.2", author-supplied in 2016) disagrees with Crossref
+  (volume 26, issue 1, pages 18-29). Crossref's listing of the journal for 2013-01 to 2013-03 has 20
+  items, all issue 1, with contiguous pages 1-4, 5-17, 18-29, 30-36, ... 183-196; 18-29 sits inside issue
+  1's run. OpenAlex agrees but derives from Crossref, so it is not independent. Resolved from deposited
+  metadata, not from the publisher's page.
+- **Abstract against Fig. 2.** Fig. 2's max case ends at 23,100 t (re-measured in #38 and unchanged here).
+  The abstract's "as high as 40,000 MT with as many as 100,000 humanoid robots" matches the sensitivity
+  cases instead: Fig. 11 (Gen 6.0 mass versus robonauts manufactured, printer speeds 0.1 to 0.5 kg/h) reads
+  about 38,700 t / 18,000 robonauts (0.1), 44,000 / 33,000 (0.15), 46,800 / 49,000 (0.2), 47,400 / 62,000
+  (0.25), 45,800 / 81,000 (0.333), 43,400 / 93,000 (0.4), 38,900 / 103,000 (0.5); Fig. 13 (fast robonauts,
+  RWPA 1/3) reaches about 45,000 t. All by eye from 110-dpi renders, about +-5%. The abstract's 41 t launch
+  is Fig. 2/4's baseline. So "as high as" is the upper envelope of the sensitivity cases, and the
+  pairing 40,000 t with 100,000 robots is Fig. 11's 0.5 kg/h point. **Residual, not reconciled:** that
+  point (about 39,000 t) and Fig. 2's nominal max case (23,100 t, also 0.5 kg/h, 2-year generations,
+  about 6 t maximum production per generation) use the same nominal printer speed; the manuscript does not
+  state what differs (Fig. 9 holds production at 6 t per generation and varies generation length).
+  The digitization above is unchanged.
+
 ## Re-digitization of Fig. 2
 
 The by-eye reading (docking, 2026-10-21) was redone from the figure's embedded 781 x 477 raster by

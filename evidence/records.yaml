@@ -23,7 +23,7 @@ records:
     source:
       citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, January 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236"
       url: "https://arxiv.org/abs/1612.03238v1"
-      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref says issue 26.2, Crossref says issue 1. The version of record (ascelibrary.org) returned HTTP 403 and was not compared."
+      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref (author-supplied) says issue 26.2, Crossref says issue 1; #40 resolved this to issue 1 from Crossref's pagination of the whole issue (pages 1-196 contiguous, 18-29 between 5-17 and 30-36; see EV-ASCE-METZGER-VOR-NOT-READ). The version of record (ascelibrary.org) returned HTTP 403 and was not compared; only its abstract was compared, through OpenAlex's copy."
     reading: read_primary
     observation_date: not_applicable
     availability_date: "2013-01"
@@ -39,7 +39,7 @@ records:
       note: "Re-digitized values agree with the by-eye ones within 5% (largest: Gen 4.0 max, 1368 t against 1440 t). Fitted max-case rate 0.647/yr (by eye 0.651). The 2-year generation spacing is not a doubling time (AS-GCITE). Gen 1.0 markers of both cases overlap. Points are placed at t = 0, 2, ..., 12 years per the caption, which includes Gen 2.5."
     uncertainty:
       kind: digitization
-      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's max-case '40,000 MT with as many as 100,000 humanoid robots' does not match Fig. 2 (about 23,100 t at Gen 6.0); unresolved. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
+      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's '40,000 MT with as many as 100,000 humanoid robots' is not Fig. 2's nominal max case (about 23,100 t at Gen 6.0); #40 located it in the sensitivity figures instead: Fig. 11 (Gen 6.0 mass 38,700 to 47,400 t, 18,000 to 103,000 robonauts across printer speeds 0.1 to 0.5 kg/h) and Fig. 13 (fast robonauts, about 45,000 t), both read by eye from page renders (+-5%). Not reconciled: Fig. 11's 0.5 kg/h point (about 39,000 t) against Fig. 2's nominal 0.5 kg/h case (23,100 t), which share the nominal printer speed. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
     depends_on: []
     fitted_to: []
     intended_use: ["basis check and comparison for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison", "example of basic (not leading-edge) chip closure at small scale (units-bridge CL-BASIC-CHIPS)"]
@@ -345,7 +345,7 @@ records:
       locator: "sections 2-5 (equations), appendix B (solution), appendix C (parameter tables); see research_notes/external/epoch-gate/EQUATIONS.md"
       by: "issue #13 session, 2026-10-25"
       date: "2026-10-25"
-      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4."
+      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4. Price base (#40, units-bridge): the appendix C table gives Y(0) as 'real USD/year', 105 to 115 trillion (110 trillion), 'the total economic value produced globally in 2024'; no base year or price index is stated anywhere in the TeX source. The default is derived there from World Bank 'GDP (current US$)' (cited as worldbank2022gdp; 'around $106T' in 2023) grown by about 3% a year, so its price base is current nominal US$ at market rates, not a constant-dollar year."
     uncertainty:
       kind: unquantified
       description: "Structural and parameter uncertainty of the source model; the authors call quantitative predictions substantially uncertain and unreliable."
@@ -898,13 +898,101 @@ records:
     fitted_to: []
     intended_use: ["compute growth rate for B-COMPUTE (#56, #45)"]
     not_for: ["training compute of any individual model", "compute after May 2024", "a capability measurement"]
+  # Epoch inputs bundled by AIFM (issue #66). Read in primary form from epoch.ai on 2026-10-25 and pinned by SHA-256
+  # under research_notes/external/ai-futures-model/epoch_primary/ (compare_epoch.json). What epoch.ai serves now is
+  # NOT the vintage AIFM bundles: Anthropic revenue is identical, OpenAI revenue differs by three rows, and the
+  # bundled ECI file (per model version, latest release 2026-08-02) is no longer served; the current per-model scores
+  # differ. The bundled vintage stays recorded by EV-AIFM-EPOCH-SERIES (not readable in primary form).
+  - id: EV-EPOCH-ECI-2026-10-25
+    kind: observation
+    title: "Epoch Capabilities Index scores per model, as served 2026-10-25 (270 models)"
+    source:
+      citation: "Epoch AI, 'Capabilities & benchmarking' (benchmark_data.zip, epoch_capabilities_index/eci_scores.csv). CC-BY 4.0"
+      url: "https://epoch.ai/data/benchmark_data.zip"
+      version: "zip as served 2026-10-25 (6dbc734ba342e2e0957d916fe8e81cc9a9b8147ea8fb96fc76e65d0df004146c, 2356852 bytes, member timestamps 2026-10-25); eci_scores.csv sha256 540796e67e6158f290edfb97a2633ca871edf9f1a89c78fc9d06cd20ca33cf64"
+    reading: read_primary
+    observation_date: {start: "2023-02-24", end: "2026-10-15"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. The file carries no publication date; the latest model release in it is 2026-10-15. Per-row availability earlier than this is not established, so this record must not be used as an information set for any earlier date."
+    units: "ECI score (Epoch's index, higher is more capable) with a bootstrap interval, per model; release date per model"
+    population: "270 models on Epoch's benchmarking hub with an ECI estimate"
+    protocol: "Epoch's own IRT-style fit over benchmark results (processed_data_for_eci.csv and eci_bootstraps.json are in the same zip, not committed); not re-derived here. The scores are re-fitted as models are added, so a past value is not stable."
+    extraction:
+      method: quoted
+      locator: "research_notes/external/ai-futures-model/epoch_primary/eci_scores.csv (member epoch_capabilities_index/eci_scores.csv, all 270 rows, verbatim)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Compared with AIFM's bundled epoch_capabilities_index.csv in epoch_primary/compare_epoch.json: of 450 rows with matching model name and release date, 7 have an identical score (mean bundled minus current -0.24, range -3.14 to +1.87); 17 bundled model names are absent now; 94 current models are absent from the bundle; frontier maximum 161.65 (2026-07-09) in the bundle against 168.83 (2026-09-22) now. Differences are reported, not reconciled."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's published eci_ci_low and eci_ci_high per model (bootstrap); not summarized here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of the ECI series AIFM bundles (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["the exact ECI file AIFM bundled (older, per model version)", "an information set before 2026-10-25", "a held-out test of AIFM (AIFM's eci_at_present_day is consistent with this series)"]
+
+  - id: EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25
+    kind: observation_report
+    title: "Epoch's reports of Anthropic whole-company annualized revenue, 15 rows to 2026-07-31"
+    source:
+      citation: "Epoch AI, 'Data on AI Companies' (Josh You, John Croxton, Venkat Somala, Yafah Edelman), ai_companies_revenue_reports.csv. CC-BY 4.0"
+      url: "https://epoch.ai/data/ai_companies_revenue_reports.csv"
+      version: "as served 2026-10-25 (192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7, 43851 bytes, etag 1369fc51d584c9b775a323418b4ef74a)"
+    reading: read_primary
+    observation_date: {start: "2023-10-01", end: "2026-07-31"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. Each row has its own report date (latest 2026-08-17), which would give a finer information set; the revisions of earlier rows are not archived, so the file as a whole is dated by download."
+    units: "annualized revenue in USD at the row date (run rate); confidence label and source type per row"
+    population: "Anthropic, scope 'Full company', rows with an annualized figure (AIFM's filter, scripts/bridge/epoch_revenue_to_ts.py)"
+    protocol: "Epoch compiles company disclosures and media reports; the figures are not audited and run-rate definitions differ by source"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/epoch_primary/ai_companies_revenue_reports.csv, Company=Anthropic, Scope='Full company', nonempty 'Annualized revenue (USD)' (verbatim file; filter in compare_epoch.py)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "The filtered rows are identical to AIFM's bundled epoch_anthropic_revenue.csv (15 of 15), so for Anthropic the bundled vintage equals the primary one served today."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's per-row confidence column (Confident, Likely, ...) and the mix of company disclosures and media reports; not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of AIFM's epoch_anthropic_revenue.csv (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["audited revenue", "product-line revenue (excluded by scope)", "an information set before the row's report date"]
+
+  - id: EV-EPOCH-REVENUE-OPENAI-2026-10-25
+    kind: observation_report
+    title: "Epoch's reports of OpenAI whole-company annualized revenue, 17 rows to 2026-09-30"
+    source:
+      citation: "Epoch AI, 'Data on AI Companies' (Josh You, John Croxton, Venkat Somala, Yafah Edelman), ai_companies_revenue_reports.csv. CC-BY 4.0"
+      url: "https://epoch.ai/data/ai_companies_revenue_reports.csv"
+      version: "as served 2026-10-25 (192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7, 43851 bytes, etag 1369fc51d584c9b775a323418b4ef74a)"
+    reading: read_primary
+    observation_date: {start: "2023-03-01", end: "2026-09-30"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. Row report dates run to 2026-10-08; revisions of earlier rows are not archived."
+    units: "annualized revenue in USD at the row date (run rate); confidence label and source type per row"
+    population: "OpenAI, scope 'Full company', rows with an annualized figure (AIFM's filter)"
+    protocol: "Epoch compiles company disclosures and media reports; the figures are not audited and run-rate definitions differ by source"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/epoch_primary/ai_companies_revenue_reports.csv, Company=OpenAI, Scope='Full company', nonempty 'Annualized revenue (USD)' (verbatim file; filter in compare_epoch.py)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Differs from AIFM's bundled epoch_openai_revenue.csv (16 rows): the bundle has a 2026-08-13 row of 40e9 (Bloomberg) that the primary file no longer has; the primary file has 2026-07-15 of 30e9 and 2026-09-30 of 50e9, both from one FT article. The 2026-09-30 row has report date 2026-09-08, earlier than its own date, which Epoch's file does not explain. Reported, not reconciled."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's per-row confidence column and the mix of company disclosures and media reports; not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of AIFM's epoch_openai_revenue.csv (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["audited revenue", "product-line revenue (excluded by scope)", "the exact OpenAI series AIFM bundled (three rows differ)"]
   # AI Futures Model (issue #14): outputs are source-model outputs, never observations. Their present-day horizon,
   # revenue and ECI levels are fitted to METR and Epoch data, so `fitted_to` marks them non-independent of those
   # records. METR links point at #12's primary records since #45: AIFM's bundled METR file is byte-identical to
   # METR's published TH1.1 file (sha256 aae31902...), i.e. the post-correction TH1.1 records plus three TH1.0 values
   # (GPT-2, davinci-002, gpt-3.5-turbo-instruct; EV-METR-TH10-2026-03-03). fitted_to lists the TH1.1 records: the
   # horizon level is Claude Mythos Preview's p80 (186 min) and the elicited doubling time was formed with METR's
-  # published TH1.1 trend in view. The Epoch placeholder has no primary record yet. See
+  # published TH1.1 trend in view. Epoch links point at primary records read 2026-10-25 (#66) plus the bundled-vintage record, since the served vintage differs. See
   # research_notes/external/ai-futures-model/ (HELDOUT.md).
   - id: EV-AIFM-REFERENCE-TRAJECTORY
     kind: source_model_output
@@ -929,8 +1017,8 @@ records:
     uncertainty:
       kind: unquantified
       description: "Single parameter point; parameter and model-form uncertainty not represented by this record."
-    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     intended_use: ["source-model replication (#14)", "basis for coupling AIFM trajectories to other components"]
     not_for: ["empirical support for any milestone date", "a held-out test against METR or Epoch data it was fitted to"]
 
@@ -957,8 +1045,8 @@ records:
     uncertainty:
       kind: sampling
       description: "Monte Carlo sampling error of quantiles and achievement rates; the elicited measure itself is judgment."
-    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     intended_use: ["source-model replication (#14)"]
     not_for: ["empirical support", "a calibrated probability of any milestone"]
 
@@ -1009,14 +1097,14 @@ records:
       locator: "inputs/epoch/epoch_capabilities_index.csv, epoch_openai_revenue.csv, epoch_anthropic_revenue.csv"
       by: "the #14 replication session"
       date: "2026-10-25"
-      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series."
+      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series. Since #66 this records the BUNDLED vintage only; it stays secondary because that vintage is not obtainable in primary form: Anthropic revenue matches the primary file served 2026-10-25 (EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25), OpenAI revenue differs by three rows (EV-EPOCH-REVENUE-OPENAI-2026-10-25), and the bundled ECI file (latest release 2026-08-02) is no longer served; its scores differ from EV-EPOCH-ECI-2026-10-25. Details: research_notes/external/ai-futures-model/epoch_primary/compare_epoch.json."
     uncertainty:
       kind: measurement
       description: "confidence column per row (Epoch); not quantified here"
-    depends_on: []
+    depends_on: [EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     fitted_to: []
-    intended_use: ["marking AIFM outputs as non-independent of Epoch data"]
-    not_for: ["empirical support until read in primary form"]
+    intended_use: ["marking AIFM outputs as non-independent of Epoch data", "what AIFM bundles; cite the EV-EPOCH-* records for Epoch's data"]
+    not_for: ["empirical support (cite the primary EV-EPOCH-* records, noting the vintage differences)"]
 
   # Units bridge recheck (issue #42): AIFM's own unit conventions and the beliefs that stand where the units bridge
   # would need a measured link from coding speed to research output.
@@ -1076,3 +1164,87 @@ records:
     fitted_to: []
     intended_use: ["scale of the Earth-industry unit's output rate: one EIU/yr = reference-year GWP (units-bridge CV-GWP-TO-EIU-OUTPUT, DEF-EIU)", "reading GATE's USD output in EIU/yr for comparison", "industry's share of world value added (DEF-EIU rejected readings)"]
     not_for: ["converting projected GWP paths into capacity growth (a real-USD index stops tracking capacity under large relative price changes)", "coupling GATE output into the pact solver's H or A", "any statement about off-Earth output prices"]
+
+  - id: EV-ASCE-METZGER-VOR-NOT-READ
+    kind: source_model_output
+    title: "Metzger et al. 2013, version of record on ascelibrary.org (not read)"
+    source:
+      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, ASCE, doi:10.1061/(ASCE)AS.1943-5525.0000236"
+      url: "https://ascelibrary.org/doi/10.1061/%28ASCE%29AS.1943-5525.0000236"
+      version: "version of record; not retrieved. https://ascelibrary.org and https://doi.org/ both returned HTTP 403 to automated access on 2026-10-25 (#40), with a browser user agent."
+    reading: not_read
+    observation_date: not_applicable
+    availability_date: "2013-01"
+    availability_basis: "Crossref published-print 2013-01; DOI registered 2012-04-02."
+    units: "not_applicable"
+    population: "model scenarios of a lunar bootstrapping industry; no observed system"
+    protocol: "not read"
+    extraction:
+      method: summarized_from_secondary
+      locator: "issue number: Crossref API works/10.1061/(ASCE)AS.1943-5525.0000236 (volume 26, issue 1, page 18-29) and Crossref journal listing for ISSN 0893-1321, 2013-01 to 2013-03 (20 items, all volume 26 issue 1, pages 1-4 to 183-196 contiguous; 18-29 lies between 5-17 and 30-36); abstract: OpenAlex W2135062463 abstract_inverted_index, taken to be the publisher's abstract"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "Abstract compared word by word with the arXiv v1 abstract: numbers identical (156 t, 60 robots, 40,000 t, 100,000 robots, 41 t, 12 t); wording differs only editorially ('metric tons (MT)' to 't', 'due to' to 'because of', 'sub-replicating' to 'subreplicating', one 'it' deleted). Issue: the publisher-deposited metadata gives issue 1 and the page run sits inside issue 1's continuous pagination, so arXiv's 'Journal of Aerospace Engineering 26.2' is taken as an author-supplied error; the publisher's own page was not read, so this is inferred from deposited metadata, not read there. Body text, figures, tables and any changes made after the manuscript (stamped 'Preprint. To appear', PDF created 2012-03-30) are unknown."
+    uncertainty:
+      kind: unquantified
+      description: "Differences between the manuscript read (EV-METZGER-2013) and the version of record beyond the abstract are unknown. OpenAlex's abstract may itself be a secondary copy."
+    depends_on: [EV-METZGER-2013]
+    fitted_to: []
+    intended_use: ["motivation", "record of what was and was not compared"]
+    not_for: ["any claim about the published figures or numbers", "empirical support"]
+
+  - id: EV-EI-STATREV-NOT-READ
+    kind: observation
+    title: "Energy Institute Statistical Review of World Energy: world primary energy, 2024, 2025 and 2026 editions (not read in primary form)"
+    source:
+      citation: "Energy Institute, Statistical Review of World Energy (annual, June); editions 2024, 2025, 2026"
+      url: "https://www.energyinst.org/statistical-review"
+      version: "no edition retrieved. https://www.energyinst.org/, /statistical-review, /statistical-review/resources-and-data-downloads and the 2025 full-report PDF returned HTTP 403 to curl with a browser user agent; the WebFetch tool could not resolve the host (2026-10-25, #40). The Wayback Machine reset the connection."
+    reading: not_read
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-06"
+    availability_basis: "Annual June release; the 2026 edition is the one OWID cites (see EV-OWID-EI-ENERGY-2026)."
+    units: "exajoules per year of primary energy (the 2025 and later editions call it total energy supply)"
+    population: "world energy supply as compiled by the Energy Institute from national statistics"
+    protocol: "not read"
+    extraction:
+      method: summarized_from_secondary
+      locator: "none; the repository's earlier values (620 EJ in 2023, EI 2024; 592 EJ in 2024, EI 2025) come from DieselNet summaries cited in decision_model.md and physics_economics.md"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "Recorded as unread under #40's stopping rule: the uncertainty bounds of CV-EIU-TO-PRIMARY-POWER are kept. The best available substitute is EV-OWID-EI-ENERGY-2026, which republishes the 2026 edition's series and is not a primary reading."
+    uncertainty:
+      kind: unquantified
+      description: "Unknown, since nothing was read. The change of method between editions is documented only in secondary summaries."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["motivation", "record that the primary source was attempted and blocked"]
+    not_for: ["empirical support: it was not read in primary form"]
+
+  - id: EV-OWID-EI-ENERGY-2026
+    kind: observation
+    title: "World total energy supply 2022-2025 as republished by Our World in Data from the Energy Institute Statistical Review 2026"
+    source:
+      citation: "Our World in Data, 'Primary energy use' grapher (primary-energy-cons), citing Energy Institute, Statistical Review of World Energy (2026); Smil (2017); U.S. Energy Information Administration (2026), with major processing by Our World in Data"
+      url: "https://ourworldindata.org/grapher/primary-energy-cons.csv"
+      version: "CSV fetched 2026-10-25, sha256 d0be59ece4013ede9dbcc2dadc9272cdb5cb8da123bd82c03c173b9a8686ac9f (347,323 bytes); metadata JSON (same URL with .metadata.json) says lastUpdated 2026-06-30, nextUpdate 2027-06-30"
+    reading: read_secondary_only
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-06-30"
+    availability_basis: "OWID's lastUpdated date for the series."
+    units: "terawatt-hours of total energy supply per year; converted here at 3.6e-3 EJ/TWh and to mean power over a 365.25-day year"
+    population: "world aggregate (entity 'World', OWID_WRL)"
+    protocol: "Energy Institute data as processed by OWID (extension with EIA data where the Review has no total; Smil for years before 1965); not the Review itself"
+    extraction:
+      method: summarized_from_secondary
+      locator: "CSV rows Entity=World, Year 2022-2025, column 'Total energy supply'"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "2022 157,938.77 TWh = 568.6 EJ = 18.0 TW; 2023 160,876.92 TWh = 579.2 EJ = 18.35 TW; 2024 164,494.10 TWh = 592.2 EJ = 18.77 TW; 2025 166,753.60 TWh = 600.3 EJ = 19.02 TW. 2024 reproduces the 592 EJ the repository took from the EI 2025 summary. 2023 is 579 EJ in this series against 620 EJ in the EI 2024 summary: the change of method is large (about 7%) and applies to earlier years. The repository's lower bound for the factor, 1.88e13 W, sits above this series' 2023 value (1.835e13 W)."
+    uncertainty:
+      kind: unquantified
+      description: "Measurement uncertainty is not reported by the source. OWID's processing and the Review's own method changes are not audited here; the series is a republication, so a transcription or processing difference from the Review itself is possible."
+    depends_on: [EV-EI-STATREV-NOT-READ]
+    fitted_to: []
+    intended_use: ["secondary cross-check of the scale of world primary energy in CV-EIU-TO-PRIMARY-POWER", "showing the method change between editions"]
+    not_for: ["empirical support: read in secondary form only", "any off-Earth energy intensity"]
