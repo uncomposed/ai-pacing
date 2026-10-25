@@ -38,8 +38,322 @@ scoring_rules:
   - id: S-COVERAGE80
     description: "share of observations inside the central 80% interval"
 
-# Forecast registry. Empty until #12 adds the first evaluation. Each entry:
+# Forecast registry; the first entries come from #12. Each entry:
 #   id, model, target (observable and units), information_cutoff, issued, label (retrospective | locked),
 #   lock_commit (required when locked), inputs (evidence record IDs), horizon, baselines, scoring, resolution
 #   ({record, vintage} or null until resolved).
-forecasts: []
+# METR suite (#12): 24 retrospective forecasts (research_notes/external/metr-time-horizons/results/holdout.json)
+# and 4 locked ones (forecasts/FC-METR-TH11-LOCK-2026-10-25.json, sha256 in forecasts/SHA256SUMS).
+forecasts:
+  - id: FC-METR-TH10-P50-2025-03-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.0 known by 2025-06-30 (minutes of human expert time)"
+    information_cutoff: "2025-03-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-04-16, vintage: "first published (values public on 2025-06-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P50-2025-04-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.0 known by 2025-07-30 (minutes of human expert time)"
+    information_cutoff: "2025-04-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-04-16, vintage: "first published (values public on 2025-07-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P50-2025-05-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.0 known by 2025-08-30 (minutes of human expert time)"
+    information_cutoff: "2025-05-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-08-06, vintage: "first published (values public on 2025-08-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P50-2025-06-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.0 known by 2025-09-29 (minutes of human expert time)"
+    information_cutoff: "2025-06-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-08-06, vintage: "first published (values public on 2025-09-29); latest vintage scored separately"}
+  - id: FC-METR-TH10-P50-2025-07-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.0 known by 2025-10-30 (minutes of human expert time)"
+    information_cutoff: "2025-07-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-08-06, vintage: "first published (values public on 2025-10-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P50-2025-08-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.0 known by 2025-11-30 (minutes of human expert time)"
+    information_cutoff: "2025-08-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-11-19, vintage: "first published (values public on 2025-11-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P50-2025-09-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.0 known by 2025-12-30 (minutes of human expert time)"
+    information_cutoff: "2025-09-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-12-19, vintage: "first published (values public on 2025-12-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P80-2025-03-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.0 known by 2025-06-30 (minutes of human expert time)"
+    information_cutoff: "2025-03-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-04-16, vintage: "first published (values public on 2025-06-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P80-2025-04-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.0 known by 2025-07-30 (minutes of human expert time)"
+    information_cutoff: "2025-04-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-04-16, vintage: "first published (values public on 2025-07-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P80-2025-05-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.0 known by 2025-08-30 (minutes of human expert time)"
+    information_cutoff: "2025-05-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-08-06, vintage: "first published (values public on 2025-08-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P80-2025-06-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.0 known by 2025-09-29 (minutes of human expert time)"
+    information_cutoff: "2025-06-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-08-06, vintage: "first published (values public on 2025-09-29); latest vintage scored separately"}
+  - id: FC-METR-TH10-P80-2025-07-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.0 known by 2025-10-30 (minutes of human expert time)"
+    information_cutoff: "2025-07-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-08-06, vintage: "first published (values public on 2025-10-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P80-2025-08-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.0 known by 2025-11-30 (minutes of human expert time)"
+    information_cutoff: "2025-08-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-11-19, vintage: "first published (values public on 2025-11-30); latest vintage scored separately"}
+  - id: FC-METR-TH10-P80-2025-09-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.0 known by 2025-12-30 (minutes of human expert time)"
+    information_cutoff: "2025-09-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-11-19, vintage: "first published (values public on 2025-12-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P50-2026-01-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.1 known by 2026-05-02 (minutes of human expert time)"
+    information_cutoff: "2026-01-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-03-03, vintage: "first published (values public on 2026-05-02); latest vintage scored separately"}
+  - id: FC-METR-TH11-P50-2026-02-28
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.1 known by 2026-05-30 (minutes of human expert time)"
+    information_cutoff: "2026-02-28"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-05-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P50-2026-03-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.1 known by 2026-06-30 (minutes of human expert time)"
+    information_cutoff: "2026-03-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-06-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P50-2026-04-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.1 known by 2026-07-30 (minutes of human expert time)"
+    information_cutoff: "2026-04-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-07-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P50-2026-05-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p50 time horizon on METR TH1.1 known by 2026-08-30 (minutes of human expert time)"
+    information_cutoff: "2026-05-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15", "EV-METR-TH11-2026-05-08"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-08-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P80-2026-01-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.1 known by 2026-05-02 (minutes of human expert time)"
+    information_cutoff: "2026-01-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-04-15, vintage: "first published (values public on 2026-05-02); latest vintage scored separately"}
+  - id: FC-METR-TH11-P80-2026-02-28
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.1 known by 2026-05-30 (minutes of human expert time)"
+    information_cutoff: "2026-02-28"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-05-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P80-2026-03-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.1 known by 2026-06-30 (minutes of human expert time)"
+    information_cutoff: "2026-03-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-06-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P80-2026-04-30
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.1 known by 2026-07-30 (minutes of human expert time)"
+    information_cutoff: "2026-04-30"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-07-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P80-2026-05-31
+    model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
+    target: "frontier p80 time horizon on METR TH1.1 known by 2026-08-30 (minutes of human expert time)"
+    information_cutoff: "2026-05-31"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15", "EV-METR-TH11-2026-05-08"]
+    horizon: "91 days"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (values public on 2026-08-30); latest vintage scored separately"}
+  - id: FC-METR-TH11-P50-LOCK-2027-04-30
+    model: "B-FLAT and B-LOGLINEAR (lag 0), research_notes/external/metr-time-horizons/forecasts/FC-METR-TH11-LOCK-2026-10-25.json"
+    target: "frontier p50 time horizon on METR TH1.1 published by 2027-04-30 (minutes of human expert time); unresolved if METR publishes no new TH1.1 value or changes suite"
+    information_cutoff: "2026-10-25"
+    issued: "2026-10-25"
+    label: locked
+    lock_commit: b7875d76706f14134d76ec092a2b51102eb4246e
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15", "EV-METR-TH11-2026-05-08"]
+    horizon: "to 2027-04-30"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: null
+  - id: FC-METR-TH11-P50-LOCK-2027-10-31
+    model: "B-FLAT and B-LOGLINEAR (lag 0), research_notes/external/metr-time-horizons/forecasts/FC-METR-TH11-LOCK-2026-10-25.json"
+    target: "frontier p50 time horizon on METR TH1.1 published by 2027-10-31 (minutes of human expert time); unresolved if METR publishes no new TH1.1 value or changes suite"
+    information_cutoff: "2026-10-25"
+    issued: "2026-10-25"
+    label: locked
+    lock_commit: b7875d76706f14134d76ec092a2b51102eb4246e
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15", "EV-METR-TH11-2026-05-08"]
+    horizon: "to 2027-10-31"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: null
+  - id: FC-METR-TH11-P80-LOCK-2027-04-30
+    model: "B-FLAT and B-LOGLINEAR (lag 0), research_notes/external/metr-time-horizons/forecasts/FC-METR-TH11-LOCK-2026-10-25.json"
+    target: "frontier p80 time horizon on METR TH1.1 published by 2027-04-30 (minutes of human expert time); unresolved if METR publishes no new TH1.1 value or changes suite"
+    information_cutoff: "2026-10-25"
+    issued: "2026-10-25"
+    label: locked
+    lock_commit: b7875d76706f14134d76ec092a2b51102eb4246e
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15", "EV-METR-TH11-2026-05-08"]
+    horizon: "to 2027-04-30"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: null
+  - id: FC-METR-TH11-P80-LOCK-2027-10-31
+    model: "B-FLAT and B-LOGLINEAR (lag 0), research_notes/external/metr-time-horizons/forecasts/FC-METR-TH11-LOCK-2026-10-25.json"
+    target: "frontier p80 time horizon on METR TH1.1 published by 2027-10-31 (minutes of human expert time); unresolved if METR publishes no new TH1.1 value or changes suite"
+    information_cutoff: "2026-10-25"
+    issued: "2026-10-25"
+    label: locked
+    lock_commit: b7875d76706f14134d76ec092a2b51102eb4246e
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-METR-TH11-2026-04-10", "EV-METR-TH11-2026-04-15", "EV-METR-TH11-2026-05-08"]
+    horizon: "to 2027-10-31"
+    baselines: [B-FLAT, B-LOGLINEAR]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: null

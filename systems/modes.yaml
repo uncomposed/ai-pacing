@@ -387,7 +387,7 @@ transitions:
 # unsupported with a reason. Changing a mode label therefore cannot change units, ownership or authority.
 adapters:
   - id: AD-METR
-    source: "METR time-horizon measurements, RE-Bench and developer-productivity studies (pin versions in #12)"
+    source: "METR time-horizon measurements (TH1.0, TH1.1; eval-analysis-public 52cb829), RE-Bench (not yet pinned) and developer-productivity studies; pinned in research_notes/external/metr-time-horizons/SOURCES.yaml (#12)"
     kind: evidence
     entity_represented: "model_weights evaluated with a stated scaffold, in a human-run evaluation setting"
     decision_authority: "Not represented: METR measures task performance, not who decides or controls."
