@@ -26,6 +26,11 @@ python ci_sims.py repro --args "--stage oat_r --designs '[{}]'" --manifest repro
 These overwrite files under `results/`. Check `git status` afterwards and restore
 anything you did not mean to change.
 
+Cached ensemble runs (`results/*_runs/*.npz`) are reused only when their run
+manifest's identity matches (`run_identity.py`; HANDOFF.md section 8b). Never
+delete, overwrite or hand-edit a cache or `results/cache_provenance.json`; a
+refused cache means the request changed, so re-solve into another `--runs-dir`.
+
 ## Environment
 
 - Pins: Python 3.12, numpy 1.26.4, matplotlib 3.9.2, jsonschema 4.23.0
