@@ -137,6 +137,52 @@ class EarthIndustryUnit(unittest.TestCase):
         self.assertTrue(20 < share < 30, share)
 
 
+class MetrAifmRecheck(unittest.TestCase):
+    """Issue #42: the coding-speed chain stays unidentified, and the numbers quoted as reasons match the replications."""
+
+    @classmethod
+    def setUpClass(cls):
+        root = HERE.parents[2]
+        s = importlib.util.spec_from_file_location('assumptions_tool', root / 'tools/assumptions_tool.py')
+        at = importlib.util.module_from_spec(s)
+        s.loader.exec_module(at)
+        cls.cv = {x['id']: x for x in at.load_yaml(HERE / 'conversions.yaml')['conversions']}
+        cls.qty = {x['id']: x for x in at.load_yaml(HERE / 'quantities.yaml')['quantities']}
+        cls.metr = HERE.parent / 'metr-time-horizons/data/observations.csv'
+        cls.fb = json.loads((HERE.parent / 'ai-futures-model/results/feedback_off.json').read_text())
+
+    def test_chain_links_stay_unidentified_and_unused(self):
+        for cid in ('CV-HORIZON-TO-DEV-TIME', 'CV-DEV-TIME-TO-RESEARCH', 'CV-INFERENCE-TO-AGENT-LABOR', 'CV-OOM-TO-FLOP'):
+            cv = self.cv[cid]
+            self.assertEqual(cv['class'], 'unidentified', cid)
+            self.assertFalse(cv['coupled'], cid)
+            self.assertEqual(cv.get('used_by', []), [], cid)
+            self.assertNotIn('value', cv.get('factor', {}), cid)
+        self.assertEqual(self.cv['CV-TOY-COMPUTE-TO-DESIGN']['class'], 'bounded_scenario')
+
+    def test_native_units(self):
+        units = {q: self.qty[q]['unit'] for q in ('QTY-METR-HORIZON', 'QTY-METR-HORIZON-P80', 'QTY-AIFM-PROGRESS',
+                                                  'QTY-SOFTWARE-EFFICIENCY', 'QTY-RESEARCH-OUTPUT')}
+        self.assertEqual(units, {'QTY-METR-HORIZON': 'min', 'QTY-METR-HORIZON-P80': 'min', 'QTY-AIFM-PROGRESS': 'OOM',
+                                 'QTY-SOFTWARE-EFFICIENCY': 'OOM', 'QTY-RESEARCH-OUTPUT': 'OOM/yr'})
+
+    def test_rct_era_horizons_quoted_in_the_reasons(self):
+        import csv
+        with self.metr.open() as f:
+            rows = {(r['record_id'], r['model_key']): float(r['p50_min']) for r in csv.DictReader(f)}
+        text = ' '.join(self.cv['CV-HORIZON-TO-DEV-TIME']['constraints'].split())
+        for model, quoted in (('claude_3_5_sonnet_20241022', 29), ('claude_3_7_sonnet', 59)):
+            self.assertEqual(round(rows[('EV-METR-TH10-2025-03-19', model)]), quoted)
+            self.assertIn(f'{quoted} min', text)
+
+    def test_feedback_on_and_off_indistinguishable_before_2026(self):
+        p = self.fb['progress_path']
+        early = [i for i, y in enumerate(p['year']) if y < 2026]
+        self.assertTrue(early)
+        for off in ('off_same_calibration', 'off_refit'):
+            self.assertLess(max(abs(p['feedback_on'][i] - p[off][i]) for i in early), 0.1)
+
+
 def _walk(node):
     if isinstance(node, dict):
         for k, v in node.items():
