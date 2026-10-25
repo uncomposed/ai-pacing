@@ -276,7 +276,7 @@ The uncommitted systems model (`systems/model.json`, 148 records, passes `system
 - **H9 — Domain separability and bounded return.**
   - Off-Earth autonomy does not create decisive leverage over Earth within the planning horizon.
   - Falsifier: off-Earth capacity gains positional or supply leverage over Earth's survival chain faster than Earth's denial and bargaining position can adapt.
-- **H10 (optional) — Physical dependence and off-Earth autonomy can be scoped.**
+- **H11 (optional; drafted as H10, renumbered by the ID registry) — Physical dependence and off-Earth autonomy can be scoped.**
   - D12/I5-style vetoes can be kept on Earth-reachable compute while off-Earth autonomy grows.
   - This makes the Q4 tension testable.
 
