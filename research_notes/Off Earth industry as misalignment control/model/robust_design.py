@@ -335,6 +335,37 @@ def check_failures(errors: dict) -> list[str]:
             if k in errors and not (abs(errors[k]) <= tol)]
 
 
+# Approximation invariants of the saturation closed form against the solver (check 3). The closed form leaves out
+# the failed-strike branch (docking.md, summary item 7), which only lowers the value of striking, so it can strike
+# earlier than the solver but never later; HALF_PERIOD allows for the solver reporting a mean year on a 1-year grid.
+HALF_PERIOD = 0.5
+Q_BASE = 0.7        # baseline q used in the q_ea threshold formula printed by check 3
+
+
+def invariant_failures(rows: list, q_star: float) -> list[str]:
+    """Closed form against solver, independent of any committed file: (a) both say strike or both say none;
+    (b) the closed-form first strike year is no later than the solver's mean year + HALF_PERIOD; (c) the
+    closed-form q_ea threshold 1 - (q*/q)^(1/9) lies between the largest q_ea the solver survives and the
+    smallest it strikes at; (d) 0 < q* < q."""
+    out = []
+    if not 0.0 < q_star < Q_BASE:
+        out.append(f"q* = {q_star:.4g} is not inside (0, {Q_BASE})")
+    safe, strike = [], []
+    for lab, cf, sv, ps in rows:
+        if (cf == "none") != (sv == "none"):
+            out.append(f"{lab}: closed form says {cf}, solver says {sv} (P(strike) {ps})")
+            continue
+        if cf != "none" and float(cf) > float(sv) + HALF_PERIOD:
+            out.append(f"{lab}: closed-form strike year {cf} is later than the solver's {sv} + {HALF_PERIOD}")
+        if lab.startswith("q_ea"):
+            (safe if sv == "none" else strike).append(float(lab.split("=")[1]))
+    thr = 1 - (q_star / Q_BASE) ** (1 / 9)
+    if safe and strike and not (max(safe) < thr < min(strike)):
+        out.append(f"q_ea threshold {thr:.4f} is not between the solver's {max(safe):g} (no strike) and "
+                   f"{min(strike):g} (strike)")
+    return out
+
+
 def checks():
     lines = []
     t0 = time.time()
@@ -377,7 +408,7 @@ def checks():
     lines.append(f"   q_ea threshold, closed form: 1 - (q*/q)^(1/9) = {1 - (qs / 0.7) ** (1 / 9):.4f}.")
     lines.append(f"(checks took {time.time() - t0:.0f} s)")
     errors = dict(reg_maxdiff=md, identity_rotation=float(d1), identity_size_erosion=float(d2))
-    return "\n".join(lines), dict(reg_maxdiff=md, q_star_cap=qs, rows=rows), check_failures(errors)
+    return "\n".join(lines), dict(reg_maxdiff=md, q_star_cap=qs, rows=rows), check_failures(errors) + invariant_failures(rows, qs)
 
 
 # ---------------------------------------------------------------------------
@@ -564,7 +595,8 @@ def main():
         if failed:
             # the files are written first so CI can upload them for inspection
             raise SystemExit("robust_design.py --check FAILED: " + "; ".join(failed))
-        print("tolerance checks passed: " + ", ".join(f"{k} <= {v:g}" for k, v in CHECK_TOL.items()))
+        print("tolerance checks passed: " + ", ".join(f"{k} <= {v:g}" for k, v in CHECK_TOL.items())
+              + "; closed-form invariants hold (strike agreement, closed form never later, q_ea threshold bracketed)")
     if a.stage:
         with ProcessPoolExecutor(WORKERS) as pool:
             stage(a.stage, pool)

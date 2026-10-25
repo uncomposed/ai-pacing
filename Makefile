@@ -28,6 +28,7 @@ test:
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_check_tolerances.py"
 	@python3 test/evidence_tool_test.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_measure_sensitivity.py"
+	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_gates.py"
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_run_identity.py"
 	@python3 "research_notes/Off Earth industry as misalignment control/model/run_identity.py" inventory --check
 
