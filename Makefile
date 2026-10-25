@@ -1,5 +1,8 @@
 .PHONY: check validate accept generate test clean-room clean-room-audit systems-check systems-report assumptions-check assumptions-report
 
+# The tools read UTF-8 sources; without a UTF-8 locale Ruby defaults to US-ASCII.
+export LANG := C.UTF-8
+
 check: test systems-check assumptions-check
 	@ruby tools/spec_tool.rb check
 
