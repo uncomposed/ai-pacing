@@ -32,7 +32,7 @@ def main():
         for box, th in bx.items():
             chi_s = np.array([t["chi0"] for t in th])
             for des, dv in bo.DESIGNS.items():
-                r0 = dict(np.load(os.path.join(bo.RUNS, f"{box}__{des}__off.npz")))
+                r0 = bo.ri.load_for_read(os.path.join(bo.RUNS, f"{box}__{des}__off.npz"))
                 s0 = bo.summarise(r0)
                 rows.append([box, des, "sampled", f"{s0['holds']}/{s0['n']}", s0["holds_rival"], s0["strike_now"],
                              f"{s0['p_strike']:.3f}", f"{s0['riv']:.2f}", f"{s0['WH']:.3f}"])
