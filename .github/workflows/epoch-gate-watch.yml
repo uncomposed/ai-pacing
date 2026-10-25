@@ -1,0 +1,62 @@
+# Watches Epoch's GATE playground bundle for redeploys (issue #33).
+# https://epoch.ai/generated/gate.js has no version in its URL; the SHA-256 in
+# research_notes/external/epoch-gate/official/fetch_bundle.sh is the pin. This job downloads
+# the bundle as served, extracts its parameter table and presets, and diffs them against
+# data/bundle_pin.json. The job fails when the hash changed; the report (new hash, table and
+# preset diff) is in the step summary and the artifact. A person records it as a finding in
+# the README. Never commits, never updates the pin. Read-only token.
+# Actions are pinned by full commit SHA (tag in the trailing comment).
+name: epoch-gate-watch
+
+on:
+  schedule:
+    - cron: "23 6 * * 1"   # Mondays 06:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LANG: C.UTF-8
+  LC_ALL: C.UTF-8
+  PYTHON_VERSION: "3.12.7"
+
+jobs:
+  watch:
+    name: compare the served gate.js with the pinned hash
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: research_notes/external/epoch-gate
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Download the bundle as served (no hash check here; the comparison below is the check)
+        run: |
+          mkdir -p "$RUNNER_TEMP/watch"
+          curl -sSfL --retry 3 -o "$RUNNER_TEMP/watch/gate.js" https://epoch.ai/generated/gate.js
+          sha256sum "$RUNNER_TEMP/watch/gate.js"
+      - name: Extract parameter table and presets
+        run: node official/bundle_meta.mjs "$RUNNER_TEMP/watch/gate.js" "$RUNNER_TEMP/watch/meta.json"
+      - name: Compare with data/bundle_pin.json
+        run: |
+          set +e
+          python official/bundle_watch.py "$RUNNER_TEMP/watch/meta.json" "$RUNNER_TEMP/watch/report.md"
+          status=$?
+          cat "$RUNNER_TEMP/watch/report.md" >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: epoch-gate-watch
+          retention-days: 30
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/watch/meta.json
+            ${{ runner.temp }}/watch/report.md

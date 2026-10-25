@@ -40,6 +40,7 @@ CONTRACT_UNITS = {
     'date a threshold on the effective-compute scale is crossed': 'yr',
     'eFLOP (software-adjusted, S(0) = 1)': 'FLOP', 'real USD per year': 'USD/yr',
     'Earth-industry units (EIU, a stock; H = 1)': 'EIU', 'per year': '1/yr',
+    'fraction of coding tasks, 0 to 1': '1', 'SDs of the human researcher taste distribution': '1',
     'FLOP/year (physical)': 'FLOP/yr',  # GATE's compute split (#35)
 }
 # Quantity kinds that the stock/flow rule applies to (issue #39). Other kinds (rate, state, share, ...) are not checked.

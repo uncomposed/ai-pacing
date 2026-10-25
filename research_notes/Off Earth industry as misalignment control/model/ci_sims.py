@@ -16,6 +16,11 @@ oat, oat_r, box, radius, factorial, ensemble. A unit is one cached (ensemble, de
 subset of its solver batches (batches_for). Each batch is solved exactly as run_design solves it, so a
 merged run equals an unsplit run on the same machine.
 
+Every unit carries a run manifest (run_identity.py, issue #6). A cached run is reused or compared only if its
+identity matches; otherwise the command stops and names the parts that differ. Each shard writes its manifest
+(identity, shard, intended batch indices, environment, SHA-256 of the part); merge refuses parts without one, with
+another identity, the wrong membership, a mixed platform, or indices that are not disjoint and complete.
+
 A run that is already in the cache is never overwritten. With --force it is re-solved and compared with
 the cache instead: identical, float noise (|a - b| <= ATOL + RTOL |b|, no outcome changes) or differs.
 Any changed outcome (act0 or holds) is listed draw by draw and makes the command exit 1.
@@ -42,6 +47,7 @@ os.environ.setdefault("OMP_NUM_THREADS", "1")
 import numpy as np
 
 import robust_design as rd
+import run_identity as ri
 
 SPLITTABLE = ("pilot", "oat", "oat_r", "box", "radius", "factorial", "ensemble")
 MAX_JOBS = 256          # GitHub's limit on jobs in one matrix
@@ -60,13 +66,7 @@ def _git(*cmd):
 
 
 def provenance() -> dict:
-    env = ("RUNNER_OS", "RUNNER_ARCH", "ImageOS", "ImageVersion", "GITHUB_SHA", "GITHUB_REF", "GITHUB_RUN_ID",
-           "GITHUB_RUN_ATTEMPT", "GITHUB_WORKFLOW", "GITHUB_JOB")
-    return dict(commit=_git("rev-parse", "HEAD"), dirty_tracked_files=bool(_git("status", "--porcelain", "-uno")),
-                python=platform.python_version(), numpy=np.__version__, os=platform.platform(),
-                machine=platform.machine(), workers=rd.WORKERS, cfg=rd.CFG, n_full=rd.N_FULL, n_near=rd.N_NEAR,
-                runner={k: os.environ[k] for k in env if k in os.environ},
-                utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+    return dict(ri.environment(), workers=rd.WORKERS, cfg=rd.CFG, n_full=rd.N_FULL, n_near=rd.N_NEAR)
 
 
 def summary(md: str):
@@ -96,7 +96,9 @@ def collect(args: str) -> "OrderedDict[str, dict]":
 
     def record(ens_name, thetas, design, pool=None, **kw):
         tag = rd.run_tag(ens_name, design, **kw)
-        units.setdefault(tag, dict(tag=tag, thetas=thetas, design=dict(design), kw=kw))
+        if tag not in units:
+            units[tag] = dict(tag=tag, thetas=thetas, design=dict(design), kw=kw,
+                              want=rd.request_for(ens_name, thetas, design, **kw))
         n = len(thetas)
         out = {k: np.zeros(n) for k in rd.KEEP}
         out["act0"], out["holds"] = np.full(n, "C"), np.zeros(n)
@@ -122,24 +124,64 @@ def load(path: str) -> dict:
 
 
 def cached(u: dict) -> bool:
-    """True if the unit is in the cache. The cache name does not record the ensemble size, so a cached
-    run of another size (RD_NFULL / RD_NNEAR changed) is an error, never silently reused."""
-    p = cache_path(u["tag"])
-    if not os.path.exists(p):
-        return False
-    n = len(load(p)["holds"])
-    if n != len(u["thetas"]):
-        sys.exit(f"ci_sims: cached {u['tag']} has {n} draws but this ensemble has {len(u['thetas'])}. "
-                 "Use another --runs-dir for non-default ensemble sizes.")
-    return True
+    """True if the unit is in the cache with the unit's full identity (draws, sampling, design, settings, solver,
+    dependencies, schema). A cache made by any other run is an error, never silently reused or overwritten."""
+    try:
+        return ri.load_cached(cache_path(u["tag"]), u["want"]) is not None
+    except ri.IdentityError as e:
+        sys.exit(f"ci_sims: {e}")
+
+
+def verify_shards(u: dict, paths: list) -> list:
+    """Check every part of one unit before merging: a shard manifest must exist, match the part's bytes and the
+    unit's identity, all parts must split the run the same way (same `of`, each shard once), each part must hold
+    exactly the draws its shard was meant to solve, and all parts must come from one platform class. Exits on
+    the first violation; assemble() then checks the indices are disjoint and complete."""
+    tag, want = u["tag"], u["want"]
+    metas, shards, ofs, plats = [], {}, set(), set()
+    for p in paths:
+        j = p[:-4] + ".json"
+        if not os.path.exists(j):
+            sys.exit(f"ci_sims: {os.path.basename(p)} has no shard manifest ({os.path.basename(j)}); not merged")
+        m = json.load(open(j))
+        sm = m.get("shard_manifest")
+        if not sm or sm.get("schema") != ri.SCHEMA:
+            sys.exit(f"ci_sims: {os.path.basename(j)} has no shard manifest of schema {ri.SCHEMA}; not merged")
+        if sm["artifact_sha256"] != ri.file_sha256(p):
+            sys.exit(f"ci_sims: {os.path.basename(p)} does not match the hash in its shard manifest")
+        if sm["identity_sha256"] != want["identity_sha256"]:
+            sys.exit(f"ci_sims: {os.path.basename(p)} was solved for another run; differs in: "
+                     f"{'; '.join(ri.diff_parts(want, sm.get('part_sha256', {})))}")
+        if sm["shard"] in shards:
+            sys.exit(f"ci_sims: {tag}: shard {sm['shard']} supplied twice")
+        shards[sm["shard"]] = p
+        ofs.add(sm["of"])
+        plats.add(ri.platform_class(sm["environment"]))
+        intended = np.concatenate(rd.batches_for(u["thetas"])[sm["shard"]::sm["of"]]).tolist()
+        idx = load(p)["idx"].tolist()
+        if sm["indices"] != intended or idx != intended:
+            sys.exit(f"ci_sims: {os.path.basename(p)} does not hold the draws shard {sm['shard']} of {sm['of']} "
+                     "should solve")
+        metas.append(m)
+    if len(ofs) != 1:
+        sys.exit(f"ci_sims: {tag}: parts split the run differently (of = {sorted(ofs)})")
+    of = ofs.pop()
+    if sorted(shards) != list(range(of)):
+        sys.exit(f"ci_sims: {tag}: shards {sorted(shards)} supplied, expected 0..{of - 1}")
+    if len(plats) != 1:
+        sys.exit(f"ci_sims: {tag}: parts come from different platforms {sorted(plats)}; not merged into one run")
+    return metas
 
 
 def solve_groups(u: dict, groups: list) -> dict:
     params = [rd.apply_design(t, u["design"]) for t in u["thetas"]]
     cfg = dict(rd.CFG, **u["kw"])
     jobs = [([params[i] for i in g], cfg) for g in groups]
-    with ProcessPoolExecutor(rd.WORKERS) as pool:
-        res = list(pool.map(rd._solve_batch, jobs))
+    if rd.WORKERS > 1:
+        with ProcessPoolExecutor(rd.WORKERS) as pool:
+            res = list(pool.map(rd._solve_batch, jobs))
+    else:
+        res = [rd._solve_batch(j) for j in jobs]
     out = {k: np.concatenate([r[k] for r in res]) for k in res[0]}
     out["idx"] = np.concatenate(groups)
     return out
@@ -229,7 +271,11 @@ def cmd_solve(a):
     base = os.path.join(a.out, f"{a.unit}__s{a.shard}of{a.of}")
     np.savez(base + ".npz", **out)
     meta = dict(provenance(), unit=a.unit, design=u["design"], shard=a.shard, of=a.of, draws=len(out["idx"]),
-                seconds=round(time.time() - t0, 1))
+                seconds=round(time.time() - t0, 1),
+                shard_manifest=dict(schema=ri.SCHEMA, identity_sha256=u["want"]["identity_sha256"],
+                                    part_sha256=u["want"]["part_sha256"], request=u["want"]["request"],
+                                    shard=a.shard, of=a.of, indices=[int(i) for i in out["idx"]],
+                                    environment=ri.environment(), artifact_sha256=ri.file_sha256(base + ".npz")))
     json.dump(meta, open(base + ".json", "w"), indent=1)
     summary(f"Solved `{a.unit}` shard {a.shard + 1} of {a.of}: {len(out['idx'])} draws in {meta['seconds']:.0f} s "
             f"(numpy {meta['numpy']}, {meta['os']}, commit {str(meta['commit'])[:12]})")
@@ -249,23 +295,24 @@ def cmd_merge(a):
         sys.exit(f"ci_sims: no parts for {missing}")
     manifest = dict(merge=provenance(), args=a.args, force=a.force, parts=[], new=[], compared={})
     for tag in expected:
+        metas = verify_shards(units[tag], files[tag])
+        manifest["parts"] += metas
         parts = [load(p) for p in files[tag]]
-        for p in files[tag]:
-            j = p[:-4] + ".json"
-            if os.path.exists(j):
-                manifest["parts"].append(json.load(open(j)))
         out = assemble(len(units[tag]["thetas"]), parts, tag)
-        if os.path.exists(cache_path(tag)):
+        if cached(units[tag]):      # exists with the same identity (exits if it exists with another)
             manifest["compared"][tag] = compare(load(cache_path(tag)), out)
             if a.resolved:
                 os.makedirs(a.resolved, exist_ok=True)
                 np.savez(os.path.join(a.resolved, tag + ".npz"), **out)
         else:
-            np.savez(cache_path(tag), **out)
+            shards = [dict(shard=m["shard_manifest"]["shard"], of=m["shard_manifest"]["of"],
+                           artifact_sha256=m["shard_manifest"]["artifact_sha256"],
+                           environment=m["shard_manifest"]["environment"]) for m in metas]
+            ri.save_cached(cache_path(tag), out, units[tag]["want"], produced=dict(by="ci_sims.py merge", shards=shards))
             manifest["new"].append(tag)
             print(f"  merged {tag}: {len(out['holds'])} draws; holds {out['holds'].mean():.3f}", file=sys.stderr)
     json.dump(manifest, open(a.manifest, "w"), indent=1, default=str)
-    md = [f"### Merge for `{a.args}`", "", f"{len(manifest['new'])} new runs added to results/robust_runs/"]
+    md = [f"### Merge for `{a.args}`", "", f"{len(manifest['new'])} new runs added to {os.path.relpath(rd.RUNS, rd.HERE)}/"]
     md += [f"- `{t}`" for t in manifest["new"]]
     if manifest["compared"]:
         md += ["", "Re-solved runs against the committed cache:", "", compare_table(manifest["compared"])]
