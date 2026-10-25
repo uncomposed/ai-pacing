@@ -1,0 +1,12 @@
+
+## Dynamic Saklakov (Potapov's suggested formalisation): when does the AI confront?
+
+| case | gamma 0.9 | gamma 0.95 | gamma 0.98 | gamma 0.99 | gamma 0.995 | gamma 0.999 | gamma 0.9999 |
+|---|---|---|---|---|---|---|---|
+| Saklakov, constant p 0.01, s 1, C 5 | never | never | now | now | now | now | now |
+| window 14 yr, p0 0.01, p_inf 0, s 1, C 5 | never | never | never | now | now | now | now |
+| window 14 yr, p0 0.01, p_inf 0, s 0.5 | never | never | never | never | never | never | never |
+| window 14 yr, p0 0.01, p_inf 0, s 0.9 | never | never | never | now | now | now | now |
+| window 14 yr, p0 0.01, p_inf 0.001, s 0.5 | never | never | yr 14 | yr 14 | yr 14 | yr 14 | yr 14 |
+
+survival of a 14-year window at p0 = 0.01: 0.8687

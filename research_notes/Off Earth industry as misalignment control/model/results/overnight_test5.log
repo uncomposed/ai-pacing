@@ -1,0 +1,24 @@
+  solved r0.1__D_mult=3_T_reloc=4_d=0.99_q_red=1.75_seq=1: 64 sets in 183 s; holds 0.984
+  solved r0.1__D_mult=3_T_reloc=4_d=0.99_q_red=1.5_seq=1: 64 sets in 194 s; holds 0.984
+  solved r0.1__D_mult=3_T_reloc=4_d=0.99_q_red=1.25_seq=1: 64 sets in 166 s; holds 0.984
+  solved full__D_mult=3_T_reloc=4_d=0.99_seq=1: 192 sets in 357 s; holds 0.062
+  solved full__D_mult=3_T_reloc=4_d=0.99_q_red=1.75_seq=1: 192 sets in 357 s; holds 0.078
+  solved full__D_mult=3_T_reloc=4_d=0.99_q_red=1.5_seq=1: 192 sets in 342 s; holds 0.073
+  solved full__D_mult=3_T_reloc=4_d=0.99_q_red=1.25_seq=1: 192 sets in 299 s; holds 0.073
+## T5. Correlated denial reserves on the best stack: q -> 1 - (1 - q)^(2 - rho)
+
+rho 0 = independent (the best stack as run before), rho 1 = fully correlated (same as one reserve). Paired draw counts against one reserve (q_red 1) and against independent reserves (q_red 2).
+
+| box | correlation | holds | vs one reserve | vs independent | mean WH | mean att |
+|---|---|---|---|---|---|---|
+| r0.1 | rho 0 (q_red 2) | 63/64 | +0 / -0 | +0 / -0 | 1.06 | 0.0156 |
+| r0.1 | rho 0.25 (q_red 1.75) | 63/64 | +0 / -0 | +0 / -0 | 1.06 | 0.0156 |
+| r0.1 | rho 0.5 (q_red 1.5) | 63/64 | +0 / -0 | +0 / -0 | 1.06 | 0.0156 |
+| r0.1 | rho 0.75 (q_red 1.25) | 63/64 | +0 / -0 | +0 / -0 | 1.06 | 0.0156 |
+| r0.1 | rho 1 (q_red 1) | 63/64 | +0 / -0 | +0 / -0 | 1.06 | 0.0156 |
+| full | rho 0 (q_red 2) | 15/192 | +3 / -0 | +0 / -0 | 0.542 | 0.839 |
+| full | rho 0.25 (q_red 1.75) | 15/192 | +3 / -0 | +0 / -0 | 0.54 | 0.844 |
+| full | rho 0.5 (q_red 1.5) | 14/192 | +2 / -0 | +0 / -1 | 0.538 | 0.85 |
+| full | rho 0.75 (q_red 1.25) | 14/192 | +2 / -0 | +0 / -1 | 0.533 | 0.854 |
+| full | rho 1 (q_red 1) | 12/192 | +0 / -0 | +0 / -3 | 0.53 | 0.869 |
+test5 done in 1896 s

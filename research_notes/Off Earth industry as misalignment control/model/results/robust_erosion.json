@@ -1,0 +1,1471 @@
+{
+ "tables": [
+  [
+   "E (baseline design). Denial erosion q_er, baseline uncertainties",
+   "| world | key rotation | q_er 0 | q_er 0.0001 | q_er 0.0003 | q_er 0.001 | q_er 0.0015 | q_er 0.002 | q_er 0.003 | q_er 0.005 | q_er 0.01 | q_er 0.02 | q_er 0.05 | q_er 0.1 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| seizure lethal (w_seized 0) | never | holds | holds | holds | holds | holds | strike yr 174 (P 0.32) | strike yr 122 (P 0.33) | strike yr 88 (P 0.33) | strike now | strike now | strike now | strike now |\n| seizure lethal (w_seized 0) | every 10 y | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | strike now | strike now |\n| seizure survivable (w_seized 0.9) | never | holds | holds | holds | holds | holds | strike yr 299 (P 0.73) | strike yr 240 (P 0.76) | strike yr 161 (P 0.79) | strike yr 41 (P 0.83) | strike now | strike now | strike now |\n| seizure survivable (w_seized 0.9) | every 10 y | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | strike now | strike now |"
+  ],
+  [
+   "E (baseline design). Denial erosion q_ea, baseline uncertainties",
+   "| world | key rotation | q_ea 0 | q_ea 0.01 | q_ea 0.02 | q_ea 0.03 | q_ea 0.04 | q_ea 0.05 | q_ea 0.06 | q_ea 0.07 | q_ea 0.08 | q_ea 0.1 | q_ea 0.2 | q_ea 0.3 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| seizure lethal (w_seized 0) | never | holds | holds | holds | holds | holds | holds | holds | strike now | strike now | strike now | strike now | strike now |\n| seizure survivable (w_seized 0.9) | never | holds | holds | holds | holds | holds | holds | holds | strike yr 58 (P 0.83) | strike yr 53 (P 0.83) | strike yr 47 (P 0.83) | strike yr 34 (P 0.84) | strike yr 30 (P 0.84) |"
+  ],
+  [
+   "E (best design). Denial erosion q_er, baseline uncertainties",
+   "| world | key rotation | q_er 0 | q_er 0.0001 | q_er 0.0003 | q_er 0.001 | q_er 0.0015 | q_er 0.002 | q_er 0.003 | q_er 0.005 | q_er 0.01 | q_er 0.02 | q_er 0.05 | q_er 0.1 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| seizure lethal (w_seized 0) | never | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | strike now |\n| seizure lethal (w_seized 0) | every 10 y | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds |\n| seizure survivable (w_seized 0.9) | never | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | strike yr 18 (P 0.92) |\n| seizure survivable (w_seized 0.9) | every 10 y | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds |"
+  ],
+  [
+   "E (best design). Denial erosion q_ea, baseline uncertainties",
+   "| world | key rotation | q_ea 0 | q_ea 0.01 | q_ea 0.02 | q_ea 0.03 | q_ea 0.04 | q_ea 0.05 | q_ea 0.06 | q_ea 0.07 | q_ea 0.08 | q_ea 0.1 | q_ea 0.2 | q_ea 0.3 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| seizure lethal (w_seized 0) | never | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds |\n| seizure survivable (w_seized 0.9) | never | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds | holds |"
+  ]
+ ],
+ "data": {
+  "baseline design__q_er": [
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.31878054997784233,
+    "t_mean": 174.00000000175623,
+    "riv": 0.681219450030126,
+    "WH": 1.0362124178230894
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.3277449826393915,
+    "t_mean": 122.00047424840807,
+    "riv": 0.6722550173703702,
+    "WH": 1.0209691318763334
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.3334695285714167,
+    "t_mean": 87.60869670997664,
+    "riv": 0.6665304714389875,
+    "WH": 0.9855712817042468
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.05,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.1,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.7347621452517791,
+    "t_mean": 299.0000000000002,
+    "riv": 0.2652378547438064,
+    "WH": 1.0401283792832454
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.7567605090912237,
+    "t_mean": 240.00000000015288,
+    "riv": 0.24323949093732755,
+    "WH": 1.0400069345160787
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.7872507675215817,
+    "t_mean": 161.00000004416825,
+    "riv": 0.21274923250841057,
+    "WH": 1.0385331585041542
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.8341533324886466,
+    "t_mean": 41.215385415523066,
+    "riv": 0.16622803905844305,
+    "WH": 0.9771170732139153
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.9448499042221485
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.9448499042221485
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.9448499042221485
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.05,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.9448499042221485
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.1,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.9448499042221485
+   }
+  ],
+  "baseline design__q_ea": [
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.03,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.04,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.06,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.07,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.08,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.2,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.3,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4933489464436333
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.03,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.04,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.06,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.26560514398646967,
+    "WH": 1.040153119526408
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.07,
+    "act0": "C",
+    "att": 0.8288228336683033,
+    "t_mean": 58.07971661952655,
+    "riv": 0.17117716633169663,
+    "WH": 1.002701083646147
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.08,
+    "act0": "C",
+    "att": 0.8307873243494629,
+    "t_mean": 53.34497872059751,
+    "riv": 0.16921267565053688,
+    "WH": 0.9968896259474654
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "C",
+    "att": 0.8334955523298679,
+    "t_mean": 46.83603796911568,
+    "riv": 0.1665044476701324,
+    "WH": 0.9874006478946937
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.2,
+    "act0": "C",
+    "att": 0.838938331671246,
+    "t_mean": 33.818610590426594,
+    "riv": 0.16106168057954012,
+    "WH": 0.9617243912159997
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.3,
+    "act0": "C",
+    "att": 0.8406775639876977,
+    "t_mean": 29.67671033500834,
+    "riv": 0.1593226552480481,
+    "WH": 0.9511793431830339
+   }
+  ],
+  "best design__q_er": [
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 5.999185280186233e-11,
+    "t_mean": NaN,
+    "riv": 0.16001753188010953,
+    "WH": 1.0721382929828462
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "S",
+    "att": 1.0,
+    "t_mean": 0.0,
+    "riv": 0.0,
+    "WH": 0.4944484117933019
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 10.0,
+    "value": 0.1,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 6.084686011561057e-11,
+    "t_mean": NaN,
+    "riv": 0.16001753187845236,
+    "WH": 1.0721382930049053
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "C",
+    "att": 0.9187266220071343,
+    "t_mean": 18.20931537885146,
+    "riv": 0.09949747196804619,
+    "WH": 0.9379049604052344
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.001,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.0015,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.002,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.003,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.005,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 10.0,
+    "value": 0.1,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   }
+  ],
+  "best design__q_ea": [
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.03,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.04,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.06,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.07,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.08,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.2,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure lethal (w_seized 0)",
+    "T_rot": 0.0,
+    "value": 0.3,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.0,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.01,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.02,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.03,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.04,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.05,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.06,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.07,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.08,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.1,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.2,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   },
+   {
+    "world": "seizure survivable (w_seized 0.9)",
+    "T_rot": 0.0,
+    "value": 0.3,
+    "act0": "C",
+    "att": 0.0,
+    "t_mean": NaN,
+    "riv": 0.16001753188284487,
+    "WH": 1.0721382930113905
+   }
+  ],
+  "q_star_cap": 0.38881209161546487
+ }
+}
