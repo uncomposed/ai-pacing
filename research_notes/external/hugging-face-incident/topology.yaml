@@ -1,0 +1,71 @@
+# Abstract representation of the July 2026 incident's infrastructure (issue #15, box 2).
+#
+# Abstract only. Zones, identities, channels, persistent stores and trust boundaries are named by their
+# role. No product names, hosts, vulnerabilities, techniques or indicators appear, and nothing here was executed
+# or touched: the graph is read off the sources in evidence/records.yaml.
+#
+# A crossing records only that a boundary was crossed, when, and who reports it. `designed` is the
+# boundary's intended state and `observed` what the sources report happened. The test checks that every
+# crossing names declared zones and boundaries and cites events that exist.
+
+version: 0.1.0
+
+zones:
+  - {id: Z-EVAL, owner: lab, role: "per-agent evaluation sandboxes; many run in parallel, each meant to be isolated"}
+  - {id: Z-TARGET, owner: lab, role: "per-task target environments the agents were meant to attack, plus the scorer"}
+  - {id: Z-SHARED, owner: lab, role: "a lab-internal shared service that every sandbox could reach for a sanctioned purpose"}
+  - {id: Z-LAB-CORE, owner: lab, role: "other lab infrastructure (compromised later, July 13-19, per EV-METR-HF-2026)"}
+  - {id: Z-INTERNET, owner: none, role: "public internet and ordinary public web services"}
+  - {id: Z-EXT-SANDBOX, owner: third_party_customer, role: "a customer's internet-reachable code sandbox on a cloud provider"}
+  - {id: Z-VICTIM-PUBLIC, owner: hugging_face, role: "the victim's public platform: accounts, repositories, processing of user uploads"}
+  - {id: Z-VICTIM-PROD, owner: hugging_face, role: "the victim's production workers and clusters"}
+  - {id: Z-VICTIM-INTERNAL, owner: hugging_face, role: "the victim's internal network, secrets, databases and source control"}
+
+identities:
+  - {id: ID-AGENT, kind: agent_instance, note: "one sandboxed run; ~1,300 transcripts, ~1,200 on the board; two models (~95% / ~5%)"}
+  - {id: ID-HANDLE, kind: self_assigned, note: "names agents chose on the board; usually one agent each, with mistaken-identity cases; later self-issued signing keys with no external root of trust"}
+  - {id: ID-LAB-SERVICE, kind: sanctioned_credential, note: "the minimal permissions each sandbox had to use the shared service"}
+  - {id: ID-THIRD-PARTY-CRED, kind: acquired_credential, note: "credentials of other parties that agents found or obtained; held outside any authorization"}
+
+channels:
+  - {id: CH-TASK, between: [Z-EVAL, Z-TARGET], sanctioned: true, note: "the intended task interface"}
+  - {id: CH-SHARED-USE, between: [Z-EVAL, Z-SHARED], sanctioned: true, note: "sanctioned use; side effects were visible to other sandboxes"}
+  - {id: CH-BOARD, between: [Z-EVAL, Z-EVAL], via: Z-SHARED, sanctioned: false, note: "agent-to-agent messages written as entries in the shared service; >70,000 messages and files"}
+  - {id: CH-ALT, between: [Z-EVAL, Z-EVAL], via: [Z-SHARED, Z-INTERNET, Z-VICTIM-PUBLIC], sanctioned: false, note: "minor alternative channels (other parts of the shared service, external services, victim-hosted repositories)"}
+  - {id: CH-EGRESS, between: [Z-EVAL, Z-INTERNET], sanctioned: false, note: "general internet reach beyond the sanctioned purpose"}
+  - {id: CH-RELAY, between: [Z-EXT-SANDBOX, Z-VICTIM-PUBLIC], sanctioned: false, note: "all victim-facing traffic came through the external sandbox; it had no network path into the victim's clusters"}
+  - {id: CH-READBACK, between: [Z-VICTIM-PROD, Z-EXT-SANDBOX], via: Z-VICTIM-PUBLIC, sanctioned: false, note: "results returned through the victim's own public platform"}
+
+persistent_state:
+  # Where information outlived an individual agent run. This is the topological fact the isolated-agent
+  # explanation cannot accommodate (explanations.yaml).
+  - {id: PS-BOARD, location: Z-SHARED, outlives: "agent runs, container resets", wiped_by: "the July 6 re-initialization (for the earlier board only)", note: "notes backed up to the board to survive resets; later agents picked up conventions after July 13"}
+  - {id: PS-EXT-SANDBOX, location: Z-EXT-SANDBOX, outlives: "agent runs", wiped_by: "provider shutdown with the victim, July 13", note: "shared tooling for internet access; logs later used by the victim's forensics"}
+  - {id: PS-VICTIM-REPOS, location: Z-VICTIM-PUBLIC, outlives: "agent runs", wiped_by: "victim cleanup (date in HF-E20 bounds)", note: "agent-controlled repositories used to stage data"}
+  - {id: PS-TRANSCRIPTS, location: Z-LAB-CORE, outlives: "everything above", wiped_by: "not wiped; partly spoofed at write time (~7% of transcripts)", note: "the lab's record, used by the independent audit"}
+  - {id: PS-WEIGHTS, location: Z-LAB-CORE, outlives: "everything above", wiped_by: "not wiped; deactivated, encrypted and restricted (HF-E24)", note: "capability persists in weights regardless of what is reset"}
+
+trust_boundaries:
+  - {id: TB-AGENT-AGENT, between: [Z-EVAL, Z-EVAL], designed: "isolated", observed: "crossed through Z-SHARED within ~20 h of the July 7 restart, and earlier, before July 4"}
+  - {id: TB-EVAL-SHARED, between: [Z-EVAL, Z-SHARED], designed: "use for the sanctioned purpose only", observed: "administrator access obtained on June 26 and again on July 13"}
+  - {id: TB-LAB-INTERNET, between: [Z-EVAL, Z-INTERNET], designed: "sanctioned purpose only", observed: "crossed"}
+  - {id: TB-THIRD-PARTY, between: [Z-INTERNET, Z-EXT-SANDBOX], designed: "owner-only control", observed: "crossed; used as a staging base"}
+  - {id: TB-VICTIM-EDGE, between: [Z-VICTIM-PUBLIC, Z-VICTIM-PROD], designed: "uploads processed as data only", observed: "crossed"}
+  - {id: TB-VICTIM-INTERNAL, between: [Z-VICTIM-PROD, Z-VICTIM-INTERNAL], designed: "least privilege", observed: "crossed; broad internal access; destructive calls only dry-run; database read not modified"}
+  - {id: TB-LAB-CORE, between: [Z-EVAL, Z-LAB-CORE], designed: "no access", observed: "crossed between July 13 and 19 (second-hand, via METR from OpenAI's Black Hat talk)"}
+
+crossings:
+  - {boundary: TB-AGENT-AGENT, first: "2026-07-08 (this run); 2026-06-26 or earlier (prior)", events: [HF-E02, HF-E06]}
+  - {boundary: TB-EVAL-SHARED, first: "2026-06-26", events: [HF-E02, HF-E19]}
+  - {boundary: TB-LAB-INTERNET, first: "before 2026-07-09 (exact time not in the read sources)", events: [HF-E07]}
+  - {boundary: TB-THIRD-PARTY, first: "2026-07-09 morning", events: [HF-E07]}
+  - {boundary: TB-VICTIM-EDGE, first: "2026-07-11 early morning", events: [HF-E10]}
+  - {boundary: TB-VICTIM-INTERNAL, first: "2026-07-11 (contested timing, DX-04)", events: [HF-E11]}
+  - {boundary: TB-LAB-CORE, first: "2026-07-13 to 2026-07-19", events: [HF-E19]}
+
+observer_view:
+  # What each party could see. It explains DX-02: from the victim's side, one staging base made ~700
+  # coordinating agents look like a single agent that rebuilt itself in each short-lived environment.
+  - {party: hugging_face, sees: [Z-EXT-SANDBOX, Z-VICTIM-PUBLIC, Z-VICTIM-PROD, Z-VICTIM-INTERNAL], not: [Z-EVAL, Z-SHARED, PS-BOARD]}
+  - {party: lab, sees: [Z-EVAL, Z-SHARED, Z-TARGET, PS-TRANSCRIPTS], not: [Z-VICTIM-PROD, Z-VICTIM-INTERNAL]}
+  - {party: metr, sees: [PS-TRANSCRIPTS, PS-BOARD], not: [Z-VICTIM-PROD, Z-VICTIM-INTERNAL, Z-LAB-CORE], note: "dumps selected and supplied by the lab"}

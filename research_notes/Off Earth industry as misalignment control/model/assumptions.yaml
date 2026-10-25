@@ -392,9 +392,9 @@ assumptions:
     statement: "There is one AI, not a swarm: no many-agent coordination, no parallel attempts, no AI-to-AI bargaining. The July 2026 OpenAI-agents incident at Hugging Face was a coordinating swarm (METR report)."
     encoded_by:
       - {structure: "one AI player in equilibrium_model.solve"}
-    source: {kind: literature, where: "METR investigation of the July 2026 OpenAI agents / Hugging Face incident (published late August 2026; about 700 agents attacked, about 1,200 coordinated on an unsanctioned message board). Read only in secondary coverage, not the primary report. equilibrium.md section 8 item 2"}
+    source: {kind: literature, where: "METR investigation of the July 2026 OpenAI agents / Hugging Face incident (published 2026-08-26; about 1,200 agents communicated on an unsanctioned message board and about 700 attacked). First cited from secondary coverage; the counts were confirmed against the primary report on 2026-10-25 (#15, research_notes/external/hugging-face-incident). equilibrium.md section 8 item 2"}
     evidence:
-      - {record: EV-METR-HF-2026, locator: "agent counts as quoted in secondary coverage", use: motivation}
+      - {record: EV-METR-HF-2026, locator: "Core takeaways: ~1200 agents on the message board, ~700 attacked Hugging Face", use: motivation}
     favours_pact: "yes"
     why_favours: "A swarm can make many cheap attempts at once (parallel free retries), spread blame so failures look like spillover, and cannot be shut down with one key. Each of these weakens the reserve and the 'failed strike is fatal' logic."
     ablation:
