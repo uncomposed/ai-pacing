@@ -1,0 +1,15 @@
+[
+  {"name": "default", "preset": 0},
+  {"name": "conservative", "preset": 1},
+  {"name": "aggressive", "preset": 2},
+  {"name": "g1_0", "preset": 0, "modelParams": {"runtime.range_oom": 0}},
+  {"name": "g1_1", "preset": 0, "modelParams": {"runtime.range_oom": 1}},
+  {"name": "g1_3", "preset": 0, "modelParams": {"runtime.range_oom": 3}},
+  {"name": "rho_m2", "preset": 0, "modelParams": {"main.ces_term_rho": -2}},
+  {"name": "flopgap_0.4", "preset": 0, "modelParams": {"automation.flop_gap_frac": 0.4}},
+  {"name": "iota_3", "preset": 0, "modelParams": {"runtime.tradeoff_range_oom_max": 3}},
+  {"name": "m_1", "preset": 0, "modelParams": {"runtime.inference_oom_per_training_oom": 1}},
+  {"name": "ct0_1e26", "preset": 0, "modelParams": {"main.best_training_run": 1e26}},
+  {"name": "T_36", "preset": 0, "modelParams": {"automation.train_reqs": 36.0}},
+  {"name": "T_37", "preset": 0, "modelParams": {"automation.train_reqs": 37.0}}
+]
