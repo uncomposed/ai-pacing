@@ -22,6 +22,7 @@ sys.path.insert(0, _TMP)
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 import em_noretry as em
 import robust_design as rd
+import run_identity as ri
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out"); os.makedirs(OUT, exist_ok=True)
 BEST = dict(D_mult=3.0, T_reloc=4.0, d=0.99, q_red=2.0, seq=1)
 def job(args):
@@ -31,7 +32,7 @@ def job(args):
     o = {k: np.asarray(r[k], float) for k in rd.KEEP}; o["act0"] = np.asarray(r["act0"]).astype("U1"); return o
 def run(ens, th, design, nr, pool, tag):
     path = os.path.join(OUT, tag + ".npz")
-    if os.path.exists(path): z = np.load(path); return {k: z[k] for k in z.files}
+    if os.path.exists(path): return ri.load_for_read(path)   # pinned by hash in results/cache_provenance.json
     params = [rd.apply_design(t, design) for t in th]; groups = rd.batches_for(th)
     res = list(pool.map(job, [([params[i] for i in g], nr) for g in groups]))
     out = {k: np.empty(len(th), float) for k in rd.KEEP}; out["act0"] = np.empty(len(th), "U1")
@@ -39,7 +40,7 @@ def run(ens, th, design, nr, pool, tag):
         for k in out: out[k][g] = r[k]
     np.savez(path, **out); return out
 def compare():
-    L = lambda p: {k: v for k, v in np.load(p).items()}
+    L = ri.load_for_read
     H = lambda r: np.isin(r["act0"], ["C", "P"]) & (r["att"] < 0.01)
     HR = lambda r: H(r) & (r["riv"] < 0.5)
     cache = {"r0.1_base_kp0": "r0.1__kill_pre=0", "r0.1_best_kp0": "r0.1__D_mult=3_T_reloc=4_d=0.99_kill_pre=0_q_red=2_seq=1",

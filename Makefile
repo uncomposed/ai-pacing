@@ -21,6 +21,8 @@ test:
 	@python3 test/json_schema_test.py
 	@python3 test/systems_tool_test.py
 	@python3 test/assumptions_tool_test.py
+	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_run_identity.py"
+	@python3 "research_notes/Off Earth industry as misalignment control/model/run_identity.py" inventory --check
 
 systems-check:
 	@python3 tools/systems_tool.py check

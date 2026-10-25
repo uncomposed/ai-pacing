@@ -257,8 +257,43 @@ gh run download --name sims-results-RUN_ID
 **Rules and known limits**
 - An already-cached run is never overwritten. A re-solve that differs from the cache is reported, never hidden.
 - Cross-platform floats: Linux x86-64 numpy and macOS arm64 numpy can differ in the last bits of `exp` and `log`. A draw that sits on a knife edge can then flip its outcome. The first real GitHub run will show whether this happens. If it does, the job summary lists each flipped draw with its strike probability on both machines. Decide then whether the cache should be re-solved on one platform. Do not loosen the check.
-- The cache name does not record the ensemble size. A non-default `n_full` or `n_near` therefore writes to its own folder (`results/robust_runs_nfull…`), and `--report` is skipped for it. `ci_sims.py` refuses to reuse a cached run whose size differs.
+- The cache name does not record the ensemble size. A non-default `n_full` or `n_near` therefore writes to its own folder (`results/robust_runs_nfull…`), and `--report` is skipped for it. The name is only an address; reuse is decided by the run manifest (section 8b).
 - GitHub turns off scheduled workflows in a public repo after 60 days with no repository activity. Re-enable the workflow in the Actions tab if that happens.
+
+## 8b. Run identity for caches and shards (issue #6, 2026-10-25)
+
+[[ai gen]] Status: `implemented`; `verified` by `tests/test_run_identity.py` (24 deterministic tests with a stand-in solver) and one reproducibility run in the pinned environment. Nothing `human_validated`. No committed output was regenerated.
+
+**Problem fixed.** `run_design`, `breakout_options.run_ens` and `ci_sims.cached` found a cache by name and reused it. Only the draw count was checked, and only in `ci_sims`. A same-sized change to the draws, the seed, the ranges, the solver or the settings would silently reuse old output. Shard merges kept part metadata but did not check it.
+
+**Run manifest** (`run_identity.py`). Every new cache is `<tag>.npz` plus `<tag>.manifest.json`. A cache is reused only if all seven identity parts match:
+1. the ordered draws (SHA-256 of every value);
+2. the sampling definition (box, n, seed, ranges, FIXED, NEAR_FRAC, sampler source, the baselines the boxes centre on);
+3. the design (every lever after defaults, plus options, plus a hash of the solver's actual inputs);
+4. the numerics (T_H, nA, N, batch size and batch membership, STRIKE_TOL);
+5. the solver source (`equilibrium_model.py` and each wrapper on the solving path, after dropping comments);
+6. the dependencies (numpy version, Python major.minor);
+7. the output schema.
+
+The machine (OS, CPU, commit, runner) is recorded but is not part of the identity: `ci_sims.py repro` measures cross-platform drift instead. Every load checks the .npz bytes against the manifest's SHA-256 and compares the identity part by part. A mismatch stops the run and names the parts that differ. Nothing is overwritten. `robust_report.py`, the breakout report and the diagnostics read caches through `run_identity.load_for_read`.
+
+**Shards.** `ci_sims.py solve` writes a shard manifest for each part, holding the identity, the shard and `of`, the intended draw indices, the environment and the part's SHA-256. `merge` refuses a part if:
+- it has no manifest, or its bytes were changed;
+- it was solved for another identity;
+- a shard is duplicated or missing, or the parts use different `of`;
+- a part holds draws other than its shard's batches;
+- the parts come from different platforms (OS/CPU/numpy).
+
+`assemble` still checks that the indices are disjoint and complete. A merged run's manifest lists its shards.
+
+**Legacy caches.** The 260 committed .npz files predate manifests. `results/cache_provenance.json` (summary: `results/cache_provenance.md`) pins each file's SHA-256 and classifies it:
+- `legacy_unverified` (116): the name maps to a current request, and the draw count and fields match;
+- `legacy_older_schema` (136): the same, but the file lacks `fail`;
+- `reference_patched_solver` (8): `diagnostics/out`.
+
+None is relabelled as verified. Each legacy entry records the identity its request had when the inventory was taken (pinned venv: Python 3.12, numpy 1.26.4). A later change to the draws, solver, settings or numpy therefore still refuses reuse; changes made *before* the inventory cannot be detected. `RD_REQUIRE_VERIFIED=1` refuses all legacy caches, which suits new calibration or external-model experiments. `python3 run_identity.py inventory --check` (in `make check`) fails if a cache file has neither a valid manifest nor a matching inventory entry, or if a recorded legacy file has gone missing.
+
+**Consequence.** Reusing legacy caches for *solving* now needs Python 3.12 and numpy 1.26.4 (the pinned CI environment). Elsewhere `run_design` refuses them and asks for a re-solve into another `--runs-dir`. Reading them for reports works anywhere and prints a count of legacy files read.
 
 ## 9. Assumption register and breakout results (2026-10-21 evening)
 
