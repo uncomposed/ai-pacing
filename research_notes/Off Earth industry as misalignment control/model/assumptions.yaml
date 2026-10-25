@@ -352,7 +352,7 @@ assumptions:
       status: partial
       where: "the swept g range reaches 0.69 (Metzger's max rate); Metzger's '3x per year' (g 1.1) is outside it"
       survived: "yes"
-      note: "Fix the PARAMS basis text in a separate change (this task does not change the model)."
+      note: "PARAMS basis text corrected in #11 (research_notes/external/units-bridge/metzger/RECHECK.md). Fig. 2 re-digitized from the embedded raster (about +-3.4% per point); the fitted max-rate case is 0.647/yr, unchanged from the by-eye 0.65."
     claims: [AR-H9]
     dependence: low
     status: verified
@@ -1016,7 +1016,7 @@ parameter_roles:
   den: {role: policy_choice}
   police: {role: policy_choice}
   psi_div: {role: policy_choice}
-  g: {role: source_model_assumption, source_model: {record: EV-METZGER-2013, locator: "Fig. 2"}, note: "Basis cites Metzger et al. 2013, but the 2-year figure there is generation spacing, not a doubling time (AS-GCITE)."}
+  g: {role: project_assumption, note: "Not a Metzger value (#11 recheck, research_notes/external/units-bridge/metzger/RECHECK.md): about half his max-rate fit (0.65/yr) at a scale 1e2 to 1e5 times larger than he models. Metzger is a comparison, linked from AS-GROWTH-G and AS-GCITE, not the source of 0.35."}
   chi0: {role: project_assumption}
   chi_m: {role: project_assumption}
   A0: {role: project_assumption}
