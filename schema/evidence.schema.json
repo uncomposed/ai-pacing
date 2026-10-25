@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/uncomposed/ai-pacing/schema/evidence.schema.json",
+  "title": "Dated evidence records, evaluation protocol and outcome labels",
+  "description": "Shapes of evidence/records.yaml, evidence/protocol.yaml and outcome labels. Dates, links and uses are checked by tools/evidence_tool.py.",
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "date": {"type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"},
+    "ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "record": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "title", "source", "reading", "observation_date", "availability_date", "availability_basis",
+                   "units", "population", "protocol", "extraction", "uncertainty", "depends_on", "fitted_to", "intended_use", "not_for"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^EV-[A-Z0-9-]+$"},
+        "kind": {"enum": ["observation", "observation_report", "source_model_output", "source_model_assumption", "formal_result", "stakeholder_statement"]},
+        "title": {"$ref": "#/$defs/text"},
+        "source": {"type": "object", "additionalProperties": false, "required": ["citation", "url", "version"],
+                   "properties": {"citation": {"$ref": "#/$defs/text"}, "url": {"$ref": "#/$defs/text"}, "version": {"$ref": "#/$defs/text"}}},
+        "reading": {"enum": ["read_primary", "read_secondary_only", "not_read"]},
+        "observation_date": {"oneOf": [
+          {"const": "not_applicable"},
+          {"type": "object", "additionalProperties": false, "required": ["start", "end"],
+           "properties": {"start": {"$ref": "#/$defs/date"}, "end": {"$ref": "#/$defs/date"}}}]},
+        "availability_date": {"$ref": "#/$defs/date"},
+        "availability_basis": {"$ref": "#/$defs/text"},
+        "units": {"$ref": "#/$defs/text"},
+        "population": {"$ref": "#/$defs/text"},
+        "protocol": {"$ref": "#/$defs/text"},
+        "extraction": {"type": "object", "additionalProperties": false, "required": ["method", "locator", "by", "date", "note"],
+                       "properties": {"method": {"enum": ["quoted", "digitized", "computed", "summarized_from_secondary", "recorded_statement"]},
+                                      "locator": {"$ref": "#/$defs/text"}, "by": {"$ref": "#/$defs/text"},
+                                      "date": {"$ref": "#/$defs/date"}, "note": {"$ref": "#/$defs/text"}}},
+        "uncertainty": {"type": "object", "additionalProperties": false, "required": ["kind", "description"],
+                        "properties": {"kind": {"enum": ["measurement", "sampling", "digitization", "unquantified", "not_applicable"]},
+                                       "description": {"$ref": "#/$defs/text"}}},
+        "depends_on": {"$ref": "#/$defs/ids"},
+        "fitted_to": {"$ref": "#/$defs/ids"},
+        "intended_use": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "not_for": {"type": "array", "items": {"$ref": "#/$defs/text"}}
+      }
+    },
+    "records_file": {
+      "type": "object", "additionalProperties": false, "required": ["schema_version", "records"],
+      "properties": {"schema_version": {"type": "string"}, "records": {"type": "array", "items": {"$ref": "#/$defs/record"}}}
+    },
+    "forecast": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "model", "target", "information_cutoff", "issued", "label", "inputs", "horizon", "baselines", "scoring", "resolution"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^FC-"},
+        "model": {"$ref": "#/$defs/text"}, "target": {"$ref": "#/$defs/text"},
+        "information_cutoff": {"$ref": "#/$defs/date"}, "issued": {"$ref": "#/$defs/date"},
+        "label": {"enum": ["retrospective", "locked"]},
+        "lock_commit": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"},
+        "inputs": {"$ref": "#/$defs/ids"}, "horizon": {"$ref": "#/$defs/text"},
+        "baselines": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "scoring": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "resolution": {"oneOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["record", "vintage"],
+                                                     "properties": {"record": {"type": "string"}, "vintage": {"$ref": "#/$defs/text"}}}]}
+      }
+    },
+    "protocol_file": {
+      "type": "object", "additionalProperties": false,
+      "required": ["protocol_version", "status", "rules", "baselines", "scoring_rules", "forecasts"],
+      "properties": {
+        "protocol_version": {"type": "string"}, "status": {"const": "proposed"},
+        "rules": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "rule"],
+                                              "properties": {"id": {"type": "string", "pattern": "^P-"}, "rule": {"$ref": "#/$defs/text"}}}},
+        "baselines": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "description"],
+                                                  "properties": {"id": {"type": "string", "pattern": "^B-"}, "description": {"$ref": "#/$defs/text"}}}},
+        "scoring_rules": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "description"],
+                                                      "properties": {"id": {"type": "string", "pattern": "^S-"}, "description": {"$ref": "#/$defs/text"}}}},
+        "forecasts": {"type": "array", "items": {"$ref": "#/$defs/forecast"}}
+      }
+    },
+    "outcome_label": {
+      "type": "object", "additionalProperties": false,
+      "required": ["interpretation", "sampling_measure", "structural_assumptions", "horizon", "predicate", "numerical_uncertainty", "uncertainty_types"],
+      "properties": {
+        "interpretation": {"const": "share of draws under the stated sampling measure; not a calibrated probability"},
+        "sampling_measure": {"$ref": "#/$defs/text"},
+        "structural_assumptions": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "horizon": {"$ref": "#/$defs/text"},
+        "predicate": {"$ref": "#/$defs/text"},
+        "numerical_uncertainty": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["quantity", "k", "n", "method", "interval"],
+          "properties": {"quantity": {"$ref": "#/$defs/text"}, "k": {"type": "integer", "minimum": 0}, "n": {"type": "integer", "minimum": 1},
+                         "method": {"const": "wilson_95"},
+                         "interval": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}}}},
+        "uncertainty_types": {"type": "object", "additionalProperties": false,
+                              "required": ["random_outcome", "parameter", "model_form", "normative"],
+                              "properties": {"random_outcome": {"$ref": "#/$defs/text"}, "parameter": {"$ref": "#/$defs/text"},
+                                             "model_form": {"$ref": "#/$defs/text"}, "normative": {"$ref": "#/$defs/text"}}}
+      }
+    }
+  }
+}

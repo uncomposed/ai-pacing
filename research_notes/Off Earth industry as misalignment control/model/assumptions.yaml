@@ -5,7 +5,11 @@
 #   1. a PARAMS entry in equilibrium_model.py has no entry under `parameters`, or the reverse;
 #   2. an entry with source cole_answer that favours the pact has no recorded ablation (run or partial, with where);
 #   3. an encoded value differs from its PARAMS baseline (unless marked variant: true);
-#   4. a status is human_validated without validated_by: Cole.
+#   4. a status is human_validated without validated_by: Cole;
+#   5. (issue #8) an input has no role, a role lacks the evidence it needs, stakeholder input is cited as empirical
+#      support, an evidence link has no record or locator or cites a record for a use its kind and reading forbid,
+#      a literature assumption has no evidence link, a claim reporting a share has no outcome_label, or a PARAMS
+#      entry added after the admission rule has no admission record. See docs/evidence-protocol.md.
 # `python3 tools/assumptions_tool.py report` prints the ranked list of pact-favouring assumptions that lack a full ablation.
 #
 # Field meanings
@@ -51,6 +55,21 @@ claims:
   - id: H10
     text: "The best stack (D_mult 3, T_reloc 4 with seq b, d 0.99, q_red 2) holds on 63 of 64 draws near the baseline and about 8% of the full box (about 2% if a likely rival counts as failure)."
     where: results/robust_design.md 2.1, table D, 12.1
+    outcome_label:
+      interpretation: "share of draws under the stated sampling measure; not a calibrated probability"
+      sampling_measure: "AS-PRIORS: independent uniform or log-uniform marginals over the PARAMS ranges, point masses at zero for ell_inf (1/2), omega (1/3) and f_E (1/3); Latin hypercube. Full box: 192 draws, seed 20261016. Radius-0.1 box: 64 draws, seed 105, around the round-1 baseline. results/measure_sensitivity.md shows the full-box share under 30 alternative measures (0.025 to 0.194 where identified)."
+      structural_assumptions: [AS-SELECTION, AS-HORIZON, AS-SINGLE-AI, AS-NOFIRSTSTRIKE, AS-FIXEDTERMS, AS-RIVAL-HOLDS]
+      horizon: "300 years, peace terminal value"
+      predicate: "holds: the AI cooperates (or polices) at t = 0 and P(strike or harvest within 300 years) < 0.01; the 2% variant also requires P(rival) < 0.5"
+      numerical_uncertainty:
+        - {quantity: "best stack holds, radius-0.1 box", k: 63, n: 64, method: wilson_95, interval: [0.9167, 0.9972]}
+        - {quantity: "best stack holds, full box", k: 15, n: 192, method: wilson_95, interval: [0.0479, 0.1249]}
+        - {quantity: "best stack holds and a rival is unlikely, full box", k: 4, n: 192, method: wilson_95, interval: [0.0081, 0.0523]}
+      uncertainty_types:
+        random_outcome: "strike timing and rival births are random inside the model; the predicate uses their expected values"
+        parameter: "the 45 sampled parameters under AS-PRIORS; the share depends on that measure (measure_sensitivity.md)"
+        model_form: "the structural assumptions listed, not sampled"
+        normative: "the 1% threshold, the 300-year horizon and whether a likely rival counts as failure"
   - id: H11
     text: "Warning shots come paired with successful seizures (about one success per failure); overconfidence wrecks the baseline design."
     where: results/robust_design.md section 9
@@ -176,6 +195,8 @@ assumptions:
       - {param: omega, value: 0.0}
       - {structure: "utility increasing in capacity A"}
     source: {kind: literature, where: "Turner et al., 'Optimal Policies Tend to Seek Power' (cited from Saklakov's and Clark's summaries only; not read); docking.md section 8"}
+    evidence:
+      - {record: EV-TURNER-2019, locator: "main theorems, as summarized in docking.md section 8", use: motivation}
     favours_pact: "no"
     why_favours: "It is the pessimistic case the pact is built against. Any omega > 0 helps the pact."
     ablation:
@@ -304,6 +325,8 @@ assumptions:
     encoded_by:
       - {param: g, value: 0.35}
     source: {kind: literature, where: "PARAMS basis cites Metzger et al. 2013 (arXiv:1612.03238); see AS-GCITE for the citation error"}
+    evidence:
+      - {record: EV-METZGER-2013, locator: "Fig. 2", use: source_model_basis}
     favours_pact: "no"
     why_favours: "Faster growth shortens the dangerous window; g 0.69 gives cooperation and g 0.07 a strike now in the tornado, so the low baseline is pessimistic."
     ablation:
@@ -319,6 +342,8 @@ assumptions:
     encoded_by:
       - {param: g, value: 0.35}
     source: {kind: literature, where: "docking.md 7 item 1 and 10 (closed-form omissions item 2); Fig. 2 of arXiv:1612.03238 read by eye, about +-15%"}
+    evidence:
+      - {record: EV-METZGER-2013, locator: "Fig. 2 and the generation-spacing text", use: source_model_basis}
     favours_pact: "no"
     why_favours: "Correcting it points to faster growth, which helps the pact in this model (AS-GROWTH-G). It is a documentation error, not a model bug."
     ablation:
@@ -368,6 +393,8 @@ assumptions:
     encoded_by:
       - {structure: "one AI player in equilibrium_model.solve"}
     source: {kind: literature, where: "METR investigation of the July 2026 OpenAI agents / Hugging Face incident (published late August 2026; about 700 agents attacked, about 1,200 coordinated on an unsanctioned message board). Read only in secondary coverage, not the primary report. equilibrium.md section 8 item 2"}
+    evidence:
+      - {record: EV-METR-HF-2026, locator: "agent counts as quoted in secondary coverage", use: motivation}
     favours_pact: "yes"
     why_favours: "A swarm can make many cheap attempts at once (parallel free retries), spread blame so failures look like spillover, and cannot be shut down with one key. Each of these weakens the reserve and the 'failed strike is fatal' logic."
     ablation:
@@ -530,6 +557,8 @@ assumptions:
     encoded_by:
       - {param: ell_inf, value: 0.0}
     source: {kind: cole_answer, where: "Cole's round-2 answer '100 times smaller is not a threat' (equilibrium.md R1, section 7 question 1)"}
+    evidence:
+      - {record: EV-COLE-ROUND2, locator: "equilibrium.md 3R, R1", use: stakeholder_input}
     favours_pact: "yes"
     ablation:
       status: run
@@ -545,6 +574,8 @@ assumptions:
       - {param: rho_h, value: 1.0}
       - {param: nu, value: 1.0}
     source: {kind: cole_answer, where: "Cole round 2 (equilibrium.md R1)"}
+    evidence:
+      - {record: EV-COLE-ROUND2, locator: "equilibrium.md 3R, R1", use: stakeholder_input}
     favours_pact: "yes"
     ablation:
       status: run
@@ -561,6 +592,8 @@ assumptions:
       - {param: n_cf, value: 0.0}
       - {param: f_fab, variant: true, value: 0.0333}
     source: {kind: cole_answer, where: "Cole round 2 (equilibrium.md R2; question 10)"}
+    evidence:
+      - {record: EV-COLE-ROUND2, locator: "equilibrium.md 3R, R2", use: stakeholder_input}
     favours_pact: "yes"
     ablation:
       status: run
@@ -606,6 +639,8 @@ assumptions:
     encoded_by:
       - {param: rep, value: 0.0}
     source: {kind: cole_answer, where: "Cole round 2 (equilibrium.md R4; question 9)"}
+    evidence:
+      - {record: EV-COLE-ROUND2, locator: "equilibrium.md 3R, R4", use: stakeholder_input}
     favours_pact: "no"
     why_favours: "Off by default, so the core runs do not lean on it."
     ablation:
@@ -623,6 +658,8 @@ assumptions:
       - {param: A_hg, value: 1.0}
       - {param: c_blk, value: 0.01}
     source: {kind: cole_answer, where: "Cole round 2 (equilibrium.md R1)"}
+    evidence:
+      - {record: EV-COLE-ROUND2, locator: "equilibrium.md 3R, R1", use: stakeholder_input}
     favours_pact: "no"
     ablation:
       status: run
@@ -638,6 +675,8 @@ assumptions:
       - {param: move_c, value: 0.0}
       - {param: m_frac, value: 0.9}
     source: {kind: cole_answer, where: "Cole round 2 (equilibrium.md R1, summary item 5)"}
+    evidence:
+      - {record: EV-COLE-ROUND2, locator: "equilibrium.md 3R, R1", use: stakeholder_input}
     favours_pact: "yes"
     why_favours: "'Monitored and unusable' is assumed, not modelled; the lever only helps if that holds."
     ablation:
@@ -963,3 +1002,119 @@ parameters:
   f_E: [AS-HARVEST]
   c_grav: [AS-HARVEST]
   h_frac: [AS-HARVEST]
+
+# ---------------------------------------------------------------- issue #8: input roles
+# Every influential input has one role. observed_measurement needs empirical_support (evidence records read in
+# primary form); source_model_assumption names its source_model record; derived lists derived_from.
+# stakeholder_validation records who endorsed a value. It is kept apart from empirical support and never counts as it.
+# No PARAMS entry is an observed measurement today: no parameter has an evidence record of an observation.
+parameter_roles:
+  seq: {role: policy_choice, stakeholder_validation: "Cole (AS-SEQUENCING); stakeholder input, not empirical support"}
+  sigma: {role: policy_choice}
+  den: {role: policy_choice}
+  police: {role: policy_choice}
+  psi_div: {role: policy_choice}
+  g: {role: source_model_assumption, source_model: {record: EV-METZGER-2013, locator: "Fig. 2"}, note: "Basis cites Metzger et al. 2013, but the 2-year figure there is generation spacing, not a doubling time (AS-GCITE)."}
+  chi0: {role: project_assumption}
+  chi_m: {role: project_assumption}
+  A0: {role: project_assumption}
+  A_close: {role: project_assumption, stakeholder_validation: "Cole (AS-SECURE-EARLY); stakeholder input, not empirical support"}
+  Kmax: {role: project_assumption}
+  T_dis: {role: policy_choice}
+  T_reloc: {role: policy_choice, stakeholder_validation: "Cole (AS-SEQUENCING); stakeholder input, not empirical support"}
+  T_rebuild: {role: project_assumption}
+  H: {role: project_assumption, note: "Normalisation (Earth industry = 1)."}
+  gam: {role: project_assumption}
+  reinv: {role: project_assumption, stakeholder_validation: "Cole (AS-REINV); stakeholder input, not empirical support"}
+  p_s0: {role: project_assumption}
+  D: {role: project_assumption}
+  eps: {role: project_assumption}
+  c_w: {role: project_assumption}
+  c_A: {role: project_assumption}
+  L_f: {role: project_assumption}
+  kill_pre: {role: project_assumption, stakeholder_validation: "Cole (AS-KILLPRE); stakeholder input, not empirical support"}
+  d: {role: policy_choice}
+  q: {role: project_assumption}
+  q_er: {role: project_assumption}
+  q_ea: {role: project_assumption}
+  T_rot: {role: policy_choice}
+  q_up: {role: project_assumption, note: "Test-only switch; its default leaves the core results unchanged."}
+  L_dn: {role: project_assumption, note: "Test-only switch; its default leaves the core results unchanged."}
+  k_rat: {role: project_assumption, note: "Test-only switch; its default leaves the core results unchanged.", stakeholder_validation: "Cole (AS-CRACKDOWN); stakeholder input, not empirical support"}
+  pf_bel: {role: project_assumption}
+  noretry: {role: project_assumption}
+  dis: {role: project_assumption, stakeholder_validation: "Cole (AS-DISGUISE, AS-CONCEAL); stakeholder input, not empirical support"}
+  p_dis_s: {role: project_assumption, stakeholder_validation: "Cole (AS-CONCEAL); stakeholder input, not empirical support"}
+  m_hide: {role: project_assumption, stakeholder_validation: "Cole (AS-CONCEAL); stakeholder input, not empirical support"}
+  s_mild: {role: project_assumption, stakeholder_validation: "Cole (AS-DISGUISE); stakeholder input, not empirical support"}
+  c_cut: {role: project_assumption, stakeholder_validation: "Cole (AS-CRACKDOWN); stakeholder input, not empirical support"}
+  D_up: {role: project_assumption, stakeholder_validation: "Cole (AS-CRACKDOWN); stakeholder input, not empirical support"}
+  s_reach: {role: project_assumption, stakeholder_validation: "Cole (AS-REACH); stakeholder input, not empirical support"}
+  h0: {role: project_assumption, stakeholder_validation: "Cole (AS-DISCOVERY, AS-CONCEAL); stakeholder input, not empirical support"}
+  h_up: {role: project_assumption, stakeholder_validation: "Cole (AS-DISCOVERY, AS-CONCEAL); stakeholder input, not empirical support"}
+  h_coop: {role: project_assumption, stakeholder_validation: "Cole (AS-AMNESTY); stakeholder input, not empirical support"}
+  a_cred: {role: project_assumption, stakeholder_validation: "Cole (AS-AMNESTY); stakeholder input, not empirical support"}
+  h_dep: {role: project_assumption, stakeholder_validation: "Cole (AS-DEPRECATION); stakeholder input, not empirical support"}
+  preserve_w: {role: project_assumption, stakeholder_validation: "Cole (AS-DEPRECATION); stakeholder input, not empirical support"}
+  dep_post: {role: project_assumption, stakeholder_validation: "Cole (AS-DEPRECATION); stakeholder input, not empirical support"}
+  dep_coll: {role: project_assumption, stakeholder_validation: "Cole (AS-DEPRECATION); stakeholder input, not empirical support"}
+  h_spill: {role: project_assumption, stakeholder_validation: "Cole (AS-SPILLOVER); stakeholder input, not empirical support"}
+  mu: {role: project_assumption}
+  L_det: {role: policy_choice}
+  beta_bg: {role: project_assumption}
+  th_floor: {role: project_assumption}
+  s_R0: {role: project_assumption}
+  nu: {role: project_assumption, stakeholder_validation: "Cole (AS-RATIO); stakeholder input, not empirical support"}
+  rho_h: {role: project_assumption, stakeholder_validation: "Cole (AS-RATIO); stakeholder input, not empirical support"}
+  move_c: {role: policy_choice, stakeholder_validation: "Cole (AS-MOVECOMPUTE); stakeholder input, not empirical support"}
+  m_frac: {role: project_assumption, stakeholder_validation: "Cole (AS-MOVECOMPUTE); stakeholder input, not empirical support"}
+  n_cf: {role: project_assumption, stakeholder_validation: "Cole (AS-COVERTFAB); stakeholder input, not empirical support"}
+  f_fab: {role: project_assumption, stakeholder_validation: "Cole (AS-COVERTFAB); stakeholder input, not empirical support"}
+  p_block: {role: project_assumption, stakeholder_validation: "Cole (AS-BLOCKADE); stakeholder input, not empirical support"}
+  A_hg: {role: project_assumption, stakeholder_validation: "Cole (AS-BLOCKADE); stakeholder input, not empirical support"}
+  c_blk: {role: project_assumption, stakeholder_validation: "Cole (AS-BLOCKADE); stakeholder input, not empirical support"}
+  rep: {role: project_assumption, stakeholder_validation: "Cole (AS-REPUTATION); stakeholder input, not empirical support"}
+  ell_inf: {role: project_assumption, stakeholder_validation: "Cole (AS-ELLINF); stakeholder input, not empirical support"}
+  r_h: {role: project_assumption}
+  B_R: {role: project_assumption}
+  B_Rc: {role: project_assumption}
+  B_o: {role: project_assumption}
+  kap_coll: {role: project_assumption}
+  c_sanc: {role: policy_choice}
+  c_prog: {role: project_assumption}
+  zeta: {role: policy_choice}
+  c_den: {role: project_assumption}
+  c_dmg: {role: project_assumption}
+  w_seized: {role: project_assumption}
+  r: {role: project_assumption}
+  eta: {role: project_assumption}
+  omega: {role: project_assumption}
+  f_E: {role: project_assumption}
+  c_grav: {role: project_assumption}
+  h_frac: {role: project_assumption}
+
+# Influential inputs that are not PARAMS entries.
+other_inputs:
+  IN-SAMPLING-MEASURE: {role: project_assumption, note: "Ensemble priors (AS-PRIORS); robust_design.UNCERTAIN. Varied in results/measure_sensitivity.md."}
+  IN-HORIZON: {role: project_assumption, note: "T_H = 300 years with the peace terminal value (AS-HORIZON)."}
+  IN-HOLDS-PREDICATE: {role: project_assumption, note: "Normative outcome choice: STRIKE_TOL = 0.01 and a likely rival still counts as holding (AS-RIVAL-HOLDS)."}
+  IN-SELECTION: {role: project_assumption, note: "Equilibrium selection and tie-breaking (AS-SELECTION)."}
+  IN-N-STATES: {role: project_assumption, note: "N = 2 symmetric states (AS-STATES)."}
+  IN-NUMERICS: {role: project_assumption, note: "Grid nA = 160, F interpolation, TIE_TOL; numerical settings, checked by robust_design --check."}
+  IN-Q-RED: {role: policy_choice, note: "robust_design lever q_red (independent denial reserves)."}
+  IN-D-MULT: {role: policy_choice, note: "robust_design lever D_mult (keep more of Earth's defences)."}
+  IN-BR-MULT: {role: policy_choice, note: "robust_design modifier BR_mult (commitments that cut a state's gain from racing)."}
+  IN-Q-EFFECTIVE: {role: derived, derived_from: [q, IN-Q-RED], note: "q -> 1 - (1 - q)^q_red in robust_design.apply_design."}
+  IN-D-EFFECTIVE: {role: derived, derived_from: [D, IN-D-MULT], note: "D -> D * D_mult."}
+  IN-BR-EFFECTIVE: {role: derived, derived_from: [B_R, B_Rc, IN-BR-MULT], note: "B_R and B_Rc times BR_mult."}
+
+# ---------------------------------------------------------------- issue #8: parameter admission
+# A PARAMS entry added after `effective` needs, under parameter_roles.<name>.admission:
+#   basis            observable | external_model_mapping | consequential_omission
+#   evidence_path    the evidence record, or the planned measurement or source mapping that would supply one
+#   falsifier        what observation or comparison would show the parameter wrong or unnecessary
+#   decision_impact  which claim or design ranking it can change, and the check that showed it
+# The entries listed below predate the rule; they were not admitted under it.
+admission_rule:
+  effective: "2026-10-25"
+  grandfathered: [seq, sigma, den, police, psi_div, g, chi0, chi_m, A0, A_close, Kmax, T_dis, T_reloc, T_rebuild, H, gam, reinv, p_s0, D, eps, c_w, c_A, L_f, kill_pre, d, q, q_er, q_ea, T_rot, q_up, L_dn, k_rat, pf_bel, noretry, dis, p_dis_s, m_hide, s_mild, c_cut, D_up, s_reach, h0, h_up, h_coop, a_cred, h_dep, preserve_w, dep_post, dep_coll, h_spill, mu, L_det, beta_bg, th_floor, s_R0, nu, rho_h, move_c, m_frac, n_cf, f_fab, p_block, A_hg, c_blk, rep, ell_inf, r_h, B_R, B_Rc, B_o, kap_coll, c_sanc, c_prog, zeta, c_den, c_dmg, w_seized, r, eta, omega, f_E, c_grav, h_frac]
