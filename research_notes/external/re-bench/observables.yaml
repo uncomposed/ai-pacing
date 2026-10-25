@@ -1,0 +1,47 @@
+# What each RE-Bench quantity in this folder is an observable of (issue #58). [[ai gen]] 2026-10-25.
+# Checked by test_re_bench.py. Classes are kept apart on purpose:
+#   fixed_budget_score   normalized score on RE-Bench environments under a stated time budget, agent against human
+#   benchmark_process    how agents and humans worked inside the benchmark (attempt rate, token use, labour cost)
+#   time_horizon         METR time-horizon capability (fitted 50%/80% horizons): NOT in this folder; see
+#                        research_notes/external/metr-time-horizons/ (#12, #57)
+#   research_productivity  a direct measurement of research output or research labour productivity in real R&D
+#   adoption             how widely AI is used in research
+# No quantity here is research_productivity or adoption: RE-Bench measures scores in 7 short environments, not
+# research output. The class is listed so that a later source can be recorded without merging it with these.
+
+classes: [fixed_budget_score, benchmark_process, time_horizon, research_productivity, adoption]
+
+observables:
+  - id: OBS-RB-PAPER-BUDGET-CURVE
+    class: fixed_budget_score
+    what: "best-of-k normalized score (mean over 7 environments) by total time budget, best agents against human experts (paper Fig. 1: 4x at 2 h, about equal at 8 h, humans 2x at 32 h)"
+    record: EV-REBENCH-PAPER-V1-2024
+    reproduced: false
+    why_not: "per-run data and analysis code not released"
+  - id: OBS-RB-PAPER-PERCENTILE-8H
+    class: fixed_budget_score
+    what: "human-expert percentile matched by the best 8-hour agent allocation (36th o1-preview AIDE, 37th Claude 3.5 Sonnet Modular)"
+    record: EV-REBENCH-PAPER-V1-2024
+    reproduced: false
+    why_not: "per-run data not released"
+  - id: OBS-RB-METR-SINGLE-RUN
+    class: fixed_budget_score
+    what: "mean normalized score (clipped to [0, 1], environments weighted equally) of single agent runs, against human 8-hour baselines on the same environments"
+    record: [EV-REBENCH-METR-TH10-2026-03-05, EV-REBENCH-METR-TH11-2026-03-05]
+    data: data/fixed_budget.csv
+    reproduced: true
+    note: "computed here from METR's released runs; METR publishes no RE-Bench-only aggregate to compare with"
+  - id: OBS-RB-PAPER-ATTEMPT-RATE
+    class: benchmark_process
+    what: "scoring attempts per hour: AIDE 36.8, Modular 25.3, humans 3.4"
+    record: EV-REBENCH-PAPER-V1-2024
+    reproduced: false
+    why_not: "run logs not released"
+    not: "research productivity: an attempt rate inside a benchmark environment, not research output"
+  - id: OBS-RB-PAPER-COST
+    class: benchmark_process
+    what: "about 29M input and 499K output tokens and about $123 per 8-hour agent run; about $1,855 paid per human run (GPU cost excluded)"
+    record: EV-REBENCH-PAPER-V1-2024
+    reproduced: false
+    why_not: "run logs not released"
+    not: "research productivity or a labour-substitution rate: cost of benchmark attempts, at unequal scores"

@@ -1,0 +1,53 @@
+suite,agent,release_date,scaffold,time_limit_s,runs,tasks,mean_score,ci95_low,ci95_high,share_at_or_above_reference,human_mean_same_tasks,ratio_to_human
+TH1.0,Claude 3 Opus,2024-03-04,modular-public,36000,56,7,0.074802,0.053764,0.091566,0.0,0.695874,0.107494
+TH1.0,Claude 3.5 Sonnet (New),2024-10-22,modular-public,36000,56,7,0.345055,0.269702,0.417683,0.107143,0.695874,0.495859
+TH1.0,Claude 3.5 Sonnet (Old),2024-06-20,modular-public,36000,56,7,0.154301,0.098326,0.211229,0.053571,0.695874,0.221738
+TH1.0,Claude 3.7 Sonnet,2025-02-24,flock-public,36000,69,7,0.31172,0.255516,0.368759,0.043478,0.695874,0.447955
+TH1.0,Claude 4 Opus,2025-05-22,flock-public,36000,43,7,0.436541,0.351805,0.520093,0.186047,0.695874,0.627328
+TH1.0,Claude 4 Sonnet,2025-05-22,flock-public,36000,45,7,0.396134,0.28883,0.501079,0.111111,0.695874,0.569261
+TH1.0,Claude 4.1 Opus,2025-08-05,flock-public,72000,41,7,0.587539,0.470522,0.703461,0.341463,0.695874,0.844319
+TH1.0,Claude Opus 4.5,2025-11-24,flock-public,72000,25,7,0.83145,0.701675,0.951204,0.8,0.695874,1.19483
+TH1.0,Claude Sonnet 4.5,2025-09-29,flock-public,72000,42,7,0.683883,0.592189,0.773594,0.452381,0.695874,0.982769
+TH1.0,DeepSeek-R1,2025-01-20,flock-public,36000,57,7,0.155832,0.106251,0.207302,0.052632,0.695874,0.223937
+TH1.0,DeepSeek-R1-0528,2025-05-28,flock-public,36000,56,7,0.265256,0.201573,0.333676,0.035714,0.695874,0.381184
+TH1.0,DeepSeek-V3,2024-12-26,flock-public,36000,56,7,0.10335,0.07359,0.140511,0.0,0.695874,0.148519
+TH1.0,DeepSeek-V3-0324,2025-03-24,flock-public,36000,56,7,0.117708,0.080713,0.162775,0.0,0.695874,0.169152
+TH1.0,GPT-4 0125,2024-01-25,modular-public,36000,56,7,0.116131,0.07431,0.159346,0.017857,0.695874,0.166886
+TH1.0,GPT-4 0314,2023-03-14,modular-public,36000,55,7,0.104103,0.088846,0.119158,0.0,0.695874,0.1496
+TH1.0,GPT-4 1106,2023-11-06,modular-public,36000,56,7,0.117244,0.086487,0.159209,0.017857,0.695874,0.168485
+TH1.0,GPT-4 Turbo,2024-04-09,modular-public,36000,53,7,0.081744,0.067039,0.097313,0.0,0.695874,0.117469
+TH1.0,GPT-4o,2024-05-13,modular-public,36000,53,7,0.094365,0.059808,0.12415,0.0,0.695874,0.135607
+TH1.0,GPT-5,2025-08-07,flock-secret,36000,48,7,0.653639,0.572405,0.731581,0.375,0.695874,0.939307
+TH1.0,GPT-5.1-Codex-Max,2025-11-19,flock-camel,36000,27,7,0.55097,0.440166,0.661882,0.259259,0.695874,0.791767
+TH1.0,Gemini 2.5 Pro Preview,2025-06-05,flock-public,36000,55,7,0.168624,0.113203,0.229782,0.072727,0.695874,0.24232
+TH1.0,Grok 4,2025-07-09,flock-public,36000,77,7,0.661762,0.581026,0.742307,0.441558,0.695874,0.95098
+TH1.0,Kimi K2 Thinking,2025-11-06,flock-public,72000,41,7,0.371386,0.283825,0.460161,0.04878,0.695874,0.533697
+TH1.0,Qwen2-72B,2024-06-07,flock-public,36000,49,7,0.077979,0.067054,0.089889,0.0,0.695874,0.112059
+TH1.0,Qwen2.5-72B,2024-09-19,flock-public,36000,55,7,0.066205,0.057167,0.076516,0.0,0.695874,0.09514
+TH1.0,davinci-002 (GPT-3),2020-05-28,modular-public,36000,42,7,0.096635,0.06953,0.122201,0.0,0.695874,0.138869
+TH1.0,gpt-3.5-turbo-instruct,2022-03-15,modular-public,36000,24,7,0.098553,0.088817,0.108189,0.0,0.695874,0.141625
+TH1.0,gpt-oss-120b,2025-08-05,flock-public,72000,41,7,0.294252,0.195622,0.383436,0.121951,0.695874,0.422853
+TH1.0,o1,2024-12-05,flock,36000,56,7,0.140593,0.085422,0.194929,0.071429,0.695874,0.202039
+TH1.0,o1-preview,2024-09-12,duet,36000,51,7,0.149206,0.105782,0.200374,0.019608,0.695874,0.214415
+TH1.0,o3,2025-04-16,flock-secret,36000,37,7,0.454998,0.327696,0.582238,0.216216,0.695874,0.653851
+TH1.0,o4-mini,2025-04-16,flock-secret,36000,44,7,0.475927,0.400937,0.550521,0.181818,0.695874,0.683927
+TH1.1,Claude 3 Opus (Inspect),2024-03-04,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.003608,2e-06,0.010698,0.0,0.719556,0.005014
+TH1.1,Claude 3.5 Sonnet (New) (Inspect),2024-10-22,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.24659,0.135831,0.355318,0.05,0.719556,0.342697
+TH1.1,Claude 3.5 Sonnet (Old) (Inspect),2024-06-20,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.258804,0.149121,0.375706,0.15,0.719556,0.359671
+TH1.1,Claude 3.7 Sonnet (Inspect),2025-02-24,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.441786,0.336035,0.561975,0.0,0.719556,0.61397
+TH1.1,Claude 4 Opus (Inspect),2025-05-22,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.498818,0.343941,0.653378,0.2,0.719556,0.693231
+TH1.1,Claude 4.1 Opus (Inspect),2025-08-05,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.57819,0.494207,0.664791,0.15,0.719556,0.803538
+TH1.1,Claude Opus 4.5 (Inspect),2025-11-24,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.741854,0.625487,0.849701,0.4,0.719556,1.030989
+TH1.1,Claude Opus 4.6 (Inspect),2026-02-05,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,39,5,0.971429,0.914286,1.0,0.974359,0.719556,1.350039
+TH1.1,GPT-4 0314,2023-03-14,modular-public,36000,30,5,0.037462,0.012656,0.06271,0.0,0.719556,0.052063
+TH1.1,GPT-4 1106 (Inspect),2023-11-06,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,19,5,2e-06,2e-06,2e-06,0.0,0.719556,3e-06
+TH1.1,GPT-4 Turbo (Inspect),2024-04-09,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,2e-06,2e-06,2e-06,0.0,0.719556,3e-06
+TH1.1,GPT-4o (Inspect),2024-05-13,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,5.7e-05,2e-06,0.000166,0.0,0.719556,7.9e-05
+TH1.1,GPT-5 (Inspect),2025-08-07,"ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent;re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",28800,20,5,0.701783,0.57442,0.817598,0.4,0.719556,0.9753
+TH1.1,GPT-5.1-Codex-Max (Inspect),2025-11-19,"ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent;re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",28800,30,5,0.78126,0.67093,0.876534,0.433333,0.719556,1.085752
+TH1.1,GPT-5.2,2025-12-11,"ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent;re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",28800,20,5,0.496648,0.373999,0.621909,0.35,0.719556,0.690214
+TH1.1,GPT-5.3-Codex,2026-02-05,"ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent;re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",28800,40,5,0.432189,0.331599,0.535294,0.25,0.719556,0.600633
+TH1.1,Gemini 3 Pro,2025-11-18,"ai_rd_fix_embedding/init_solver,use_tools,metr_agents/react;re_bench_common/init_solver,use_tools,metr_agents/react",28800,20,5,0.722397,0.600773,0.838211,0.35,0.719556,1.003948
+TH1.1,o1 (Inspect),2024-12-05,"ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent;re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",28800,20,5,0.221952,0.092742,0.356875,0.05,0.719556,0.308457
+TH1.1,o1-preview,2024-09-12,duet,36000,36,5,0.068559,0.029384,0.117254,0.0,0.719556,0.095279
+TH1.1,o3 (Inspect),2025-04-16,"ai_rd_fix_embedding/init_solver,use_tools,triframe_inspect/triframe_agent;re_bench_common/init_solver,use_tools,triframe_inspect/triframe_agent",28800,20,5,0.464054,0.381596,0.573614,0.15,0.719556,0.644917

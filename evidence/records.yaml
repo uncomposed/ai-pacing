@@ -1165,6 +1165,120 @@ records:
     intended_use: ["scale of the Earth-industry unit's output rate: one EIU/yr = reference-year GWP (units-bridge CV-GWP-TO-EIU-OUTPUT, DEF-EIU)", "reading GATE's USD output in EIU/yr for comparison", "industry's share of world value added (DEF-EIU rejected readings)"]
     not_for: ["converting projected GWP paths into capacity growth (a real-USD index stops tracking capacity under large relative price changes)", "coupling GATE output into the pact solver's H or A", "any statement about off-Earth output prices"]
 
+  # RE-Bench (issue #58): fixed-budget human-agent comparisons, kept apart from time-horizon capability.
+  # research_notes/external/re-bench/. None of these is a research-productivity observation (observables.yaml).
+  - id: EV-REBENCH-PAPER-V1-2024
+    kind: observation_report
+    title: "RE-Bench: Evaluating frontier AI R&D capabilities of language model agents against human experts (arXiv v1)"
+    source:
+      citation: "Wijk, Lin, Becker et al., arXiv:2411.15114v1 (METR), 2024-11-22; same text as metr.org/AI_R_D_Evaluation_Report.pdf (PDF created 2024-11-22)"
+      url: "https://arxiv.org/abs/2411.15114v1"
+      version: "arXiv v1 LaTeX source, report.tex sha256 2f20ec7e63098ce1dbab103b1449435dccc3ef941f0be05850de3707ad4a0ccf; environments at github.com/METR/RE-Bench a0cc6d4 (task files unchanged since 93b9806, 2025-01-30)"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2024-11-22"}
+    availability_date: "2024-11-22"
+    availability_basis: "arXiv v1 submission, Fri 22 Nov 2024 18:30 UTC. Run dates are not stated; agent runs used claude-3-5-sonnet-20241022, so some ran after 2024-10-22."
+    units: "normalized score (0 = starting solution, 1 = reference solution, per environment; averaged over 7 environments); best-of-k over k independent runs; total time budget in hours (k x per-run limit); human percentile; USD"
+    population: "7 RE-Bench environments; 71 eight-hour attempts by 61 human experts; o1-preview (AIDE) and Claude 3.5 Sonnet 20240620 and 20241022 (Modular, AIDE) with 30-minute, 2-hour and 8-hour runs on 0-6 H100s"
+    protocol: "humans and agents under the same environments and hardware; score@k with replacement, best observed score (random choice for Scaling Law Experiment); agent pauses for API errors not counted; 95% percentile-bootstrap intervals"
+    extraction:
+      method: quoted
+      locator: "abstract and macros (lines 75-94 of report.tex): agents 4x human score at a 2-hour total budget, humans narrowly ahead at 8 h and 2x the top agent at 32 h, 82% of expert attempts > 0.05, 24% >= reference; Sec. 4.2 percentiles 36 (o1-preview AIDE) and 37 (Claude 3.5 Sonnet Modular) at 8 h; Fig. 1 caption allocations at 16 h; Table 'baseline-sourcing'; Table 'validation_metrics'; Table 'ceiling_estimates'; Sec. 5.1 attempt rates 36.8/25.3/3.4 per hour; Sec. 6.2 about $123 per 8-hour agent run against about $1,855 per human run"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "Transcribed by regex into research_notes/external/re-bench/data/paper_values.json and checked in results/reproduction.json: table arithmetic and README transforms reproduce; the ceiling table reproduces for 6 of 7 environments (Scaling Law Experiment implies a reference score of about 0.80, README 0.84); the validation table gives 60/71 = 84.5% above 0.05 against the abstract's 82%; the text gives 0.96 and 0.46 for two source groups whose table values are 0.98 and 0.48. The fixed-budget curve (Fig. 1) cannot be reproduced: the promised 'Analysis code and anonymized human expert data' was not found released."
+    uncertainty:
+      kind: sampling
+      description: "Bootstrap 95% intervals shown in Fig. 1 only (not tabulated); 3 to 5 eight-hour agent runs per environment; human scores vary widely by source (0.48 to 0.98 mean); Finetune GPT-2 for QA starting score varies 17-52%; agents saw test scores in 6 of 7 environments (overfitting risk stated by the authors)"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["fixed-budget comparison of AI agents and human experts on short ML research-engineering environments, dated 2024-11 (#58)", "evidence for rd_capability under AD-METR as a benchmark score (QTY-BENCH-SCORE), not as a time horizon"]
+    not_for: ["time-horizon capability (no logistic fit, no human-time scale)", "research productivity or research output", "realized R&D speed-up or labour substitution", "adoption", "a units-bridge conversion: no conversion from benchmark score to research labour or output is identified (#42)", "extrapolation beyond 32-hour budgets or beyond these 7 environments"]
+
+  - id: EV-REBENCH-PAPER-V2-2025
+    kind: observation_report
+    title: "RE-Bench paper, arXiv v2 (revision of EV-REBENCH-PAPER-V1-2024)"
+    source:
+      citation: "Wijk, Lin, Becker et al., arXiv:2411.15114v2, 2025-05-27"
+      url: "https://arxiv.org/abs/2411.15114v2"
+      version: "arXiv v2 LaTeX source, report.tex sha256 d14419e0f673a80cf720fdf633f04161deec01f25868ff52ec462103915f8e6f"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2024-11-22"}
+    availability_date: "2025-05-27"
+    availability_basis: "arXiv v2 submission, Tue 27 May 2025 03:32 UTC"
+    units: "as EV-REBENCH-PAPER-V1-2024"
+    population: "as EV-REBENCH-PAPER-V1-2024"
+    protocol: "as EV-REBENCH-PAPER-V1-2024"
+    extraction:
+      method: quoted
+      locator: "diff of report.tex v1 to v2: only Table 'env_metrics' lines of code change (Optimize a Kernel 180 -> 218, Optimize LLM Foundry 1,651 -> 1,392, Finetune GPT-2 for QA 647 -> 716), plus an added author and acknowledgements; every number used by EV-REBENCH-PAPER-V1-2024 is unchanged"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "Kept as a separate vintage per P-REVISIONS; data/paper_values.json holds v2 values and the v1 differences."
+    uncertainty:
+      kind: sampling
+      description: "as EV-REBENCH-PAPER-V1-2024"
+    depends_on: [EV-REBENCH-PAPER-V1-2024]
+    fitted_to: []
+    intended_use: ["latest vintage of the RE-Bench fixed-budget comparison (#58)"]
+    not_for: ["an independent observation: same runs as v1", "time-horizon capability", "research productivity or research output", "adoption", "a units-bridge conversion"]
+
+  - id: EV-REBENCH-METR-TH10-2026-03-05
+    kind: observation
+    title: "RE-Bench single-run scores of 32 agents against human 8-hour baselines, METR TH1.0 suite release"
+    source:
+      citation: "METR, eval-analysis-public, reports/time-horizon-1-0/data/raw/runs.jsonl, rows with task_source RE-Bench"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "commit 52cb829c7a2efb2d659285c4b1768d191d97f8d2 (2026-03-05); file sha256 f489d11728909937dad99ba1ed2d7c40efe12a766891e67dbc7c2486a3311236"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2025-12-05"}
+    availability_date: "2026-03-05"
+    availability_basis: "commit date of the pinned file. Many rows were public in earlier commits; the later date is used, which is conservative for information-set checks. Human rows carry no run date; agent run starts span 2025-01-13 to 2025-12-05 (data/run_dates.json)."
+    units: "normalized score per run as released in score_cont (range exactly [0, 1]: apparently clipped, unlike the paper's unclipped normalization); mean over runs per environment, then equal weight per environment"
+    population: "7 RE-Bench environments; 1,578 agent runs of 32 agents (7 GPT-2 placeholder rows excluded) with per-run time_limit 36,000 s or 72,000 s; 91 human baseline rows"
+    protocol: "agents in METR scaffolds (modular-public, flock, duet and others per row); humans 8-hour baselines. Agent limits (10 h or 20 h) exceed the human 8 h, so this is not an equal-budget comparison"
+    extraction:
+      method: computed
+      locator: "research_notes/external/re-bench/data/fixed_budget.csv rows with suite TH1.0; data/human_baselines.csv rows with suite TH1.0 (build_data.py)"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "Human rows do not match the paper's 71 baselines (91 rows; per-environment counts differ, results/reproduction.json). These are the same runs METR's TH1.0 time horizons are fitted to (EV-METR-TH10-*), so the two are not independent evidence."
+    uncertainty:
+      kind: sampling
+      description: "95% interval from 2,000 bootstrap draws of runs within environment (seed 20261025); 1 to 13 runs per agent and environment; scaffolds differ across agents; clipping at 1 hides how far a run exceeds the reference"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["fixed-budget (single-run) comparison of agents with human 8-hour baselines on RE-Bench, by agent and release date (#58)"]
+    not_for: ["time-horizon capability (use EV-METR-TH10-*)", "independent confirmation of the TH1.0 horizons (same runs)", "an equal-budget comparison (agent limits 10-20 h, humans 8 h)", "research productivity or research output", "adoption", "a units-bridge conversion"]
+
+  - id: EV-REBENCH-METR-TH11-2026-03-05
+    kind: observation
+    title: "RE-Bench single-run scores of 20 agents against human 8-hour baselines, METR TH1.1 suite release"
+    source:
+      citation: "METR, eval-analysis-public, reports/time-horizon-1-1/data/raw/runs.jsonl, rows with task_source RE-Bench"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "commit 52cb829c7a2efb2d659285c4b1768d191d97f8d2 (2026-03-05); file sha256 609f904f4b6ae32129388da89d036e00bac511ad94223d2be1e58fc2b45b55cd"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2026-02-17"}
+    availability_date: "2026-03-05"
+    availability_basis: "commit date of the pinned file; agent run starts span 2025-06-03 to 2026-02-17; human rows undated"
+    units: "as EV-REBENCH-METR-TH10-2026-03-05"
+    population: "5 RE-Bench environments (Optimize LLM Foundry and Restricted Architecture MLM are not in TH1.1); 474 agent runs of 20 agents, 18 of them Inspect runs with time_limit 28,800 s (8 h) and two legacy rows (GPT-4 0314, o1-preview) with 36,000 s; 71 human baseline rows"
+    protocol: "Inspect ReAct or triframe agents for the 8-hour runs: per-run limit equal to the human 8-hour budget, the closest to an equal-budget single-attempt comparison in the released data"
+    extraction:
+      method: computed
+      locator: "research_notes/external/re-bench/data/fixed_budget.csv rows with suite TH1.1; data/human_baselines.csv rows with suite TH1.1 (build_data.py)"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "71 human rows, the paper's count, but on 5 environments and with different per-environment counts, so not the paper's set. Same runs as METR's TH1.1 horizons (EV-METR-TH11-*): not independent of them."
+    uncertainty:
+      kind: sampling
+      description: "as EV-REBENCH-METR-TH10-2026-03-05; 19 to 40 runs per agent"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["fixed-budget (single 8-hour run) comparison of agents with human 8-hour baselines on RE-Bench, by agent and release date (#58)"]
+    not_for: ["time-horizon capability (use EV-METR-TH11-*)", "independent confirmation of the TH1.1 horizons (same runs)", "research productivity or research output", "adoption", "a units-bridge conversion", "comparison with TH1.0 rows without a mapping (different environments, scaffolds and limits)"]
+
   - id: EV-ASCE-METZGER-VOR-NOT-READ
     kind: source_model_output
     title: "Metzger et al. 2013, version of record on ascelibrary.org (not read)"

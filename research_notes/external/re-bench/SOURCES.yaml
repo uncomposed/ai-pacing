@@ -1,0 +1,48 @@
+# Pinned sources for the RE-Bench replication (issue #58). [[ai gen]] 2026-10-25.
+# status: used | checked_unavailable | not_used. File hashes: sources.sha256 (checked by fetch_sources.sh).
+
+sources:
+  - id: metr-re-bench
+    title: "RE-Bench (METR), environments and task READMEs"
+    url: "https://github.com/METR/RE-Bench"
+    version: "commit a0cc6d4a91b20f84ebef505d5c72358f88b3b389 (2026-10-20, 'Add deprecation notice to README.md (#46)'), the last commit; it changes only README.md, so task files are those of 93b98062e55f6945d4a7e213a3226dd419896170 (2025-01-30, 'Stage suite (#39)'). Repository archived; tasks deprecated."
+    accessed: "2026-10-25"
+    license: "MIT (LICENSE at the pin, Copyright (c) 2024 METR), with METR's informal request to keep task material and solutions out of training data. Nothing is vendored: fetch_sources.sh reads files into a git-ignored cache; data/task_scores.csv holds the README scores and transform names, with attribution. Protected solution zips are not opened."
+    used_for: "Environment versions (suite_manifest.yaml), starting and official-solution scores and raw values from each task README, and the score transforms in the scoring code (assets/score.py for four environments, ai_rd_small_scaling_law.py: 'score = 1 - distance'). No task was run."
+    status: used
+
+  - id: rebench-paper-v1
+    title: "RE-Bench: Evaluating frontier AI R&D capabilities of language model agents against human experts"
+    url: "https://arxiv.org/abs/2411.15114v1"
+    version: "arXiv v1 (2024-11-22), LaTeX source from https://arxiv.org/e-print/2411.15114v1, report.tex sha256 2f20ec7e...; metr.org/AI_R_D_Evaluation_Report.pdf (sha256 d748e856..., created 2024-11-22) has the v1 text"
+    accessed: "2026-10-25"
+    license: "arXiv non-exclusive distribution licence 1.0. Not vendored; numbers used as cited facts (data/paper_values.json)."
+    used_for: "Evidence record EV-REBENCH-PAPER-V1-2024: headline fixed-budget comparisons, tables 'baseline-sourcing', 'validation_metrics', 'ceiling_estimates', 'env_metrics', attempt rates and cost. Read in full as LaTeX; figures not digitized."
+    status: used
+
+  - id: rebench-paper-v2
+    title: "RE-Bench paper, arXiv v2"
+    url: "https://arxiv.org/abs/2411.15114v2"
+    version: "arXiv v2 (2025-05-27), report.tex sha256 d14419e0..."
+    accessed: "2026-10-25"
+    license: "as v1"
+    used_for: "Evidence record EV-REBENCH-PAPER-V2-2025 (revision; only lines-of-code values changed) and the reproduction checks (results/reproduction.json uses v2 values)."
+    status: used
+
+  - id: metr-eval-analysis-public
+    title: "METR Time Horizon Analysis (eval-analysis-public), RE-Bench rows"
+    url: "https://github.com/METR/eval-analysis-public"
+    version: "commit 52cb829c7a2efb2d659285c4b1768d191d97f8d2 (2026-03-05), the pin used by research_notes/external/metr-time-horizons (#12); files reports/time-horizon-1-0/data/raw/runs.jsonl, reports/time-horizon-1-1/data/raw/runs.jsonl, data/external/release_dates.yaml (same sha256 as that folder's cache)"
+    accessed: "2026-10-25"
+    license: "No LICENSE file at the pin. Not vendored; data/fixed_budget.csv and data/human_baselines.csv hold derived aggregates, with attribution."
+    used_for: "Evidence records EV-REBENCH-METR-TH10-2026-03-05 and EV-REBENCH-METR-TH11-2026-03-05: per-run normalized RE-Bench scores of agents and human baselines, time limits, scaffolds, run dates; model release dates."
+    status: used
+
+  - id: rebench-analysis-code-and-human-data
+    title: "RE-Bench analysis code and anonymized human expert data"
+    url: "none found"
+    version: "promised in the paper's abstract footnote ('coming soon', v1 and v2)"
+    accessed: "2026-10-25"
+    license: "n/a"
+    used_for: "Would allow reproducing Fig. 1 (score by total time budget) and the 82%/24%/percentile claims. Searched: METR's 41 public GitHub repositories (GitHub search, 2026-10-25); RE-Bench repository; eval-analysis-public (has human rows, but not the paper's 71-run set); transcripts.metr.org was not searched for scores."
+    status: checked_unavailable

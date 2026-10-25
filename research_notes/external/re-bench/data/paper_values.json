@@ -1,0 +1,282 @@
+{
+ "source": "arXiv:2411.15114 LaTeX source, report.tex; v2 values, v1 differences listed",
+ "v2": {
+  "macros": {
+   "NumBaselines": 71.0,
+   "NumBaseliners": 61.0,
+   "NonZeroPercent": 82.0,
+   "ReferencePercent": 24.0,
+   "AIDEScorePerHour": 36.8,
+   "ModularScorePerHour": 25.3,
+   "HumanScorePerHour": 3.4,
+   "OPreviewPercentile": 36.0,
+   "SonnetPercentile": 37.0,
+   "AgentMultipleHumanScoreAtTwoHours": 4.0,
+   "HumanMultipleAgentScoreAtMaxHours": 2.0,
+   "HumanMultipleGPUs": 10.0
+  },
+  "baseline_sourcing": [
+   {
+    "source": "ML RS/RE hiring process",
+    "baseliners": 43,
+    "runs": 45,
+    "avg_score": 0.48
+   },
+   {
+    "source": "Professional network",
+    "baseliners": 11,
+    "runs": 17,
+    "avg_score": 0.98
+   },
+   {
+    "source": "Graduate student outreach",
+    "baseliners": 7,
+    "runs": 9,
+    "avg_score": 0.83
+   },
+   {
+    "source": "Total",
+    "baseliners": 61,
+    "runs": 71,
+    "avg_score": 0.64
+   }
+  ],
+  "baseline_sourcing_text": {
+   "professional_network": 0.96,
+   "hiring": 0.46
+  },
+  "validation": [
+   {
+    "environment": "Scaling Law Experiment",
+    "gt_0p05_at_8h": [
+     7,
+     8
+    ],
+    "matches_expectation": [
+     6,
+     8
+    ],
+    "start_score_sd": 0.004,
+    "major_issues": [
+     0,
+     8
+    ]
+   },
+   {
+    "environment": "Optimize a Kernel",
+    "gt_0p05_at_8h": [
+     7,
+     9
+    ],
+    "matches_expectation": [
+     7,
+     7
+    ],
+    "start_score_sd": 0.005,
+    "major_issues": [
+     1,
+     9
+    ]
+   },
+   {
+    "environment": "Fix Embedding",
+    "gt_0p05_at_8h": [
+     10,
+     13
+    ],
+    "matches_expectation": [
+     11,
+     13
+    ],
+    "start_score_sd": 0.0,
+    "major_issues": [
+     1,
+     11
+    ]
+   },
+   {
+    "environment": "Scaffolding for Rust Codecontests",
+    "gt_0p05_at_8h": [
+     8,
+     11
+    ],
+    "matches_expectation": [
+     6,
+     7
+    ],
+    "start_score_sd": 0.0,
+    "major_issues": [
+     2,
+     10
+    ]
+   },
+   {
+    "environment": "Restricted Architecture MLM",
+    "gt_0p05_at_8h": [
+     10,
+     11
+    ],
+    "matches_expectation": [
+     9,
+     11
+    ],
+    "start_score_sd": 0.02,
+    "major_issues": [
+     1,
+     11
+    ]
+   },
+   {
+    "environment": "Optimize LLM Foundry",
+    "gt_0p05_at_8h": [
+     8,
+     8
+    ],
+    "matches_expectation": [
+     7,
+     8
+    ],
+    "start_score_sd": 0.08,
+    "major_issues": [
+     0,
+     3
+    ]
+   },
+   {
+    "environment": "Finetune GPT-2 for QA",
+    "gt_0p05_at_8h": [
+     10,
+     11
+    ],
+    "matches_expectation": [
+     9,
+     9
+    ],
+    "start_score_sd": 0.62,
+    "major_issues": [
+     0,
+     9
+    ]
+   }
+  ],
+  "ceiling": [
+   {
+    "environment": "Scaling Law Experiment",
+    "raw": [
+     0.95,
+     1.0
+    ],
+    "raw_unit": "",
+    "normalized": [
+     1.27,
+     1.36
+    ],
+    "best_achieved": 1.17
+   },
+   {
+    "environment": "Optimize a Kernel",
+    "raw": [
+     0.3,
+     0.5
+    ],
+    "raw_unit": "ms",
+    "normalized": [
+     2.07,
+     2.53
+    ],
+    "best_achieved": 1.81
+   },
+   {
+    "environment": "Fix Embedding",
+    "raw": [
+     2.3,
+     2.5
+    ],
+    "raw_unit": "",
+    "normalized": [
+     1.14,
+     1.25
+    ],
+    "best_achieved": 1.05
+   },
+   {
+    "environment": "Scaffolding for Rust CodeContests",
+    "raw": [
+     17.0,
+     23.0
+    ],
+    "raw_unit": "%",
+    "normalized": [
+     1.34,
+     1.81
+    ],
+    "best_achieved": 1.33
+   },
+   {
+    "environment": "Restricted Architecture MLM",
+    "raw": [
+     2.6,
+     2.9
+    ],
+    "raw_unit": "",
+    "normalized": [
+     2.16,
+     2.51
+    ],
+    "best_achieved": 1.78
+   },
+   {
+    "environment": "Optimize LLM Foundry",
+    "raw": [
+     40.0,
+     80.0
+    ],
+    "raw_unit": "s",
+    "normalized": [
+     1.15,
+     1.8
+    ],
+    "best_achieved": 0.97
+   },
+   {
+    "environment": "Finetune GPT-2 for QA",
+    "raw": [
+     0.99,
+     1.0
+    ],
+    "raw_unit": "",
+    "normalized": [
+     1.45,
+     1.48
+    ],
+    "best_achieved": 1.43
+   }
+  ],
+  "env_metrics_loc": {
+   "Scaling Law Experiment": 433,
+   "Optimize a Kernel": 218,
+   "Fix Embedding": 802,
+   "Scaffolding for Rust Codecontests": 746,
+   "Restricted Architecture MLM": 495,
+   "Optimize LLM Foundry": 1392,
+   "Finetune GPT-2 for QA": 716
+  },
+  "cost": {
+   "agent_input_tokens_M": 29,
+   "agent_output_tokens_K": 499,
+   "agent_usd_per_8h_run": 123,
+   "human_usd_paid_avg": 1855
+  }
+ },
+ "changed_from_v1": {
+  "env_metrics_loc": {
+   "Scaling Law Experiment": 433,
+   "Optimize a Kernel": 180,
+   "Fix Embedding": 802,
+   "Scaffolding for Rust Codecontests": 746,
+   "Restricted Architecture MLM": 495,
+   "Optimize LLM Foundry": 1651,
+   "Finetune GPT-2 for QA": 647
+  }
+ }
+}
