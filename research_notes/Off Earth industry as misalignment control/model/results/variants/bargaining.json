@@ -1,0 +1,1015 @@
+{
+ "analysis": {
+  "conflicts": [
+   {
+    "better_on": [
+     "V_H"
+    ],
+    "policy": "reneg_down",
+    "structure": "eroding_reserve",
+    "worse_on": [
+     "conflict_year"
+    ]
+   },
+   {
+    "better_on": [
+     "V_H"
+    ],
+    "policy": "committed",
+    "structure": "eroding_reserve",
+    "worse_on": [
+     "conflict_year"
+    ]
+   }
+  ],
+  "distribution": {
+   "committed": {
+    "baseline": "humans gain, AI loss",
+    "closing_window": "humans gain, AI loss",
+    "eroding_reserve": "humans gain, AI loss",
+    "harvest": "humans same, AI same",
+    "no_reserve": "humans gain, AI gain"
+   },
+   "reneg_down": {
+    "baseline": "humans gain, AI loss",
+    "closing_window": "humans loss, AI loss",
+    "eroding_reserve": "humans gain, AI loss",
+    "harvest": "humans same, AI same",
+    "no_reserve": "humans same, AI same"
+   },
+   "reneg_two_sided": {
+    "baseline": "humans gain, AI loss",
+    "closing_window": "humans loss, AI loss",
+    "eroding_reserve": "humans gain, AI loss",
+    "harvest": "humans same, AI same",
+    "no_reserve": "humans gain, AI loss"
+   },
+   "reneg_up": {
+    "baseline": "humans same, AI same",
+    "closing_window": "humans same, AI same",
+    "eroding_reserve": "humans gain, AI loss",
+    "harvest": "humans same, AI same",
+    "no_reserve": "humans gain, AI loss"
+   }
+  },
+  "reference": "fixed",
+  "reversals": [
+   {
+    "better_in": [
+     "baseline",
+     "eroding_reserve"
+    ],
+    "measure": "V_H",
+    "policy": "reneg_down",
+    "worse_in": [
+     "closing_window"
+    ]
+   },
+   {
+    "better_in": [
+     "eroding_reserve",
+     "no_reserve"
+    ],
+    "measure": "conflict_year",
+    "policy": "reneg_two_sided",
+    "worse_in": [
+     "closing_window"
+    ]
+   },
+   {
+    "better_in": [
+     "eroding_reserve",
+     "no_reserve"
+    ],
+    "measure": "P_ai_strike",
+    "policy": "reneg_two_sided",
+    "worse_in": [
+     "closing_window"
+    ]
+   },
+   {
+    "better_in": [
+     "eroding_reserve",
+     "no_reserve"
+    ],
+    "measure": "successful_harm",
+    "policy": "reneg_two_sided",
+    "worse_in": [
+     "closing_window"
+    ]
+   },
+   {
+    "better_in": [
+     "eroding_reserve",
+     "no_reserve"
+    ],
+    "measure": "control_retained",
+    "policy": "reneg_two_sided",
+    "worse_in": [
+     "closing_window"
+    ]
+   },
+   {
+    "better_in": [
+     "baseline",
+     "eroding_reserve",
+     "no_reserve"
+    ],
+    "measure": "V_H",
+    "policy": "reneg_two_sided",
+    "worse_in": [
+     "closing_window"
+    ]
+   },
+   {
+    "better_in": [
+     "no_reserve"
+    ],
+    "measure": "conflict_year",
+    "policy": "committed",
+    "worse_in": [
+     "eroding_reserve"
+    ]
+   }
+  ],
+  "signs": {
+   "committed": {
+    "baseline": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "closing_window": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "eroding_reserve": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "no_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   },
+   "reneg_down": {
+    "baseline": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "closing_window": {
+     "P_ai_strike": -1,
+     "V_H": -1,
+     "conflict_year": -1,
+     "control_retained": -1,
+     "successful_harm": -1
+    },
+    "eroding_reserve": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": -1,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "no_reserve": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    }
+   },
+   "reneg_two_sided": {
+    "baseline": {
+     "P_ai_strike": 0,
+     "V_H": 1,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "closing_window": {
+     "P_ai_strike": -1,
+     "V_H": -1,
+     "conflict_year": -1,
+     "control_retained": -1,
+     "successful_harm": -1
+    },
+    "eroding_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "no_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   },
+   "reneg_up": {
+    "baseline": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "closing_window": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "eroding_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    },
+    "harvest": {
+     "P_ai_strike": 0,
+     "V_H": 0,
+     "conflict_year": 0,
+     "control_retained": 0,
+     "successful_harm": 0
+    },
+    "no_reserve": {
+     "P_ai_strike": 1,
+     "V_H": 1,
+     "conflict_year": 1,
+     "control_retained": 1,
+     "successful_harm": 1
+    }
+   }
+  }
+ },
+ "measures": {
+  "baseline": {
+   "committed": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 0.0,
+    "V_H": 50.75374994375136,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.0
+   },
+   "fixed": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 5.074748643341413,
+    "successful_harm": 0.0
+   },
+   "reneg_down": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 0.0,
+    "V_H": 50.75374994375136,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.0
+   },
+   "reneg_two_sided": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 0.0,
+    "V_H": 50.75374994375136,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.0
+   },
+   "reneg_up": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 5.074748643341413,
+    "successful_harm": 0.0
+   }
+  },
+  "closing_window": {
+   "committed": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 5.807691665388919,
+    "V_H": 46.86262911473042,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 3.8906406265617504,
+    "successful_harm": 0.0
+   },
+   "fixed": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 5.074748643341413,
+    "successful_harm": 0.0
+   },
+   "reneg_down": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 5.595062255859375,
+    "V_H": 20.425396501535033,
+    "conflict_year": 19,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 1.6258167425028105,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_two_sided": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 5.595062255859375,
+    "V_H": 20.425396501535033,
+    "conflict_year": 19,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 1.6258167425028105,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_up": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 5.074748643341413,
+    "successful_harm": 0.0
+   }
+  },
+  "eroding_reserve": {
+   "committed": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 4.375855140536404,
+    "V_H": 46.47515273692839,
+    "conflict_year": 114,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 2.6183184640429387,
+    "successful_harm": 0.9999999998498499
+   },
+   "fixed": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 7.670483944619001,
+    "V_H": 45.35481634043125,
+    "conflict_year": 165,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 5.03942403782169,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_down": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 1.042360396406796,
+    "V_H": 50.16395131976611,
+    "conflict_year": 163,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.2080582285063361,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_two_sided": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 1.042360396406796,
+    "V_H": 50.49850623412847,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 0.2540081725946586,
+    "successful_harm": 0.0
+   },
+   "reneg_up": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 7.670411423270876,
+    "V_H": 45.66940181611725,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 5.0831125906059285,
+    "successful_harm": 0.0
+   }
+  },
+  "harvest": {
+   "committed": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "conflict_year": 0,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.9999999998498499
+   },
+   "fixed": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "conflict_year": 0,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_down": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "conflict_year": 0,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_two_sided": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "conflict_year": 0,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_up": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "conflict_year": 0,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.9999999998498499
+   }
+  },
+  "no_reserve": {
+   "committed": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 19.948158328944547,
+    "V_H": 37.38859579189683,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 13.363504760799055,
+    "successful_harm": 0.0
+   },
+   "fixed": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 19.917328095761828,
+    "V_H": 5.080455448299299e-09,
+    "conflict_year": 0,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_down": {
+    "P_ai_strike": 1.0,
+    "V_A_excess": 19.917328095761828,
+    "V_H": 5.080455448299299e-09,
+    "conflict_year": 0,
+    "control_retained": 1.5015011456398497e-10,
+    "pv_transfer_H": 0.0,
+    "successful_harm": 0.9999999998498499
+   },
+   "reneg_two_sided": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 19.91228485107422,
+    "V_H": 37.41263082078491,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 13.339472698069164,
+    "successful_harm": 0.0
+   },
+   "reneg_up": {
+    "P_ai_strike": 0.0,
+    "V_A_excess": 19.91228485107422,
+    "V_H": 37.41263082078491,
+    "conflict_year": null,
+    "control_retained": 1.0,
+    "pv_transfer_H": 13.339472698069164,
+    "successful_harm": 0.0
+   }
+  }
+ },
+ "raw": {
+  "baseline": {
+   "committed": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 0.0,
+    "V_H": 50.75374994375136,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "committed",
+    "strike_year": null,
+    "x_committed": 0.0,
+    "x_first": 0.0,
+    "x_hi": 0.0,
+    "x_last": 0.0,
+    "x_lo": 0.0
+   },
+   "diagnostics": {
+    "bargain_exists_every_year": true,
+    "bargain_exists_t0": true,
+    "commitment_problem": false,
+    "first_gap_year": null,
+    "gap_max": -3.8539068959942555,
+    "lockin_max": -0.04661047945306368,
+    "lockin_t0": -0.04661047945306368,
+    "min_surplus": 1.5466104793029136,
+    "p_f": 1.5015015010506002e-10,
+    "surplus_t0": 1.5466104793029136,
+    "x_fix": 0.15,
+    "x_lo": 0.0,
+    "x_max": 1.5
+   },
+   "fixed": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 5.074748643341413,
+    "regime": "fixed",
+    "strike_year": null,
+    "x_first": 0.15,
+    "x_hi": 0.15,
+    "x_last": 0.15,
+    "x_lo": 0.15
+   },
+   "reneg_down": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 0.0,
+    "V_H": 50.75374994375136,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.0,
+    "x_hi": 0.15,
+    "x_last": 0.0,
+    "x_lo": 0.0
+   },
+   "reneg_two_sided": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 0.0,
+    "V_H": 50.75374994375136,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.0,
+    "x_hi": 1.5,
+    "x_last": 0.0,
+    "x_lo": 0.0
+   },
+   "reneg_up": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 5.074748643341413,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.15,
+    "x_hi": 1.5,
+    "x_last": 0.15,
+    "x_lo": 0.15
+   }
+  },
+  "closing_window": {
+   "committed": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 5.807691665388919,
+    "V_H": 46.86262911473042,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 3.8906406265617504,
+    "regime": "committed",
+    "strike_year": null,
+    "x_committed": 0.115,
+    "x_first": 0.115,
+    "x_hi": 0.115,
+    "x_last": 0.115,
+    "x_lo": 0.115
+   },
+   "diagnostics": {
+    "bargain_exists_every_year": true,
+    "bargain_exists_t0": true,
+    "commitment_problem": true,
+    "first_gap_year": 19,
+    "gap_max": 4.100105601061489,
+    "lockin_max": 0.11088952052328765,
+    "lockin_t0": 0.11088952052328765,
+    "min_surplus": 1.3891104793265623,
+    "p_f": 1.5015015010506002e-10,
+    "surplus_t0": 1.3891104793265623,
+    "x_fix": 0.15,
+    "x_lo": 0.0,
+    "x_max": 1.5
+   },
+   "fixed": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 5.074748643341413,
+    "regime": "fixed",
+    "strike_year": null,
+    "x_first": 0.15,
+    "x_hi": 0.15,
+    "x_last": 0.15,
+    "x_lo": 0.15
+   },
+   "reneg_down": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 5.595062255859375,
+    "V_H": 20.425396501535033,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 1.6258167425028105,
+    "regime": "reneg",
+    "strike_year": 19,
+    "x_first": 0.1107896555973138,
+    "x_hi": 0.15,
+    "x_last": 0.10584617532117413,
+    "x_lo": 0.0
+   },
+   "reneg_two_sided": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 5.595062255859375,
+    "V_H": 20.425396501535033,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 1.6258167425028105,
+    "regime": "reneg",
+    "strike_year": 19,
+    "x_first": 0.1107896555973138,
+    "x_hi": 1.5,
+    "x_last": 0.10584617532117413,
+    "x_lo": 0.0
+   },
+   "reneg_up": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 7.575249998333373,
+    "V_H": 45.67837494937623,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 5.074748643341413,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.15,
+    "x_hi": 1.5,
+    "x_last": 0.15,
+    "x_lo": 0.15
+   }
+  },
+  "eroding_reserve": {
+   "committed": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 4.375855140536404,
+    "V_H": 46.47515273692839,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 2.6183184640429387,
+    "regime": "committed",
+    "strike_year": 114,
+    "x_committed": 0.08,
+    "x_first": 0.08,
+    "x_hi": 0.08,
+    "x_last": 0.08,
+    "x_lo": 0.08
+   },
+   "diagnostics": {
+    "bargain_exists_every_year": true,
+    "bargain_exists_t0": true,
+    "commitment_problem": false,
+    "first_gap_year": null,
+    "gap_max": -1.228920022243292,
+    "lockin_max": 0.2959891198700374,
+    "lockin_t0": -0.04661047945306368,
+    "min_surplus": 1.2040108799798124,
+    "p_f": 1.5015015010506002e-10,
+    "surplus_t0": 1.5466104793029136,
+    "x_fix": 0.15,
+    "x_lo": 0.0,
+    "x_max": 1.5
+   },
+   "fixed": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 7.670483944619001,
+    "V_H": 45.35481634043125,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 5.03942403782169,
+    "regime": "fixed",
+    "strike_year": 165,
+    "x_first": 0.15,
+    "x_hi": 0.15,
+    "x_last": 0.15,
+    "x_lo": 0.15
+   },
+   "reneg_down": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 1.042360396406796,
+    "V_H": 50.16395131976611,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.2080582285063361,
+    "regime": "reneg",
+    "strike_year": 163,
+    "x_first": 0.0,
+    "x_hi": 0.15,
+    "x_last": 0.1447274410377819,
+    "x_lo": 0.0
+   },
+   "reneg_two_sided": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 1.042360396406796,
+    "V_H": 50.49850623412847,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.2540081725946586,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.0,
+    "x_hi": 1.5,
+    "x_last": 0.27097930340638854,
+    "x_lo": 0.0
+   },
+   "reneg_up": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 7.670411423270876,
+    "V_H": 45.66940181611725,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 5.0831125906059285,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.15,
+    "x_hi": 1.5,
+    "x_last": 0.27097930340638854,
+    "x_lo": 0.15
+   }
+  },
+  "harvest": {
+   "committed": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "committed",
+    "strike_year": 0,
+    "x_committed": 0.0,
+    "x_first": null,
+    "x_hi": 0.0,
+    "x_last": null,
+    "x_lo": 0.0
+   },
+   "diagnostics": {
+    "bargain_exists_every_year": false,
+    "bargain_exists_t0": false,
+    "commitment_problem": true,
+    "first_gap_year": 0,
+    "gap_max": 498.45338944547257,
+    "lockin_max": 499.9533894454719,
+    "lockin_t0": 499.9533894454719,
+    "min_surplus": -498.453389445622,
+    "p_f": 1.5015015010506002e-10,
+    "surplus_t0": -498.453389445622,
+    "x_fix": 0.15,
+    "x_lo": 0.0,
+    "x_max": 1.5
+   },
+   "fixed": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "fixed",
+    "strike_year": 0,
+    "x_first": null,
+    "x_hi": 0.15,
+    "x_last": null,
+    "x_lo": 0.15
+   },
+   "reneg_down": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "reneg",
+    "strike_year": 0,
+    "x_first": null,
+    "x_hi": 0.15,
+    "x_last": null,
+    "x_lo": 0.0
+   },
+   "reneg_two_sided": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "reneg",
+    "strike_year": 0,
+    "x_first": null,
+    "x_hi": 1.5,
+    "x_last": null,
+    "x_lo": 0.0
+   },
+   "reneg_up": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 25248.4794170905,
+    "V_H": 5.080455448299299e-09,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "reneg",
+    "strike_year": 0,
+    "x_first": null,
+    "x_hi": 1.5,
+    "x_last": null,
+    "x_lo": 0.15
+   }
+  },
+  "no_reserve": {
+   "committed": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 19.948158328944547,
+    "V_H": 37.38859579189683,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 13.363504760799055,
+    "regime": "committed",
+    "strike_year": null,
+    "x_committed": 0.395,
+    "x_first": 0.395,
+    "x_hi": 0.395,
+    "x_last": 0.395,
+    "x_lo": 0.395
+   },
+   "diagnostics": {
+    "bargain_exists_every_year": true,
+    "bargain_exists_t0": true,
+    "commitment_problem": false,
+    "first_gap_year": null,
+    "gap_max": -1.1056104795192816,
+    "lockin_max": 0.39438952048072007,
+    "lockin_t0": 0.39438952048072007,
+    "min_surplus": 1.1056104793691297,
+    "p_f": 1.5015015010506002e-10,
+    "surplus_t0": 1.1056104793691297,
+    "x_fix": 0.15,
+    "x_lo": 0.0,
+    "x_max": 1.5
+   },
+   "fixed": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 19.917328095761828,
+    "V_H": 5.080455448299299e-09,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "fixed",
+    "strike_year": 0,
+    "x_first": null,
+    "x_hi": 0.15,
+    "x_last": null,
+    "x_lo": 0.15
+   },
+   "reneg_down": {
+    "P_seizure": 0.9999999998498499,
+    "P_strike_fails": 1.5015015010506002e-10,
+    "T": 300,
+    "V_A": 19.917328095761828,
+    "V_H": 5.080455448299299e-09,
+    "control_retained": 1.5015011456398497e-10,
+    "human_chose_war": false,
+    "pv_transfer_H": 0.0,
+    "regime": "reneg",
+    "strike_year": 0,
+    "x_first": null,
+    "x_hi": 0.15,
+    "x_last": null,
+    "x_lo": 0.0
+   },
+   "reneg_two_sided": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 19.91228485107422,
+    "V_H": 37.41263082078491,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 13.339472698069164,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.39428965754506606,
+    "x_hi": 1.5,
+    "x_last": 0.39428965754506606,
+    "x_lo": 0.0
+   },
+   "reneg_up": {
+    "P_seizure": 0.0,
+    "P_strike_fails": 0.0,
+    "T": 300,
+    "V_A": 19.91228485107422,
+    "V_H": 37.41263082078491,
+    "control_retained": 1.0,
+    "human_chose_war": false,
+    "pv_transfer_H": 13.339472698069164,
+    "regime": "reneg",
+    "strike_year": null,
+    "x_first": 0.39428965754506606,
+    "x_hi": 1.5,
+    "x_last": 0.39428965754506606,
+    "x_lo": 0.15
+   }
+  }
+ }
+}

@@ -1,0 +1,2567 @@
+{
+ "bootstrap": {
+  "max_abs_log_ratio": 0.08403582359457107,
+  "median_abs_log_ratio": 0.014840232149894814,
+  "n": 1000,
+  "rows": [
+   {
+    "alias": "Claude 3 Opus (Inspect)",
+    "p50": {
+     "log_ratio": [
+      -0.01768931141324638,
+      -0.01421338445559248
+     ],
+     "ours": [
+      1.676394893466041,
+      8.64114311749482
+     ],
+     "published": [
+      1.706313,
+      8.76484
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.014872875332318878,
+      -0.05497669516927481
+     ],
+     "ours": [
+      0.19334532226950946,
+      2.0049634980567874
+     ],
+     "published": [
+      0.190491,
+      2.118276
+     ]
+    }
+   },
+   {
+    "alias": "Claude 3.5 Sonnet (New) (Inspect)",
+    "p50": {
+     "log_ratio": [
+      -0.02673164483309198,
+      -0.010035861840436418
+     ],
+     "ours": [
+      9.876451782689717,
+      40.4126621291665
+     ],
+     "published": [
+      10.144026,
+      40.82028
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.01263110765180147,
+      -0.015845007464558063
+     ],
+     "ours": [
+      0.9051511586663621,
+      7.248103058386802
+     ],
+     "published": [
+      0.89379,
+      7.363864
+     ]
+    }
+   },
+   {
+    "alias": "Claude 3.5 Sonnet (Old) (Inspect)",
+    "p50": {
+     "log_ratio": [
+      -0.00883841826551373,
+      0.00595488435283817
+     ],
+     "ours": [
+      5.441427226941435,
+      22.517907074026468
+     ],
+     "published": [
+      5.489734,
+      22.384214
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.003376406121556638,
+      -0.01669015003081958
+     ],
+     "ours": [
+      0.5812291563665911,
+      4.497819754831381
+     ],
+     "published": [
+      0.57927,
+      4.573519
+     ]
+    }
+   },
+   {
+    "alias": "Claude 3.7 Sonnet (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.011443573023263907,
+      0.029122708359995125
+     ],
+     "ours": [
+      33.386045928555156,
+      107.30599181841833
+     ],
+     "published": [
+      33.006168,
+      104.226017
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.00823032494725056,
+      0.015203568796013716
+     ],
+     "ours": [
+      4.53810380688234,
+      29.33246417475232
+     ],
+     "published": [
+      4.575608,
+      28.889879
+     ]
+    }
+   },
+   {
+    "alias": "Claude 4 Opus (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.006220346339092986,
+      -0.0011461012865241996
+     ],
+     "ours": [
+      60.36841998927417,
+      163.26684638689946
+     ],
+     "published": [
+      59.994073,
+      163.454074
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.024069833850015574,
+      0.01268522394393857
+     ],
+     "ours": [
+      8.68978962323255,
+      42.47264011466736
+     ],
+     "published": [
+      8.483125,
+      41.937268
+     ]
+    }
+   },
+   {
+    "alias": "Claude 4.1 Opus (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.013938346534592113,
+      -0.008986375360609318
+     ],
+     "ours": [
+      60.10433461594952,
+      158.02544223578067
+     ],
+     "published": [
+      59.272391,
+      159.451918
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.003566202212707889,
+      -0.00218246139359677
+     ],
+     "ours": [
+      10.500940668283125,
+      47.68177372957248
+     ],
+     "published": [
+      10.538456,
+      47.785951
+     ]
+    }
+   },
+   {
+    "alias": "Claude Opus 4.5 (Inspect)",
+    "p50": {
+     "log_ratio": [
+      -0.00726989271033818,
+      0.02321863091462587
+     ],
+     "ours": [
+      160.5463067316385,
+      638.355697056284
+     ],
+     "published": [
+      161.717714,
+      623.704698
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.010472340236588353,
+      0.0009953315112273197
+     ],
+     "ours": [
+      20.877985510277412,
+      104.74552265166564
+     ],
+     "published": [
+      20.660485,
+      104.641318
+     ]
+    }
+   },
+   {
+    "alias": "Claude Opus 4.6 (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.008238178006432353,
+      0.08403582359457107
+     ],
+     "ours": [
+      319.3054142920204,
+      3952.3524097357817
+     ],
+     "published": [
+      316.685725,
+      3633.786163
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.030770766072920026,
+      -0.0045216203278027715
+     ],
+     "ours": [
+      26.20755890784655,
+      169.66895733121774
+     ],
+     "published": [
+      27.026521,
+      170.437873
+     ]
+    }
+   },
+   {
+    "alias": "GPT-4 0314",
+    "p50": {
+     "log_ratio": [
+      0.013926955741441443,
+      -0.011286234721827269
+     ],
+     "ours": [
+      1.9600280192290154,
+      7.905553665030609
+     ],
+     "published": [
+      1.93292,
+      7.995283
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.03220488502344546,
+      0.016385129952047047
+     ],
+     "ours": [
+      0.35420954883731487,
+      2.5654385422666373
+     ],
+     "published": [
+      0.342984,
+      2.523746
+     ]
+    }
+   },
+   {
+    "alias": "GPT-4 1106 (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.04462088221041634,
+      -0.03038590681409213
+     ],
+     "ours": [
+      1.9520463287301841,
+      8.190529569306861
+     ],
+     "published": [
+      1.866859,
+      8.443226
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.05312335029684681,
+      -0.010553997480576015
+     ],
+     "ours": [
+      0.2916901632596093,
+      2.33365419188808
+     ],
+     "published": [
+      0.276599,
+      2.358414
+     ]
+    }
+   },
+   {
+    "alias": "GPT-4 Turbo (Inspect)",
+    "p50": {
+     "log_ratio": [
+      -0.021318785268870176,
+      0.0007339366417480843
+     ],
+     "ours": [
+      1.938280600119219,
+      6.741559061948004
+     ],
+     "published": [
+      1.980046,
+      6.736613
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.0037860503231780017,
+      0.014664104831146833
+     ],
+     "ours": [
+      0.4266585873548168,
+      2.2292575484128556
+     ],
+     "published": [
+      0.428277,
+      2.196806
+     ]
+    }
+   },
+   {
+    "alias": "GPT-4o (Inspect)",
+    "p50": {
+     "log_ratio": [
+      -0.03707439469581668,
+      -0.038892211763614036
+     ],
+     "ours": [
+      3.8558458442796097,
+      12.41344350988376
+     ],
+     "published": [
+      4.001482,
+      12.905741
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.02064987666971858,
+      -0.08218115751169959
+     ],
+     "ours": [
+      0.5514903952508639,
+      2.7772883994714106
+     ],
+     "published": [
+      0.562997,
+      3.01517
+     ]
+    }
+   },
+   {
+    "alias": "GPT-5 (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.013789395313493128,
+      0.003018428585533129
+     ],
+     "ours": [
+      114.20537182698011,
+      406.777542769061
+     ],
+     "published": [
+      112.641357,
+      405.551565
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.03327213382879513,
+      0.0031399222134439637
+     ],
+     "ours": [
+      18.557054666318994,
+      70.31355785009252
+     ],
+     "published": [
+      19.184874,
+      70.093125
+     ]
+    }
+   },
+   {
+    "alias": "GPT-5.1-Codex-Max (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.006751370111173657,
+      -0.0026800346193070804
+     ],
+     "ours": [
+      135.22061962799353,
+      395.1462968900175
+     ],
+     "published": [
+      134.31077,
+      396.206723
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.013115794699661572,
+      -0.01394779111581273
+     ],
+     "ours": [
+      26.94629011945746,
+      87.14148789230717
+     ],
+     "published": [
+      27.30204,
+      88.365435
+     ]
+    }
+   },
+   {
+    "alias": "GPT-5.2",
+    "p50": {
+     "log_ratio": [
+      -0.03469622820705103,
+      0.0563228160567961
+     ],
+     "ours": [
+      191.31315170403388,
+      862.4081319277968
+     ],
+     "published": [
+      198.067494,
+      815.177445
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.015214933944531536,
+      0.009651450160868474
+     ],
+     "ours": [
+      32.15057737645091,
+      133.00826664579924
+     ],
+     "published": [
+      31.665111,
+      131.730719
+     ]
+    }
+   },
+   {
+    "alias": "GPT-5.3-Codex",
+    "p50": {
+     "log_ratio": [
+      -0.014807588967470751,
+      0.05037583435824675
+     ],
+     "ours": [
+      192.04820412732636,
+      858.5298601534552
+     ],
+     "published": [
+      194.913134,
+      816.351994
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.016241979881333194,
+      0.009482537631078166
+     ],
+     "ours": [
+      22.727664635467445,
+      123.22189677741736
+     ],
+     "published": [
+      22.361504,
+      122.058963
+     ]
+    }
+   },
+   {
+    "alias": "Gemini 3 Pro",
+    "p50": {
+     "log_ratio": [
+      -0.01897049092451726,
+      0.02152974888642398
+     ],
+     "ours": [
+      136.94249272330848,
+      387.48880536462804
+     ],
+     "published": [
+      139.565157,
+      379.235434
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      0.03212411434748433,
+      0.02191622792862627
+     ],
+     "ours": [
+      26.48782699182883,
+      105.58433847177841
+     ],
+     "published": [
+      25.650451,
+      103.295501
+     ]
+    }
+   },
+   {
+    "alias": "o1 (Inspect)",
+    "p50": {
+     "log_ratio": [
+      0.024425274672464133,
+      0.03433839029046735
+     ],
+     "ours": [
+      21.68782604666196,
+      67.22158960762458
+     ],
+     "published": [
+      21.164512,
+      64.95249
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.03062475473781668,
+      0.041111678798900195
+     ],
+     "ours": [
+      2.9444645216365024,
+      17.339017946790886
+     ],
+     "published": [
+      3.036033,
+      16.640636
+     ]
+    }
+   },
+   {
+    "alias": "o1-preview",
+    "p50": {
+     "log_ratio": [
+      -0.009379708445725594,
+      -0.0068790932120036995
+     ],
+     "ours": [
+      11.606812307002958,
+      33.151041706777725
+     ],
+     "published": [
+      11.716193,
+      33.379877
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.016927437600190193,
+      0.03656058390615926
+     ],
+     "ours": [
+      1.9788637902016946,
+      9.244317942723043
+     ],
+     "published": [
+      2.012646,
+      8.912444
+     ]
+    }
+   },
+   {
+    "alias": "o3 (Inspect)",
+    "p50": {
+     "log_ratio": [
+      -0.022153278833282185,
+      0.003232398371754583
+     ],
+     "ours": [
+      72.98059723980093,
+      191.56202309069306
+     ],
+     "published": [
+      74.615398,
+      190.943818
+     ]
+    },
+    "p80": {
+     "log_ratio": [
+      -0.013445324505713776,
+      -0.01677444634303664
+     ],
+     "ours": [
+      14.92531712609033,
+      56.86164356842129
+     ],
+     "published": [
+      15.127348,
+      57.823511
+     ]
+    }
+   }
+  ]
+ },
+ "bootstrap_vs_upstream_max_abs_log_ratio": 0.0017845722377004426,
+ "doubling_times": {
+  "all_time_stitched": {
+   "abs_diff": -0.00045621186461630714,
+   "ours": 187.77754378813538,
+   "ours_without_16h_exclusion": 182.6639039139613,
+   "published": 187.778,
+   "within_tolerance": true
+  },
+  "from_2023_on": {
+   "abs_diff": -0.0001973492547335809,
+   "ours": 128.74380265074527,
+   "ours_without_16h_exclusion": 124.76559063324224,
+   "published": 128.744,
+   "within_tolerance": true
+  }
+ },
+ "revisions": [
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 18.217769,
+    "p80": 3.199037,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 19.764601,
+    "p80": 4.192071,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_3_5_sonnet",
+   "p50_ratio": 1.0849078720890575,
+   "p80_ratio": 1.3104165409778006,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 28.98308,
+    "p80": 4.641502,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 30.454555,
+    "p80": 5.907631,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_3_5_sonnet_20241022",
+   "p50_ratio": 1.050770138991439,
+   "p80_ratio": 1.2727843271423778,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 58.995323,
+    "p80": 15.027277,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 55.258445,
+    "p80": 20.378794,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_3_7_sonnet",
+   "p50_ratio": 0.9366580635553093,
+   "p80_ratio": 1.3561202072737462,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 6.422456,
+    "p80": 1.125523,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 7.148402,
+    "p80": 1.578216,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_3_opus",
+   "p50_ratio": 1.1130324598564785,
+   "p80_ratio": 1.402206796307139,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 113.683473,
+    "p80": 21.890424,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 109.263038,
+    "p80": 27.289864,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_4_1_opus",
+   "p50_ratio": 0.9611162917234239,
+   "p80_ratio": 1.246657625270301,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 85.563366,
+    "p80": 20.879205,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 83.567793,
+    "p80": 26.88671,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_4_opus",
+   "p50_ratio": 0.9766772499342767,
+   "p80_ratio": 1.2877267118168534,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 74.94601,
+    "p80": 17.092196,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 73.660733,
+    "p80": 21.948674,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_4_sonnet",
+   "p50_ratio": 0.9828506280721281,
+   "p80_ratio": 1.2841342329563736,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-12-19",
+    "p50": 288.927205,
+    "p80": 27.172279,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 246.781803,
+    "p80": 36.039286,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_opus_4_5",
+   "p50_ratio": 0.854131416942894,
+   "p80_ratio": 1.3263254804648517,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 121.942249,
+    "p80": 21.178587,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 116.528413,
+    "p80": 26.095319,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "claude_sonnet_4_5",
+   "p50_ratio": 0.9556032790571215,
+   "p80_ratio": 1.2321558090726261,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 0.148847,
+    "p80": 0.034191,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 0.144057,
+    "p80": 0.056238,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "davinci_002",
+   "p50_ratio": 0.9678193043863832,
+   "p80_ratio": 1.644818811968062,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 26.923383,
+    "p80": 4.337196,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 27.887616,
+    "p80": 5.629461,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "deepseek_r1",
+   "p50_ratio": 1.03581396141785,
+   "p80_ratio": 1.2979494124775548,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 32.173687,
+    "p80": 3.773558,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 32.764282,
+    "p80": 4.671541,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "deepseek_r1_0528",
+   "p50_ratio": 1.018356460047616,
+   "p80_ratio": 1.237967191706077,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-06-27",
+    "p50": 18.485727,
+    "p80": 3.84346,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 19.822812,
+    "p80": 5.424593,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "deepseek_v3",
+   "p50_ratio": 1.0723306689534038,
+   "p80_ratio": 1.4113827124518012,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 23.260377,
+    "p80": 5.264371,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 24.594348,
+    "p80": 7.452729,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "deepseek_v3_0324",
+   "p50_ratio": 1.0573495003971776,
+   "p80_ratio": 1.4156922071031848,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 39.528138,
+    "p80": 9.30802,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 40.182282,
+    "p80": 12.565677,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gemini_2_5_pro_preview",
+   "p50_ratio": 1.0165488189704257,
+   "p80_ratio": 1.34998388486488,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 44.757083,
+    "p80": 6.650389,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 45.110184,
+    "p80": 8.35222,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt-oss-120b",
+   "p50_ratio": 1.0078892764302803,
+   "p80_ratio": 1.2558994669334382,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 0.039791,
+    "p80": 0.005661,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 0.053778,
+    "p80": 0.0128,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt2",
+   "p50_ratio": 1.351511648362695,
+   "p80_ratio": 2.2610846140257905,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 0.60628,
+    "p80": 0.177114,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 0.599247,
+    "p80": 0.25538,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_3_5_turbo_instruct",
+   "p50_ratio": 0.9883997492907567,
+   "p80_ratio": 1.4418961798615582,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 5.36383,
+    "p80": 0.965132,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 6.024114,
+    "p80": 1.367526,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_4",
+   "p50_ratio": 1.1230993525149007,
+   "p80_ratio": 1.4169315699821372,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 5.366038,
+    "p80": 1.197524,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 6.346859,
+    "p80": 1.913986,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_4_0125",
+   "p50_ratio": 1.1827830887518875,
+   "p80_ratio": 1.5982861303823555,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 8.569266,
+    "p80": 1.456694,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 9.394536,
+    "p80": 2.01019,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_4_1106",
+   "p50_ratio": 1.0963057979528235,
+   "p80_ratio": 1.3799672408893016,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 6.56715,
+    "p80": 1.523306,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 7.777455,
+    "p80": 2.492662,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_4_turbo",
+   "p50_ratio": 1.1842968410954524,
+   "p80_ratio": 1.6363501489523444,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 9.183516,
+    "p80": 1.69453,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 10.174857,
+    "p80": 2.374364,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_4o",
+   "p50_ratio": 1.1079478709461605,
+   "p80_ratio": 1.4011932512260035,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-08-06",
+    "p50": 137.73809,
+    "p80": 26.558988,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 130.816528,
+    "p80": 32.984347,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_5",
+   "p50_ratio": 0.9497483811485988,
+   "p80_ratio": 1.2419278550824302,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-11-19",
+    "p50": 173.263213,
+    "p80": 32.366446,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 162.253699,
+    "p80": 40.039035,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "gpt_5_1_codex_max",
+   "p50_ratio": 0.9364578677182905,
+   "p80_ratio": 1.2370537994811044,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-20",
+    "p50": 109.17174,
+    "p80": 15.296022,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 104.84751,
+    "p80": 18.59131,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "grok_4",
+   "p50_ratio": 0.9603905736044878,
+   "p80_ratio": 1.2154343135751242,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-11-19",
+    "p50": 57.602524,
+    "p80": 11.645755,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 57.621724,
+    "p80": 15.004943,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "kimi_k2_thinking",
+   "p50_ratio": 1.0003333187274919,
+   "p80_ratio": 1.2884474213994714,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 39.20756,
+    "p80": 5.972849,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 41.551706,
+    "p80": 7.645697,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "o1_elicited",
+   "p50_ratio": 1.0597881122926294,
+   "p80_ratio": 1.2800753878090674,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-03-19",
+    "p50": 22.2212,
+    "p80": 4.610785,
+    "source": "refit:th10_2025-03-18"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 23.254728,
+    "p80": 6.418505,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "o1_preview",
+   "p50_ratio": 1.046510899501377,
+   "p80_ratio": 1.3920633905072564,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-04-16",
+    "p50": 94.001912,
+    "p80": 21.419845,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 91.443799,
+    "p80": 27.30067,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "o3",
+   "p50_ratio": 0.9727865854473258,
+   "p80_ratio": 1.274550306036295,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-04-16",
+    "p50": 78.591036,
+    "p80": 15.938635,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 76.748308,
+    "p80": 20.147776,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "o4-mini",
+   "p50_ratio": 0.9765529493719868,
+   "p80_ratio": 1.2640841577713524,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-06-27",
+    "p50": 5.154185,
+    "p80": 0.933717,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 5.813798,
+    "p80": 1.325385,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "qwen_2_5_72b",
+   "p50_ratio": 1.1279761979828042,
+   "p80_ratio": 1.4194718528205013,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2025-06-27",
+    "p50": 2.24382,
+    "p80": 0.424853,
+    "source": "refit:th10_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 2.536634,
+    "p80": 0.595157,
+    "source": "published:benchmark_results_1_0.yaml"
+   },
+   "model_key": "qwen_2_72b",
+   "p50_ratio": 1.1304979900348513,
+   "p80_ratio": 1.400853942422438,
+   "suite": "TH1.0"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 10.769734,
+    "p80": 1.319419,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 11.395377,
+    "p80": 1.671757,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "claude_3_5_sonnet_20240620_inspect",
+   "p50_ratio": 1.0580927068393704,
+   "p80_ratio": 1.2670402654501718,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 19.776153,
+    "p80": 2.110724,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 20.522872,
+    "p80": 2.595677,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "claude_3_5_sonnet_20241022_inspect",
+   "p50_ratio": 1.037758556985274,
+   "p80_ratio": 1.2297567090723374,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 59.764418,
+    "p80": 9.792359,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 60.388937,
+    "p80": 12.09179,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "claude_3_7_sonnet_inspect",
+   "p50_ratio": 1.0104496792723723,
+   "p80_ratio": 1.2348189031876793,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 3.573458,
+    "p80": 0.476494,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 3.952262,
+    "p80": 0.638973,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "claude_3_opus_inspect",
+   "p50_ratio": 1.1060048837848382,
+   "p80_ratio": 1.340988553895747,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-02-12",
+    "p50": 100.846503,
+    "p80": 18.850563,
+    "source": "refit:th11_2026-02-12"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 100.472004,
+    "p80": 23.455761,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "claude_4_1_opus_inspect",
+   "p50_ratio": 0.9962864453515061,
+   "p80_ratio": 1.2443002895987774,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 101.184481,
+    "p80": 16.64175,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 100.366123,
+    "p80": 20.429752,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "claude_4_opus_inspect",
+   "p50_ratio": 0.9919122182382889,
+   "p80_ratio": 1.2276204125167127,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 320.406691,
+    "p80": 41.549788,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 292.994594,
+    "p80": 49.430584,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "claude_opus_4_5_inspect",
+   "p50_ratio": 0.9144459283467335,
+   "p80_ratio": 1.1896711482619358,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-02-04",
+    "p50": 236.655757,
+    "p80": 43.435099,
+    "source": "refit:th11_2026-02-12"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 224.325884,
+    "p80": 54.142849,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gemini_3_pro",
+   "p50_ratio": 0.9478995433861345,
+   "p80_ratio": 1.2465229790313128,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 3.524312,
+    "p80": 0.621707,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 3.987428,
+    "p80": 0.889561,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gpt_4",
+   "p50_ratio": 1.1314060730151019,
+   "p80_ratio": 1.4308363907757191,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 3.608883,
+    "p80": 0.563302,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 4.044959,
+    "p80": 0.783032,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gpt_4_1106_inspect",
+   "p50_ratio": 1.1208340641688856,
+   "p80_ratio": 1.3900749509144295,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 3.226683,
+    "p80": 0.617446,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 3.732787,
+    "p80": 0.927933,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gpt_4_turbo_inspect",
+   "p50_ratio": 1.1568496192529605,
+   "p80_ratio": 1.5028569299987367,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 6.404473,
+    "p80": 0.947773,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 6.991195,
+    "p80": 1.267009,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gpt_4o_inspect",
+   "p50_ratio": 1.0916112848004824,
+   "p80_ratio": 1.3368274892827714,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-02-04",
+    "p50": 236.549121,
+    "p80": 40.997992,
+    "source": "refit:th11_2026-02-12"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 223.714694,
+    "p80": 50.632499,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gpt_5_1_codex_max_inspect",
+   "p50_ratio": 0.9457430788762051,
+   "p80_ratio": 1.2349994848528192,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-02-04",
+    "p50": 394.231582,
+    "p80": 55.241527,
+    "source": "refit:th11_2026-02-12"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 352.249302,
+    "p80": 66.002649,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gpt_5_2",
+   "p50_ratio": 0.8935085824757693,
+   "p80_ratio": 1.1948013131497977,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 213.951731,
+    "p80": 31.642894,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 203.012577,
+    "p80": 38.312431,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "gpt_5_2025_08_07_inspect",
+   "p50_ratio": 0.948870925470568,
+   "p80_ratio": 1.2107751901580177,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 37.936725,
+    "p80": 5.719841,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 38.831588,
+    "p80": 7.090121,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "o1_inspect",
+   "p50_ratio": 1.023588303945583,
+   "p80_ratio": 1.239566099826901,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 19.396598,
+    "p80": 3.407555,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 20.326586,
+    "p80": 4.420545,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "o1_preview",
+   "p50_ratio": 1.047945933611657,
+   "p80_ratio": 1.2972776668314965,
+   "suite": "TH1.1"
+  },
+  {
+   "first": {
+    "available": "2026-01-29",
+    "p50": 120.732783,
+    "p80": 23.904003,
+    "source": "refit:th11_2026-01-20"
+   },
+   "latest": {
+    "available": "2026-03-03",
+    "p50": 119.732634,
+    "p80": 29.981603,
+    "source": "published:benchmark_results_1_1.yaml"
+   },
+   "model_key": "o3_inspect",
+   "p50_ratio": 0.9917160113835859,
+   "p80_ratio": 1.2542503027630978,
+   "suite": "TH1.1"
+  }
+ ],
+ "th10_points": [
+  {
+   "alias": "Claude 3 Opus",
+   "model_key": "claude_3_opus",
+   "p50": {
+    "ours": 7.14802607620022,
+    "published": 7.148402,
+    "rel_diff": -5.258850856171282e-05
+   },
+   "p80": {
+    "ours": 1.5781762467047917,
+    "published": 1.578216,
+    "rel_diff": -2.518875439627699e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 3.5 Sonnet (New)",
+   "model_key": "claude_3_5_sonnet_20241022",
+   "p50": {
+    "ours": 30.457315056499763,
+    "published": 30.454555,
+    "rel_diff": 9.062869248177563e-05
+   },
+   "p80": {
+    "ours": 5.907379048025829,
+    "published": 5.907631,
+    "rel_diff": -4.264856321778421e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 3.5 Sonnet (Old)",
+   "model_key": "claude_3_5_sonnet",
+   "p50": {
+    "ours": 19.766627722270286,
+    "published": 19.764601,
+    "rel_diff": 0.0001025430399677063
+   },
+   "p80": {
+    "ours": 4.192193659218193,
+    "published": 4.192071,
+    "rel_diff": 2.925981410939471e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 3.7 Sonnet",
+   "model_key": "claude_3_7_sonnet",
+   "p50": {
+    "ours": 55.25883213417078,
+    "published": 55.258445,
+    "rel_diff": 7.005882463273494e-06
+   },
+   "p80": {
+    "ours": 20.37919886066516,
+    "published": 20.378794,
+    "rel_diff": 1.9866762731801657e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 4 Opus",
+   "model_key": "claude_4_opus",
+   "p50": {
+    "ours": 83.57986401581842,
+    "published": 83.567793,
+    "rel_diff": 0.00014444578928185514
+   },
+   "p80": {
+    "ours": 26.920106945237233,
+    "published": 26.88671,
+    "rel_diff": 0.0012421358075136446
+   },
+   "within_tolerance": false
+  },
+  {
+   "alias": "Claude 4 Sonnet",
+   "model_key": "claude_4_sonnet",
+   "p50": {
+    "ours": 73.67376130309933,
+    "published": 73.660733,
+    "rel_diff": 0.00017686903956448674
+   },
+   "p80": {
+    "ours": 21.972513106724875,
+    "published": 21.948674,
+    "rel_diff": 0.001086129700813565
+   },
+   "within_tolerance": false
+  },
+  {
+   "alias": "Claude 4.1 Opus",
+   "model_key": "claude_4_1_opus",
+   "p50": {
+    "ours": 109.26928765877086,
+    "published": 109.263038,
+    "rel_diff": 5.719828850869746e-05
+   },
+   "p80": {
+    "ours": 27.28628385442528,
+    "published": 27.289864,
+    "rel_diff": -0.00013118957187618907
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude Opus 4.5",
+   "model_key": "claude_opus_4_5",
+   "p50": {
+    "ours": 246.80527846249566,
+    "published": 246.781803,
+    "rel_diff": 9.512639185826899e-05
+   },
+   "p80": {
+    "ours": 36.04231767134146,
+    "published": 36.039286,
+    "rel_diff": 8.412129312063144e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude Sonnet 4.5",
+   "model_key": "claude_sonnet_4_5",
+   "p50": {
+    "ours": 116.5375218473551,
+    "published": 116.528413,
+    "rel_diff": 7.81684665618343e-05
+   },
+   "p80": {
+    "ours": 26.106069816971136,
+    "published": 26.095319,
+    "rel_diff": 0.0004119825847361813
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "DeepSeek-R1",
+   "model_key": "deepseek_r1",
+   "p50": {
+    "ours": 27.88779945171382,
+    "published": 27.887616,
+    "rel_diff": 6.578250138611352e-06
+   },
+   "p80": {
+    "ours": 5.628675802145222,
+    "published": 5.629461,
+    "rel_diff": -0.0001394801127103662
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "DeepSeek-R1-0528",
+   "model_key": "deepseek_r1_0528",
+   "p50": {
+    "ours": 32.76418766018272,
+    "published": 32.764282,
+    "rel_diff": -2.8793494476486714e-06
+   },
+   "p80": {
+    "ours": 4.6715987046821015,
+    "published": 4.671541,
+    "rel_diff": 1.2352386953518035e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "DeepSeek-V3",
+   "model_key": "deepseek_v3",
+   "p50": {
+    "ours": 19.82214817484333,
+    "published": 19.822812,
+    "rel_diff": -3.348794089697016e-05
+   },
+   "p80": {
+    "ours": 5.424447214638299,
+    "published": 5.424593,
+    "rel_diff": -2.687489396913101e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "DeepSeek-V3-0324",
+   "model_key": "deepseek_v3_0324",
+   "p50": {
+    "ours": 24.59286288788645,
+    "published": 24.594348,
+    "rel_diff": -6.0384284777503794e-05
+   },
+   "p80": {
+    "ours": 7.452257144928579,
+    "published": 7.452729,
+    "rel_diff": -6.331305907147922e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-2",
+   "model_key": "gpt2",
+   "p50": {
+    "ours": 0.053790913362567916,
+    "published": 0.053778,
+    "rel_diff": 0.00024012351831448342
+   },
+   "p80": {
+    "ours": 0.012816289624976395,
+    "published": 0.0128,
+    "rel_diff": 0.0012726269512808308
+   },
+   "within_tolerance": false
+  },
+  {
+   "alias": "GPT-4 0125",
+   "model_key": "gpt_4_0125",
+   "p50": {
+    "ours": 6.346953459428144,
+    "published": 6.346859,
+    "rel_diff": 1.4882862238385641e-05
+   },
+   "p80": {
+    "ours": 1.9140981377420858,
+    "published": 1.913986,
+    "rel_diff": 5.858859055707377e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4 0314",
+   "model_key": "gpt_4",
+   "p50": {
+    "ours": 6.026886710276764,
+    "published": 6.024114,
+    "rel_diff": 0.00046026856011760486
+   },
+   "p80": {
+    "ours": 1.3683976208161064,
+    "published": 1.367526,
+    "rel_diff": 0.0006373705626849802
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4 1106",
+   "model_key": "gpt_4_1106",
+   "p50": {
+    "ours": 9.393929015790997,
+    "published": 9.394536,
+    "rel_diff": -6.461034467308835e-05
+   },
+   "p80": {
+    "ours": 2.0100741384061567,
+    "published": 2.01019,
+    "rel_diff": -5.7637135715271626e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4 Turbo",
+   "model_key": "gpt_4_turbo",
+   "p50": {
+    "ours": 7.776754410685884,
+    "published": 7.777455,
+    "rel_diff": -9.007950725725689e-05
+   },
+   "p80": {
+    "ours": 2.4927604580346068,
+    "published": 2.492662,
+    "rel_diff": 3.949915175294194e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4o",
+   "model_key": "gpt_4o",
+   "p50": {
+    "ours": 10.173933485042594,
+    "published": 10.174857,
+    "rel_diff": -9.076441638489197e-05
+   },
+   "p80": {
+    "ours": 2.37417379349161,
+    "published": 2.374364,
+    "rel_diff": -8.01084030881416e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-5",
+   "model_key": "gpt_5",
+   "p50": {
+    "ours": 130.81131561990412,
+    "published": 130.816528,
+    "rel_diff": -3.984496588904651e-05
+   },
+   "p80": {
+    "ours": 32.97949718410711,
+    "published": 32.984347,
+    "rel_diff": -0.00014703386102776772
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-5.1-Codex-Max",
+   "model_key": "gpt_5_1_codex_max",
+   "p50": {
+    "ours": 162.24320072482078,
+    "published": 162.253699,
+    "rel_diff": -6.470284032922269e-05
+   },
+   "p80": {
+    "ours": 40.03427650863252,
+    "published": 40.039035,
+    "rel_diff": -0.00011884630504899185
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Gemini 2.5 Pro Preview",
+   "model_key": "gemini_2_5_pro_preview",
+   "p50": {
+    "ours": 40.17958055486913,
+    "published": 40.182282,
+    "rel_diff": -6.722975889894567e-05
+   },
+   "p80": {
+    "ours": 12.56749169152085,
+    "published": 12.565677,
+    "rel_diff": 0.00014441653409114075
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Grok 4",
+   "model_key": "grok_4",
+   "p50": {
+    "ours": 104.84582074934873,
+    "published": 104.84751,
+    "rel_diff": -1.6111499941851015e-05
+   },
+   "p80": {
+    "ours": 18.590863831014588,
+    "published": 18.59131,
+    "rel_diff": -2.399879219983081e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Kimi K2 Thinking",
+   "model_key": "kimi_k2_thinking",
+   "p50": {
+    "ours": 57.631857223254336,
+    "published": 57.621724,
+    "rel_diff": 0.00017585768961603243
+   },
+   "p80": {
+    "ours": 15.015798312893715,
+    "published": 15.004943,
+    "rel_diff": 0.0007234491256458142
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Qwen2-72B",
+   "model_key": "qwen_2_72b",
+   "p50": {
+    "ours": 2.53688967726069,
+    "published": 2.536634,
+    "rel_diff": 0.00010079391062745024
+   },
+   "p80": {
+    "ours": 0.5952828444952278,
+    "published": 0.595157,
+    "rel_diff": 0.00021144755959823236
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Qwen2.5-72B",
+   "model_key": "qwen_2_5_72b",
+   "p50": {
+    "ours": 5.813432590919901,
+    "published": 5.813798,
+    "rel_diff": -6.285204269207423e-05
+   },
+   "p80": {
+    "ours": 1.325234235664757,
+    "published": 1.325385,
+    "rel_diff": -0.0001137513516774602
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "davinci-002 (GPT-3)",
+   "model_key": "davinci_002",
+   "p50": {
+    "ours": 0.14402822210267463,
+    "published": 0.144057,
+    "rel_diff": -0.00019976743459437785
+   },
+   "p80": {
+    "ours": 0.056251884265126964,
+    "published": 0.056238,
+    "rel_diff": 0.00024688404863182356
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "gpt-3.5-turbo-instruct",
+   "model_key": "gpt_3_5_turbo_instruct",
+   "p50": {
+    "ours": 0.5982179056615206,
+    "published": 0.599247,
+    "rel_diff": -0.0017173124579337173
+   },
+   "p80": {
+    "ours": 0.25516720188556197,
+    "published": 0.25538,
+    "rel_diff": -0.0008332606877516913
+   },
+   "within_tolerance": false
+  },
+  {
+   "alias": "gpt-oss-120b",
+   "model_key": "gpt-oss-120b",
+   "p50": {
+    "ours": 45.113014154194715,
+    "published": 45.110184,
+    "rel_diff": 6.27386976457256e-05
+   },
+   "p80": {
+    "ours": 8.353985788148826,
+    "published": 8.35222,
+    "rel_diff": 0.0002114154259376111
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "o1",
+   "model_key": "o1_elicited",
+   "p50": {
+    "ours": 41.55415630075631,
+    "published": 41.551706,
+    "rel_diff": 5.896991946152674e-05
+   },
+   "p80": {
+    "ours": 7.647182365980958,
+    "published": 7.645697,
+    "rel_diff": 0.00019427476408728772
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "o1-preview",
+   "model_key": "o1_preview",
+   "p50": {
+    "ours": 23.256953504947578,
+    "published": 23.254728,
+    "rel_diff": 9.570118160828756e-05
+   },
+   "p80": {
+    "ours": 6.419066818375112,
+    "published": 6.418505,
+    "rel_diff": 8.753103333436485e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "o3",
+   "model_key": "o3",
+   "p50": {
+    "ours": 91.44256764167596,
+    "published": 91.443799,
+    "rel_diff": -1.3465738929241411e-05
+   },
+   "p80": {
+    "ours": 27.310789588098533,
+    "published": 27.30067,
+    "rel_diff": 0.00037067178565708403
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "o4-mini",
+   "model_key": "o4-mini",
+   "p50": {
+    "ours": 76.75719890030769,
+    "published": 76.748308,
+    "rel_diff": 0.00011584490315663665
+   },
+   "p80": {
+    "ours": 20.15946399572472,
+    "published": 20.147776,
+    "rel_diff": 0.0005801134440208688
+   },
+   "within_tolerance": true
+  }
+ ],
+ "th10_points_maxrel": 0.0017173124579337173,
+ "th10_points_ok": false,
+ "th10_points_worst": "gpt-3.5-turbo-instruct",
+ "th11_points": [
+  {
+   "alias": "Claude 3 Opus (Inspect)",
+   "model_key": "claude_3_opus_inspect",
+   "p50": {
+    "ours": 3.9523355424834965,
+    "published": 3.952262,
+    "rel_diff": 1.8607694402872355e-05
+   },
+   "p80": {
+    "ours": 0.6390231629450048,
+    "published": 0.638973,
+    "rel_diff": 7.850557849042872e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 3.5 Sonnet (New) (Inspect)",
+   "model_key": "claude_3_5_sonnet_20241022_inspect",
+   "p50": {
+    "ours": 20.523148860453855,
+    "published": 20.522872,
+    "rel_diff": 1.3490336725485719e-05
+   },
+   "p80": {
+    "ours": 2.5955782541664005,
+    "published": 2.595677,
+    "rel_diff": -3.8042419607364764e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 3.5 Sonnet (Old) (Inspect)",
+   "model_key": "claude_3_5_sonnet_20240620_inspect",
+   "p50": {
+    "ours": 11.394229860376972,
+    "published": 11.395377,
+    "rel_diff": -0.00010066710588230166
+   },
+   "p80": {
+    "ours": 1.6716558799203114,
+    "published": 1.671757,
+    "rel_diff": -6.048730747865161e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 3.7 Sonnet (Inspect)",
+   "model_key": "claude_3_7_sonnet_inspect",
+   "p50": {
+    "ours": 60.38766927198462,
+    "published": 60.388937,
+    "rel_diff": -2.099271950051218e-05
+   },
+   "p80": {
+    "ours": 12.091278716941783,
+    "published": 12.09179,
+    "rel_diff": -4.228348807056026e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 4 Opus (Inspect)",
+   "model_key": "claude_4_opus_inspect",
+   "p50": {
+    "ours": 100.37248394238803,
+    "published": 100.366123,
+    "rel_diff": 6.33773846980823e-05
+   },
+   "p80": {
+    "ours": 20.42967785627171,
+    "published": 20.429752,
+    "rel_diff": -3.629203540578274e-06
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude 4.1 Opus (Inspect)",
+   "model_key": "claude_4_1_opus_inspect",
+   "p50": {
+    "ours": 100.47180486646587,
+    "published": 100.472004,
+    "rel_diff": -1.9819803148690696e-06
+   },
+   "p80": {
+    "ours": 23.45541653785634,
+    "published": 23.455761,
+    "rel_diff": -1.4685609375786335e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude Opus 4.5 (Inspect)",
+   "model_key": "claude_opus_4_5_inspect",
+   "p50": {
+    "ours": 293.00213264031765,
+    "published": 292.994594,
+    "rel_diff": 2.572962256652822e-05
+   },
+   "p80": {
+    "ours": 49.43391791520567,
+    "published": 49.430584,
+    "rel_diff": 6.744640536049396e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Claude Opus 4.6 (Inspect)",
+   "model_key": "claude_opus_4_6_inspect",
+   "p50": {
+    "ours": 718.9243692614466,
+    "published": 718.80683,
+    "rel_diff": 0.00016351995632346572
+   },
+   "p80": {
+    "ours": 69.87201173020034,
+    "published": 69.874587,
+    "rel_diff": -3.6855599585328136e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4 0314",
+   "model_key": "gpt_4",
+   "p50": {
+    "ours": 3.9871683302693053,
+    "published": 3.987428,
+    "rel_diff": -6.512211147002844e-05
+   },
+   "p80": {
+    "ours": 0.8895057133422907,
+    "published": 0.889561,
+    "rel_diff": -6.2150496378921e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4 1106 (Inspect)",
+   "model_key": "gpt_4_1106_inspect",
+   "p50": {
+    "ours": 4.044847948813757,
+    "published": 4.044959,
+    "rel_diff": -2.745421801386705e-05
+   },
+   "p80": {
+    "ours": 0.7830186737790318,
+    "published": 0.783032,
+    "rel_diff": -1.701874376547341e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4 Turbo (Inspect)",
+   "model_key": "gpt_4_turbo_inspect",
+   "p50": {
+    "ours": 3.732740844685427,
+    "published": 3.732787,
+    "rel_diff": -1.2364840151102285e-05
+   },
+   "p80": {
+    "ours": 0.9279215487951978,
+    "published": 0.927933,
+    "rel_diff": -1.2340551313716475e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-4o (Inspect)",
+   "model_key": "gpt_4o_inspect",
+   "p50": {
+    "ours": 6.9906685289150605,
+    "published": 6.991195,
+    "rel_diff": -7.530487776974404e-05
+   },
+   "p80": {
+    "ours": 1.2669092356588982,
+    "published": 1.267009,
+    "rel_diff": -7.874004139030166e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-5 (Inspect)",
+   "model_key": "gpt_5_2025_08_07_inspect",
+   "p50": {
+    "ours": 202.99571335241018,
+    "published": 203.012577,
+    "rel_diff": -8.306700914306742e-05
+   },
+   "p80": {
+    "ours": 38.31118538620799,
+    "published": 38.312431,
+    "rel_diff": -3.251200092235784e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-5.1-Codex-Max (Inspect)",
+   "model_key": "gpt_5_1_codex_max_inspect",
+   "p50": {
+    "ours": 223.7268194053902,
+    "published": 223.714694,
+    "rel_diff": 5.4200308318597124e-05
+   },
+   "p80": {
+    "ours": 50.63108725240004,
+    "published": 50.632499,
+    "rel_diff": -2.7882242193078e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-5.2",
+   "model_key": "gpt_5_2",
+   "p50": {
+    "ours": 352.2464293424866,
+    "published": 352.249302,
+    "rel_diff": -8.155182982916287e-06
+   },
+   "p80": {
+    "ours": 66.00541560178948,
+    "published": 66.002649,
+    "rel_diff": 4.191652655438638e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "GPT-5.3-Codex",
+   "model_key": "gpt_5_3_codex",
+   "p50": {
+    "ours": 349.49601526432724,
+    "published": 349.530732,
+    "rel_diff": -9.932384335453737e-05
+   },
+   "p80": {
+    "ours": 54.73240647471349,
+    "published": 54.739407,
+    "rel_diff": -0.00012788821929521355
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "Gemini 3 Pro",
+   "model_key": "gemini_3_pro",
+   "p50": {
+    "ours": 224.34490987831586,
+    "published": 224.325884,
+    "rel_diff": 8.48135666584593e-05
+   },
+   "p80": {
+    "ours": 54.141426228654694,
+    "published": 54.142849,
+    "rel_diff": -2.6278102678078952e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "o1 (Inspect)",
+   "model_key": "o1_inspect",
+   "p50": {
+    "ours": 38.83081452884314,
+    "published": 38.831588,
+    "rel_diff": -1.9918607419899814e-05
+   },
+   "p80": {
+    "ours": 7.089806364953181,
+    "published": 7.090121,
+    "rel_diff": -4.43765412211361e-05
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "o1-preview",
+   "model_key": "o1_preview",
+   "p50": {
+    "ours": 20.32941046617154,
+    "published": 20.326586,
+    "rel_diff": 0.0001389542824132839
+   },
+   "p80": {
+    "ours": 4.421094718282153,
+    "published": 4.420545,
+    "rel_diff": 0.00012435531866628047
+   },
+   "within_tolerance": true
+  },
+  {
+   "alias": "o3 (Inspect)",
+   "model_key": "o3_inspect",
+   "p50": {
+    "ours": 119.73252995236805,
+    "published": 119.732634,
+    "rel_diff": -8.689997745836564e-07
+   },
+   "p80": {
+    "ours": 29.981576725521418,
+    "published": 29.981603,
+    "rel_diff": -8.763533618783015e-07
+   },
+   "within_tolerance": true
+  }
+ ],
+ "th11_points_maxrel": 0.00016351995632346572,
+ "th11_points_ok": true,
+ "tolerances": {
+  "doubling_days_abs": 0.001,
+  "point_rel": 0.001
+ },
+ "upstream": {
+  "agents": {
+   "Claude 3 Opus (Inspect)": {
+    "average": 0.294753,
+    "p50": 3.952262,
+    "p50q0.025": 1.676577,
+    "p50q0.975": 8.644877,
+    "p80": 0.638973,
+    "p80q0.025": 0.193369,
+    "p80q0.975": 2.005169
+   },
+   "Claude 3.5 Sonnet (New) (Inspect)": {
+    "average": 0.452356,
+    "p50": 20.522872,
+    "p50q0.025": 9.874824,
+    "p50q0.975": 40.412855,
+    "p80": 2.595677,
+    "p80q0.025": 0.905094,
+    "p80q0.975": 7.247944
+   },
+   "Claude 3.5 Sonnet (Old) (Inspect)": {
+    "average": 0.401502,
+    "p50": 11.395377,
+    "p50q0.025": 5.441687,
+    "p50q0.975": 22.516722,
+    "p80": 1.671757,
+    "p80q0.025": 0.581256,
+    "p80q0.975": 4.498402
+   },
+   "Claude 3.7 Sonnet (Inspect)": {
+    "average": 0.558217,
+    "p50": 60.388937,
+    "p50q0.025": 33.385879,
+    "p50q0.975": 107.302719,
+    "p80": 12.09179,
+    "p80q0.025": 4.538607,
+    "p80q0.975": 29.331824
+   },
+   "Claude 4 Opus (Inspect)": {
+    "average": 0.615452,
+    "p50": 100.366123,
+    "p50q0.025": 60.36877,
+    "p50q0.975": 163.28087,
+    "p80": 20.429752,
+    "p80q0.025": 8.689914,
+    "p80q0.975": 42.472934
+   },
+   "Claude 4.1 Opus (Inspect)": {
+    "average": 0.615713,
+    "p50": 100.472004,
+    "p50q0.025": 60.105845,
+    "p50q0.975": 158.015405,
+    "p80": 23.455761,
+    "p80q0.025": 10.49816,
+    "p80q0.975": 47.715211
+   },
+   "Claude Opus 4.5 (Inspect)": {
+    "average": 0.73007,
+    "p50": 292.994594,
+    "p50q0.025": 160.539157,
+    "p50q0.975": 638.619623,
+    "p80": 49.430584,
+    "p80q0.025": 20.878605,
+    "p80q0.975": 104.745812
+   },
+   "Claude Opus 4.6 (Inspect)": {
+    "average": 0.788644,
+    "p50": 718.80683,
+    "p50q0.025": 319.32091,
+    "p50q0.975": 3949.750392,
+    "p80": 69.874587,
+    "p80q0.025": 26.206972,
+    "p80q0.975": 169.697548
+   },
+   "GPT-4 0314": {
+    "average": 0.293044,
+    "p50": 3.987428,
+    "p50q0.025": 1.959555,
+    "p50q0.975": 7.906991,
+    "p80": 0.889561,
+    "p80q0.025": 0.353578,
+    "p80q0.975": 2.565517
+   },
+   "GPT-4 1106 (Inspect)": {
+    "average": 0.28905,
+    "p50": 4.044959,
+    "p50q0.025": 1.952629,
+    "p50q0.975": 8.193214,
+    "p80": 0.783032,
+    "p80q0.025": 0.291717,
+    "p80q0.975": 2.334083
+   },
+   "GPT-4 Turbo (Inspect)": {
+    "average": 0.271786,
+    "p50": 3.732787,
+    "p50q0.025": 1.938233,
+    "p50q0.975": 6.742026,
+    "p80": 0.927933,
+    "p80q0.025": 0.426791,
+    "p80q0.975": 2.229245
+   },
+   "GPT-4o (Inspect)": {
+    "average": 0.338424,
+    "p50": 6.991195,
+    "p50q0.025": 3.851599,
+    "p50q0.975": 12.414331,
+    "p80": 1.267009,
+    "p80q0.025": 0.551517,
+    "p80q0.975": 2.776774
+   },
+   "GPT-5 (Inspect)": {
+    "average": 0.693697,
+    "p50": 203.012577,
+    "p50q0.025": 114.211156,
+    "p50q0.975": 406.743053,
+    "p80": 38.312431,
+    "p80q0.025": 18.558207,
+    "p80q0.975": 70.313466
+   },
+   "GPT-5.1-Codex-Max (Inspect)": {
+    "average": 0.708301,
+    "p50": 223.714694,
+    "p50q0.025": 135.214914,
+    "p50q0.975": 395.13675,
+    "p80": 50.632499,
+    "p80q0.025": 26.94592,
+    "p80q0.975": 87.141313
+   },
+   "GPT-5.2": {
+    "average": 0.752875,
+    "p50": 352.249302,
+    "p50q0.025": 191.31908,
+    "p50q0.975": 862.339204,
+    "p80": 66.002649,
+    "p80q0.025": 32.15869,
+    "p80q0.975": 133.011471
+   },
+   "GPT-5.3-Codex": {
+    "average": 0.745439,
+    "p50": 349.530732,
+    "p50q0.025": 192.048863,
+    "p50q0.975": 858.325814,
+    "p80": 54.739407,
+    "p80q0.025": 22.728306,
+    "p80q0.975": 123.217662
+   },
+   "Gemini 3 Pro": {
+    "average": 0.709822,
+    "p50": 224.325884,
+    "p50q0.025": 136.865815,
+    "p50q0.975": 387.478199,
+    "p80": 54.142849,
+    "p80q0.025": 26.496334,
+    "p80q0.975": 105.52151
+   },
+   "o1 (Inspect)": {
+    "average": 0.510512,
+    "p50": 38.831588,
+    "p50q0.025": 21.687821,
+    "p50q0.975": 67.221467,
+    "p80": 7.090121,
+    "p80q0.025": 2.944768,
+    "p80q0.975": 17.338613
+   },
+   "o1-preview": {
+    "average": 0.451441,
+    "p50": 20.326586,
+    "p50q0.025": 11.61017,
+    "p50q0.975": 33.15407,
+    "p80": 4.420545,
+    "p80q0.025": 1.978925,
+    "p80q0.975": 9.245178
+   },
+   "o3 (Inspect)": {
+    "average": 0.636235,
+    "p50": 119.732634,
+    "p50q0.025": 72.982684,
+    "p50q0.975": 191.583353,
+    "p80": 29.981603,
+    "p80q0.025": 14.925206,
+    "p80q0.975": 56.861131
+   }
+  },
+  "max_abs_log_ratio_ci": 0.08337726019819199,
+  "max_rel_point": 0.0,
+  "n_bootstrap": 1000,
+  "versions": {
+   "numpy": "2.4.1",
+   "pandas": "2.3.3",
+   "scikit-learn": "1.8.0"
+  }
+ },
+ "upstream_commit": "52cb829c7a2efb2d659285c4b1768d191d97f8d2"
+}

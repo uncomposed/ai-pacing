@@ -167,6 +167,108 @@ class UnitsBridgeTest(unittest.TestCase):
         self.c['conversions'] = [x for x in self.c['conversions'] if 'ECI' not in x['from'] and 'EFFICIENCY' not in x['from']]
         self.rejects('category software_efficiency has no quantity')
 
+    # issue #39: the unit is defined once, and stocks and flows stay apart
+    def modes_copy(self):
+        m = copy.deepcopy(MODES)
+        pact = next(a for a in m['adapters'] if a['id'] == 'AD-PACT')
+        return m, next(x for x in pact['quantities'] if x['name'] == 'AI capacity A')
+
+    def defn(self, ident):
+        return next(x for x in self.q['definitions'] if x['id'] == ident)
+
+    def test_eiu_definition_is_a_stock_with_rejected_readings(self):
+        d = self.defn('DEF-EIU')
+        self.assertEqual(d['kind'], 'stock')
+        self.assertEqual(d['output_rate']['conversion'], 'CV-CAPACITY-TO-OUTPUT')
+        rejected = ' '.join(r['reading'] for r in d['rejects']).lower()
+        for word in ('industry', 'primary energy', 'gdp'):
+            self.assertIn(word, rejected)
+        roles = {b['role'] for b in d['basis']}
+        self.assertEqual(roles, {'stock', 'flow'})
+
+    def test_unit_defined_twice(self):
+        extra = copy.deepcopy(self.defn('DEF-EIU'))
+        extra['id'] = 'DEF-EIU-ENERGY'
+        self.q['definitions'].append(extra)
+        self.rejects('already has a definition (DEF-EIU); a unit is defined once')
+
+    def test_unit_without_definition(self):
+        self.q['definitions'] = [x for x in self.q['definitions'] if x['id'] != 'DEF-LEC']
+        self.rejects('normalized dimension le_capacity has no definition')
+
+    def test_definition_needs_rejected_alternatives(self):
+        self.defn('DEF-EIU')['rejects'] = []
+        self.rejects('quantities_file')
+
+    def test_definition_basis_equation_must_exist(self):
+        self.defn('DEF-EIU')['basis'][0]['equation'] = 'PACT-NOWHERE'
+        self.rejects('basis names unknown equation PACT-NOWHERE')
+
+    def test_flow_unit_in_use_needs_output_rate(self):
+        del self.defn('DEF-EIU')['output_rate']
+        self.rejects('so the definition states its output rate')
+
+    def test_output_rate_must_be_a_normalization_from_stock_to_flow(self):
+        self.defn('DEF-EIU')['output_rate']['conversion'] = 'CV-EIU-TO-PRIMARY-POWER'
+        self.rejects('must be a normalization with one value')
+
+    def test_stock_booked_to_flow(self):
+        self.qty('QTY-TOY-CAPITAL')['contract']['accounting'] = 'industrial_output'
+        self.rejects('QTY-TOY-CAPITAL: a stock is booked to industrial_output, a flow')
+
+    def test_flow_booked_to_stock(self):
+        self.qty('QTY-INDUSTRIAL-OUTPUT')['contract']['accounting'] = 'industrial_capacity'
+        self.rejects('QTY-INDUSTRIAL-OUTPUT: a flow is booked to industrial_capacity, a stock')
+
+    def test_normalized_flow_needs_per_time(self):
+        self.qty('QTY-TOY-DESIGN')['unit'] = 'EIU'
+        self.c['conversions'] = [x for x in self.c['conversions'] if 'TOY-DESIGN' not in x['from'] + x['to']]
+        self.e['equations'] = [x for x in self.e['equations'] if 'D' not in x['text'].split()]
+        self.rejects('QTY-TOY-DESIGN: a flow in a normalized unit is per time')
+
+    def test_normalized_stock_has_no_time(self):
+        self.qty('QTY-PACT-A')['unit'] = 'EIU/yr'
+        self.rejects('QTY-PACT-A: a stock in a normalized unit carries no time dimension')
+
+    def test_contract_books_a_as_flow_again(self):
+        modes, a = self.modes_copy()
+        a['accounting'] = 'industrial_output'
+        a['kind'] = 'flow'
+        errors = tool.validate(self.q, self.c, self.e, modes, PARAMS)
+        self.assertTrue(any("must declare kind stock (it declares flow)" in x for x in errors), errors)
+
+    def test_contract_must_declare_kind(self):
+        modes, a = self.modes_copy()
+        del a['kind']
+        errors = tool.validate(self.q, self.c, self.e, modes, PARAMS)
+        self.assertTrue(any("must declare kind stock (it declares None)" in x for x in errors), errors)
+
+    def test_contract_output_rate_must_match_dictionary(self):
+        modes, a = self.modes_copy()
+        a['output_rate']['value'] = 0.3
+        errors = tool.validate(self.q, self.c, self.e, modes, PARAMS)
+        self.assertTrue(any('output rate 0.3 per year differs from CV-CAPACITY-TO-OUTPUT' in x for x in errors), errors)
+
+    def test_output_rate_without_matching_conversion(self):
+        self.c['conversions'] = [x for x in self.c['conversions'] if x['id'] != 'CV-CAPACITY-TO-OUTPUT']
+        self.defn('DEF-EIU')['output_rate']['conversion'] = 'CV-RATE-TO-DOUBLING'
+        self.rejects('but no normalization leads from QTY-PACT-A to a quantity booked there')
+
+    def test_observed_primary_needs_a_primary_observation_record(self):
+        self.cv('CV-GWP-TO-EIU-OUTPUT')['evidence']['ref'] = 'EV-GATE-PAPER-2025'
+        self.rejects('CV-GWP-TO-EIU-OUTPUT: observed_primary needs an evidence record')
+
+    def test_gwp_factor_is_reciprocal_of_reference_gwp(self):
+        self.e['symbols']['Y_ref']['value'] = 2.0e14          # PPP instead of market exchange rates
+        self.rejects('CV-GWP-TO-EIU-OUTPUT: derivation gives')
+
+    def test_gwp_conversion_stays_uncoupled(self):
+        self.assertFalse(self.cv('CV-GWP-TO-EIU-OUTPUT')['coupled'])
+
+    def test_solver_flow_terms_need_the_output_rate(self):
+        self.eq('PACT-AI-FLOW')['text'] = 'Y_AI = A + sigma * T_trade'
+        self.rejects('equation PACT-AI-FLOW: adds earth_industry to earth_industry*time^-1')
+
     def test_schema_rejects_unknown_evidence_status(self):
         self.qty('QTY-CHI0')['evidence']['status'] = 'validated'
         self.rejects('quantities_file')

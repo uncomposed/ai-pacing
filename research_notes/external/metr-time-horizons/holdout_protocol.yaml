@@ -1,0 +1,70 @@
+# Rolling-origin holdout for METR frontier time horizons. Declared before holdout.py was first run on
+# data/observations.csv (see the commit order on the branch). [[ai gen]] 2026-10-25.
+#
+# Label: RETROSPECTIVE. Every outcome scored here was public before this file was written, and its author
+# had seen METR's published trend (doubling about every 4 to 7 months). Only inputs available by each cutoff
+# are used, but the choice of design was not blind. It follows evidence/protocol.yaml (P-CUTOFF, P-REVISIONS,
+# P-ROLLING, P-BASELINES, P-SCORING, P-SELECTION, P-LABEL); the forecasts are registered there.
+#
+# Nothing here is a development model. The two baselines are the comparators any later model (#14) must beat
+# on these splits before it is promoted (#12 stopping rule).
+
+label: retrospective
+protocol_version: 0.1.0
+observations: data/observations.csv
+
+# Information set at date t, for one suite: every model with a row whose `available` <= t, each at the value
+# of its latest such row (later rows are revisions or re-measurements). Suites are never mixed: TH1.0 and
+# TH1.1 differ in tasks, human-time estimates and infrastructure.
+series:
+  - {suite: TH1.0, metric: p50_min}
+  - {suite: TH1.0, metric: p80_min}
+  - {suite: TH1.1, metric: p50_min}
+  - {suite: TH1.1, metric: p80_min}
+
+# Target: the frontier F(t) = max over the information set at t of the metric, in minutes of human expert
+# time. A forecast made at cutoff c is for F(c + horizon). Defined without looking at which models appear,
+# so no target is selected on its outcome (P-SELECTION).
+target: frontier_known_by_date
+
+cutoffs:
+  TH1.0: ["2025-03-31", "2025-04-30", "2025-05-31", "2025-06-30", "2025-07-31", "2025-08-31", "2025-09-30"]
+  TH1.1: ["2026-01-31", "2026-02-28", "2026-03-31", "2026-04-30", "2026-05-31"]
+horizon_days: 91
+# A cutoff is used only if cutoff + horizon <= last_date of its suite: TH1.0 values were last added on
+# 2025-12-19 and revised on 2026-01-20; TH1.1's page stopped being updated on 2026-09-08.
+last_date: {TH1.0: "2026-01-19", TH1.1: "2026-09-08"}
+
+resolution:
+  primary: first_published   # F(c + h) from the information set at c + h (values as public then)
+  secondary: latest_vintage  # same models, at their latest values in data/observations.csv (P-REVISIONS)
+
+baselines:
+  B-FLAT:
+    point: "F(c)"
+    interval80: >-
+      exp of the 10% and 90% empirical quantiles of log F(s + h) - log F(s) over month-ends s of the same suite
+      with s + h <= c, added to log F(c). No interval when fewer than 3 such s exist.
+  B-LOGLINEAR:
+    point: >-
+      OLS of ln(metric) on model_release_date (days) over the frontier-advancing models of the information set
+      at c (running maximum by release date, ties kept, as METR's get_sota_agents does), evaluated at
+      c + h - L, where L is the median publication lag (first available minus release date) of the suite's
+      models in that information set.
+    interval80: "OLS prediction interval at the same date, Student t with n - 2 degrees of freedom; none when n < 3."
+
+scoring:
+  - S-ABSLOGERR    # natural log
+  - S-INTERVAL80   # on the natural-log scale: l, u, y are ln(minutes)
+  - S-COVERAGE80
+aggregation: "equal weight over cutoffs, per series and per resolution; origins overlap (h > one month), so scores are serially dependent and n is small"
+
+# Pre-declared comparison rule. "B-LOGLINEAR beats B-FLAT" is stated only if its mean S-ABSLOGERR is lower in
+# both suites for p50_min, under the primary resolution, at horizon 91 and in the 182-day sensitivity.
+# Otherwise the result is "not established", whatever the individual numbers.
+comparison_rule: loglinear_beats_flat_only_if_robust
+
+sensitivities:
+  - {id: H182, horizon_days: 182}
+  - {id: NOSAT, note: "drop values above saturation_minutes (960, METR's 16-hour notice) from the frontier"}
+  - {id: FROM2023, note: "B-LOGLINEAR fitted only on models released on or after 2023-01-01"}

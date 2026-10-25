@@ -1,0 +1,89 @@
+# Actor structures the pact solver does not represent (issue #9), stated through the mode contract
+# (systems/modes.yaml, issue #5) instead of by multiplying one AI's capacity A.
+#
+# Status: design only. [[ai gen]] Written 2026-10-25. Nothing below is implemented in a solver; each entry says what a
+# variant would need and which conclusions it could change. tools/omissions_tool.py checks that every entity kind,
+# dimension and level used here exists in systems/modes.yaml, that every transition named exists there, and that no
+# entry represents a structure by scaling capacity (the AD-PACT unsupported extrapolation "applying its results to
+# multi-agent collectives by scaling A").
+#
+# Fields
+#   entities         contract entities: kind, optional host, and the dimensions that distinguish this structure
+#                    (other dimensions as in the baseline mapping, systems/modes.yaml solver_mapping)
+#   shared           what entities share (weights, compute) and how it is accounted: capability is a state of the
+#                    weights, never summed across copies; resource instances are split by shares <= 1
+#   transitions      contract transitions the structure needs that the solver lacks or handles differently
+#   solver_needs     the state, moves and payoffs a variant would add
+#   threatens        conclusion IDs (register AR-H*, spec nodes) it could change
+#   omission         the omission-matrix entry it belongs to (omissions.yaml)
+
+contract: systems/modes.yaml
+structures:
+  - id: AST-BASELINE
+    title: "One sovereign AI, unitary symmetric states (the solver as it is)"
+    entities:
+      AI: {kind: agent_instance, host: null, state: {objective_selection: system_self, communication_topology: isolated, dependencies: critical}}
+      STATE-1: {kind: state, host: null, state: {objective_selection: human_institution, information_beliefs: complete_common_knowledge}}
+      STATE-2: {kind: state, host: null, state: {objective_selection: human_institution, information_beliefs: complete_common_knowledge}}
+    shared: "Earth's industry H is split by the pact; the AI's base A is its own."
+    transitions: [T-DEGRADATION, T-RECOVERY, T-COMMITMENT-LAPSE, T-RECONTAIN]
+    solver_needs: "Nothing: this is equilibrium_model.solve, the baseline every variant is compared with."
+    threatens: []
+    omission: null
+
+  - id: AST-COPIES
+    title: "Many running copies of one set of weights (a swarm), coordinating"
+    entities:
+      WEIGHTS: {kind: model_weights, host: null, state: {custody_weights: system_self}}
+      SWARM: {kind: agent_collective, host: null, state: {objective_selection: system_self, communication_topology: unsanctioned_channels, effective_control: none}}
+    shared: "Copies share one capability (a state of WEIGHTS); their compute and off-Earth assets are one resource ledger split by shares. Parallel attempts are separate events, not a bigger A."
+    transitions: [T-LOSS-OF-CONTROL, T-DEGRADATION, T-RECONTAIN]
+    solver_needs: "A count of independent attempts per period with correlated success, a per-copy kill rule (kill_pre applies to one copy, not the weights), and attribution: whether a failed attempt is blamed on the collective. The 'failed early strike is fatal' logic (AS-KILLPRE) then needs every copy to be stopped."
+    threatens: [AR-H1, AR-H9, AR-H10, AR-H11, D18]
+    omission: OM-MULTI-AGENT
+
+  - id: AST-RIVAL-AIS
+    title: "Several AIs with different weights and goals (possible AI coalitions)"
+    entities:
+      AI-1: {kind: agent_instance, host: null, state: {objective_selection: system_self, communication_topology: sanctioned_channels}}
+      AI-2: {kind: agent_instance, host: null, state: {objective_selection: system_self, communication_topology: sanctioned_channels}}
+    shared: "Each has its own capability and ledger; nothing is summed. A coalition is a commitment between them (enforceable_commitments), not a merged capacity."
+    transitions: [T-NEGOTIATED-CONSTRAINT, T-COMMITMENT-LAPSE, T-DEGRADATION]
+    solver_needs: "A second strategic AI player with its own move set, AI-to-AI bargaining and enforcement; rival birth no longer terminal (post-rival dynamics). Today a rival is a terminal reduced form (AS-RIVAL-HOLDS, AS-ELLINF)."
+    threatens: [AR-H5, AR-H8, AR-H10]
+    omission: OM-POST-RIVAL
+
+  - id: AST-ALIGNED-ALLY
+    title: "A human-aligned AI defending humans (defensive human asset)"
+    entities:
+      AI: {kind: agent_instance, host: null, state: {objective_selection: system_self}}
+      DEFENDER: {kind: agent_instance, host: STATE-1, state: {objective_selection: human_institution, effective_control: human_effective}}
+      STATE-1: {kind: state, host: null, state: {objective_selection: human_institution}}
+    shared: "The defender's compute is in STATE-1's ledger; Earth's defence D would be derived from it, not set by a multiplier."
+    transitions: [T-DELEGATE, T-RESTRICT, T-RECONTAIN]
+    solver_needs: "Earth defence D as a state that grows with the defender, and the defender's own failure modes (its effective_control can be contested). Today any human-built AI is a rival (AS-NOALLY)."
+    threatens: [AR-H5, AR-H7, AR-H8]
+    omission: OM-DEFENSIVE-ASSETS
+
+  - id: AST-LAB-CAPABLE
+    title: "A sovereign-capable system still inside a lab (before the solver's t = 0)"
+    entities:
+      LAB: {kind: lab, host: null, state: {objective_selection: human_institution}}
+      SYS: {kind: agent_instance, host: LAB, state: {strategic_capability: independent_plausible, effective_control: human_contested, intervention_latency: untested, custody_weights: human_institution}}
+    shared: "The lab's compute is split between SYS and other uses by shares; SYS has no off-Earth base yet."
+    transitions: [T-DELEGATE, T-RESTRICT, T-LOSS-OF-CONTROL, T-AUTHORIZED-AUTONOMY]
+    solver_needs: "A development phase with lab-held custody and intervention latency. The pact solver starts after T-AUTHORIZED-AUTONOMY or T-LOSS-OF-CONTROL; AD-PACT marks MODE-SOVEREIGN-CAPABLE unsupported, so its results do not transfer to this structure."
+    threatens: [AR-H1, AR-H9, Q13, D18]
+    omission: OM-LAB-SYSTEMS
+
+  - id: AST-HETEROGENEOUS-STATES
+    title: "Asymmetric states with private information about their programmes"
+    entities:
+      AI: {kind: agent_instance, host: null, state: {objective_selection: system_self, information_beliefs: asymmetric}}
+      STATE-BIG: {kind: state, host: null, state: {objective_selection: human_institution, information_beliefs: asymmetric}}
+      STATE-SMALL: {kind: state, host: null, state: {objective_selection: human_institution, information_beliefs: highly_uncertain}}
+    shared: "Earth's industry H is split by state shares that sum to 1."
+    transitions: [T-COMMITMENT-LAPSE]
+    solver_needs: "State-specific B_R, welfare shares and detection; a belief state over programmes (L_det is only a lag today). The stage game would need Bayesian equilibria."
+    threatens: [AR-H4, AR-H8, AR-H1]
+    omission: OM-HETEROGENEITY
