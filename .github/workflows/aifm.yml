@@ -1,0 +1,71 @@
+# AI Futures Model replication (issue #14). Started by hand (Actions tab > aifm > Run workflow).
+# Fetches the upstream at the pinned commit, runs its own golden tests, re-runs the reference trajectory,
+# feedback-off baseline and anchor comparison, and a seeded Monte Carlo, then uploads the summaries.
+# Nothing is ever committed or pushed: a person downloads the artifact, compares it with
+# research_notes/external/ai-futures-model/results/, and commits deliberately.
+# No secrets; read-only token; actions pinned by full commit SHA (tag in the trailing comment).
+name: aifm
+
+on:
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: "Rollout preset (see PRESETS in aifm_runner.py)"
+        type: choice
+        default: published-daniel-08-16-26
+        options: [published-daniel-08-16-26, pinned-q2-daniel]
+      num_samples:
+        description: "Monte Carlo samples (about 4 CPU-seconds each; 1000 takes about 20 minutes on 4 cores)"
+        type: string
+        default: "1000"
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.14"
+  DIR: research_notes/external/ai-futures-model
+
+jobs:
+  run:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: python -m pip install -r "$DIR/requirements-upstream.txt"
+      - name: Fetch the upstream at the pinned commit
+        run: bash "$DIR/fetch_upstream.sh" "$RUNNER_TEMP/aifm"
+      - name: Upstream's own golden tests (trajectory, milestones, components)
+        working-directory: ${{ runner.temp }}/aifm
+        run: python -m pytest -q -p no:cacheprovider tests/test_full_trajectory.py tests/test_ces_functions.py tests/test_taste_distribution.py tests/test_automation_model.py
+      - name: Reference trajectory, feedback-off baseline, anchor modes
+        run: |
+          python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" reference
+          python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" feedback-off
+          python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" anchors
+      - name: Seeded Monte Carlo
+        env:
+          PRESET: ${{ inputs.preset }}
+          N: ${{ inputs.num_samples }}
+        run: |
+          case "$N" in ''|*[!0-9]*) echo "num_samples must be a whole number"; exit 1;; esac
+          python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" rollouts --preset "$PRESET" -n "$N" \
+            --workers "$(getconf _NPROCESSORS_ONLN)" --out "$RUNNER_TEMP/rollouts"
+      - name: Fast checks on the regenerated summaries
+        if: always()
+        run: python "$DIR/tests/test_aifm.py"
+      - name: Show what differs from the committed summaries
+        if: always()
+        run: git diff --stat -- "$DIR/results" || true
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: aifm-results-${{ github.run_id }}
+          path: ${{ env.DIR }}/results
+          retention-days: 30
+          if-no-files-found: warn

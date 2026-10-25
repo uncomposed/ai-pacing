@@ -1,0 +1,14 @@
+{
+ "reference_trajectory": {
+  "series_rtol": 0.001,
+  "series_atol": 1e-09,
+  "milestone_time_atol_years": 0.01,
+  "progress_atol_ooms": 0.001,
+  "multiplier_rtol": 0.001,
+  "basis": "series_rtol matches the upstream's own TRAJECTORY_RTOL (ODE solver rtol 1e-3 to 1e-4). Milestone times use an absolute 0.01 year (about 4 days) instead of the upstream's relative 1e-3, which on a calendar year allows about 2 years."
+ },
+ "seeded_distribution": {
+  "z": 3.0,
+  "basis": "Sampling noise only. Each quantile passes when |ours - published| <= z * sqrt(se_ours^2 + se_pub^2); se_ours by bootstrap over our draws, se_pub scaled from it by sqrt(n_ours/n_pub). Achievement rates use z pooled binomial standard errors. It does not absorb code changes between the published run and the pinned commit; those show up as failures and are reported, not tolerated."
+ }
+}

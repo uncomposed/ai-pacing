@@ -1,0 +1,603 @@
+{
+ "what": "Seeded Monte Carlo, preset published-daniel-08-16-26: config app/forecast/data/simulations/daniel-08-16-26/sampling_config.yaml, inputs inputs/2200.csv, seed 20260810, time range [2017.0, 2200.0], 1000 samples.",
+ "status": "source-model replication of a sampling-measure output; shares are draws under the sampled parameter measure, not calibrated probabilities; not empirical validation",
+ "preset": {
+  "config": "app/forecast/data/simulations/daniel-08-16-26/sampling_config.yaml",
+  "input_data": "inputs/2200.csv",
+  "seed": 20260810,
+  "time_range": [
+   2017.0,
+   2200.0
+  ],
+  "published_dir": "app/forecast/data/simulations/daniel-08-16-26",
+  "num_samples": 1000
+ },
+ "failed_rollouts": 51,
+ "failures_by_reason": {
+  "revenue: timeout": 3,
+  "time-horizon: timeout": 5,
+  "uplift-solved: infeasible uplift belief": 35,
+  "uplift-solved: timeout": 8
+ },
+ "failure_note": "Timeouts come from the upstream's 30 s per-sample limit and depend on machine load; infeasible uplift beliefs are the model's own rejections (uplift-solved mode).",
+ "summary": {
+  "overall": {
+   "AC": {
+    "num_achieved": 942,
+    "num_not_achieved": 7,
+    "total_rollouts": 949,
+    "achievement_rate_pct": 99.26238145416228,
+    "p10": 2026.8999212640538,
+    "p50": 2027.920999402019,
+    "p90": 2031.6321299149683,
+    "bootstrap_se": {
+     "p10": 0.022567653220116675,
+     "p50": 0.050822563988639505,
+     "p90": 0.35863514145724745
+    }
+   },
+   "AI2027-SC": {
+    "num_achieved": 881,
+    "num_not_achieved": 68,
+    "total_rollouts": 949,
+    "achievement_rate_pct": 92.8345626975764,
+    "p10": 2027.2857064314207,
+    "p50": 2028.847445330356,
+    "p90": 2039.4371690010726,
+    "bootstrap_se": {
+     "p10": 0.0396736927022339,
+     "p50": 0.0706013951299018,
+     "p90": 12.15261421269537
+    }
+   },
+   "SAR-level-experiment-selection-skill": {
+    "num_achieved": 939,
+    "num_not_achieved": 10,
+    "total_rollouts": 949,
+    "achievement_rate_pct": 98.94625922023182,
+    "p10": 2027.214303515294,
+    "p50": 2028.9416589578839,
+    "p90": 2037.182221583324,
+    "bootstrap_se": {
+     "p10": 0.04404554706247587,
+     "p50": 0.09556473161076108,
+     "p90": 0.7016539796285122
+    }
+   },
+   "SIAR-level-experiment-selection-skill": {
+    "num_achieved": 927,
+    "num_not_achieved": 22,
+    "total_rollouts": 949,
+    "achievement_rate_pct": 97.68177028451001,
+    "p10": 2027.518021965792,
+    "p50": 2029.917050431035,
+    "p90": 2050.578393844653,
+    "bootstrap_se": {
+     "p10": 0.06785630890407192,
+     "p50": 0.14772704577593976,
+     "p90": 3.0187095779218915
+    }
+   },
+   "TED-AI": {
+    "num_achieved": 925,
+    "num_not_achieved": 24,
+    "total_rollouts": 949,
+    "achievement_rate_pct": 97.47102212855637,
+    "p10": 2027.410710165664,
+    "p50": 2029.587399266893,
+    "p90": 2047.4811676896852,
+    "bootstrap_se": {
+     "p10": 0.05664094856824771,
+     "p50": 0.12811906603596457,
+     "p90": 2.150119060680491
+    }
+   },
+   "ASI": {
+    "num_achieved": 903,
+    "num_not_achieved": 46,
+    "total_rollouts": 949,
+    "achievement_rate_pct": 95.15279241306638,
+    "p10": 2027.6089134737022,
+    "p50": 2030.610463083767,
+    "p90": 2070.274036799156,
+    "bootstrap_se": {
+     "p10": 0.06294989372415069,
+     "p50": 0.21237147258922603,
+     "p90": 6.5432398836043255
+    }
+   }
+  },
+  "by_mode": {
+   "revenue": {
+    "AC": {
+     "num_achieved": 226,
+     "num_not_achieved": 7,
+     "total_rollouts": 233,
+     "achievement_rate_pct": 96.99570815450643,
+     "p10": 2026.8143913255612,
+     "p50": 2028.1254132162762,
+     "p90": 2034.1985629720414
+    },
+    "AI2027-SC": {
+     "num_achieved": 210,
+     "num_not_achieved": 23,
+     "total_rollouts": 233,
+     "achievement_rate_pct": 90.12875536480686,
+     "p10": 2027.5132715177094,
+     "p50": 2029.0500140341558,
+     "p90": 2073.079939558541
+    },
+    "SAR-level-experiment-selection-skill": {
+     "num_achieved": 224,
+     "num_not_achieved": 9,
+     "total_rollouts": 233,
+     "achievement_rate_pct": 96.13733905579399,
+     "p10": 2027.4537458304446,
+     "p50": 2029.2041071129672,
+     "p90": 2042.0518788762665
+    },
+    "SIAR-level-experiment-selection-skill": {
+     "num_achieved": 222,
+     "num_not_achieved": 11,
+     "total_rollouts": 233,
+     "achievement_rate_pct": 95.27896995708154,
+     "p10": 2027.774229337024,
+     "p50": 2030.5327334845724,
+     "p90": 2058.494806769411
+    },
+    "TED-AI": {
+     "num_achieved": 220,
+     "num_not_achieved": 13,
+     "total_rollouts": 233,
+     "achievement_rate_pct": 94.4206008583691,
+     "p10": 2027.71090154904,
+     "p50": 2029.981422428946,
+     "p90": 2066.879866215327
+    },
+    "ASI": {
+     "num_achieved": 213,
+     "num_not_achieved": 20,
+     "total_rollouts": 233,
+     "achievement_rate_pct": 91.41630901287553,
+     "p10": 2027.798963603204,
+     "p50": 2031.5784848078713,
+     "p90": 2087.643083622943
+    }
+   },
+   "time-horizon": {
+    "AC": {
+     "num_achieved": 276,
+     "num_not_achieved": 0,
+     "total_rollouts": 276,
+     "achievement_rate_pct": 100.0,
+     "p10": 2027.058640252707,
+     "p50": 2027.9585116116907,
+     "p90": 2030.836970763557
+    },
+    "AI2027-SC": {
+     "num_achieved": 256,
+     "num_not_achieved": 20,
+     "total_rollouts": 276,
+     "achievement_rate_pct": 92.7536231884058,
+     "p10": 2027.3271530900086,
+     "p50": 2028.8524822266154,
+     "p90": 2038.2474024247094
+    },
+    "SAR-level-experiment-selection-skill": {
+     "num_achieved": 276,
+     "num_not_achieved": 0,
+     "total_rollouts": 276,
+     "achievement_rate_pct": 100.0,
+     "p10": 2027.3251586523393,
+     "p50": 2028.8135078175253,
+     "p90": 2036.1262442700595
+    },
+    "SIAR-level-experiment-selection-skill": {
+     "num_achieved": 270,
+     "num_not_achieved": 6,
+     "total_rollouts": 276,
+     "achievement_rate_pct": 97.82608695652173,
+     "p10": 2027.5224611906774,
+     "p50": 2029.4262048774099,
+     "p90": 2047.7258989384325
+    },
+    "TED-AI": {
+     "num_achieved": 272,
+     "num_not_achieved": 4,
+     "total_rollouts": 276,
+     "achievement_rate_pct": 98.55072463768116,
+     "p10": 2027.4456130238655,
+     "p50": 2029.2755835122457,
+     "p90": 2044.435475083027
+    },
+    "ASI": {
+     "num_achieved": 265,
+     "num_not_achieved": 11,
+     "total_rollouts": 276,
+     "achievement_rate_pct": 96.01449275362319,
+     "p10": 2027.5379800120186,
+     "p50": 2029.9538848321217,
+     "p90": 2062.8314737119044
+    }
+   },
+   "uplift-solved": {
+    "AC": {
+     "num_achieved": 440,
+     "num_not_achieved": 0,
+     "total_rollouts": 440,
+     "achievement_rate_pct": 100.0,
+     "p10": 2026.8701748855954,
+     "p50": 2027.7673237035854,
+     "p90": 2031.2215448625172
+    },
+    "AI2027-SC": {
+     "num_achieved": 415,
+     "num_not_achieved": 25,
+     "total_rollouts": 440,
+     "achievement_rate_pct": 94.31818181818181,
+     "p10": 2027.2122532351616,
+     "p50": 2028.7016717668816,
+     "p90": 2036.8906056368544
+    },
+    "SAR-level-experiment-selection-skill": {
+     "num_achieved": 439,
+     "num_not_achieved": 1,
+     "total_rollouts": 440,
+     "achievement_rate_pct": 99.77272727272727,
+     "p10": 2027.120617984734,
+     "p50": 2028.8312995926667,
+     "p90": 2036.9069546595522
+    },
+    "SIAR-level-experiment-selection-skill": {
+     "num_achieved": 435,
+     "num_not_achieved": 5,
+     "total_rollouts": 440,
+     "achievement_rate_pct": 98.86363636363636,
+     "p10": 2027.4380818872137,
+     "p50": 2029.8876213199126,
+     "p90": 2051.833715445544
+    },
+    "TED-AI": {
+     "num_achieved": 433,
+     "num_not_achieved": 7,
+     "total_rollouts": 440,
+     "achievement_rate_pct": 98.4090909090909,
+     "p10": 2027.3066425800864,
+     "p50": 2029.5721803833621,
+     "p90": 2044.4110529432871
+    },
+    "ASI": {
+     "num_achieved": 425,
+     "num_not_achieved": 15,
+     "total_rollouts": 440,
+     "achievement_rate_pct": 96.5909090909091,
+     "p10": 2027.5851300895413,
+     "p50": 2030.5178129783587,
+     "p90": 2063.7841682610388
+    }
+   }
+  }
+ },
+ "published": {
+  "source": "app/forecast/data/simulations/daniel-08-16-26/milestone_pdfs_overlay_statistics.csv",
+  "metadata": {
+   "id": "daniel-08-16-26",
+   "forecaster": "Daniel",
+   "date": "08-16-26",
+   "customIdentifier": null,
+   "sourceRunDir": "/root/aifm_daniel_run/outputs/daniel_q2_10k/20260810_192534",
+   "modelVersion": null,
+   "exportedAt": "2026-08-10T20:06:18.623067",
+   "numSamples": 10000,
+   "presentDay": 2026.578082,
+   "timeRange": [
+    2017.0,
+    2200.0
+   ],
+   "seed": 20260810
+  },
+  "overall": {
+   "AC": {
+    "num_achieved": 9535,
+    "num_not_achieved": 77,
+    "total_rollouts": 9612,
+    "achievement_rate_pct": 99.2,
+    "p10": 2026.8912,
+    "p50": 2027.9218,
+    "p90": 2031.6771
+   },
+   "AI2027-SC": {
+    "num_achieved": 8944,
+    "num_not_achieved": 668,
+    "total_rollouts": 9612,
+    "achievement_rate_pct": 93.05,
+    "p10": 2027.2889,
+    "p50": 2028.8479,
+    "p90": 2040.9654
+   },
+   "SAR-level-experiment-selection-skill": {
+    "num_achieved": 9486,
+    "num_not_achieved": 126,
+    "total_rollouts": 9612,
+    "achievement_rate_pct": 98.69,
+    "p10": 2027.2605,
+    "p50": 2028.9254,
+    "p90": 2037.803
+   },
+   "SIAR-level-experiment-selection-skill": {
+    "num_achieved": 9318,
+    "num_not_achieved": 294,
+    "total_rollouts": 9612,
+    "achievement_rate_pct": 96.94,
+    "p10": 2027.5472,
+    "p50": 2029.9744,
+    "p90": 2051.5303
+   },
+   "TED-AI": {
+    "num_achieved": 9312,
+    "num_not_achieved": 300,
+    "total_rollouts": 9612,
+    "achievement_rate_pct": 96.88,
+    "p10": 2027.4618,
+    "p50": 2029.6071,
+    "p90": 2048.0584
+   },
+   "ASI": {
+    "num_achieved": 9076,
+    "num_not_achieved": 536,
+    "total_rollouts": 9612,
+    "achievement_rate_pct": 94.42,
+    "p10": 2027.6322,
+    "p50": 2030.6335,
+    "p90": 2073.462
+   }
+  }
+ },
+ "comparison": {
+  "tolerance": {
+   "z": 3.0,
+   "basis": "Sampling noise only. Each quantile passes when |ours - published| <= z * sqrt(se_ours^2 + se_pub^2); se_ours by bootstrap over our draws, se_pub scaled from it by sqrt(n_ours/n_pub). Achievement rates use z pooled binomial standard errors. It does not absorb code changes between the published run and the pinned commit; those show up as failures and are reported, not tolerated."
+  },
+  "rows": [
+   {
+    "milestone": "AC",
+    "stat": "p10",
+    "ours": 2026.8999212640538,
+    "published": 2026.8912,
+    "diff": 0.00872126405374729,
+    "tolerance": 0.07096648495417231,
+    "pass": true
+   },
+   {
+    "milestone": "AC",
+    "stat": "p50",
+    "ours": 2027.920999402019,
+    "published": 2027.9218,
+    "diff": -0.0008005979809695418,
+    "tolerance": 0.15981718114213375,
+    "pass": true
+   },
+   {
+    "milestone": "AC",
+    "stat": "p90",
+    "ours": 2031.6321299149683,
+    "published": 2031.6771,
+    "diff": -0.04497008503176403,
+    "tolerance": 1.1277679217250762,
+    "pass": true
+   },
+   {
+    "milestone": "AC",
+    "stat": "achievement_rate_pct",
+    "ours": 99.26238145416228,
+    "published": 99.2,
+    "diff": 0.0623814541622858,
+    "tolerance": 0.906191535197843,
+    "pass": true
+   },
+   {
+    "milestone": "AI2027-SC",
+    "stat": "p10",
+    "ours": 2027.2857064314207,
+    "published": 2027.2889,
+    "diff": -0.0031935685792632285,
+    "tolerance": 0.12475832062679053,
+    "pass": true
+   },
+   {
+    "milestone": "AI2027-SC",
+    "stat": "p50",
+    "ours": 2028.847445330356,
+    "published": 2028.8479,
+    "diff": -0.0004546696438865183,
+    "tolerance": 0.22201390620286418,
+    "pass": true
+   },
+   {
+    "milestone": "AI2027-SC",
+    "stat": "p90",
+    "ours": 2039.4371690010726,
+    "published": 2040.9654,
+    "diff": -1.5282309989274836,
+    "tolerance": 38.21524131318816,
+    "pass": true
+   },
+   {
+    "milestone": "AI2027-SC",
+    "stat": "achievement_rate_pct",
+    "ours": 92.8345626975764,
+    "published": 93.05,
+    "diff": -0.21543730242359338,
+    "tolerance": 2.5992210313037876,
+    "pass": true
+   },
+   {
+    "milestone": "SAR-level-experiment-selection-skill",
+    "stat": "p10",
+    "ours": 2027.214303515294,
+    "published": 2027.2605,
+    "diff": -0.04619648470611537,
+    "tolerance": 0.13850610085240053,
+    "pass": true
+   },
+   {
+    "milestone": "SAR-level-experiment-selection-skill",
+    "stat": "p50",
+    "ours": 2028.9416589578839,
+    "published": 2028.9254,
+    "diff": 0.01625895788379239,
+    "tolerance": 0.300513882496176,
+    "pass": true
+   },
+   {
+    "milestone": "SAR-level-experiment-selection-skill",
+    "stat": "p90",
+    "ours": 2037.182221583324,
+    "published": 2037.803,
+    "diff": -0.620778416676103,
+    "tolerance": 2.2064286482369346,
+    "pass": true
+   },
+   {
+    "milestone": "SAR-level-experiment-selection-skill",
+    "stat": "achievement_rate_pct",
+    "ours": 98.94625922023182,
+    "published": 98.69,
+    "diff": 0.2562592202318248,
+    "tolerance": 1.1505505707595727,
+    "pass": true
+   },
+   {
+    "milestone": "SIAR-level-experiment-selection-skill",
+    "stat": "p10",
+    "ours": 2027.518021965792,
+    "published": 2027.5472,
+    "diff": -0.029178034207916426,
+    "tolerance": 0.21338167854307327,
+    "pass": true
+   },
+   {
+    "milestone": "SIAR-level-experiment-selection-skill",
+    "stat": "p50",
+    "ours": 2029.917050431035,
+    "published": 2029.9744,
+    "diff": -0.05734956896503718,
+    "tolerance": 0.46454405644790175,
+    "pass": true
+   },
+   {
+    "milestone": "SIAR-level-experiment-selection-skill",
+    "stat": "p90",
+    "ours": 2050.578393844653,
+    "published": 2051.5303,
+    "diff": -0.9519061553469328,
+    "tolerance": 9.49266659466607,
+    "pass": true
+   },
+   {
+    "milestone": "SIAR-level-experiment-selection-skill",
+    "stat": "achievement_rate_pct",
+    "ours": 97.68177028451001,
+    "published": 96.94,
+    "diff": 0.7417702845100127,
+    "tolerance": 1.7394540620655148,
+    "pass": true
+   },
+   {
+    "milestone": "TED-AI",
+    "stat": "p10",
+    "ours": 2027.410710165664,
+    "published": 2027.4618,
+    "diff": -0.05108983433592584,
+    "tolerance": 0.17811373584806517,
+    "pass": true
+   },
+   {
+    "milestone": "TED-AI",
+    "stat": "p50",
+    "ours": 2029.587399266893,
+    "published": 2029.6071,
+    "diff": -0.01970073310690168,
+    "tolerance": 0.4028845925405833,
+    "pass": true
+   },
+   {
+    "milestone": "TED-AI",
+    "stat": "p90",
+    "ours": 2047.4811676896852,
+    "published": 2048.0584,
+    "diff": -0.5772323103146846,
+    "tolerance": 6.761287515418154,
+    "pass": true
+   },
+   {
+    "milestone": "TED-AI",
+    "stat": "achievement_rate_pct",
+    "ours": 97.47102212855637,
+    "published": 96.88,
+    "diff": 0.5910221285563733,
+    "tolerance": 1.7600258943041933,
+    "pass": true
+   },
+   {
+    "milestone": "ASI",
+    "stat": "p10",
+    "ours": 2027.6089134737022,
+    "published": 2027.6322,
+    "diff": -0.023286526297852106,
+    "tolerance": 0.19795291261652015,
+    "pass": true
+   },
+   {
+    "milestone": "ASI",
+    "stat": "p50",
+    "ours": 2030.610463083767,
+    "published": 2030.6335,
+    "diff": -0.023036916232967997,
+    "tolerance": 0.6678256160354457,
+    "pass": true
+   },
+   {
+    "milestone": "ASI",
+    "stat": "p90",
+    "ours": 2070.274036799156,
+    "published": 2073.462,
+    "diff": -3.187963200844024,
+    "tolerance": 20.57594248822589,
+    "pass": true
+   },
+   {
+    "milestone": "ASI",
+    "stat": "achievement_rate_pct",
+    "ours": 95.15279241306638,
+    "published": 94.42,
+    "diff": 0.7327924130663743,
+    "tolerance": 2.3300033241211207,
+    "pass": true
+   }
+  ],
+  "pass": true,
+  "n_fail": 0
+ },
+ "provenance": {
+  "upstream": "https://github.com/AI-Futures-Project/aifm-public",
+  "upstream_commit": "1c40ecdb246c25980515441a66571931c5604e11",
+  "upstream_tracked_files_modified": false,
+  "command": "aifm_runner.py rollouts --preset published-daniel-08-16-26 -n 1000",
+  "python": "3.14.6",
+  "numpy": "2.4.1",
+  "scipy": "1.17.0",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "generated_utc": "2026-10-25T18:23:31Z",
+  "run_metadata": {
+   "num_samples": 1000,
+   "seed": 20260810,
+   "time_range": [
+    2017.0,
+    2200.0
+   ],
+   "per_sample_timeout": 30.0
+  }
+ }
+}

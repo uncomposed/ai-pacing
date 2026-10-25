@@ -1,0 +1,110 @@
+# Pinned sources for the METR suite (issue #12). [[ai gen]] 2026-10-25.
+# status: used | checked_unavailable | not_used. File hashes: sources.sha256 (checked by fetch_sources.sh).
+
+sources:
+  - id: metr-eval-analysis-public
+    title: "METR Time Horizon Analysis (eval-analysis-public)"
+    url: "https://github.com/METR/eval-analysis-public"
+    version: "commit 52cb829c7a2efb2d659285c4b1768d191d97f8d2 (2026-03-05, 'Sync public pipeline (#39)'); full history cloned for data vintages"
+    vintages:
+      - {name: th10_2025-03-18, commit: 4f79669581d765c77ed66057cd3773839b9c4863, path: data/external/all_runs.jsonl}
+      - {name: th10_2026-01-20, commit: 52d6b564d243aeb7531f1cbdc7c33a5a2cc98aaf, path: reports/time-horizon-1-0/data/raw/runs.jsonl}
+      - {name: th10_2026-03-05, commit: 52cb829c7a2efb2d659285c4b1768d191d97f8d2, path: reports/time-horizon-1-0/data/raw/runs.jsonl}
+      - {name: th11_2026-01-20, commit: 52d6b564d243aeb7531f1cbdc7c33a5a2cc98aaf, path: reports/time-horizon-1-1/data/raw/runs.jsonl}
+      - {name: th11_2026-01-30, commit: 8d68adbed39022587b3d624f0ef2c6ca93e3f089, path: reports/time-horizon-1-1/data/raw/runs.jsonl}
+      - {name: th11_2026-02-12, commit: 571a941b2336c417731001229281a5d2202c1e0e, path: reports/time-horizon-1-1/data/raw/runs.jsonl}
+      - {name: th11_2026-03-05, commit: 52cb829c7a2efb2d659285c4b1768d191d97f8d2, path: reports/time-horizon-1-1/data/raw/runs.jsonl}
+    accessed: "2026-10-25"
+    license: "None found. The README says 'See LICENSE file' but the repository has no LICENSE file at the pinned commit. Nothing is vendored; fetch_sources.sh clones it into a git-ignored cache. data/observations.csv holds numbers derived from it, with attribution."
+    used_for: "Run-level data (task, human minutes, score, weights, run timestamps, scaffold), the fitting and bootstrap code (src/horizon/utils/logistic.py, wrangle/logistic.py, wrangle/bootstrap.py, generate_benchmark_results.py, plot/bootstrap_ci.py: read in full), parameters (reports/*/fig_params/figs.yaml: regularization 0.1 before 52cb829, 1e-5 after) and release dates."
+    status: used
+
+  - id: metr-benchmark-results-1-1
+    title: "METR published TH1.1 results"
+    url: "https://metr.org/assets/benchmark_results_1_1.yaml"
+    version: "sha256 aae31902b0519a4da73e16643915e5e8aca13cd3315c3aac893ce3d6dfe92ad9, ETag ed31f8bc959c399a41c9a56d0bb0f526-ssl"
+    accessed: "2026-10-25"
+    license: "No license statement; page footer '(c) 2026 METR. All rights reserved.' Not vendored; values used as cited facts."
+    used_for: "Published p50/p80 estimates and 95% intervals, release dates, scaffolds, doubling times: the reproduction target and the post-correction TH1.1 values."
+    status: used
+
+  - id: metr-benchmark-results-1-0
+    title: "METR published TH1.0 results"
+    url: "https://metr.org/assets/benchmark_results_1_0.yaml"
+    version: "sha256 f15fd2f13cd8d28f06f5430fabf21dcd1284193ec152bdedc34e11dcc525df66"
+    accessed: "2026-10-25"
+    license: "As above."
+    used_for: "Post-correction TH1.0 values and a secondary reproduction check."
+    status: used
+
+  - id: metr-time-horizons-page
+    title: "Task-Completion Time Horizons of Frontier AI Models"
+    url: "https://metr.org/time-horizons/"
+    version: "page 'LAST UPDATED September 8, 2026', 'no longer actively updated'; read 2026-10-25"
+    accessed: "2026-10-25"
+    license: "(c) METR, all rights reserved; quoted briefly."
+    used_for: "Dated 'Updates' list (availability dates in batches.yaml), the 16-hour reliability notice, method and human-time definitions, FAQ on selection ('not a complete record'), measurement lags."
+    status: used
+
+  - id: metr-paper-2025
+    title: "Measuring AI Ability to Complete Long Tasks"
+    url: "https://arxiv.org/abs/2503.14499"
+    version: "v1, submitted 2025-03-18; only the abstract was read"
+    accessed: "2026-10-25"
+    license: "arXiv record"
+    used_for: "Availability date of TH1.0 and the abstract's headline ('around 50 minutes' for Claude 3.7 Sonnet; doubling about every seven months). The body was not read."
+    status: used
+
+  - id: metr-th11-blog
+    title: "Time Horizon 1.1"
+    url: "https://metr.org/blog/2026-01-29-time-horizon-1-1/"
+    version: "datePublished 2026-01-29; read 2026-10-25"
+    accessed: "2026-10-25"
+    license: "(c) METR"
+    used_for: "TH1.1 suite changes (170 -> 228 tasks; 31 tasks of 8 h or more, human baselines for only 5 of them; Vivaria -> Inspect), 14 of 33 models re-estimated and why; trend comparison (131 vs 165 days since 2023)."
+    status: used
+
+  - id: metr-rct-2025
+    title: "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity"
+    url: "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/"
+    version: "datePublished 2025-07-10; read 2026-10-25 (the accompanying paper was not read)"
+    accessed: "2026-10-25"
+    license: "(c) METR"
+    used_for: "Realized productivity observable (evidence record EV-METR-RCT-2025)."
+    status: used
+
+  - id: metr-uplift-2026
+    title: "We are Changing our Developer Productivity Experiment Design"
+    url: "https://metr.org/blog/2026-02-24-uplift-update/"
+    version: "datePublished 2026-02-24; read 2026-10-25"
+    accessed: "2026-10-25"
+    license: "(c) METR"
+    used_for: "Follow-up estimates, selection and concurrency caveats (EV-METR-UPLIFT-2026)."
+    status: used
+
+  - id: metr-algorithmic-holistic-2025
+    title: "Research Update: Towards Reconciling Slowdown with Time Horizons"
+    url: "https://metr.org/blog/2025-08-12-research-update-towards-reconciling-slowdown-with-time-horizons/"
+    version: "datePublished 2025-08-13; read 2026-10-25"
+    accessed: "2026-10-25"
+    license: "(c) METR"
+    used_for: "Algorithmic versus holistic scoring of agent PRs (EV-METR-ALGO-2025)."
+    status: used
+
+  - id: metr-re-bench
+    title: "RE-Bench"
+    url: "https://github.com/METR/RE-Bench"
+    version: "not pinned"
+    accessed: "not accessed"
+    license: "not checked"
+    used_for: "Nothing yet. RE-Bench tasks are part of the time-horizon suites; fixed-budget RE-Bench comparisons are the optional follow-up of #12."
+    status: not_used
+
+  - id: wayback-machine
+    title: "Internet Archive snapshots of metr.org result files"
+    url: "https://web.archive.org/cdx/search/cdx"
+    version: "n/a"
+    accessed: "2026-10-25"
+    license: "n/a"
+    used_for: "Would have given the page values as published before the 2026-03-03 correction. Connection reset from this environment, so pre-correction values are re-fitted from run vintages instead."
+    status: checked_unavailable

@@ -168,6 +168,7 @@ used as a check). Results (`results/coupling_toy.md`):
 - No version of record of Metzger et al. was compared (publisher page blocked).
 - The toy is not run through the pact solver, and its bottleneck parameters are not tied to physical
   data (e.g. radiator mass, launch cadence in `physics_economics.md`).
-- Adapter quantities for METR (#12) and AI Futures (#14) still cite the contract's README-level
-  entries; when those replications land, their units must be rechecked here (`make units-check` fails on
-  any unit or name change in `systems/modes.yaml`).
+- The AI Futures adapter (`AD-AIFM`) was rewritten from code by #14, and its `QTY-AIFM-*` references
+  here follow its names. The METR adapter (#12) still cites the contract's README-level entry. Both
+  sets of units are rechecked in #42 (`make units-check` fails on any unit or name change in
+  `systems/modes.yaml`).

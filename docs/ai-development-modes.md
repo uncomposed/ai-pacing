@@ -174,16 +174,18 @@ authority, which is the #5 rule for rejecting an adapter.
 |---|---|---|---|---|
 | AD-METR (evidence, #12) | partial | partial | unsupported | time horizon to strategic capability or control |
 | AD-GATE (#13) | partial | unsupported | unsupported | digital workers as an actor; social-planner allocation as a lab/state/AI decision |
-| AD-AIFM (#14) | supported | partial | unsupported | automation milestones as loss of control; double-counting compute feedback with GATE |
+| AD-AIFM (#14) | supported | unsupported | unsupported | automation milestones as loss of control; effort as validated advances; double-counting compute or efficiency feedback with GATE |
 | AD-PACT (this repo) | unsupported | unsupported | partial | capacity A as capability; scaling A for collectives; anything before t = 0 |
 
 The GATE entry was checked in #13 against the paper (arXiv:2503.04941v2) and a pinned
 rerun of Epoch's compiled solver: a social planner maximizing a representative
 household's utility makes every allocation; there are no labs, states or AI actors.
 See `research_notes/external/epoch-gate/` (MODES.md, INTERFACES.md). The AI Futures entry
-rests on the repository README, read 2026-10-25; that model was not run and no version is
-pinned. Claims about who allocates resources in it are marked "to verify" in the YAML and
-are for #14 to settle.
+was checked in #14 against the code at commit `1c40ecdb`, run with the upstream's pinned
+environment (`research_notes/external/ai-futures-model/`, modes.md): no actor decides
+anything, labor and compute are exogenous input series, and the model takes inference
+compute, not agent labor, as an input. That review moved its sovereign-capable coverage
+from partial to unsupported, because nothing in it corresponds to `strategic_capability`.
 
 ## 8. The pact solver on the contract
 
