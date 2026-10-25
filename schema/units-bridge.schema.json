@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/uncomposed/ai-pacing/schema/units-bridge.schema.json",
+  "title": "Quantity dictionary, conversions and equations bridging AI research to industry (issue #11)",
+  "description": "Shapes of research_notes/external/units-bridge/{quantities,conversions,equations}.yaml. Units, dimensions, links and the stopping rule are checked by tools/units_tool.py.",
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "evidence": {
+      "type": "object", "additionalProperties": false, "required": ["status", "ref"],
+      "properties": {
+        "status": {"enum": ["normalization", "observed_secondary", "source_model_output", "source_model_assumption", "project_assumption",
+                            "external_pending", "not_collected", "scenario"]},
+        "ref": {"$ref": "#/$defs/text"}
+      }
+    },
+    "contract": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "accounting": {"type": "string"}, "dimension": {"type": "string"}, "mode": {"type": "string"}, "element": {"type": "string"},
+        "adapter_quantity": {"type": "object", "additionalProperties": false, "required": ["adapter", "name"],
+                             "properties": {"adapter": {"type": "string"}, "name": {"type": "string"}}}
+      }
+    },
+    "quantity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "category", "unit", "kind", "semantic", "observable", "models", "contract", "evidence"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^QTY-[A-Z0-9-]+$"},
+        "name": {"$ref": "#/$defs/text"}, "category": {"type": "string"}, "unit": {"type": "string"},
+        "kind": {"enum": ["stock", "flow", "rate", "state", "share", "ratio", "probability", "threshold", "date", "index", "interval", "multiplier"]},
+        "semantic": {"$ref": "#/$defs/text"}, "observable": {"$ref": "#/$defs/text"},
+        "models": {"type": "array", "items": {"type": "string"}},
+        "contract": {"$ref": "#/$defs/contract"},
+        "pact_params": {"type": "array", "items": {"type": "string"}},
+        "no_calibration_from_capability": {"type": "boolean"},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "note": {"type": "string"}
+      }
+    },
+    "concept": {
+      "type": "object", "additionalProperties": false, "required": ["id", "name", "meaning", "quantities", "contract", "does_not_give"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CL-[A-Z0-9-]+$"}, "name": {"$ref": "#/$defs/text"}, "meaning": {"$ref": "#/$defs/text"},
+        "quantities": {"type": "array", "items": {"type": "string"}}, "contract": {"$ref": "#/$defs/contract"},
+        "does_not_give": {"$ref": "#/$defs/text"}
+      }
+    },
+    "quantities_file": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "status", "dimensions", "units", "categories", "quantities", "closure_and_sovereignty"],
+      "properties": {
+        "schema_version": {"type": "string"}, "status": {"const": "proposed"},
+        "dimensions": {"type": "object", "additionalProperties": false, "required": ["physical", "normalized"],
+                       "properties": {"physical": {"type": "array", "items": {"type": "string"}},
+                                      "normalized": {"type": "array", "items": {"type": "string"}}}},
+        "units": {"type": "object", "additionalProperties": {
+          "type": "object", "additionalProperties": false, "required": ["factor", "dims"],
+          "properties": {"factor": {"type": "number", "exclusiveMinimum": 0}, "dims": {"type": "object", "additionalProperties": {"type": "integer"}},
+                         "note": {"type": "string"}}}},
+        "categories": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "quantities": {"type": "array", "items": {"$ref": "#/$defs/quantity"}},
+        "closure_and_sovereignty": {"type": "array", "items": {"$ref": "#/$defs/concept"}}
+      }
+    },
+    "delay": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "note"],
+      "properties": {"kind": {"enum": ["none", "fixed", "bounded", "unknown"]}, "value": {"type": "number"},
+                     "bounds": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+                     "unit": {"type": "string"}, "note": {"type": "string"}}
+    },
+    "conversion": {
+      "type": "object", "additionalProperties": false, "required": ["id", "from", "to", "class", "coupled"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^CV-[A-Z0-9-]+$"}, "from": {"type": "string"}, "to": {"type": "string"},
+        "class": {"enum": ["normalization", "identity", "empirical_scale_estimate", "bounded_scenario", "unidentified", "forbidden"]},
+        "form": {"enum": ["linear", "reciprocal", "log10", "exp10"]},
+        "factor": {"type": "object", "additionalProperties": false, "required": ["unit"],
+                   "properties": {"value": {"type": "number"}, "bounds": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+                                  "unit": {"type": "string"}}},
+        "derivation": {"type": "string"}, "mechanism": {"type": "string"}, "delay": {"$ref": "#/$defs/delay"},
+        "constraints": {"type": "string"}, "evidence": {"$ref": "#/$defs/evidence"}, "coupled": {"type": "boolean"},
+        "used_by": {"type": "array", "items": {"type": "string"}}, "reason": {"type": "string"}
+      }
+    },
+    "conversions_file": {
+      "type": "object", "additionalProperties": false, "required": ["schema_version", "status", "conversions"],
+      "properties": {"schema_version": {"type": "string"}, "status": {"const": "proposed"},
+                     "conversions": {"type": "array", "items": {"$ref": "#/$defs/conversion"}}}
+    },
+    "equations_file": {
+      "type": "object", "additionalProperties": false, "required": ["schema_version", "symbols", "equations"],
+      "properties": {
+        "schema_version": {"type": "string"},
+        "symbols": {"type": "object", "additionalProperties": {
+          "type": "object", "additionalProperties": false, "required": ["unit"],
+          "properties": {"unit": {"type": "string"}, "value": {"type": "number"}, "quantity": {"type": "string"}}}},
+        "equations": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["id", "model", "text"],
+          "properties": {"id": {"type": "string"}, "model": {"type": "string"}, "text": {"type": "string"},
+                         "check_value": {"type": "string"}, "note": {"type": "string"}}}}
+      }
+    }
+  }
+}

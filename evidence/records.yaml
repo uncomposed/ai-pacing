@@ -21,29 +21,29 @@ records:
     kind: source_model_output
     title: "Affordable, rapid bootstrapping of the space industry and solar system civilization"
     source:
-      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236 (DOI from the arXiv page)"
-      url: "https://arxiv.org/abs/1612.03238"
-      version: "arXiv v1 (2016-12-10); journal version not compared with it"
+      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, January 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236"
+      url: "https://arxiv.org/abs/1612.03238v1"
+      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref says issue 26.2, Crossref says issue 1. The version of record (ascelibrary.org) returned HTTP 403 and was not compared."
     reading: read_primary
     observation_date: not_applicable
-    availability_date: "2013"
-    availability_basis: "Journal year as cited; exact journal date not checked. The arXiv copy was posted 2016-12-10."
-    units: "landed mass (metric tons), industrial asset mass (metric tons), years"
+    availability_date: "2013-01"
+    availability_basis: "Crossref published-print 2013-01 (DOI registered 2012-04-02, possibly online ahead of print; not checked). The manuscript read here was public on arXiv from 2016-12-10."
+    units: "asset mass (metric tons, 'MT'), robonauts (count), energy (J/yr), years; generations 2 years apart"
     population: "model scenarios of a lunar bootstrapping industry; no observed system"
-    protocol: "simple growth model swept over parameter ranges (abstract)"
+    protocol: "spreadsheet mass and energy balance by generation (Gen 1.0 to 6.0), two cases: maximum and half manufacturing rate (Fig. 2); the spreadsheet was not released"
     extraction:
       method: digitized
-      locator: "Fig. 2 (growth curves, read off by eye); model and results sections (docking.md references)"
-      by: "the docking session of 2026-10 (model/docking/metzger.py, results/docking.md section 7)"
-      date: "2026-10"
-      note: "Curves read by eye; generation spacing (2 years) is not a doubling time (AS-GCITE)."
+      locator: "Fig. 2, p. 12 (asset mass by generation, both cases); p. 11 'Growth Rate of Space Industry' (2-year generations, 'two or fewer new sets per year'); p. 16 (Gen 5.0 uses 10^15 J/yr; 'factor of 3 per year' illustration); p. 8-9 (local electronics targets, chips for 'appropriate technology')"
+      by: "first by eye (docking session, 2026-10, model/docking/metzger.py); re-digitized 2026-10-25 for #11 from the figure's embedded raster (781 x 477 px) by marker detection, research_notes/external/units-bridge/metzger/digitize_fig2.py"
+      date: "2026-10-25"
+      note: "Re-digitized values agree with the by-eye ones within 5% (largest: Gen 4.0 max, 1368 t against 1440 t). Fitted max-case rate 0.647/yr (by eye 0.651). The 2-year generation spacing is not a doubling time (AS-GCITE). Gen 1.0 markers of both cases overlap. Points are placed at t = 0, 2, ..., 12 years per the caption, which includes Gen 2.5."
     uncertainty:
       kind: digitization
-      description: "about +-15% on read-off values (docking.md 7); model-form uncertainty of the source not quantified"
+      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's max-case '40,000 MT with as many as 100,000 humanoid robots' does not match Fig. 2 (about 23,100 t at Gen 6.0); unresolved. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
     depends_on: []
     fitted_to: []
-    intended_use: ["basis check for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison"]
-    not_for: ["empirical support for any growth rate: these are model projections, not observations"]
+    intended_use: ["basis check and comparison for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison", "example of basic (not leading-edge) chip closure at small scale (units-bridge CL-BASIC-CHIPS)"]
+    not_for: ["empirical support for any growth rate: these are model projections, not observations", "the source of g = 0.35, which is a project assumption", "growth rates at scales above about 2.3e4 t, which the source does not model"]
 
   - id: EV-TURNER-2019
     kind: formal_result

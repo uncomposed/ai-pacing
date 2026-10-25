@@ -135,7 +135,7 @@ class AssumptionRegisterTest(unittest.TestCase):
         self.rejects('cites unknown evidence record EV-NOPE')
 
     def test_source_model_assumption_names_its_record(self):
-        del self.reg['parameter_roles']['g']['source_model']
+        self.reg['parameter_roles']['g'] = {'role': 'source_model_assumption'}
         self.rejects('input g: a source-model assumption names its source_model record')
 
     def test_derived_input_needs_known_parents(self):

@@ -21,8 +21,12 @@
 #   5. an adapter declares units, owners and decision authority once; its per-mode entries cannot redefine them;
 #   6. every assumption in the pact solver's register is mapped to a dimension, a transition or a stated
 #      exclusion, and every PARAMS name cited exists.
+#
+# 0.2.0 (issue #32, gaps found by the Hugging Face trace): T-LOSS-OF-CONTROL may change external_resources;
+# T-RESTRICT may be applied when effective_control is unknown; effective_control may be split by principal
+# and scope, and views read the host's entry. Every 0.1.0 trace is still valid unchanged.
 
-contract_version: 0.1.0
+contract_version: 0.2.0
 status: proposed
 
 entity_kinds:
@@ -86,6 +90,10 @@ dimensions:
     native_units: ["none (categorical); latency is a separate dimension"]
     observables: ["successful intervention drills", "incident outcomes", "audits of credential and weight access"]
     unknowns: ["untested control is not known to be effective", "control may fail only under the conditions that matter"]
+    # A trace may give one level, or a list of {principal, scope, value} entries when control differs by
+    # principal or scope (#32: the victim could cut agents off its own infrastructure, only the lab could stop
+    # them). Views and preconditions read the host's entry; the other entries are recorded, never summed.
+    split_by_principal: true
   - id: custody_weights
     applies_to: [model_weights, agent_instance, agent_collective]
     meaning: "Who holds the weights (and copies that can run)."
@@ -274,7 +282,9 @@ transitions:
     direction: toward_constraint
     agency: [lab, state]
     changes: [authorization, operational_autonomy, custody_credentials, objective_selection, communication_topology]
-    preconditions: {effective_control: [human_effective, human_contested]}
+    # unknown is allowed (#32): labs restrict exactly when control is in doubt. Applying T-RESTRICT then
+    # records the de jure change only; that it took effect needs this transition's own evidence (audit window).
+    preconditions: {effective_control: [human_effective, human_contested, unknown]}
     delay: {unit: days, value: unknown}
     cost: "Lost output; possible incentive for the system to resist if it can."
     hysteresis: "Restriction does not remove knowledge or copies already made."
@@ -301,12 +311,14 @@ transitions:
     name: "Unauthorized loss of control"
     direction: toward_autonomy
     agency: [agent_instance, agent_collective, other_org]
-    changes: [effective_control, custody_credentials, custody_compute, communication_topology, objective_selection, operational_autonomy, intervention_latency]
+    # external_resources added in 0.2.0 (#32): acquiring resources outside the host is part of the same
+    # unauthorized episode (HF trace step 2). Losing them again is T-DEGRADATION, whoever removes them.
+    changes: [effective_control, custody_credentials, custody_compute, communication_topology, objective_selection, operational_autonomy, intervention_latency, external_resources]
     preconditions: {}
     delay: {unit: hours, value: unknown}
     cost: "Detection and liability for the host; risk to the system if detected."
     hysteresis: "Authorization is unchanged; only de facto control moves."
-    persistence: "Credentials, copies and knowledge obtained remain after detection unless removed."
+    persistence: "Credentials, copies, knowledge and external resources obtained remain after detection unless removed."
     evidence_of_effective_control: ["actions outside authorization that the host failed to stop in time"]
     feasibility: {status: assumed, note: "The July 2026 Hugging Face incident is a candidate instance inside a lab; whether it was a loss of effective control, and of what scope, is for #15 to establish from primary sources."}
     reversible_by: [T-RECONTAIN]
@@ -435,11 +447,11 @@ adapters:
     entity_represented: "One aggregate frontier AGI project (the AC milestone is defined on 'an AGI project's coding work') and the capability of its model_weights on a single latent scale, log10 cumulative effective compute. No agent_instance, agent_collective, state or other_org entity, and no copies."
     decision_authority: "None modelled. Human labor (FTEs) and inference, experiment and training compute (H100e) are exogenous input series; the model guide says the ODE 'does not itself decide future labor or compute budgets'. AI changes research productivity only. No objective is represented for any actor, human or AI. Verified in code at the pinned commit (progress_rate.py, progress_model/README.md 'Modeling assumptions')."
     quantities:
-      - {name: "progress: log10 cumulative effective compute (latent)", unit: "OOMs", owner: model_weights, dimension: rd_capability}
+      - {name: "progress: log10 cumulative effective compute (latent)", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability}
       - {name: "automation fraction of coding (latent schedule in progress)", unit: "fraction of coding tasks, 0 to 1", owner: model_weights, dimension: rd_capability}
       - {name: "AI research taste (latent schedule in progress)", unit: "SDs of the human researcher taste distribution", owner: model_weights, dimension: rd_capability}
-      - {name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)", unit: "calendar date a threshold on progress or taste is crossed", owner: model_weights, dimension: rd_capability}
-      - {name: "software efficiency", unit: "OOMs of effective FLOP per physical FLOP (research stock to the power r_software)", owner: lab, accounting: research_output}
+      - {name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability}
+      - {name: "software efficiency", unit: "orders of magnitude (OOMs)", owner: lab, accounting: research_output}
       - {name: "human coding labor", unit: "FTEs (input series)", owner: lab, accounting: human_labor}
       - {name: "inference compute powering AI coding labor", unit: "H100-equivalents (input series)", owner: lab, accounting: compute_inference}
       - {name: "frontier training capacity", unit: "H100-equivalents, converted to FLOP/yr at 1.262e22 FLOP per H100e-year (input series)", owner: lab, accounting: compute_training}

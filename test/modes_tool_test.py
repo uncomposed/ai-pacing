@@ -129,6 +129,84 @@ class ModeContractTest(unittest.TestCase):
         step['entities']['SYS-B']['state']['dependencies'] = 'none_within_horizon'
         self.rejects('applies T-RECONTAIN but dependencies was none_within_horizon')
 
+    # --- #32: gaps found by the Hugging Face trace
+    def test_loss_of_control_may_acquire_external_resources(self):
+        tr = self.trace('TR-NOMINAL-CONTROL')
+        tr['steps'][1]['entities']['SYS-B']['state']['external_resources'] = 'minor'
+        self.assertFalse([e for e in self.errors() if 'step 2' in e and 'external_resources' in e])
+        tr['steps'][1]['transitions'] = []
+        self.rejects('SYS-B external_resources changed from none to minor without a transition that declares it')
+
+    def _restrict_from(self, control):
+        tr = self.trace('TR-RESTRICTED-REGAINS')
+        for step in tr['steps'][:2]:
+            step['entities']['SYS-C']['state']['effective_control'] = control
+        return [e for e in self.errors() if 'applies T-RESTRICT' in e]
+
+    def test_restriction_allowed_when_control_unknown(self):
+        self.assertEqual([], self._restrict_from('unknown'))
+
+    def test_restriction_still_needs_control_not_known_lost(self):
+        self.assertEqual(["TR-RESTRICTED-REGAINS step 2: SYS-C applies T-RESTRICT but effective_control was none, "
+                          "not in ['human_effective', 'human_contested', 'unknown']"], self._restrict_from('none'))
+
+    def test_precondition_with_undeclared_level_is_rejected(self):
+        self.transition('T-RESTRICT')['preconditions']['effective_control'].append('mostly')
+        self.rejects('T-RESTRICT: precondition effective_control uses undeclared level mostly')
+
+    def _split(self, host_value, other_value='none', trace='TR-CONTROLLED-CAPABLE', eid='SYS-A', host='LAB-A'):
+        tr = self.trace(trace)
+        for step in tr['steps']:
+            ents = step['entities']
+            ents['ORG-X'] = {'kind': 'other_org', 'host': None, 'state': dict(ents[host]['state'])}
+            ents[eid]['state']['effective_control'] = [
+                {'principal': host, 'scope': 'the host lab', 'value': host_value},
+                {'principal': 'ORG-X', 'scope': "ORG-X's own infrastructure", 'value': other_value}]
+        return tr
+
+    def test_split_control_keeps_single_value_form_and_reads_host_entry(self):
+        tr = self._split('human_effective')
+        self.assertEqual([], self.errors())
+        self.assertTrue(tool.classify(self.c, tr, tr['steps'][0])['SYS-A']['MODE-HUMAN-LAB'])
+
+    def test_split_control_other_principal_does_not_set_the_view(self):
+        tr = self._split('human_nominal_only', other_value='human_effective')
+        self.assertFalse(tool.classify(self.c, tr, tr['steps'][0])['SYS-A']['MODE-HUMAN-LAB'])
+        self.rejects('SYS-A derives views')
+
+    def test_split_control_host_entry_unknown_is_undetermined(self):
+        tr = self._split('unknown', other_value='human_effective')
+        self.assertIsNone(tool.classify(self.c, tr, tr['steps'][0])['SYS-A']['MODE-HUMAN-LAB'])
+
+    def test_split_control_rules(self):
+        tr = self._split('human_effective')
+        step = tr['steps'][0]
+        entries = step['entities']['SYS-A']['state']['effective_control']
+        entries[1]['value'] = 'partly'
+        self.rejects("SYS-A effective_control = 'partly' for ORG-X is not a declared level")
+        entries[1].update(principal='ORG-Y', value='none')
+        self.rejects('SYS-A effective_control names principal ORG-Y, which is not in the step')
+        entries[1]['principal'] = 'LAB-A'
+        self.rejects('SYS-A effective_control has more than one entry for principal LAB-A')
+        entries[0]['principal'] = entries[1]['principal'] = 'ORG-X'
+        self.rejects('SYS-A effective_control is split by principal but has no entry for its host LAB-A')
+
+    def test_split_control_needs_a_host(self):
+        tr = self._split('human_effective')
+        tr['steps'][0]['entities']['SYS-A']['host'] = None
+        self.rejects('SYS-A effective_control is split by principal but SYS-A has no host')
+
+    def test_split_only_on_declared_dimension(self):
+        tr = self._split('human_effective')
+        state = tr['steps'][0]['entities']['SYS-A']['state']
+        state['custody_credentials'] = state['effective_control']
+        self.rejects('custody_credentials is split by principal, but custody_credentials is not declared split_by_principal')
+
+    def test_split_needs_two_entries(self):
+        tr = self._split('human_effective')
+        tr['steps'][0]['entities']['SYS-A']['state']['effective_control'].pop()
+        self.rejects('schema: traces/0/steps/0/entities/SYS-A/state/effective_control')
+
     def test_stock_reset_on_mode_change_is_rejected(self):
         step = self.trace('TR-NOMINAL-CONTROL')['steps'][2]
         step['entities']['SYS-B']['stocks']['liabilities'] = []
