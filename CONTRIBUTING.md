@@ -66,7 +66,7 @@ layers, ten semantic acceptance tests, JSON Schema conformance, and whether the
 committed views in `generated/` are stale). Other targets: `make validate`,
 `make accept`, `make test`, `make systems-report`, `make assumptions-report`,
 `make clean-room`, `make clean-room-audit` (diagnostic only, not part of `check`).
-`.venv/` is not in `.gitignore`; do not commit it.
+`.venv/` is git-ignored.
 
 The rendering tests resolve historical commits, so they need full git history
 (`git fetch --unshallow` if your clone is shallow; CI uses `fetch-depth: 0`).
@@ -86,11 +86,11 @@ python ci_sims.py repro --args "--stage oat_r --designs '[{}]'" --manifest repro
 `--check` and `repro` write files under `results/` and the model directory. If you
 run them in your working tree, `git status` afterwards and do not commit changes you
 did not intend (see "No silent regeneration" below). Match the pinned versions when
-exact numbers matter. Even with them, floats can differ in the last bits across
-platforms: on one Linux x86-64 machine with the pinned packages, `--check` passed but
-`compare-checks` reported `$.reg_maxdiff: 0.0 vs 1.1226575225009583e-12 (beyond
-tolerance)` against the committed reference. If you see this, report it with your
-platform; do not overwrite the reference or loosen the tolerance.
+exact numbers matter. Floats can still differ in the last bits across platforms, so
+`--check`'s error measures (`reg_maxdiff` and the two identity differences) are
+judged against `CHECK_TOL` in `robust_design.py` rather than compared with the
+committed copy; every other number must match the reference. Do not loosen those
+thresholds or overwrite the reference to make a failure go away.
 
 ## Regenerating views
 
