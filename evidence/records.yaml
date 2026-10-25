@@ -128,3 +128,60 @@ records:
     fitted_to: []
     intended_use: ["record of stakeholder input for AS-ELLINF, AS-RATIO, AS-COVERTFAB, AS-REPUTATION, AS-BLOCKADE, AS-MOVECOMPUTE"]
     not_for: ["empirical support"]
+
+  # GATE (issue #13): source-model records, never observations. See research_notes/external/epoch-gate/.
+  - id: EV-GATE-PAPER-2025
+    kind: source_model_assumption
+    title: "GATE: An Integrated Assessment Model for AI Automation (model structure and default parameters)"
+    source:
+      citation: "Erdil, Potlogea, Besiroglu, Roldan, Ho, Sevilla, Barnett, Vrzala and Sandler, arXiv:2503.04941"
+      url: "https://arxiv.org/abs/2503.04941"
+      version: "arXiv v2 (2025-03-12), TeX source sha256 df66e5c8316bb1ec023d8d82e2283dcd4aa3203bc5ef7ba2474402dc2d23cb02"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2025-03-06"
+    availability_basis: "arXiv v1 submission date; v2 (2025-03-12) differs editorially only"
+    units: "native GATE units: USD/year, FLOP/year, eFLOP, FLOP/year/$, eFLOP/FLOP, workers, fraction of tasks"
+    population: "one closed world economy with a representative household and a social planner; no observed system"
+    protocol: "deterministic optimal-control model solved numerically (paper section 5 and appendix B)"
+    extraction:
+      method: quoted
+      locator: "sections 2-5 (equations), appendix B (solution), appendix C (parameter tables); see research_notes/external/epoch-gate/EQUATIONS.md"
+      by: "issue #13 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4."
+    uncertainty:
+      kind: unquantified
+      description: "Structural and parameter uncertainty of the source model; the authors call quantitative predictions substantially uncertain and unreliable."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["source-to-equation map for #13", "mode and interface mapping (#5, #11)"]
+    not_for: ["empirical support for any growth rate, automation date or allocation", "evidence about lab, state or AI decisions"]
+
+  - id: EV-GATE-PLAYGROUND-2026
+    kind: source_model_output
+    title: "GATE playground presets (Default, Conservative, Aggressive): cached runs and pinned rerun of the compiled solver"
+    source:
+      citation: "Epoch AI, GATE playground, https://epoch.ai/gate"
+      url: "https://epoch.ai/generated/gate.js"
+      version: "bundle sha256 c2104290dc486c27e07b6614dd306604bd98a095d660369d3ce356f481e72731, fetched 2026-10-25"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-10-25"
+    availability_basis: "Date this bundle was fetched; the URL is unversioned and the first public date of this build is unknown (no archive copy was reachable)."
+    units: "native GATE units per research_notes/external/epoch-gate/INTERFACES.md"
+    population: "model runs: three presets and seven one-parameter variants of the Default preset (official/jobs.json)"
+    protocol: "official solver rerun under Node; full trajectories hashed; preset reruns compared with the playground cache (bit-identical)"
+    extraction:
+      method: computed
+      locator: "research_notes/external/epoch-gate/data/baseline_target.json"
+      by: "issue #13 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Steps 0-20 and selected later steps kept; the full trajectory is pinned by SHA-256."
+    uncertainty:
+      kind: unquantified
+      description: "Model outputs, not measurements. Optimizer stops at its iteration cap; doubling it moves trajectory values by up to 2% over steps 0-20 but no milestone."
+    depends_on: [EV-GATE-PAPER-2025]
+    fitted_to: []
+    intended_use: ["baseline target for #13 replication and any independent re-solve", "comparison model next to AI Futures (#14)"]
+    not_for: ["forecasts of real GWP, compute or automation dates", "empirical validation of any kind", "evidence about sovereign AI"]

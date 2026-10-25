@@ -188,9 +188,9 @@ These are single runs, not the comparison #13 asks for; see "Not done".
 - [INTERFACES.md](INTERFACES.md): ownership, budget, compute, labor, physical-resource and
   time units, and where coupling GATE with AI Futures (#14) would count the same feedback
   twice.
-- [evidence_records.yaml](evidence_records.yaml): the paper, the bundle and the baseline
-  target as #8-shaped evidence records (kind `source_model_output` /
-  `source_model_assumption`, never observations).
+- `evidence/records.yaml` (#8 contract): `EV-GATE-PAPER-2025` (kind
+  `source_model_assumption`) and `EV-GATE-PLAYGROUND-2026` (kind `source_model_output`, the
+  pinned bundle and the baseline target). Neither is an observation.
 
 ## Not done (Done-when boxes of #13)
 

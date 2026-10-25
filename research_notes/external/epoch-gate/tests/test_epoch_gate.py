@@ -166,22 +166,15 @@ class Records(unittest.TestCase):
             for k in ('id', 'url', 'version', 'accessed', 'license', 'used_for', 'status'):
                 self.assertIn(k, src, src.get('id'))
 
-    def test_evidence_records_shape(self):
-        recs = load_yaml(HERE / 'evidence_records.yaml')
-        schema_path = ROOT / 'schema' / 'evidence.schema.json'
-        required = ['id', 'kind', 'title', 'source', 'reading', 'observation_date', 'availability_date', 'availability_basis',
-                    'units', 'population', 'protocol', 'extraction', 'uncertainty', 'depends_on', 'fitted_to', 'intended_use', 'not_for']
-        for r in recs['records']:
-            for k in required:
-                self.assertIn(k, r, r.get('id'))
-            # These are model outputs and assumptions, never observations (#8).
-            self.assertIn(r['kind'], ('source_model_output', 'source_model_assumption'))
-        if schema_path.exists():  # once the evidence contract (#8) is on main
-            import jsonschema
-            schema = json.loads(schema_path.read_text())
-            sub = dict(schema['$defs']['records_file'])
-            sub['$defs'] = schema['$defs']
-            jsonschema.validate(recs, sub)
+    def test_evidence_records(self):
+        # Shape and dates are checked by tools/evidence_tool.py in `make check`; here only
+        # that the GATE records exist, carry the pin, and are never observations (#8).
+        recs = {r['id']: r for r in load_yaml(ROOT / 'evidence' / 'records.yaml')['records']}
+        paper, runs = recs['EV-GATE-PAPER-2025'], recs['EV-GATE-PLAYGROUND-2026']
+        self.assertEqual(paper['kind'], 'source_model_assumption')
+        self.assertEqual(runs['kind'], 'source_model_output')
+        self.assertIn(PINNED_BUNDLE, runs['source']['version'])
+        self.assertEqual(runs['depends_on'], ['EV-GATE-PAPER-2025'])
 
     def test_contract_adapter_points_here(self):
         modes = load_yaml(ROOT / 'systems' / 'modes.yaml')
