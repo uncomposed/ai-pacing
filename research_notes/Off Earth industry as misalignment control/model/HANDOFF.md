@@ -274,3 +274,10 @@ gh run download --name sims-results-RUN_ID
 2. **A human-chosen preventive strike or shutdown on a cooperating AI** (Cole's guess (c)). Needs a model change (a human move). Three stand-ins (deadline, discovery, spillover) all break the pact, so this is probably the largest unmodelled risk to H1 and H9.
 3. **Two-sided Powell renegotiation** (Cole's guess (b)). Upward (humans pay to buy off prize-only strikes) is expected to help. Downward (humans squeeze the AI as they get stronger; AS-NOEXPLOIT, never ablated) is expected to hurt, by the same mechanism as item 2. Needs a model change. Run the downward side first.
 Not recommended next, though ranked first by the register: the swarm (AS-SINGLE-AI). No cheap stand-in represents many coordinating agents faithfully; it needs a design discussion first.
+
+## 10. Evidence contract (issue #8, 2026-10-25)
+
+[[ai gen]] Status: `implemented`; checked by its own tests; nothing `human_validated` and nothing empirically validated. See `docs/evidence-protocol.md`.
+- `assumptions.yaml` now gives every PARAMS entry and other influential input a role (none is an observed measurement), links literature-based assumptions to dated records in `evidence/records.yaml`, labels H10's shares (sampling measure, horizon, predicate, Wilson intervals, uncertainty types), and requires an admission record for any PARAMS entry added after 2026-10-25.
+- `measure_sensitivity.py` reweights the cached full-box runs under 31 alternative sampling measures (no solving): best-stack share 0.025 to 0.194 across the 28 identified measures; outputs `results/measure_sensitivity.{md,json}`, checked by `tests/test_measure_sensitivity.py` in `make check`.
+- Not done: fresh-draw runs under widened ranges or new point masses (needs `sims.yml`).

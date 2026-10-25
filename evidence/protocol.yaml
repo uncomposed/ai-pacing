@@ -1,0 +1,45 @@
+# Shared historical-evaluation protocol (issue #8). Checked by tools/evidence_tool.py in `make check`.
+# Proposed, not yet exercised: the first acceptance case is the METR suite (#12). Explained in docs/evidence-protocol.md.
+
+protocol_version: 0.1.0
+status: proposed
+
+rules:
+  - id: P-CUTOFF
+    rule: "Every forecast names an information cutoff date. Every evidence record it uses must have been available on or before the cutoff (latest day a partial date allows <= cutoff). Checked."
+  - id: P-REVISIONS
+    rule: "A revised source (new dataset version, re-estimated value, revised report) is a new evidence record with its own availability date; the old record stays. A forecast is scored against the vintage named in its resolution, and a second score against the latest vintage is reported separately."
+  - id: P-ROLLING
+    rule: "Historical tests use rolling origins: for each cutoff in a pre-declared list, fit only on data available by that cutoff and score on the next declared horizon. Cutoffs, horizons and the list of models are fixed before scoring."
+  - id: P-BASELINES
+    rule: "Every model is scored against the declared simple baselines on the same splits. A model that does not beat them, or whose advantage disappears under another plausible cutoff list, is not promoted."
+  - id: P-SCORING
+    rule: "Point forecasts use absolute log error; intervals use the interval score at the stated level and report coverage. Scores are aggregated over origins with equal weight unless a weighting is declared in advance."
+  - id: P-CONTAMINATION
+    rule: "Check that no input, calibration target or tuning decision used information after the cutoff: evidence availability dates, model release dates of the source model and its calibration data, and the dates of any parameter changes. Models fitted to the same data are not independent evidence (fitted_to and depends_on in the records)."
+  - id: P-SELECTION
+    rule: "Report every model, cutoff and target evaluated, including failures. Do not drop targets after seeing scores."
+  - id: P-LABEL
+    rule: "Each forecast is labelled retrospective (made after the outcome could be known, even if only inputs before the cutoff were used) or locked (committed, with a commit hash, before the outcome was observed). Only locked forecasts are prospective tests. Checked."
+
+baselines:
+  - id: B-FLAT
+    description: "last observed value carried forward"
+  - id: B-LOGLINEAR
+    description: "least-squares straight line in log(value) against time, fitted on data available by the cutoff"
+  - id: B-COMPUTE
+    description: "source-declared compute-driven trend, where the target has one (to be specified per target in #12, #14)"
+
+scoring_rules:
+  - id: S-ABSLOGERR
+    description: "|log(forecast) - log(observed)|"
+  - id: S-INTERVAL80
+    description: "interval score of the central 80% interval: (u - l) + (2 / 0.2) * (l - y if y < l) + (2 / 0.2) * (y - u if y > u)"
+  - id: S-COVERAGE80
+    description: "share of observations inside the central 80% interval"
+
+# Forecast registry. Empty until #12 adds the first evaluation. Each entry:
+#   id, model, target (observable and units), information_cutoff, issued, label (retrospective | locked),
+#   lock_commit (required when locked), inputs (evidence record IDs), horizon, baselines, scoring, resolution
+#   ({record, vintage} or null until resolved).
+forecasts: []

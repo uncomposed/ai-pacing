@@ -21,6 +21,11 @@ mechanisms, and evaluation plans with
 `python3 tools/systems_tool.py trace --requirement REQ-COMPETE`.
 See [traceability examples and limitations](docs/requirement-traceability.md).
 
+The [evidence and validation contract](docs/evidence-protocol.md) (issue #8) holds
+dated evidence records, input roles, outcome-share labels, the shared historical
+evaluation protocol and the parameter-admission rule. `make evidence-check` checks
+[`evidence/`](evidence/records.yaml); `make check` includes it.
+
 ## Existing AI Pacing proposal
 
 This repository publishes AI Pacing as a versioned, machine-readable idea rather than a single privileged essay. Git is authoritative. Human-facing pages, PDFs, games, songs, simulations, critiques, and other works are renderings of an exact Git state.
