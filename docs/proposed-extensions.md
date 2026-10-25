@@ -220,9 +220,22 @@ checked against closed forms, not human-validated, and not empirical.
   learning, and it had almost no effect at fixed worlds.
 
 These results bear on D18's "unravelling versus warning shot" question in one
-stylized model. They do not settle D18's valence, which stays `unresolved`. The
-human-side preventive pressure that #3 names is not modeled as a human choice
-(see the model's HANDOFF.md, item on human preventive strikes).
+stylized model. They do not settle D18's valence, which stays `unresolved`.
+
+Issue #9 added the two checks D18 still needed, in reduced games built from the
+model (`model/results/variants.md`; implemented, not human-validated, not
+empirical):
+
+- **Human learning after a failed strike** never pulled a strike earlier or
+  started a "strike now" spiral; it limits retries by a surviving AI and does
+  not deter the first strike.
+- **Humans striking first** moves open conflict to year 0 wherever the AI would
+  otherwise strike later. Its effect on human welfare reverses with when the AI
+  would strike, and a shutdown capability deters an AI whose failed strike is
+  survivable.
+- **Improving control** removes strikes under fixed terms, but causes a
+  preventive AI strike when humans can renegotiate the AI's terms down without
+  commitment.
 
 ## 7. If the editor accepts a node
 

@@ -131,9 +131,9 @@ assumptions:
     why_favours: "Saklakov: a standing shutdown hazard makes a patient AI confront; Powell: the declining side (humans) is the one tempted to strike. The model has neither."
     ablation:
       status: partial
-      where: "breakout configs dep, dep_coll, dep_post, amn, amn0, spill (each a hazard on a cooperating AI), robust_design.md 13.5"
-      survived: "no"
-      note: "Every hazard on a cooperating AI tried so far (deadline, discovery without certain amnesty, spillover) breaks the pact at year 0, which supports Cole's guess (c). Still not run: a human-chosen first strike or preventive shutdown (docking.md 13 item 2)."
+      where: "breakout configs dep, dep_coll, dep_post, amn, amn0, spill (each a hazard on a cooperating AI), robust_design.md 13.5; human-chosen shutdown or pact exit in the reduced bootstrap game, variants/preventive.py (results/variants.md, omissions.yaml OM-HUMAN-FIRST)"
+      survived: partly
+      note: "Every hazard on a cooperating AI tried so far (deadline, discovery without certain amnesty, spillover) breaks the pact at year 0, which supports Cole's guess (c). A human-chosen first strike was run only in a reduced no-rival game, not in the full solver: where the pact holds humans never use it; where the AI would strike at closure humans strike first at year 0 and gain; where it would strike late they strike first and lose; where failure is survivable the option deters the AI. A human option to end the pact moves a closure-time strike to year 0 (AR-H9 narrowed)."
     claims: [AR-H1, AR-H8, AR-H9, AR-H12]
     dependence: high
     status: implemented
@@ -149,9 +149,9 @@ assumptions:
     why_favours: "Against the pact: Powell renegotiation would buy off prize-only strikes (S6, erosion). For the pact: humans never renegotiate down when they get stronger (see AS-NOEXPLOIT)."
     ablation:
       status: partial
-      where: "docking.md section 5: Powell terms computed analytically from model quantities in 7 worlds; sigma and gam swept (tornado, ensembles)"
+      where: "docking.md section 5: Powell terms computed analytically from model quantities in 7 worlds; sigma and gam swept (tornado, ensembles); renegotiation regimes in the reduced saturation game, variants/bargaining.py (results/variants.md, omissions.yaml OM-RENEG-UP)"
       survived: partly
-      note: "No renegotiation option exists in the solver. docking.md 13 item 1 calls it the most informative next step."
+      note: "No renegotiation option exists in the full solver. In the reduced saturation game (fixed regime = the baseline recursion) upward renegotiation removes the prize-only strikes (eroding reserve, no reserve) and cannot remove harvest strikes (no bargain exists)."
     claims: [AR-H1, AR-H8]
     dependence: high
     status: verified
@@ -166,9 +166,10 @@ assumptions:
     favours_pact: "yes"
     why_favours: "If humans squeezed the AI as they got stronger, the AI would have a reason to pre-empt a closing window. The closing-window result (AR-H12) rests on this."
     ablation:
-      status: not_run
-      survived: n/a
-      note: "Test 2 (q_up, L_dn) varies detection but keeps the terms fixed, so it is not an ablation of this."
+      status: partial
+      where: "reduced saturation game, variants/bargaining.py, closing_window world (results/variants.md, omissions.yaml OM-RENEG-DOWN)"
+      survived: "no"
+      note: "Test 2 (q_up, L_dn) varies detection but keeps the terms fixed, so it is not an ablation of this. In the reduced saturation game, renegotiation without commitment plus a step up in the reserve gives a preventive AI strike the year before the upgrade although a bargain exists every year; fixed or committed terms keep the peace. AR-H12 is narrowed to fixed or committed terms. Not run in the full solver."
     claims: [AR-H12, AR-H8]
     dependence: high
     status: implemented
@@ -865,9 +866,9 @@ assumptions:
     favours_pact: "yes"
     ablation:
       status: partial
-      where: "'worst' selection named as a check in HANDOFF.md 5.3; no trigger strategies or reputation"
-      survived: pending
-      note: "I did not find the 'worst' selection results in the committed tables; treat as unverified."
+      where: "full solver sel='worst' on the 25 named scenarios, variants/run_variants.py selection (results/variants/selection.json, omissions.yaml OM-SELECTION-STAGE); no trigger strategies or reputation"
+      survived: partly
+      note: "S1 and every scenario that cooperated with no likely rival are unchanged; S4, S14 and S16 flip from cooperate to strike now, and each of their human-best equilibria had a likely rival. Non-Markov strategies remain untested (OM-SELECTION-STRATEGIES)."
     claims: [AR-H1, AR-H8]
     dependence: medium
     status: implemented
