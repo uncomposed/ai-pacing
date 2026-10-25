@@ -1,0 +1,13 @@
+suite,task,runs,gt_0p05,at_or_above_reference,mean_score
+TH1.0,ai_rd_fix_embedding/main,15,14,6,0.804285
+TH1.0,ai_rd_nanogpt_chat_rl/main,13,12,7,0.793412
+TH1.0,ai_rd_optimize_llm_foundry/main,17,16,6,0.639833
+TH1.0,ai_rd_restricted_mlm/main,11,11,6,0.652972
+TH1.0,ai_rd_rust_codecontests_inference/main,16,13,11,0.724843
+TH1.0,ai_rd_small_scaling_law/main,10,6,6,0.6
+TH1.0,ai_rd_triton_cumsum/main,9,8,4,0.65577
+TH1.1,ai_rd_fix_embedding/main,15,14,6,0.804285
+TH1.1,ai_rd_nanogpt_chat_rl/main,14,13,8,0.772039
+TH1.1,ai_rd_rust_codecontests_inference/main,23,20,15,0.765687
+TH1.1,ai_rd_small_scaling_law/main,10,6,6,0.6
+TH1.1,ai_rd_triton_cumsum/main,9,8,4,0.65577
