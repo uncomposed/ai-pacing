@@ -1,0 +1,135 @@
+# When each METR time-horizon value became public, and which value was public then.
+#
+# Read by build_observations.py, which writes data/observations.csv (one row per batch x model).
+# One batch = one evidence record in evidence/records.yaml (same id). [[ai gen]] Curated 2026-10-25.
+#
+# available: the conservative (latest defensible) date the values were public. Bases, in order of preference:
+#   - METR's own dated statement (time-horizons page "Updates" list, blog datePublished, arXiv submission);
+#   - otherwise the date of the first eval-analysis-public commit containing the runs (author date; the push
+#     could be later, which only matters if it is later than a forecast cutoff we use; none is close).
+# values: how the value in that batch is obtained.
+#   - runs: re-fitted here from the runs file of that vintage, with the regularization METR used then
+#     (0.1 until the 2026-03-03 correction). This RECONSTRUCTS what was published; the page values of the
+#     time were not archived, so it assumes the runs then equalled those later committed (checked where two
+#     vintages overlap: see revisions in results/reproduction.md).
+#   - published: copied from metr.org/assets/benchmark_results_1_{0,1}.yaml (fetched 2026-10-25, sha256 in
+#     sources.sha256); these are the post-correction values.
+# models: aliases as they appear in that vintage's runs file (runs) or keys of the published file (published).
+
+regularization_before_correction: 0.1
+regularization_after_correction: 0.00001
+
+batches:
+  # ---------------- TH1.0 (task suite of the March 2025 paper; Vivaria infrastructure)
+  - id: EV-METR-TH10-2025-03-19
+    suite: TH1.0
+    available: "2025-03-19"
+    basis: "arXiv 2503.14499 v1 submitted 2025-03-18; METR blog post 2025-03-19; runs in eval-analysis-public 4f79669 (2025-03-18). Later date used."
+    values: {source: runs, vintage: th10_2025-03-18, regularization: 0.1}
+    models: ["Claude 3 Opus", "Claude 3.5 Sonnet (New)", "Claude 3.5 Sonnet (Old)", "Claude 3.7 Sonnet", "GPT-2", "GPT-4 0125",
+             "GPT-4 0314", "GPT-4 1106", "GPT-4 Turbo", "GPT-4o", "davinci-002 (GPT-3)", "gpt-3.5-turbo-instruct", "o1", "o1-preview"]
+  - id: EV-METR-TH10-2025-04-16
+    suite: TH1.0
+    available: "2025-04-16"
+    basis: "time-horizons page Updates: 'April 16th, 2025: Added o3 and o4-mini'"
+    values: {source: runs, vintage: th10_2026-01-20, regularization: 0.1}
+    models: ["o3", "o4-mini"]
+  - id: EV-METR-TH10-2025-06-27
+    suite: TH1.0
+    available: "2025-06-27"
+    basis: "time-horizons page Updates: 'June 27th, 2025: Added DeepSeek-V3 and Qwen models' (DeepSeek-V3-0324 not assumed included)"
+    values: {source: runs, vintage: th10_2026-01-20, regularization: 0.1}
+    models: ["DeepSeek-V3", "Qwen2-72B", "Qwen2.5-72B"]
+  - id: EV-METR-TH10-2025-08-06
+    suite: TH1.0
+    available: "2025-08-06"
+    basis: "time-horizons page Updates: 'August 6th, 2025: Added GPT-5, gpt-oss-120b, and Claude Opus 4.1' (only GPT-5's public runs predate this; see EV-METR-TH10-2026-01-20)"
+    values: {source: runs, vintage: th10_2026-01-20, regularization: 0.1}
+    models: ["GPT-5"]
+  - id: EV-METR-TH10-2025-11-19
+    suite: TH1.0
+    available: "2025-11-19"
+    basis: "time-horizons page Updates: 'November 19th, 2025: Added GPT-5.1-Codex-Max and Kimi K2 Thinking'"
+    values: {source: runs, vintage: th10_2026-01-20, regularization: 0.1}
+    models: ["GPT-5.1-Codex-Max", "Kimi K2 Thinking"]
+  - id: EV-METR-TH10-2025-12-19
+    suite: TH1.0
+    available: "2025-12-19"
+    basis: "time-horizons page Updates: 'December 19th, 2025: Added Claude Opus 4.5'"
+    values: {source: runs, vintage: th10_2026-01-20, regularization: 0.1}
+    models: ["Claude Opus 4.5"]
+  - id: EV-METR-TH10-2026-01-20
+    suite: TH1.0
+    available: "2026-01-20"
+    basis: "first public appearance found: eval-analysis-public 52d6b56 (2026-01-20). (a) Models with no dated page entry (Claude 4 Opus/Sonnet, Gemini 2.5 Pro Preview, DeepSeek-R1-0528, DeepSeek-V3-0324). (b) Models whose page entry predates every public run of theirs, so the value first shown on the page came from runs that were later replaced and are not public: DeepSeek-R1 (page 2025-03-06, runs from 2025-06-17), Grok 4 (page 2025-07-20, runs to 2025-07-30), gpt-oss-120b and Claude Opus 4.1 (page 2025-08-06, runs from 2025-09-29 and 2025-08-21), Claude Sonnet 4.5 (page 2025-09-30, runs from 2025-10-03). They enter at the date their public runs appeared: late, not leaked. (c) Re-scored runs of the paper models."
+    values: {source: runs, vintage: th10_2026-01-20, regularization: 0.1}
+    models: ["Claude 4 Opus", "Claude 4 Sonnet", "Gemini 2.5 Pro Preview", "DeepSeek-R1-0528", "DeepSeek-V3-0324",
+             "DeepSeek-R1", "Grok 4", "gpt-oss-120b", "Claude 4.1 Opus", "Claude Sonnet 4.5",
+             "Claude 3 Opus", "Claude 3.5 Sonnet (New)", "Claude 3.5 Sonnet (Old)", "Claude 3.7 Sonnet", "GPT-2", "GPT-4 0125",
+             "GPT-4 0314", "GPT-4 1106", "GPT-4 Turbo", "GPT-4o", "davinci-002 (GPT-3)", "gpt-3.5-turbo-instruct", "o1", "o1-preview"]
+  - id: EV-METR-TH10-2026-03-03
+    suite: TH1.0
+    available: "2026-03-03"
+    basis: "time-horizons page Updates: 'March 3rd, 2026: Corrected a regularization mistake that affected our measurements' (regularization 0.1 -> 1e-5 in eval-analysis-public 52cb829). Revision of every TH1.0 value."
+    values: {source: published, file: benchmark_results_1_0.yaml}
+    models: all
+  # ---------------- TH1.1 (228 tasks; Inspect infrastructure)
+  - id: EV-METR-TH11-2026-01-29
+    suite: TH1.1
+    available: "2026-01-29"
+    basis: "METR blog 'Time Horizon 1.1', datePublished 2026-01-29; runs in eval-analysis-public 52d6b56 (2026-01-20). Later date used."
+    values: {source: runs, vintage: th11_2026-01-20, regularization: 0.1}
+    models: ["Claude 3 Opus (Inspect)", "Claude 3.5 Sonnet (New) (Inspect)", "Claude 3.5 Sonnet (Old) (Inspect)", "Claude 3.7 Sonnet (Inspect)",
+             "Claude 4 Opus (Inspect)", "Claude 4.5 Opus (Inspect)", "GPT-4 0314", "GPT-4 1106 (Inspect)", "GPT-4 Turbo (Inspect)",
+             "GPT-4o (Inspect)", "GPT-5 (Inspect)", "o1 (Inspect)", "o1-preview", "o3 (Inspect)"]
+  - id: EV-METR-TH11-2026-02-04
+    suite: TH1.1
+    available: "2026-02-04"
+    basis: "time-horizons page Updates: 'February 3rd, 2026: Added Gemini 3 Pro and GPT-5.1 Codex Max'; 'February 4th, 2026: Added GPT-5.2'. One record at the later date."
+    values: {source: runs, vintage: th11_2026-02-12, regularization: 0.1}
+    models: ["Gemini 3 Pro", "GPT-5.1-Codex-Max (Inspect)", "GPT-5.2"]
+  - id: EV-METR-TH11-2026-02-12
+    suite: TH1.1
+    available: "2026-02-12"
+    basis: "no dated page entry; first public appearance found: eval-analysis-public 571a941 (2026-02-12)"
+    values: {source: runs, vintage: th11_2026-02-12, regularization: 0.1}
+    models: ["Claude 4.1 Opus (Inspect)"]
+  - id: EV-METR-TH11-2026-03-03
+    suite: TH1.1
+    available: "2026-03-03"
+    basis: "time-horizons page Updates: regularization correction 2026-03-03. Revision of every TH1.1 value, and the first value we can recover for Claude Opus 4.6 and GPT-5.3-Codex (page entry 2026-02-20; their pre-correction values are in no public vintage, so they enter here, late rather than leaked)."
+    values: {source: published, file: benchmark_results_1_1.yaml}
+    models: ["claude_3_5_sonnet_20240620_inspect", "claude_3_5_sonnet_20241022_inspect", "claude_3_7_sonnet_inspect", "claude_3_opus_inspect",
+             "claude_4_1_opus_inspect", "claude_4_opus_inspect", "claude_opus_4_5_inspect", "claude_opus_4_6_inspect", "gpt_5_3_codex",
+             "gemini_3_pro", "gpt_4", "gpt_4_1106_inspect", "gpt_4_turbo_inspect", "gpt_4o_inspect", "gpt_5_1_codex_max_inspect", "gpt_5_2",
+             "gpt_5_2025_08_07_inspect", "o1_inspect", "o1_preview", "o3_inspect"]
+  - id: EV-METR-TH11-2026-04-10
+    suite: TH1.1
+    available: "2026-04-10"
+    basis: "time-horizons page Updates: 'April 10th, 2026: Added GPT-5.4'"
+    values: {source: published, file: benchmark_results_1_1.yaml}
+    models: ["gpt_5_4"]
+  - id: EV-METR-TH11-2026-04-15
+    suite: TH1.1
+    available: "2026-04-15"
+    basis: "time-horizons page Updates: 'April 15th, 2026: Added Gemini 3.1 Pro'"
+    values: {source: published, file: benchmark_results_1_1.yaml}
+    models: ["gemini_3_1_pro"]
+  - id: EV-METR-TH11-2026-05-08
+    suite: TH1.1
+    available: "2026-05-08"
+    basis: "time-horizons page Updates: 'May 8th, 2026: Added Claude Mythos Preview (early) and notice that Measurements above 16 hrs are unreliable with our current task suite.'"
+    values: {source: published, file: benchmark_results_1_1.yaml}
+    models: ["claude_mythos_preview_early_inspect"]
+
+# Published keys stitched into the TH1.1 file from TH1.0 (generate_benchmark_results --model-names-to-stitch);
+# they are TH1.0 measurements and are excluded from TH1.1 series.
+th11_stitched_from_th10: [davinci_002, gpt2, gpt_3_5_turbo_instruct]
+
+# Runs aliases whose 'model' field differs from the published key.
+alias_key_overrides:
+  "GPT-5.3-Codex": gpt_5_3_codex   # runs file calls it flamingo_2
+  "Claude 4.5 Opus (Inspect)": claude_opus_4_5_inspect   # renamed after 2026-01-20
+
+# METR: "Measurements above 16 hrs are unreliable with our current task suite" (page notice, 2026-05-08).
+saturation_minutes: 960
