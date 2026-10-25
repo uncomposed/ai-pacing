@@ -6,16 +6,16 @@ Needs the upstream dependencies at the versions in upstream uv.lock (numpy 2.4.1
 pandas 2.3.3, joblib 1.5.3, scipy, pyyaml); see .github/workflows/metr-repro.yml. It calls
 horizon.wrangle.bootstrap.compute_bootstrap_regressions and horizon.wrangle.logistic.run_logistic_regressions
 with the parameters of figs.wrangle_logistic.headline in reports/time-horizon-1-1/fig_params/figs.yaml.
-DVC is only used upstream to read those parameters, so a stub stands in for it and the parameters are
-read from the YAML directly.
+DVC is only used upstream to read those parameters, so an empty stub package stands in for it and the
+parameters are read from the YAML directly. Run without `python -I`, so joblib's workers see PYTHONPATH.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import pathlib
+import os
 import sys
-import types
 
 
 def main() -> None:
@@ -26,12 +26,16 @@ def main() -> None:
     a = ap.parse_args()
     cache = pathlib.Path(a.cache)
     up = cache / "eval-analysis-public"
-    sys.path.insert(0, str(up / "src"))
-    dvc = types.ModuleType("dvc")
-    dvc.api = types.ModuleType("dvc.api")  # type: ignore[attr-defined]
-    sys.modules["dvc"], sys.modules["dvc.api"] = dvc, dvc.api  # type: ignore[attr-defined]
+    # Stub package for dvc (upstream imports dvc.api only to read parameters). Put on PYTHONPATH too, so
+    # joblib's worker processes can import the upstream modules.
+    stub = cache / "_stubs"
+    (stub / "dvc").mkdir(parents=True, exist_ok=True)
+    (stub / "dvc/__init__.py").write_text("")
+    (stub / "dvc/api.py").write_text("")
+    paths = [str(up / "src"), str(stub)]
+    sys.path[:0] = paths
+    os.environ["PYTHONPATH"] = os.pathsep.join(paths + [os.environ.get("PYTHONPATH", "")])
 
-    import joblib
     import numpy as np
     import pandas as pd
     import sklearn
@@ -46,13 +50,10 @@ def main() -> None:
     boot = None
     if a.n_bootstrap > 0:
         bdata = data.rename(columns={"alias": "agent"})
-        # Threads, not loky processes: the workers could not import the stubbed modules. Each replicate seeds
-        # its own generator (42 + i) upstream, so the backend does not change the draws.
-        with joblib.parallel_config(backend="threading"):
-            boot = compute_bootstrap_regressions(
-                data=bdata, categories=["task_family", "task_id", "run_id"], n_bootstrap=a.n_bootstrap,
-                regularization=params["regularization"], weights_col=params["weighting"],
-                success_percents=params["success_percents"], score_col=params.get("score_col", "score_binarized"))
+        boot = compute_bootstrap_regressions(
+            data=bdata, categories=["task_family", "task_id", "run_id"], n_bootstrap=a.n_bootstrap,
+            regularization=params["regularization"], weights_col=params["weighting"],
+            success_percents=params["success_percents"], score_col=params.get("score_col", "score_binarized"))
         bfile = cache / "upstream_bootstrap_th11.csv"
         boot.to_csv(bfile, index=False)
     runs = pd.read_json(runs_file, lines=True, orient="records", convert_dates=False)

@@ -328,8 +328,24 @@ def to_markdown(res: dict) -> str:
     return "\n".join(L)
 
 
-def _canon(x):
-    return json.loads(json.dumps(x, sort_keys=True, default=str), parse_float=lambda s: round(float(s), 9))
+def _plain(x):
+    return json.loads(json.dumps(x, sort_keys=True, default=str))
+
+
+def close(a, b, rel: float = 1e-9) -> bool:
+    """Structural equality with floats compared to a relative tolerance (platform float noise only)."""
+    a, b = _plain(a), _plain(b)
+
+    def eq(x, y):
+        if isinstance(x, dict):
+            return isinstance(y, dict) and x.keys() == y.keys() and all(eq(x[k], y[k]) for k in x)
+        if isinstance(x, list):
+            return isinstance(y, list) and len(x) == len(y) and all(eq(u, v) for u, v in zip(x, y))
+        if isinstance(x, float) or isinstance(y, float):
+            return isinstance(x, (int, float)) and isinstance(y, (int, float)) and not isinstance(x, bool) \
+                and abs(x - y) <= rel * max(1.0, abs(x), abs(y))
+        return x == y
+    return eq(a, b)
 
 
 def main() -> None:
@@ -340,7 +356,7 @@ def main() -> None:
     jpath, mpath = HERE / "results/holdout.json", HERE / "results/holdout.md"
     if a.check:
         committed = json.loads(jpath.read_text())
-        if _canon(committed) != _canon(res) or mpath.read_text() != to_markdown(res):
+        if not close(committed, res) or mpath.read_text() != to_markdown(res):
             sys.exit("holdout: recomputed results differ from the committed results/holdout.{json,md}")
         print(f"holdout: {len(res['forecasts'])} retrospective forecasts reproduce the committed results; "
               f"verdict: {res['verdict']['statement']}")

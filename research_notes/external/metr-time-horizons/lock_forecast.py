@@ -76,7 +76,7 @@ def main() -> None:
         digest = hashlib.sha256(committed.encode()).hexdigest()
         if f"{digest}  {OUT.name}" not in sums.read_text():
             sys.exit(f"lock_forecast: {OUT.name} does not match forecasts/SHA256SUMS (a locked forecast was edited)")
-        if committed != text:
+        if not H.close(json.loads(committed), json.loads(text)):  # relative 1e-9: platform float noise only
             sys.exit("lock_forecast: the committed forecast no longer follows from data/observations.csv and the code")
         print(f"lock_forecast: {OUT.name} intact (sha256 {digest[:12]}...) and reproducible")
         return
