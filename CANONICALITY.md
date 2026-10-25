@@ -26,6 +26,12 @@ views so that a readable page cannot silently become the idea's authority.
 5. Files under `generated/`, diagrams, websites, essays, and other artifacts are
    projections or renderings. They never override the YAML.
 
+Within the YAML, a node whose `provenance.author_status` is `proposed` is
+recorded for the editor's review and is not part of the accepted idea. A
+rendering must not present it as accepted. `spec/id-registry.yaml` records which
+proposition IDs each source uses, so the YAML and the editorial reference cannot
+acquire new silent ID collisions.
+
 The editorial reference currently contains claims and decompositions that have
 not all been reconciled into YAML. This is an explicit open conformance issue,
 not an invitation for a renderer to merge the files silently. Run

@@ -115,7 +115,11 @@ module CleanRoom
 
   def audit
     markdown = markdown_nodes
-    yaml_nodes = AIPacing.nodes_by_id(AIPacing.load_spec)
+    spec = AIPacing.load_spec
+    proposed = AIPacing.proposed_ids(spec)
+    # Proposed YAML nodes are not accepted canon; compare the editorial
+    # reference with the accepted YAML and list proposals separately.
+    yaml_nodes = AIPacing.nodes_by_id(AIPacing.accepted_spec(spec))
     missing = markdown.keys - yaml_nodes.keys
     extra = yaml_nodes.keys - markdown.keys
     shared = markdown.keys & yaml_nodes.keys
@@ -126,6 +130,8 @@ module CleanRoom
     {
       "markdown_node_count" => markdown.length,
       "yaml_node_count" => yaml_nodes.length,
+      "yaml_proposed_nodes" => proposed,
+      "proposed_ids_in_editorial" => (proposed & markdown.keys).sort,
       "missing_from_yaml" => missing.sort,
       "extra_in_yaml" => extra.sort,
       "kind_mismatches" => kind_mismatches.sort,

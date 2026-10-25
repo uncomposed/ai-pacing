@@ -97,7 +97,7 @@ module AIPacingRendering
               errors << "covers unknown target node #{node_id}" unless nodes.key?(node_id)
             end
             if relationship["claim"] == "faithful"
-              kernel_ids = nodes.values.select { |node| node["kind"] == "kernel" }.map { |node| node["id"] }.sort
+              kernel_ids = AIPacing.accepted_kernel_ids(spec)
               missing = kernel_ids - Array(relationship["covers"])
               errors << "faithful rendering does not cover kernel nodes #{missing.join(', ')}" unless missing.empty?
             end

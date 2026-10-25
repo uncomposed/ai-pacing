@@ -95,7 +95,26 @@
         "origin": {"type": "string", "minLength": 1},
         "sources": {"type": "array", "minItems": 1, "items": {"type": "string"}},
         "ai_roles": {"type": "array", "minItems": 1, "items": {"type": "string"}},
-        "author_status": {"type": "string", "minLength": 1}
+        "author_status": {
+          "description": "Canonical editor's acceptance status. 'proposed' means recorded for review and not accepted canon. Every other value is accepted; 'unresolved' is an open question the editor accepted as a question.",
+          "enum": [
+            "accepted",
+            "accepted-after-revision",
+            "accepted-after-wording-correction",
+            "accepted-as-hypothesis",
+            "accepted-as-option",
+            "unresolved",
+            "proposed"
+          ]
+        }
+      }
+    },
+    "proposal": {
+      "type": "object",
+      "required": ["issue"],
+      "properties": {
+        "issue": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+#[0-9]+$"},
+        "issue_id": {"type": "string", "pattern": "^[KDHIQ][0-9]+$"}
       }
     },
     "node": {
@@ -107,6 +126,7 @@
         "title": {"type": "string", "minLength": 1},
         "statement": {"type": "string", "minLength": 1},
         "provenance": {"$ref": "#/$defs/provenance"},
+        "proposal": {"$ref": "#/$defs/proposal"},
         "replaceable": {"type": "boolean"},
         "falsifier": {"type": "string"},
         "evidence_needed": {"type": "string"},
@@ -120,6 +140,13 @@
         {
           "if": {"properties": {"kind": {"const": "implementation"}}},
           "then": {"required": ["replaceable"], "properties": {"replaceable": {"const": true}}}
+        },
+        {
+          "if": {
+            "required": ["provenance"],
+            "properties": {"provenance": {"required": ["author_status"], "properties": {"author_status": {"const": "proposed"}}}}
+          },
+          "then": {"required": ["proposal"]}
         }
       ]
     },

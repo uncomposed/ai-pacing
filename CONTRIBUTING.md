@@ -11,15 +11,16 @@ actually established.
 | Path | What it is | Authority |
 |---|---|---|
 | `spec/ai-pacing.yaml` | The canonical specification (K, D, H, I, Q nodes, sources, acceptance tests). | Normative |
+| `spec/id-registry.yaml` | Reserved-ID registry: every K, D, H, I, Q ID used or reserved in the YAML, the editorial reference, research notes and issues. Checked by `make check`. | Normative for ID allocation |
 | `.idea/` | IRAP registry identity: `manifest.yaml`, `verifiers.yaml`, `verification-policy.yaml`, `publication.yaml`. | Normative for identity and verification policy |
 | `AI_Pacing_Canonical_Spec_v0.1.md` | Supplied editorial reference, used to audit the YAML. Known to diverge (`make clean-room-audit`). | Reference only |
 | `generated/` | Deterministic views of the YAML (canonical JSON, claims CSV, graph, audit trail, matrices). | Projection |
 | `renderings/`, `examples/renderings/` | Renderings (for example the draw.io dependency map) and their rendering envelopes. | Projection |
-| `schema/` | JSON Schemas for the spec, rendering envelopes and the systems model. | Tooling |
+| `schema/` | JSON Schemas for the spec, the ID registry, rendering envelopes and the systems model. | Tooling |
 | `tools/` | Ruby and Python tools: `spec_tool.rb`, `rendering_tool.rb`, `irap_tool.rb`, `registry_payload.rb`, `clean_room_tool.rb`, `systems_tool.py`, `assumptions_tool.py`. | Tooling |
 | `test/` | Unit and mutation tests for the tools. | Tooling |
 | `systems/model.json` | Systems-engineering challenge workspace (stakeholders, hazards, requirements, candidate solutions). A draft, not part of the proposal. | Draft, separate from the spec |
-| `docs/` | Verification strategy, systems engineering, clean-room reconstruction, actor analysis, off-Earth pact note. | Explanatory |
+| `docs/` | Verification strategy, systems engineering, clean-room reconstruction, actor analysis, off-Earth pact note, proposed extensions (`proposed-extensions.md`). | Explanatory |
 | `eval/clean-room/` | Clean-room reconstruction rubric. Keep it away from the generator. | Verifier material |
 | `reports/`, `research_notes/` | Research. `research_notes/Off Earth industry as misalignment control/` holds notes and the equilibrium model (below). | Research, not normative |
 
@@ -131,14 +132,32 @@ decides what enters the specification. Contributors propose; they do not accept.
    `D` derived, `H` hypothesis (needs a falsifier, evidence requirement and
    stopping rule), `I` replaceable implementation, `Q` open question. Give the
    candidate statement, what it depends on or supports, and what would falsify it.
-2. Node IDs come from a single reserved-ID list; see the reserved-ID registry under
-   `spec/`. Reserve an ID there before using it, and never reuse or renumber one.
-   Do not pick the next free number from your own reading of the YAML.
-3. In the PR, add the node as proposed: `provenance.author_status: proposed`, with
-   honest `origin`, `sources` and `ai_roles`. The tooling only requires a non-empty
-   status, so this is a convention you are responsible for. Do not write
-   `accepted*` yourself; the editor changes that, and AI-assisted proposals must say
-   so in `ai_roles`.
+2. Node IDs come from one list, the reserved-ID registry `spec/id-registry.yaml`.
+   It covers the YAML, the editorial Markdown, research-note candidates and issue
+   proposals. Do not pick the next free number from your own reading of the YAML.
+   To reserve an ID:
+   - run `ruby tools/spec_tool.rb next-id H` (or `K`, `D`, `I`, `Q`) to get the next
+     free ID of that kind;
+   - add an entry under `ids:` with that `id`, its `kind`, `collision: none`, and
+     one definition. Use `{source: yaml, title: <node title>, status: proposed}`
+     when the node lands in the YAML in the same PR. For an issue or research-note
+     candidate that is not in the YAML yet, use that source's key (declare it under
+     `sources:` if it is new) with `status: reserved`;
+   - bump `next_free` for that kind;
+   - if the issue or note already used a different number, add a `renumbering` row
+     (`source`, `old`, `new`, `reason`).
+   Never reuse or renumber a registered ID. `make check` rejects an unregistered or
+   retitled YAML node, an ID that collides with another definition, and a
+   `next_free` at or below a used ID.
+3. In the PR, add the node as proposed: `provenance.author_status: proposed` and
+   `proposal: {issue: uncomposed/ai-pacing#N}`, with honest `origin`, `sources` and
+   `ai_roles`. The tooling enforces this: `author_status` must be one of the known
+   values, and a proposed node must name its issue. Proposed nodes are excluded
+   from kernel identity, node-existence and dependency-path acceptance tests, and
+   an accepted node may not depend on one. Do not write `accepted*` yourself; the
+   editor changes that (and the registry status), and AI-assisted proposals must
+   say so in `ai_roles`. See `docs/verification.md` and
+   `docs/proposed-extensions.md` for a worked example.
 4. Check downstream effects first: `ruby tools/spec_tool.rb impact <ID>`. Never turn
    an implementation option into a kernel proposition, or a hypothesis or open
    question into a conclusion (see `generator_contract` in the YAML).

@@ -31,6 +31,28 @@ These checks are meant to prevent:
 - open questions disappearing through confident prose;
 - AI suggestions being included without human responsibility.
 
+`author_status` takes a fixed set of values. `proposed` marks a node recorded
+for the editor's review and not accepted; every other value is accepted canon
+(`unresolved` is an open question the editor accepted as a question). A proposed
+node must name its proposal issue and still meets every field rule above. An
+accepted node may not be derived from, grounded by, or implemented by a proposed
+node. A proposed hypothesis may condition an accepted claim, since that records
+a proposed edge, not an accepted dependency.
+
+## 3a. Reserved-ID registry
+
+`spec/id-registry.yaml` lists every proposition ID used or reserved in the YAML,
+the editorial reference, the off-Earth research report, and the proposal issues.
+`make check` rejects:
+
+- a YAML node with no registered `yaml` definition, or whose registered kind,
+  title, or status (accepted or proposed) differs from the YAML;
+- a registered `yaml` definition with no YAML node;
+- an editorial-reference heading ID that is unregistered or retitled;
+- a YAML node whose ID is reserved for something else, or a new legacy
+  collision outside the grandfathered 2026-08-29 set;
+- a `next_free` ID at or below any used, reserved, or local-namespace ID.
+
 ## 4. Semantic acceptance tests
 
 The YAML contains executable assertions for the theory's important relationships. They test the stable semantic IDs and dependency paths rather than searching prose for favored words.
@@ -50,6 +72,13 @@ The current suite requires:
 
 The generated acceptance matrix gives a reviewable deterministic view of these results.
 
+Kernel identity (`exact_kind_ids`), `node_exists`, and `path_exists` assertions
+run against the accepted canon only: proposed nodes and every relation touching
+one are removed first. A proposed node can therefore neither complete nor break
+those assertions. Field assertions (falsifiability, replaceability, provenance)
+apply to every node. The minimal reconstruction, the kernel review checklist,
+and faithful-rendering kernel coverage also use accepted kernel nodes only.
+
 ## 5. Mutation tests
 
 The unit tests deliberately damage an in-memory copy of the specification. The suite confirms that validators catch:
@@ -59,7 +88,9 @@ The unit tests deliberately damage an in-memory copy of the specification. The s
 - a hypothesis with no falsifier;
 - silent promotion of an implementation option;
 - unknown provenance;
-- corruption of the seven-claim kernel checksum.
+- corruption of the seven-claim kernel checksum;
+- a proposed node counted as canon, or an accepted node depending on one;
+- an unregistered, duplicated, retitled, or colliding proposition ID.
 
 This is a lightweight falsification test for the validator itself. A validator that only succeeds on the canonical file without rejecting known-bad mutations provides weak evidence.
 
