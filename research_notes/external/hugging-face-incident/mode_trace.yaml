@@ -10,12 +10,13 @@
 # (0.2.0) for all three; resolved_gaps records the old messages and what changed. contract_gaps is now empty.
 # Contract 0.3.0 (#39, stocks and flows) requires trace resources to be stocks; this trace's only resource is
 # compute_inference (a stock), so it validates unchanged against 0.3.0. Contract 0.4.0 (#61) changes adapters only
-# (a kind on every adapter quantity, new stock ledgers); this trace validates unchanged and is re-pinned to 0.4.0.
+# (a kind on every adapter quantity, new stock ledgers); 0.5.0 (#47) adds the milestone interface and
+# compute_experiment. This trace uses neither, validates unchanged and is re-pinned to 0.5.0.
 #
 # Values are judgements from the events cited in each step's basis. `unknown` means the read sources do not
 # settle the value; the contract then reports the view as undetermined rather than false.
 
-contract_version_used: 0.4.0
+contract_version_used: 0.5.0
 
 traces:
   - id: TR-HF-INCIDENT

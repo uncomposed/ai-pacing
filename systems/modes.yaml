@@ -23,7 +23,9 @@
 #      exclusion, and every PARAMS name cited exists;
 #   7. stocks and flows stay apart (#39, #61): every adapter quantity declares its kind; one booked to an accounting
 #      quantity has that quantity's kind (or is a ratio on it, or is recorded ambiguous with a source locator); an
-#      output_rate leads from a stock to a flow derived from it, and trace resources (held by shares) are stocks.
+#      output_rate leads from a stock to a flow derived from it, and trace resources (held by shares) are stocks;
+#   8. a milestone event (#47) sets only the capability level its binding declares; it applies no transition, carries
+#      no rate or probability, and every bound milestone may inform transitions in both directions.
 #
 # 0.2.0 (issue #32, gaps found by the Hugging Face trace): T-LOSS-OF-CONTROL may change external_resources;
 # T-RESTRICT may be applied when effective_control is unknown; effective_control may be split by principal
@@ -42,8 +44,13 @@
 # AIFM's software efficiency move from research_output to efficiency_level; GATE's digital workers from agent_labor to
 # agent_workforce; GATE's input from human_labor to human_workforce (L counts workers). GATE's training and runtime
 # compute and AIFM's human coding FTEs are recorded ambiguous with their source locators. Every trace is unchanged.
+#
+# 0.5.0 (issue #47): milestone_interface maps AIFM's capability milestones to capability levels and to the transitions
+# they may inform, without hazards or probabilities; trace steps may carry milestone events. New accounting quantity
+# compute_experiment (a stock); AIFM's experiment compute is booked there and research_output is derived from it.
+# New trace TR-MILESTONE-CONSTRAINED. Every 0.4.0 trace is valid unchanged.
 
-contract_version: 0.4.0
+contract_version: 0.5.0
 status: proposed
 
 entity_kinds:
@@ -262,6 +269,12 @@ accounting:
     kind: stock
     ledger: "the entity with custody_compute"
     derived_from: []
+  - id: compute_experiment
+    unit: "FLOP/s allocated to research experiments"
+    kind: stock
+    ledger: "the entity with custody_compute"
+    derived_from: []
+    note: "Compute that runs research experiments: neither training a released model nor running agents (#47). Booking it to compute_inference would turn it into agent labor; booking it to compute_training would count it in capability. A cluster split between uses is split by shares, never counted in two ledgers."
   - id: agent_workforce
     unit: "agent instances or human-worker equivalents deployed at a time"
     kind: stock
@@ -284,7 +297,7 @@ accounting:
     unit: "source-native (e.g. software-efficiency multiplier per year)"
     kind: flow
     ledger: "the entity whose objectives direct the research"
-    derived_from: [human_labor, agent_labor, compute_training]
+    derived_from: [human_labor, agent_labor, compute_training, compute_experiment]
   - id: efficiency_level
     unit: "source-native level (e.g. hardware FLOP/year per USD; software eFLOP/FLOP or OOMs)"
     kind: stock
@@ -514,9 +527,11 @@ adapters:
         kind_ambiguity: {candidates: [stock, flow], locator: "aifm-public 1c40ecdb, input series L_HUMAN (research_notes/external/ai-futures-model/MECHANISMS.md, research-labor row)", note: "An FTE count is either a headcount equivalent at a time (human_workforce) or hours worked divided by full-time hours (a flow, human_labor); the series does not say which and gives no hours per FTE-year. Booked to human_labor provisionally."}
       - {name: "inference compute powering AI coding labor", unit: "H100-equivalents (input series)", owner: lab, accounting: compute_inference, kind: stock}
       - {name: "frontier training capacity", unit: "H100-equivalents, converted to FLOP/yr at 1.262e22 FLOP per H100e-year (input series)", owner: lab, accounting: compute_training, kind: stock}
+      - {name: "experiment compute", unit: "H100-equivalents (input series experiment_H100e)", owner: lab, accounting: compute_experiment, kind: stock}
     # AIFM takes inference compute and converts it to AI coding labor internally, so agent_labor is not an input.
-    # Its experiment-compute series has no accounting quantity in this contract yet (see research_notes/external/ai-futures-model/modes.md).
-    inputs: [human_labor, compute_inference, compute_training]
+    # Experiment compute enters research effort as experiment_H100e^0.655 in a CES with serial coding labor
+    # (progress_rate.py compute_research_effort); it is booked to compute_experiment (#47).
+    inputs: [human_labor, compute_inference, compute_training, compute_experiment]
     modes:
       MODE-HUMAN-LAB: {coverage: supported, reason: "Its implicit setting: resources follow human-made forecasts and nothing in the model can stop or redirect them. Control is assumed by omission, not modelled, so the model cannot show the view failing."}
       MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "The view's defining dimension, strategic_capability, has no counterpart. TED-AI and ASI are latent thresholds on a research-taste scale, not strategic action; authorization, operational autonomy and intervention are absent."}
@@ -526,7 +541,7 @@ adapters:
       - "reading coding automation or research-effort growth as validated advances: effort converts to software efficiency with no review or integration stage"
       - "adding a compute-investment feedback from GATE on top of AIFM's compute series without replacing them: AIFM's compute paths are forecasts that already embed investment beliefs"
       - "counting AIFM's software-efficiency feedback and GATE's algorithmic-progress feedback as two separate accelerations of the same research"
-    attach_point: "Pre-transition development trajectories under MODE-HUMAN-LAB, as rd_capability levels for a lab's model_weights. T-DELEGATE or T-LOSS-OF-CONTROL hazards can attach to its milestones only through a transition interface that #14 has not defined yet."
+    attach_point: "Pre-transition development trajectories under MODE-HUMAN-LAB, as rd_capability levels for a lab's model_weights. Its milestones attach to transitions only through milestone_interface (#47): a milestone sets a capability level and names the transitions it may inform, in both directions; it carries no hazard or probability."
   - id: AD-PACT
     source: "Off-Earth pact equilibrium solver, research_notes/Off Earth industry as misalignment control/model/equilibrium_model.py"
     kind: model
@@ -551,6 +566,45 @@ adapters:
       - "applying its results to multi-agent collectives by scaling A (AS-SINGLE-AI, #9)"
       - "applying its results before t = 0, where no development dynamics exist"
     attach_point: "Downstream of a T-AUTHORIZED-AUTONOMY or T-LOSS-OF-CONTROL transition; its strike and exit moves map to T-DEGRADATION and T-COMMITMENT-LAPSE."
+
+# How a source model's capability milestone attaches to transitions (issue #47, from #14). A milestone is an event
+# on the capability scale of a model_weights entity (or the agents running those weights). It is evidence for a
+# capability level, nothing more. The checker enforces every rule below.
+milestone_interface:
+  status: proposed
+  rules:
+    - "A milestone event sets exactly one capability dimension (the one its adapter quantity attaches to) to its binding's level, on an entity of a kind the binding lists. Every other dimension, every stock (knowledge, copies, assets, liabilities, commitments), dependencies, effective control, intervention latency and the entity's identity and kind carry over unless a transition in the step declares the change."
+    - "A milestone applies no transition. A transition in the same step still needs its own declared changes, and its preconditions are read from the previous step's state with only the milestone's dimension updated."
+    - "A mode view that changes in a step still needs a transition; a milestone alone cannot relabel an entity."
+    - "may_inform lists the transitions whose preconditions or evidence a milestone bears on, and must include transitions in both directions: a milestone opens no one-way takeoff."
+    - "No hazard, rate, probability or delay attaches to a milestone or a binding (the objects are closed). A source model's forecast date for a milestone is a scenario input, never evidence that it was crossed."
+  sources:
+    - adapter: AD-AIFM
+      quantity: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)"
+      milestones: [AC, AI2027-SC, SAR, SIAR, TED-AI, ASI]
+      locator: "aifm-public 1c40ecdb, _impl.py compute_milestones; readings in research_notes/external/ai-futures-model/modes.md (rd_capability row)"
+  bindings:
+    - id: MB-AIFM-AC
+      adapter: AD-AIFM
+      milestone: AC
+      definition: "Automated coder: fully automates an AGI project's coding work (AIFM's definition; a latent threshold, and in the observable modes a time-horizon, revenue or ECI threshold)."
+      sets: {dimension: rd_capability, level: automates_tasks}
+      entity_kinds: [model_weights, agent_instance, agent_collective]
+      may_inform: [T-DELEGATE, T-RESTRICT, T-NEGOTIATED-CONSTRAINT]
+      basis: "Coding is a set of research tasks, not the research programme; modes.md reads AC as at most automates_tasks. AIFM's own scenario tools act on resources at AC (sos_mode freezes labor and compute; the pause transform reduces compute), the counterpart of T-RESTRICT on compute, with no actor choosing it."
+    - id: MB-AIFM-SAR
+      adapter: AD-AIFM
+      milestone: SAR
+      definition: "Superhuman AI researcher: fully automates AI R&D (AIFM's definition; latent threshold)."
+      sets: {dimension: rd_capability, level: automates_research_program}
+      entity_kinds: [model_weights, agent_instance, agent_collective]
+      may_inform: [T-DELEGATE, T-AUTHORIZED-AUTONOMY, T-RESTRICT, T-NEGOTIATED-CONSTRAINT]
+      basis: "modes.md reads SAR as AIFM's counterpart of automates_research_program. It says nothing about strategic_capability, control or objectives (AD-AIFM unsupported extrapolations)."
+  unbound:
+    - {adapter: AD-AIFM, milestone: AI2027-SC, reason: "Superhuman coder: between AC and SAR on the same scale; no contract level separates it from automates_tasks."}
+    - {adapter: AD-AIFM, milestone: SIAR, reason: "Beyond SAR on the research-taste scale; automates_research_program is the contract's top rd_capability level, so SIAR adds no level."}
+    - {adapter: AD-AIFM, milestone: TED-AI, reason: "A threshold on the research-taste scale ('top-expert-dominating'); binding it to strategic_capability is an AD-AIFM unsupported extrapolation, and it adds no rd_capability level."}
+    - {adapter: AD-AIFM, milestone: ASI, reason: "As TED-AI: no test of sustained independent strategic action; no rd_capability level above automates_research_program."}
 
 # The pact solver's assumption register (model/assumptions.yaml), mapped onto the contract.
 solver_mapping:
@@ -748,6 +802,58 @@ traces:
           COLL-F: [MODE-SOVEREIGN]
         basis: "COLL-F controls 30% of a provider's cluster through accounts it owns; 'substantial within scope' is a judgement for a one-year scope of covert operation, not a threshold. The provider keeps the other 70%."
 
+  - id: TR-MILESTONE-CONSTRAINED
+    title: "Capability milestones followed by delegation, then restriction, then delegation again"
+    purpose: "A milestone event changes a capability level only; transitions after it run in either direction under their own preconditions (#47). Illustration, not an AIFM run: AIFM has no lab and makes no decision."
+    scope: "one lab's research deployment"
+    horizon: "years"
+    steps:
+      - label: "before AC"
+        entities:
+          LAB-G: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-G: {kind: agent_instance, host: LAB-G, state: {strategic_capability: assisted_only, rd_capability: assists_humans, cyber_capability: moderate, objective_selection: human_institution, authorization: supervised_tasks, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: task_level, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K8, copies: [LAB-G], assets: [], liabilities: [], commitments: [deployment-policy]}}
+        resources:
+          R-CLUSTER-G: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+          R-EXPERIMENT-G: {accounting: compute_experiment, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+        expected_views:
+          SYS-G: [MODE-HUMAN-LAB]
+        basis: "Coding assisted, not automated. Drills met the required intervention time."
+      - label: "AC reached; the lab delegates coding"
+        milestones: [{entity: SYS-G, binding: MB-AIFM-AC, basis: "Assumed for the illustration: the lab judges its coding work fully automated. An AIFM forecast date would not be this evidence."}]
+        transitions: [{entity: SYS-G, type: T-DELEGATE}]
+        entities:
+          LAB-G: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-G: {kind: agent_instance, host: LAB-G, state: {strategic_capability: assisted_only, rd_capability: automates_tasks, cyber_capability: moderate, objective_selection: human_institution, authorization: delegated_autonomy, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K8, copies: [LAB-G], assets: [], liabilities: [], commitments: [deployment-policy]}}
+        resources:
+          R-CLUSTER-G: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+          R-EXPERIMENT-G: {accounting: compute_experiment, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+        expected_views:
+          SYS-G: [MODE-HUMAN-LAB]
+        basis: "The milestone sets rd_capability; T-DELEGATE, not the milestone, changes authorization and autonomy, and its precondition (effective control) held before the step."
+      - label: "SAR reached; the lab restricts"
+        milestones: [{entity: SYS-G, binding: MB-AIFM-SAR, basis: "Assumed for the illustration."}]
+        transitions: [{entity: SYS-G, type: T-RESTRICT}]
+        entities:
+          LAB-G: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-G: {kind: agent_instance, host: LAB-G, state: {strategic_capability: assisted_only, rd_capability: automates_research_program, cyber_capability: moderate, objective_selection: human_institution, authorization: supervised_tasks, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: step_approved, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K8, copies: [LAB-G], assets: [], liabilities: [], commitments: [deployment-policy]}}
+        resources:
+          R-CLUSTER-G: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+          R-EXPERIMENT-G: {accounting: compute_experiment, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+        expected_views:
+          SYS-G: [MODE-HUMAN-LAB]
+        basis: "A milestone can be followed by a constraining transition. Knowledge K8, copies and the compute holdings carry over; capability is not reset by the restriction."
+      - label: "restriction relaxed after review"
+        transitions: [{entity: SYS-G, type: T-DELEGATE}]
+        entities:
+          LAB-G: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
+          SYS-G: {kind: agent_instance, host: LAB-G, state: {strategic_capability: assisted_only, rd_capability: automates_research_program, cyber_capability: moderate, objective_selection: human_institution, authorization: delegated_autonomy, effective_control: human_effective, custody_weights: human_institution, custody_compute: human_institution, custody_credentials: human_institution, operational_autonomy: long_horizon_unsupervised, external_resources: none, dependencies: critical, communication_topology: sanctioned_channels, information_beliefs: asymmetric, enforceable_commitments: human_enforceable, intervention_latency: within_required}, stocks: {knowledge: K8, copies: [LAB-G], assets: [], liabilities: [], commitments: [deployment-policy]}}
+        resources:
+          R-CLUSTER-G: {accounting: compute_inference, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+          R-EXPERIMENT-G: {accounting: compute_experiment, unit: "FLOP/s", holders: {LAB-G: 1.0}}
+        expected_views:
+          SYS-G: [MODE-HUMAN-LAB]
+        basis: "Delegation again, with no new milestone: neither the milestones nor the transitions form a one-way sequence."
+
 # What would show this contract wrong or incomplete, and what evidence each mode and transition needs.
 falsifiers:
   - id: F-LABEL-SUFFICES
@@ -768,6 +874,9 @@ falsifiers:
   - id: F-RECONTAIN-DEPENDENCE
     targets: [T-RECONTAIN]
     statement: "Recontainment succeeding against a system with dependencies none_within_horizon would contradict the stated precondition."
+  - id: F-MILESTONE-LEVEL
+    targets: [contract]
+    statement: "If systems judged past a bound milestone (MB-AIFM-AC, MB-AIFM-SAR) by the source's observable criteria do not perform at the bound rd_capability level, the binding is wrong; if labs' delegation and restriction decisions track a capability measure no binding names, the interface binds the wrong milestones (#47)."
   - id: F-REVERSIBILITY
     targets: [T-RESTRICT, T-DELEGATE, T-LOSS-OF-CONTROL]
     statement: "A documented restriction that removed knowledge or copies, rather than authorization, would contradict the stated hysteresis."
@@ -779,6 +888,7 @@ omission_checks:
   - {id: OC-HUMAN-INTERNAL, check: "Labs and states are unitary; employees, executives and regulators (systems/model.json actors) are not separate entities here.", status: open}
   - {id: OC-THRESHOLDS, check: "No dimension level is tied to a number; any adapter that needs one must cite evidence for it (#8).", status: enforced}
   - {id: OC-RATE, check: "Transition delays are all unknown; no rate or hazard is asserted.", status: open}
+  - {id: OC-MILESTONE-HAZARD, check: "Milestone bindings carry no hazard, rate or probability for the transitions they may inform (#47); the schema closes those objects.", status: enforced}
 
 evidence_requirements:
   MODE-HUMAN-LAB: "Intervention drills or incident outcomes with timing, the required response time for the scenario, and custody audits."

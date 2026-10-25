@@ -62,6 +62,10 @@ Gap for #5/#11: AIFM's **experiment compute** (`experiment_H100e`, 10x inference
 in the default series) has no accounting quantity in the contract. It is neither training
 nor inference. Mapping it to `compute_training` would double count with the training
 series. We leave it unmapped and flag it rather than extend the contract in this PR.
+*Resolved in contract 0.5.0 (#47):* it is booked to a new stock ledger,
+`compute_experiment`, from which `research_output` is derived. The milestones attach to
+transitions through `milestone_interface` (AC and SAR bound, the others listed unbound);
+see `docs/ai-development-modes.md` section 15.
 
 ## Evidence records
 

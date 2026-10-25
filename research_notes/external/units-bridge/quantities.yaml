@@ -139,7 +139,7 @@ definitions:
         reason: "F is reduced by dismantling and restored by rebuilding over years, and covert fabs add n_cf f_fab to it: it is installed capacity, a stock. Output would need a utilization rate the solver does not have."
 
 categories: [capability_metric, research_labor, research_output, software_efficiency, compute_training, compute_inference,
-             energy, physical_capital, physical_output, supply_chain_closure, external_control]
+             compute_experiment, energy, physical_capital, physical_output, supply_chain_closure, external_control]
 
 quantities:
   # ---- capability metrics -------------------------------------------------------------------------------------
@@ -357,6 +357,17 @@ quantities:
     contract: {accounting: compute_training}
     evidence: {status: source_model_assumption, ref: "AIFM input series at 1c40ecdb; FLOP_PER_H100E_YEAR at progress_model/config.py:122 (EV-UNITS-AIFM-CONVENTIONS)"}
     note: "Contract adapter quantity AD-AIFM 'frontier training capacity'. Not linked by adapter_quantity until the contract declares its kind (#61). AIFM's experiment compute (also H100e) has no accounting quantity in the contract (ai-futures-model/modes.md) and is not listed here."
+  - id: QTY-EXPERIMENT-COMPUTE-RATE
+    name: "Compute allocated to research experiments"
+    category: compute_experiment
+    unit: FLOP/s
+    kind: stock
+    semantic: "installed FLOP/s assigned to research experiments: neither training a released model nor running agents"
+    observable: "cluster inventories and schedules; AIFM reads it as the input series experiment_H100e"
+    models: [AD-AIFM]
+    contract: {accounting: compute_experiment}
+    evidence: {status: not_collected, ref: "no data in the repository; AIFM's series is a source_model_assumption (#14)"}
+    note: "Added for #47. AIFM's series is in H100-equivalents (10x inference compute in its default series; 4e14 FLOP/s per H100e by AIFM's convention, EV-UNITS-AIFM-CONVENTIONS). Never also counted as inference or training compute (CV-NO-EXPERIMENT-AS-INFERENCE, CV-NO-EXPERIMENT-AS-TRAINING)."
   # ---- energy -------------------------------------------------------------------------------------------------
   - id: QTY-WORLD-PRIMARY-POWER
     name: "World primary energy use (as mean power)"

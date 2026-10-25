@@ -341,6 +341,82 @@ class ModeContractTest(unittest.TestCase):
         step['resources']['R-OFFEARTH']['accounting'] = 'industrial_output'
         self.rejects('resource R-OFFEARTH is held by shares, so it is a stock; industrial_output is a flow')
 
+    # --- issue #47: milestone interface and experiment compute
+    def binding(self, ident):
+        return next(b for b in self.c['milestone_interface']['bindings'] if b['id'] == ident)
+
+    def mstep(self, n):
+        return self.trace('TR-MILESTONE-CONSTRAINED')['steps'][n]
+
+    def test_milestone_trace_runs_both_ways(self):
+        tr = self.trace('TR-MILESTONE-CONSTRAINED')
+        applied = [t['type'] for s in tr['steps'] for t in s.get('transitions', [])]
+        self.assertEqual(applied, ['T-DELEGATE', 'T-RESTRICT', 'T-DELEGATE'])
+        self.assertEqual([m['binding'] for s in tr['steps'] for m in s.get('milestones', [])], ['MB-AIFM-AC', 'MB-AIFM-SAR'])
+
+    def test_milestone_does_not_change_authority(self):
+        del self.mstep(1)['transitions']
+        self.rejects('SYS-G authorization changed from supervised_tasks to delegated_autonomy without a transition')
+
+    def test_milestone_sets_its_own_level(self):
+        self.mstep(1)['entities']['SYS-G']['state']['rd_capability'] = 'automates_research_program'
+        self.rejects('milestone MB-AIFM-AC sets SYS-G rd_capability to automates_tasks, but the step has automates_research_program')
+
+    def test_milestone_cannot_change_stocks(self):
+        self.mstep(1)['entities']['SYS-G']['stocks']['knowledge'] = 'K9'
+        self.rejects('SYS-G stock knowledge changed without a declared cause')
+
+    def test_milestone_not_in_first_step(self):
+        self.mstep(0)['milestones'] = [{'entity': 'SYS-G', 'binding': 'MB-AIFM-AC', 'basis': 'x'}]
+        self.rejects('the first step cannot carry a milestone event')
+
+    def test_binding_sets_capability_only(self):
+        self.binding('MB-AIFM-AC')['sets'] = {'dimension': 'effective_control', 'level': 'none'}
+        self.rejects('a milestone sets a capability dimension only')
+
+    def test_binding_cannot_leave_its_quantity_dimension(self):
+        self.binding('MB-AIFM-SAR')['sets'] = {'dimension': 'strategic_capability', 'level': 'independent_plausible'}
+        self.rejects('sets strategic_capability, but its adapter quantity attaches to rd_capability')
+
+    def test_binding_informs_both_directions(self):
+        self.binding('MB-AIFM-SAR')['may_inform'] = ['T-DELEGATE', 'T-AUTHORIZED-AUTONOMY']
+        self.rejects('may_inform must name transitions in both directions')
+
+    def test_binding_carries_no_hazard(self):
+        self.binding('MB-AIFM-AC')['hazard'] = {'T-LOSS-OF-CONTROL': 0.1}
+        self.rejects("Additional properties are not allowed ('hazard' was unexpected)")
+
+    def test_every_listed_milestone_is_bound_or_unbound(self):
+        mi = self.c['milestone_interface']
+        mi['unbound'] = [u for u in mi['unbound'] if u['milestone'] != 'SIAR']
+        self.rejects('AD-AIFM milestone SIAR must be bound or listed unbound exactly once (0)')
+
+    def test_milestone_source_is_an_event(self):
+        self.quantity('AD-AIFM', self.c['milestone_interface']['sources'][0]['quantity'])['kind'] = 'state'
+        self.rejects('is a state, not an event')
+
+    def test_precondition_reads_the_milestone_level(self):
+        # A capability precondition (none exists in the contract) would be read after the milestone in the same step.
+        self.transition('T-RESTRICT')['preconditions']['rd_capability'] = ['automates_research_program']
+        self.assertEqual([], self.errors())
+        step = self.mstep(2)
+        del step['milestones']
+        step['entities']['SYS-G']['state']['rd_capability'] = 'automates_tasks'
+        self.mstep(3)['entities']['SYS-G']['state']['rd_capability'] = 'automates_tasks'
+        self.rejects('SYS-G applies T-RESTRICT but rd_capability was automates_tasks')
+
+    def test_experiment_compute_has_its_own_ledger(self):
+        acc = {q['id']: q for q in self.c['accounting']}
+        self.assertEqual(acc['compute_experiment']['kind'], 'stock')
+        self.assertIn('compute_experiment', acc['research_output']['derived_from'])
+        q = self.quantity('AD-AIFM', 'experiment compute')
+        self.assertEqual((q['accounting'], q['kind']), ('compute_experiment', 'stock'))
+        self.assertIn('compute_experiment', self.adapter('AD-AIFM')['inputs'])
+
+    def test_experiment_compute_and_research_output_not_both_inputs(self):
+        self.adapter('AD-AIFM')['inputs'].append('research_output')
+        self.rejects('input research_output is derived from')
+
     def test_adapter_must_cover_every_mode(self):
         del self.adapter('AD-GATE')['modes']['MODE-SOVEREIGN']
         self.rejects('AD-GATE: must state coverage for every mode')

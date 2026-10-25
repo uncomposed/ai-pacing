@@ -6,7 +6,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": ["contract_version", "status", "entity_kinds", "dimensions", "modes", "stocks", "accounting", "transitions",
-               "adapters", "solver_mapping", "traces", "falsifiers", "omission_checks", "evidence_requirements"],
+               "adapters", "milestone_interface", "solver_mapping", "traces", "falsifiers", "omission_checks", "evidence_requirements"],
   "properties": {
     "contract_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "status": {"const": "proposed"},
@@ -17,6 +17,7 @@
     "accounting": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/quantity"}},
     "transitions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/transition"}},
     "adapters": {"type": "array", "items": {"$ref": "#/$defs/adapter"}},
+    "milestone_interface": {"$ref": "#/$defs/milestone_interface"},
     "solver_mapping": {"$ref": "#/$defs/solver_mapping"},
     "traces": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/trace"}},
     "falsifiers": {"type": "array", "minItems": 1, "items": {
@@ -150,6 +151,30 @@
                          "properties": {"principal": {"type": "string"}, "scope": {"$ref": "#/$defs/text"}, "value": {"type": "string"}}}}]}},
                      "stocks": {"type": "object", "additionalProperties": {"type": ["string", "array"]}}}
     },
+    "milestone_interface": {
+      "description": "Issue #47. Closed objects: no hazard, rate, probability or delay field can be added to a source or binding.",
+      "type": "object", "additionalProperties": false, "required": ["status", "rules", "sources", "bindings", "unbound"],
+      "properties": {
+        "status": {"const": "proposed"},
+        "rules": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "sources": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["adapter", "quantity", "milestones", "locator"],
+          "properties": {"adapter": {"type": "string"}, "quantity": {"$ref": "#/$defs/text"}, "milestones": {"$ref": "#/$defs/ids"},
+                         "locator": {"$ref": "#/$defs/text"}}}},
+        "bindings": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "adapter", "milestone", "definition", "sets", "entity_kinds", "may_inform", "basis"],
+          "properties": {"id": {"type": "string", "pattern": "^MB-"}, "adapter": {"type": "string"}, "milestone": {"type": "string"},
+                         "definition": {"$ref": "#/$defs/text"},
+                         "sets": {"type": "object", "additionalProperties": false, "required": ["dimension", "level"],
+                                  "properties": {"dimension": {"type": "string"}, "level": {"type": "string"}}},
+                         "entity_kinds": {"$ref": "#/$defs/ids"}, "may_inform": {"$ref": "#/$defs/ids"},
+                         "basis": {"$ref": "#/$defs/text"}}}},
+        "unbound": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["adapter", "milestone", "reason"],
+          "properties": {"adapter": {"type": "string"}, "milestone": {"type": "string"}, "reason": {"$ref": "#/$defs/text"}}}}
+      }
+    },
     "trace": {
       "type": "object", "additionalProperties": false, "required": ["id", "title", "purpose", "scope", "horizon", "steps"],
       "properties": {
@@ -167,6 +192,9 @@
               "type": "object", "additionalProperties": false, "required": ["accounting", "unit", "holders"],
               "properties": {"accounting": {"type": "string"}, "unit": {"$ref": "#/$defs/text"},
                              "holders": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "number", "exclusiveMinimum": 0}}}}},
+            "milestones": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["entity", "binding", "basis"],
+                                                       "properties": {"entity": {"type": "string"}, "binding": {"type": "string"},
+                                                                      "basis": {"$ref": "#/$defs/text"}}}},
             "stock_changes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["entity", "stock", "cause"],
                                                            "properties": {"entity": {"type": "string"}, "stock": {"type": "string"}, "cause": {"$ref": "#/$defs/text"}}}},
             "expected_views": {"type": "object", "additionalProperties": {"$ref": "#/$defs/ids"}},
