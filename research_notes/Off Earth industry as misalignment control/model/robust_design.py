@@ -12,7 +12,8 @@ that humans control widen the region of uncertain parameters where the pact hold
     python3 robust_design.py --report             # tables, scenario discovery, figures (no solving)
 
 Every solved (ensemble, design) pair is cached in results/robust_runs/ as .npz, so stages can be
-re-run or resumed cheaply and --report only reads the cache.
+re-run or resumed cheaply and --report only reads the cache. Each cache has a manifest (<tag>.manifest.json) and is
+reused only if its full experiment identity matches the request (run_identity.py, issue #6).
 Outputs: results/robust_design_tables.md, results/robust_design_summary.json, figures/rd_*.png.
 results/robust_design.md is hand-written from those tables.
 Colours: Okabe-Ito blue and orange, always backed by hatching, markers, line style or text labels.
@@ -31,6 +32,7 @@ os.environ.setdefault("OMP_NUM_THREADS", "1")
 import numpy as np
 
 import equilibrium_model as em
+import run_identity as ri
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")
@@ -151,9 +153,19 @@ def u_to_params(U: np.ndarray, box: str) -> list[dict]:
     return out
 
 
+class Ensemble(list):
+    """Parameter draws that remember how they were sampled (box, n, seed) and their unit-cube sample U, for the
+    run manifest (run_identity.inputs_identity)."""
+    sampling: dict = None
+    U: np.ndarray = None
+
+
 def ensemble(box: str, n: int, seed: int = 20261016):
     U = lhs(n, len(UNCERTAIN), seed)
-    return U, u_to_params(U, box)
+    th = Ensemble(u_to_params(U, box))
+    th.sampling = dict(box=box, n=n, seed=seed)
+    th.U = U
+    return U, th
 
 
 # ---------------------------------------------------------------------------
@@ -200,18 +212,25 @@ def batches_for(thetas: list[dict]) -> list[np.ndarray]:
 
 
 def run_tag(ens_name: str, design: dict, **kw) -> str:
-    """Cache name of one (ensemble, design, solver settings) run; ci_sims.py uses it too."""
+    """Cache name of one (ensemble, design, solver settings) run; ci_sims.py uses it too. The name is only an
+    address: reuse is decided by the manifest's identity (request_for, run_identity.load_cached)."""
     cfg = dict(CFG, **kw)
     return f"{ens_name}__{design_key(design)}" + ("" if cfg == CFG else "__" + "_".join(f"{k}{v}" for k, v in sorted(kw.items())))
+
+
+def request_for(ens_name: str, thetas: list[dict], design: dict, **kw) -> dict:
+    """Run manifest (identity) of solving `design` over `thetas` with solver settings CFG + kw."""
+    return ri.request("robust_design", ens_name, thetas, design, dict(CFG, **kw))
 
 
 def run_design(ens_name: str, thetas: list[dict], design: dict, pool=None, **kw) -> dict:
     cfg = dict(CFG, **kw)
     tag = run_tag(ens_name, design, **kw)
     path = os.path.join(RUNS, tag + ".npz")
-    if os.path.exists(path):
-        z = np.load(path)
-        return {k: z[k] for k in z.files}
+    want = request_for(ens_name, thetas, design, **kw)
+    hit = ri.load_cached(path, want)      # raises IdentityError if a cache exists but was made by another run
+    if hit is not None:
+        return hit
     params = [apply_design(t, design) for t in thetas]
     groups = batches_for(thetas)
     jobs = [([params[i] for i in g], cfg) for g in groups]
@@ -224,7 +243,7 @@ def run_design(ens_name: str, thetas: list[dict], design: dict, pool=None, **kw)
         for k in out:
             out[k][g] = r[k]
     out["holds"] = holds(out).astype(float)
-    np.savez(path, **out)
+    ri.save_cached(path, out, want, produced=dict(by="robust_design.run_design", batches=len(groups)))
     print(f"  solved {tag}: {n} sets in {time.time() - t0:.0f} s; holds {out['holds'].mean():.3f}", flush=True)
     return out
 

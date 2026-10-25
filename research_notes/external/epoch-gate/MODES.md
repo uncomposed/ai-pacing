@@ -34,7 +34,7 @@ So, in contract terms:
 | Who chooses? | A planner, solved by an optimizer (sign-gradient descent, 40 iterations, 160-year horizon). | The allocations are an optimum of a stated objective, not a forecast of what labs, states or AIs will do. |
 | Whose objective? | A representative household's consumption utility. | `objective_selection` is not represented. There is no AI objective at all. |
 | Who owns compute, weights, output? | Implicitly the household; all stocks are aggregate. | `custody_weights`, `custody_compute`, `custody_credentials`, `external_resources` are not represented. |
-| What are AIs? | "Digital workers": runtime compute per task, a production input (line 523). | `agent_labor` in the accounting sense only; never an entity. |
+| What are AIs? | "Digital workers": runtime compute per task, a production input (line 523). | `agent_workforce` (a stock) in the accounting sense only; never an entity. |
 | Control, authorization, intervention? | Absent. | `authorization`, `effective_control`, `operational_autonomy`, `intervention_latency`, `dependencies`, `communication_topology`, `enforceable_commitments` are not represented. |
 | Capability? | Largest training run C_T (eFLOP) and the fraction of a task continuum automatable. | Maps to `capability` (accounting) and, loosely, to `rd_capability` only in the sense of task coverage; nothing maps to `strategic_capability` or `cyber_capability`. |
 
