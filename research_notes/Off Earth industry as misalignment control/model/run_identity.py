@@ -365,6 +365,27 @@ def load_for_read(path: str, strict: bool = False) -> dict:
 _LEGACY_READS: dict[str, list[str]] = {}
 
 
+def verify_draws(path: str, ens_name: str, thetas) -> str:
+    """For code that regenerates draws instead of reading them (measure_sensitivity.py): check that `thetas` are
+    the draws the cache at `path` is bound to. A manifest records the producing draws; a legacy inventory entry
+    records the draws its request had at inventory time (not the producing draws, which were never stored).
+    Returns 'manifest' or the legacy class; raises IdentityError on a mismatch."""
+    th = list(thetas)
+    part = digest(dict(ensemble=ens_name, n=len(th), draws_sha256=digest([sorted(t.items()) for t in th])))
+    d = describe(path)
+    have = (d["manifest"]["part_sha256"] if d["status"] == "manifest" else d["entry"].get("request_part_sha256", {}))
+    if have.get("inputs") != part:
+        deps = (d["manifest"]["identity"]["dependencies"] if d["status"] == "manifest" else
+                dict(numpy=inventory().get("environment", {}).get("numpy")))
+        if deps.get("numpy") != np.__version__:
+            # exp/log in the sampler differ in the last bits between numpy versions, so the draws do too
+            _warn(f"{relpath(path)}: regenerated draws differ from the bound draws; numpy {np.__version__} here, "
+                  f"{deps.get('numpy')} for the cache. Use the pinned environment for exact draws.")
+            return d["status"] + " (draws differ: other numpy)"
+        raise IdentityError(f"{relpath(path)}: the regenerated draws are not the draws this cache is bound to")
+    return d["status"]
+
+
 def legacy_read_summary() -> str:
     if not _LEGACY_READS:
         return ""

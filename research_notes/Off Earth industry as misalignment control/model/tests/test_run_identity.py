@@ -180,6 +180,13 @@ class CacheReuse(Base):
         np.savez(path, **z)
         self.assertRefused(lambda: rd.run_design("r0.1", self.th(), {}), "do not match its manifest")
 
+    def test_regenerated_draws_are_checked(self):
+        # measure_sensitivity.py regenerates draws instead of reading them; they must be the bound draws
+        rd.run_design("r0.1", self.th(), {})
+        path = os.path.join(rd.RUNS, "r0.1__base.npz")
+        self.assertEqual(ri.verify_draws(path, "r0.1", self.th()), "manifest")
+        self.assertRefused(lambda: ri.verify_draws(path, "r0.1", self.th(seed=106)), "regenerated draws")
+
     def test_report_read_detects_stale_manifest(self):
         rd.run_design("r0.1", self.th(), {})
         path = os.path.join(rd.RUNS, "r0.1__base.npz")

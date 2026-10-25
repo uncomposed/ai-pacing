@@ -1,16 +1,21 @@
 flowchart LR
   D1["D1 — Capability Release Compact"]
+  D18["D18 — Closing-window dynamics may pull strikes earlier (risk to test)"]
+  D19["D19 — Review-based model sharing compresses inter-lab capability gaps"]
   D2["D2 — Rival laboratories provide the technical attack surface"]
   D3["D3 — Safety becomes part of the profit function"]
   D4["D4 — Compute stock and compute entanglement differ"]
   D5["D5 — Unauthorized agency can be made epistemically valuable"]
   D6["D6 — International cooperation can deepen in stages"]
   H1["H1 — A/H/P separability remains actionable"]
+  H10["H10 — Retrospective audit makes concealment a losing long-run strategy"]
+  H14["H14 — External-signal dependence preserves some A/P separation"]
   H2["H2 — Rival review has positive safety value after proliferation costs"]
   H3["H3 — The foreign public frontier is measurable enough to govern"]
   H4["H4 — Physical activation latency can preserve reversibility"]
   H5["H5 — Domestic benefits can sustain the institution"]
   I1["I1 — Architecture-neutral unauthorized-agency boundary"]
+  I11["I11 — Do not optimize against the audit signal"]
   I2["I2 — Surveil, preserve, and report"]
   I3["I3 — Weights-as-bond review process"]
   I4["I4 — Observable uncommissioned hardware reserve"]
@@ -25,35 +30,54 @@ flowchart LR
   K6["K6 — Make foreign public capability an automatic reciprocity input"]
   K7["K7 — Maximize warning time"]
   Q1["Q1 — How should practical public capability be measured?"]
+  Q11["Q11 — How independent must auditors be to resist correlated misalignment?"]
+  Q12["Q12 — What inter-lab and international convergence minimizes singleton and correlated-failure risk?"]
+  Q13["Q13 — Can a credible cooperative autonomy path reduce incentives for AI defection?"]
   Q2["Q2 — What access makes adversarial review credible without unacceptable leakage?"]
   Q3["Q3 — How many independent human vetoes are enough?"]
   Q4["Q4 — When does capability itself collapse A/H/P separability?"]
+  D2 -->|grounds| D19
   D2 -->|grounds| D3
   D2 -->|implements| I3
   D4 -->|implements| I4
+  D5 -->|grounds| D18
   D5 -->|implements| I1
+  D5 -->|implements| I11
   D5 -->|implements| I2
   D6 -->|implements| I6
   H1 -->|conditions| K1
   H1 -->|conditions| K2
   H1 -->|conditions| K3
+  H10 -->|grounds| D18
+  H10 -->|conditions| D5
+  H10 -->|conditions| K7
+  H14 -->|conditions| D5
+  H14 -->|conditions| K1
+  H14 -->|conditions| K2
+  H14 -->|conditions| K3
+  H14 -->|conditions| K7
   H2 -->|conditions| D2
   H2 -->|conditions| D3
   H3 -->|conditions| K6
   H4 -->|conditions| D4
   H5 -->|conditions| K5
+  I3 -->|grounds| D19
   K1 -->|grounds| D4
   K2 -->|grounds| D1
   K2 -->|grounds| D4
   K3 -->|grounds| D1
   K3 -->|grounds| D5
   K4 -->|grounds| D1
+  K4 -->|grounds| D19
   K4 -->|grounds| D2
   K4 -->|grounds| D3
   K5 -->|grounds| D1
   K5 -->|grounds| D6
   K6 -->|grounds| D1
   K6 -->|grounds| D6
+  K7 -->|grounds| D18
   K7 -->|grounds| D4
   K7 -->|grounds| D5
   K7 -->|implements| I5
+  classDef proposed stroke-dasharray: 5 5
+  class D18,D19,H10,H14,I11,Q11,Q12,Q13 proposed

@@ -30,6 +30,17 @@ mechanisms, and evaluation plans with
 `python3 tools/systems_tool.py trace --requirement REQ-COMPETE`.
 See [traceability examples and limitations](docs/requirement-traceability.md).
 
+The [AI development mode contract](docs/ai-development-modes.md) (proposed, issue #5)
+defines human-run lab, sovereign-capable and sovereign AI modes as derived views over
+a factored state, with bidirectional transitions and adapter boundaries for METR,
+GATE, AI Futures and the pact solver. `make modes-check` checks
+[`systems/modes.yaml`](systems/modes.yaml); `make check` includes it.
+
+The [evidence and validation contract](docs/evidence-protocol.md) (issue #8) holds
+dated evidence records, input roles, outcome-share labels, the shared historical
+evaluation protocol and the parameter-admission rule. `make evidence-check` checks
+[`evidence/`](evidence/records.yaml); `make check` includes it.
+
 ## Existing AI Pacing proposal
 
 This repository publishes AI Pacing as a versioned, machine-readable idea rather than a single privileged essay. Git is authoritative. Human-facing pages, PDFs, games, songs, simulations, critiques, and other works are renderings of an exact Git state.
@@ -47,6 +58,8 @@ separates:
 
 Every proposition records sources, the role AI played, and the canonical editor's acceptance status. The audit trail distinguishes documentary evidence from historical inference.
 
+Nodes with `author_status: proposed` are recorded for review and are not accepted canon; see [`docs/proposed-extensions.md`](docs/proposed-extensions.md). Every proposition ID used or reserved anywhere in the repository is listed in [`spec/id-registry.yaml`](spec/id-registry.yaml); `ruby tools/spec_tool.rb next-id H` prints the next free ID of a kind.
+
 ## Quality gate
 
 Run the complete local gate:
@@ -55,7 +68,7 @@ Run the complete local gate:
 make check
 ```
 
-It checks YAML structure, typed and referential integrity, dependency cycles, provenance, hypothesis falsifiability, ten semantic acceptance tests, mutation tests, JSON Schema conformance, and whether committed deterministic views are stale.
+It checks YAML structure, typed and referential integrity, the reserved-ID registry, dependency cycles, provenance, hypothesis falsifiability, ten semantic acceptance tests, mutation tests, JSON Schema conformance, and whether committed deterministic views are stale.
 
 Regenerate all views after an accepted model change:
 

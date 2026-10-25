@@ -24,7 +24,7 @@ body:
     id: reserved_id
     attributes:
       label: Reserved ID
-      description: The ID you reserved in the reserved-ID registry under spec/ (for example D12). Reserve it before use; do not guess the next free number. For a change to an existing node, give that node's ID.
+      description: The ID you reserved in spec/id-registry.yaml (for example D20). Get the next free ID with `ruby tools/spec_tool.rb next-id D`, then add a registry entry and bump next_free, as CONTRIBUTING.md describes; do not guess the next free number. If you cannot edit the repository, write "unreserved" and the editor or the implementing PR will reserve one. For a change to an existing node, give that node's ID.
     validations:
       required: true
   - type: textarea
