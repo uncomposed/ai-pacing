@@ -1,5 +1,14 @@
 # AI Pacing canonical specification
 
+**Contributing and research.** Read [`CONTRIBUTING.md`](CONTRIBUTING.md) first: repository
+layout, how to run `make check`, how spec changes are proposed, and the evidence standards.
+The [off-Earth pact research notes](research_notes/Off%20Earth%20industry%20as%20misalignment%20control/)
+and equilibrium model start at its
+[`HANDOFF.md`](research_notes/Off%20Earth%20industry%20as%20misalignment%20control/model/HANDOFF.md).
+CI is defined in [`.github/workflows/`](.github/workflows/): `check.yml` runs on every pull
+request; `sims.yml` and `breakout.yml` are started by hand and their outputs reviewed before
+commit. Agents: see [`CLAUDE.md`](CLAUDE.md).
+
 ## Stakeholder challenges and candidate solutions
 
 Start with the [actor and use-case analysis](docs/actor-analysis.md) for distinct
@@ -43,6 +52,8 @@ separates:
 
 Every proposition records sources, the role AI played, and the canonical editor's acceptance status. The audit trail distinguishes documentary evidence from historical inference.
 
+Nodes with `author_status: proposed` are recorded for review and are not accepted canon; see [`docs/proposed-extensions.md`](docs/proposed-extensions.md). Every proposition ID used or reserved anywhere in the repository is listed in [`spec/id-registry.yaml`](spec/id-registry.yaml); `ruby tools/spec_tool.rb next-id H` prints the next free ID of a kind.
+
 ## Quality gate
 
 Run the complete local gate:
@@ -51,7 +62,7 @@ Run the complete local gate:
 make check
 ```
 
-It checks YAML structure, typed and referential integrity, dependency cycles, provenance, hypothesis falsifiability, ten semantic acceptance tests, mutation tests, JSON Schema conformance, and whether committed deterministic views are stale.
+It checks YAML structure, typed and referential integrity, the reserved-ID registry, dependency cycles, provenance, hypothesis falsifiability, ten semantic acceptance tests, mutation tests, JSON Schema conformance, and whether committed deterministic views are stale.
 
 Regenerate all views after an accepted model change:
 

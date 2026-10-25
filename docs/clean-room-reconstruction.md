@@ -85,9 +85,11 @@ damage invalidates the test even if normal outputs look good.
 
 `AI_Pacing_Canonical_Spec_v0.1.md` is materially richer than the current YAML.
 The Markdown defines D1–D17, H1–H6, I1–I3, and Q1–Q10. The YAML currently
-defines D1–D6, H1–H5, I1–I7, and Q1–Q4, with several shared IDs carrying
-different titles or decompositions. Run `make clean-room-audit` for the exact
-machine comparison.
+defines D1–D6, H1–H5, I1–I7, and Q1–Q4 as accepted nodes, with several shared
+IDs carrying different titles or decompositions. Run `make clean-room-audit` for
+the exact machine comparison. The audit compares accepted YAML nodes only and
+lists proposed nodes (`author_status: proposed`) separately; `spec/id-registry.yaml`
+records every collision.
 
 This means the first clean-room run should be treated as a baseline diagnostic,
 not as final certification. Automatically merging the two would be unsafe

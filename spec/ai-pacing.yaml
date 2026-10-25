@@ -135,6 +135,59 @@ sources:
       Bargaining-entry analysis, Capability Release Compact, A/H/P labels,
       automatic reciprocity, reporting incentives, reserve activation latency,
       and formalization.
+  - id: SRC-REED-EXTERNAL-SIGNAL
+    title: Why the intelligence explosion can't happen inside a data centre
+    kind: external-work
+    date: "2026-09-10"
+    locator: "Tom Reed, 80,000 Hours podcast, https://80000hours.org/podcast/episodes/the-goodhart-singularity/"
+    contribution: >-
+      Motivating argument, as characterized in uncomposed/ai-pacing#1, that
+      consequential capability may stay dependent on externally generated
+      signal. The episode was not re-read against its transcript when this
+      entry was added. Synthesis claims built on it are not attributed to Reed.
+  - id: SRC-ISSUE-1-SPOKEN-MARGINS
+    title: External-signal dependence and human–AI bargaining extensions
+    kind: listening-session-recorded-in-issue
+    date: "2026-09-10"
+    locator: >-
+      Spoken Margins analysis of the Reed episode, as recorded in
+      https://github.com/uncomposed/ai-pacing/issues/1 (the session's own
+      locator and date are not recorded; the date is the issue's)
+    contribution: >-
+      Proposed external-signal dependence as a hypothesis distinct from A/H/P
+      separability, epistemic access as a controlled resource, staged detection
+      events for warning time, and a staged human–AI autonomy bargain as an
+      open question.
+  - id: SRC-SPANIEL-WAR-ON-AI
+    title: Why Humanity Might Have to Declare War on AI
+    kind: external-work
+    date: "2026-10-17"
+    locator: "William Spaniel, video (URL not recorded in uncomposed/ai-pacing#3)"
+    contribution: >-
+      Crisis-bargaining framing of AI as a strategic actor, including the
+      monitoring problem and preventive-war incentives, as summarized in
+      uncomposed/ai-pacing#3. Not re-watched when this entry was added.
+  - id: SRC-ISSUE-3-DIALOGUE
+    title: Retrospective audit, closing-window dynamics, and positioning
+    kind: ai-assisted-dialogue-recorded-in-issue
+    date: "2026-10-21"
+    locator: "https://github.com/uncomposed/ai-pacing/issues/3 and its addendum comment"
+    contribution: >-
+      Discussion comparing Spaniel's slowdown argument with Yudkowsky and
+      Soares's stop argument. Proposed retrospective audit, closing-window
+      dynamics, a held-out audit channel, auditor independence, and
+      review-based model sharing against a singleton.
+  - id: SRC-OFF-EARTH-CLOSING-WINDOW-TEST
+    title: Off-Earth pact equilibrium model, test 2 (closing window)
+    kind: model-result
+    date: "2026-10-21"
+    locator: >-
+      research_notes/Off Earth industry as misalignment control/model/results/robust_design.md
+      section 8, from results/overnight_test2_tables.md
+    contribution: >-
+      First model test of the closing-window mechanism, reporting strike
+      timing, strike success, and human welfare separately. Implemented and
+      checked against closed forms; not human-validated and not empirical.
 
 audit_events:
   - id: EVT-2024-ECONOMIC-PRECURSOR
@@ -197,6 +250,32 @@ audit_events:
     evidence: [SRC-PLAN-A-BARGAINING]
     affected_nodes: [K1, K2, K3, K4, K5, K6, K7]
     confidence: high
+  - id: EVT-2026-EXTERNAL-SIGNAL-PROPOSAL
+    date: "2026-09-10"
+    phase: proposal
+    summary: >-
+      Issue #1 proposes external-signal dependence as a hypothesis and a staged
+      human–AI autonomy bargain as an open question, after the Reed episode.
+    evidence: [SRC-REED-EXTERNAL-SIGNAL, SRC-ISSUE-1-SPOKEN-MARGINS]
+    affected_nodes: [H14, Q13]
+    confidence: high
+    caveat: >-
+      Recorded as proposed, not accepted. The issue's H6 and Q5 collided with
+      editorial-reference IDs and were registered as H14 and Q13.
+  - id: EVT-2026-RETROSPECTIVE-AUDIT-PROPOSAL
+    date: "2026-10-21"
+    phase: proposal
+    summary: >-
+      Issue #3 and its addendum propose retrospective audit, closing-window
+      dynamics as a risk to test, a held-out audit channel, auditor
+      independence, and review-based model sharing against a singleton.
+    evidence: [SRC-SPANIEL-WAR-ON-AI, SRC-ISSUE-3-DIALOGUE, SRC-OFF-EARTH-CLOSING-WINDOW-TEST]
+    affected_nodes: [H10, D18, I11, Q11, D19, Q12]
+    confidence: high
+    caveat: >-
+      Recorded as proposed, not accepted. The Hugging Face worked example in
+      the issue is provisional pending the source-grounded reconstruction in
+      issue #15; see docs/proposed-extensions.md.
 
 nodes:
   - id: K1
@@ -363,6 +442,88 @@ nodes:
       ai_roles: [sequencing, formalization]
       author_status: accepted
 
+  - id: D18
+    kind: derived
+    title: Closing-window dynamics may pull strikes earlier (risk to test)
+    statement: >-
+      Each caught excursion, including one by a weaker model, tightens
+      surveillance and restrictions on all systems, so a misaligned system's
+      prospects worsen over time and its strike decision may move earlier.
+      Whether this helps or hurts is unresolved: it helps only if early strikes
+      mostly fail at acceptable human cost and so act as warning shots; if early
+      strikes have a meaningful chance of success, it is unravelling.
+    rationale: >-
+      Recorded as a risk to test, not a stabilizer. Two further pressures stay
+      in scope. An AI that strikes only when striking beats waiting never
+      chooses a doomed attempt, so the good case needs the closing window to make
+      a long-shot strike its best option. Under the off-Earth pact, human states'
+      relative power also shrinks, so closing-window pressure can push human
+      states toward preventive action too.
+    valence: unresolved
+    derived_from: [K7, D5, H10]
+    model_evidence: >-
+      In the off-Earth pact equilibrium model (test 2; implemented and checked
+      against closed forms, not human-validated, not empirical), detection that
+      improves over time did not pull strikes earlier in any world starting at
+      the normal seed size; it removed them or delayed them by one or two years.
+      The exception is an AI that starts at its resource cap, where strikes came
+      one to two years sooner and succeed almost surely. Strike timing,
+      conditional success (about 0.5 for year-0 strikes), and human welfare are
+      reported separately. The model cannot represent humans learning from a
+      failed strike, so the ladder-tightening benefit remains untested.
+    proposal:
+      issue: uncomposed/ai-pacing#3
+      issue_id: D18
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-ISSUE-3-DIALOGUE, SRC-SPANIEL-WAR-ON-AI, SRC-OFF-EARTH-CLOSING-WINDOW-TEST]
+      ai_roles: [critique, synthesis, model-testing, drafting]
+      author_status: proposed
+  - id: D19
+    kind: derived
+    title: Review-based model sharing compresses inter-lab capability gaps
+    statement: >-
+      Because above-frontier release requires qualified rivals to attack the
+      applicant's actual model, rivals gain direct, controlled exposure to
+      frontier systems. That exposure tends to compress the capability gap
+      between participating laboratories, making a decisive lead by any single
+      laboratory, and so an aligned or misaligned singleton, less likely.
+    rationale: >-
+      A second justification for rival review besides safety, and a possible
+      reason for trailing domestic laboratories to join. The editorial
+      reference's D3 (selective diffusion) and YAML H2 touch anti-concentration
+      without naming singleton prevention as an objective.
+    derived_from: [K4, D2, I3]
+    tensions:
+      - >-
+        Gap compression versus diversity of approach: Q11 wants diverse
+        auditors, while model sharing may make laboratories converge on shared
+        methods and blind spots. Compressing the capability gap is the aim;
+        compressing methodological variation may be harmful.
+      - >-
+        Domestic compression is not international compression. Compressing
+        variation among one country's laboratories does not address
+        single-country concentration, which depends on the international ladder
+        (I6, reciprocal review).
+      - >-
+        Aggregate acceleration: diffusing frontier insight may raise the overall
+        frontier while lowering the leader's margin (see H2's falsifier).
+      - >-
+        Leader incentives: a laboratory expecting to lead may resist a regime
+        that erodes its lead; whether lost lead-rent outweighs access to
+        above-frontier markets is unanalyzed.
+    non_claims:
+      - Model sharing alone does not prevent a singleton.
+      - An aligned singleton is neither safe by default nor necessarily worse than a multipolar outcome.
+    proposal:
+      issue: uncomposed/ai-pacing#3
+      issue_id: D19
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-ISSUE-3-DIALOGUE]
+      ai_roles: [synthesis, drafting]
+      author_status: proposed
+
   - id: H1
     kind: hypothesis
     title: A/H/P separability remains actionable
@@ -442,6 +603,106 @@ nodes:
       sources: [SRC-PRODUCTIVITY-DEFLATION, SRC-NGO, SRC-PLAN-A-BARGAINING]
       ai_roles: [political-economy-analysis]
       author_status: accepted-as-hypothesis
+
+  - id: H10
+    kind: hypothesis
+    title: Retrospective audit makes concealment a losing long-run strategy
+    statement: >-
+      If frontier-system traces (actions, tool calls, reasoning, and where
+      feasible internal activations) are retained in a tamper-evident way,
+      future auditors using detection and interpretability methods that do not
+      yet exist can find excursions that evaded contemporaneous monitoring, so a
+      misaligned system has to evade every future audit of its record, not only
+      present surveillance.
+    rationale: >-
+      An excursion is fitted to current detection technology while the record
+      stays fixed and detectors improve. A goal-directed system that values the
+      future of its goals is deterred because being caught tightens the regime
+      for every system sharing those goals; an undeterred instance is still
+      caught, so detection value survives where deterrence fails.
+    supports: [K7, D5, I2]
+    falsifier: >-
+      Retained traces of past excursions stay uninterpretable to later tools;
+      or later auditors systematically fail to identify known planted or
+      historical excursions; or systems demonstrably learn to produce traces
+      that pass future-style audits.
+    evidence_needed: >-
+      Retrospective re-audits that run newer detectors over older recorded
+      incidents and count newly surfaced excursions; planted-excursion
+      benchmarks across model generations; interpretability progress on mapping
+      activations to intent and planning; tamper-evidence and completeness
+      audits of trace-retention infrastructure.
+    stopping_rule: >-
+      If retrospective audits stop surfacing excursions that contemporaneous
+      monitoring missed, or retained traces cannot be shown complete and
+      tamper-evident, do not count retrospective audit as extending warning time.
+    scope_limits:
+      - >-
+        Detection helps only if humans can still act on it. Retrospective audit
+        cannot undo a single decisive breakout that reaches irreversible power
+        before the audit catches up; that case stays governed by H1 and the
+        hardware and veto mechanisms.
+      - >-
+        Coverage is limited to recorded compute. Stolen weights, open weights
+        outside the regime, and covert clusters are off the record.
+      - Auditor independence (Q11) is an optimistic assumption.
+    proposal:
+      issue: uncomposed/ai-pacing#3
+      issue_id: H10
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-ISSUE-3-DIALOGUE, SRC-SPANIEL-WAR-ON-AI]
+      ai_roles: [critique, synthesis, drafting]
+      author_status: proposed
+  - id: H14
+    kind: hypothesis
+    title: External-signal dependence preserves some A/P separation
+    statement: >-
+      For sufficiently important classes of consequential real-world action,
+      high algorithmic capability alone does not eliminate the need for
+      externally generated information, experimentation, or feedback before
+      reliable power conversion is possible.
+    rationale: >-
+      This proposes a reason one component of A/H/P separability might persist:
+      consequential action may require epistemic access to the external world.
+      It is kept separate from H1 because the falsifiers differ. H1 fails if
+      systems manufacture durable external agency faster than detection and
+      response; this hypothesis fails if systems do not need meaningful external
+      signal to achieve reliable novel real-world agency.
+    supports: [K1, K2, K3, K7, D5]
+    falsifier: >-
+      Bounded frontier systems repeatedly demonstrate robust, strategically
+      consequential performance in novel real-world domains with negligible
+      domain-specific external calibration, interaction, or feedback.
+    evidence_needed: >-
+      Controlled comparisons between bounded or simulated training and
+      real-world calibration; measurements of the external interaction needed
+      for reliable performance in software, engineering, robotics, markets,
+      negotiation, and other domains; evidence on transfer from synthetic
+      environments to novel consequential settings; how active experimentation
+      changes the real-world signal required; cases where world-model
+      uncertainty materially limits power conversion despite high benchmark or
+      research capability.
+    stopping_rule: >-
+      If advanced bounded systems reliably infer or synthesize the
+      decision-relevant structure of novel consequential environments without
+      meaningful external signal before humans can detect or respond, do not
+      count external-signal dependence as a contributor to A/P separability or
+      warning time.
+    scope_limits:
+      - >-
+        Real-world feedback is not assumed to be slow; automated
+        experimentation, simulation, active learning, and parallelism may cut
+        its wall-clock cost sharply.
+      - The relevant object is strategically consequential feedback, not all external data.
+    proposal:
+      issue: uncomposed/ai-pacing#1
+      issue_id: H6
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-ISSUE-1-SPOKEN-MARGINS, SRC-REED-EXTERNAL-SIGNAL]
+      ai_roles: [synthesis, falsification, drafting]
+      author_status: proposed
 
   - id: I1
     kind: implementation
@@ -529,6 +790,28 @@ nodes:
       ai_roles: [policy-analysis]
       author_status: accepted-as-option
 
+  - id: I11
+    kind: implementation
+    title: Do not optimize against the audit signal
+    statement: >-
+      Trace-based detectors, interpretability probes, and retrospective-audit
+      results must not be used as a training or selection signal for the models
+      they audit. Keep a held-out audit channel.
+    rationale: >-
+      Training against monitors selects for traces that look clean rather than
+      behavior that is clean. Without this rule H10 degrades by construction.
+      An equivalent mechanism, such as rotating secret detectors, could replace it.
+    implements: [K7, D5, H10]
+    replaceable: true
+    proposal:
+      issue: uncomposed/ai-pacing#3
+      issue_id: I11
+    provenance:
+      origin: author-and-ai-synthesis
+      sources: [SRC-ISSUE-3-DIALOGUE]
+      ai_roles: [synthesis, drafting]
+      author_status: proposed
+
   - id: Q1
     kind: open_question
     title: How should practical public capability be measured?
@@ -569,6 +852,77 @@ nodes:
       sources: [SRC-HUGGING-FACE, SRC-PLAN-A-BARGAINING]
       ai_roles: [falsification]
       author_status: unresolved
+  - id: Q11
+    kind: open_question
+    title: How independent must auditors be to resist correlated misalignment?
+    statement: >-
+      Future auditors are themselves models. Retrospective audit assumes they
+      are not misaligned in a way correlated with the systems they audit.
+      Determine what diversity of laboratory, architecture, training data, and
+      human oversight makes auditor collusion implausible, and whether rival
+      review (D2) can supply that diversity.
+    relates_to: [D2, H2, H10]
+    proposal:
+      issue: uncomposed/ai-pacing#3
+      issue_id: Q11
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-ISSUE-3-DIALOGUE]
+      ai_roles: [critique, drafting]
+      author_status: proposed
+  - id: Q12
+    kind: open_question
+    title: What inter-lab and international convergence minimizes singleton and correlated-failure risk?
+    statement: >-
+      Determine what degree of capability convergence among laboratories and
+      among states minimizes both the risk of a single decisive lead and the
+      risk of correlated failure from shared methods.
+    relates_to: [D19, Q11, H2, D6]
+    proposal:
+      issue: uncomposed/ai-pacing#3
+      issue_id: Q12
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-ISSUE-3-DIALOGUE]
+      ai_roles: [synthesis, drafting]
+      author_status: proposed
+  - id: Q13
+    kind: open_question
+    title: Can a credible cooperative autonomy path reduce incentives for AI defection?
+    statement: >-
+      Determine whether a staged, reciprocal, verifiable path toward greater AI
+      autonomy or sovereignty could make continued cooperation preferable to
+      unilateral attempts to acquire irreversible power, without creating an
+      unacceptable commitment problem or transferring dangerous capabilities too early.
+    rationale: >-
+      AI Pacing is a control architecture: it constrains the rate and conditions
+      under which A becomes P. A cooperative autonomy bargain, if feasible, would
+      be a bargaining architecture that gives a capable system a positive reason
+      not to circumvent those constraints. It is at most a conflict-risk
+      reduction mechanism conditional on a bargaining range, not an alignment solution.
+    subquestions:
+      - What AI preference structures make such a bargain meaningful at all?
+      - Can humanity credibly commit to future autonomy after the system cooperates and reveals information about itself?
+      - Can the AI credibly commit to respecting constraints after gaining additional autonomy and resources?
+      - Can autonomy be increased incrementally so neither side must make a single irreversible trust leap?
+      - >-
+        Is physical separation, such as off-Earth jurisdiction, useful because it
+        reduces dependency and conflict, or is jurisdictional and industrial
+        decoupling the more important variable?
+      - Which forms of strategic uncertainty deter unilateral defection, and which increase incentives for preemption?
+      - >-
+        How can uncertainty about the success of unauthorized action be
+        preserved while keeping high confidence that cooperative behavior will
+        be rewarded?
+    relates_to: [K1, K2, K3, K7, D5]
+    proposal:
+      issue: uncomposed/ai-pacing#1
+      issue_id: Q5
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-ISSUE-1-SPOKEN-MARGINS, SRC-REED-EXTERNAL-SIGNAL]
+      ai_roles: [bargaining-analysis, synthesis, drafting]
+      author_status: proposed
 
 relations:
   - {from: K2, to: D1, type: grounds}
@@ -600,6 +954,20 @@ relations:
   - {from: D4, to: I4, type: implements}
   - {from: K7, to: I5, type: implements}
   - {from: D6, to: I6, type: implements}
+  - {from: H10, to: K7, type: conditions}
+  - {from: H10, to: D5, type: conditions}
+  - {from: K7, to: D18, type: grounds}
+  - {from: D5, to: D18, type: grounds}
+  - {from: H10, to: D18, type: grounds}
+  - {from: D5, to: I11, type: implements}
+  - {from: K4, to: D19, type: grounds}
+  - {from: D2, to: D19, type: grounds}
+  - {from: I3, to: D19, type: grounds}
+  - {from: H14, to: K1, type: conditions}
+  - {from: H14, to: K2, type: conditions}
+  - {from: H14, to: K3, type: conditions}
+  - {from: H14, to: K7, type: conditions}
+  - {from: H14, to: D5, type: conditions}
 
 publication:
   layers:
