@@ -898,13 +898,101 @@ records:
     fitted_to: []
     intended_use: ["compute growth rate for B-COMPUTE (#56, #45)"]
     not_for: ["training compute of any individual model", "compute after May 2024", "a capability measurement"]
+  # Epoch inputs bundled by AIFM (issue #66). Read in primary form from epoch.ai on 2026-10-25 and pinned by SHA-256
+  # under research_notes/external/ai-futures-model/epoch_primary/ (compare_epoch.json). What epoch.ai serves now is
+  # NOT the vintage AIFM bundles: Anthropic revenue is identical, OpenAI revenue differs by three rows, and the
+  # bundled ECI file (per model version, latest release 2026-08-02) is no longer served; the current per-model scores
+  # differ. The bundled vintage stays recorded by EV-AIFM-EPOCH-SERIES (not readable in primary form).
+  - id: EV-EPOCH-ECI-2026-10-25
+    kind: observation
+    title: "Epoch Capabilities Index scores per model, as served 2026-10-25 (270 models)"
+    source:
+      citation: "Epoch AI, 'Capabilities & benchmarking' (benchmark_data.zip, epoch_capabilities_index/eci_scores.csv). CC-BY 4.0"
+      url: "https://epoch.ai/data/benchmark_data.zip"
+      version: "zip as served 2026-10-25 (6dbc734ba342e2e0957d916fe8e81cc9a9b8147ea8fb96fc76e65d0df004146c, 2356852 bytes, member timestamps 2026-10-25); eci_scores.csv sha256 540796e67e6158f290edfb97a2633ca871edf9f1a89c78fc9d06cd20ca33cf64"
+    reading: read_primary
+    observation_date: {start: "2023-02-24", end: "2026-10-15"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. The file carries no publication date; the latest model release in it is 2026-10-15. Per-row availability earlier than this is not established, so this record must not be used as an information set for any earlier date."
+    units: "ECI score (Epoch's index, higher is more capable) with a bootstrap interval, per model; release date per model"
+    population: "270 models on Epoch's benchmarking hub with an ECI estimate"
+    protocol: "Epoch's own IRT-style fit over benchmark results (processed_data_for_eci.csv and eci_bootstraps.json are in the same zip, not committed); not re-derived here. The scores are re-fitted as models are added, so a past value is not stable."
+    extraction:
+      method: quoted
+      locator: "research_notes/external/ai-futures-model/epoch_primary/eci_scores.csv (member epoch_capabilities_index/eci_scores.csv, all 270 rows, verbatim)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Compared with AIFM's bundled epoch_capabilities_index.csv in epoch_primary/compare_epoch.json: of 450 rows with matching model name and release date, 7 have an identical score (mean bundled minus current -0.24, range -3.14 to +1.87); 17 bundled model names are absent now; 94 current models are absent from the bundle; frontier maximum 161.65 (2026-07-09) in the bundle against 168.83 (2026-09-22) now. Differences are reported, not reconciled."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's published eci_ci_low and eci_ci_high per model (bootstrap); not summarized here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of the ECI series AIFM bundles (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["the exact ECI file AIFM bundled (older, per model version)", "an information set before 2026-10-25", "a held-out test of AIFM (AIFM's eci_at_present_day is consistent with this series)"]
+
+  - id: EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25
+    kind: observation_report
+    title: "Epoch's reports of Anthropic whole-company annualized revenue, 15 rows to 2026-07-31"
+    source:
+      citation: "Epoch AI, 'Data on AI Companies' (Josh You, John Croxton, Venkat Somala, Yafah Edelman), ai_companies_revenue_reports.csv. CC-BY 4.0"
+      url: "https://epoch.ai/data/ai_companies_revenue_reports.csv"
+      version: "as served 2026-10-25 (192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7, 43851 bytes, etag 1369fc51d584c9b775a323418b4ef74a)"
+    reading: read_primary
+    observation_date: {start: "2023-10-01", end: "2026-07-31"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. Each row has its own report date (latest 2026-08-17), which would give a finer information set; the revisions of earlier rows are not archived, so the file as a whole is dated by download."
+    units: "annualized revenue in USD at the row date (run rate); confidence label and source type per row"
+    population: "Anthropic, scope 'Full company', rows with an annualized figure (AIFM's filter, scripts/bridge/epoch_revenue_to_ts.py)"
+    protocol: "Epoch compiles company disclosures and media reports; the figures are not audited and run-rate definitions differ by source"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/epoch_primary/ai_companies_revenue_reports.csv, Company=Anthropic, Scope='Full company', nonempty 'Annualized revenue (USD)' (verbatim file; filter in compare_epoch.py)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "The filtered rows are identical to AIFM's bundled epoch_anthropic_revenue.csv (15 of 15), so for Anthropic the bundled vintage equals the primary one served today."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's per-row confidence column (Confident, Likely, ...) and the mix of company disclosures and media reports; not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of AIFM's epoch_anthropic_revenue.csv (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["audited revenue", "product-line revenue (excluded by scope)", "an information set before the row's report date"]
+
+  - id: EV-EPOCH-REVENUE-OPENAI-2026-10-25
+    kind: observation_report
+    title: "Epoch's reports of OpenAI whole-company annualized revenue, 17 rows to 2026-09-30"
+    source:
+      citation: "Epoch AI, 'Data on AI Companies' (Josh You, John Croxton, Venkat Somala, Yafah Edelman), ai_companies_revenue_reports.csv. CC-BY 4.0"
+      url: "https://epoch.ai/data/ai_companies_revenue_reports.csv"
+      version: "as served 2026-10-25 (192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7, 43851 bytes, etag 1369fc51d584c9b775a323418b4ef74a)"
+    reading: read_primary
+    observation_date: {start: "2023-03-01", end: "2026-09-30"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. Row report dates run to 2026-10-08; revisions of earlier rows are not archived."
+    units: "annualized revenue in USD at the row date (run rate); confidence label and source type per row"
+    population: "OpenAI, scope 'Full company', rows with an annualized figure (AIFM's filter)"
+    protocol: "Epoch compiles company disclosures and media reports; the figures are not audited and run-rate definitions differ by source"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/epoch_primary/ai_companies_revenue_reports.csv, Company=OpenAI, Scope='Full company', nonempty 'Annualized revenue (USD)' (verbatim file; filter in compare_epoch.py)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Differs from AIFM's bundled epoch_openai_revenue.csv (16 rows): the bundle has a 2026-08-13 row of 40e9 (Bloomberg) that the primary file no longer has; the primary file has 2026-07-15 of 30e9 and 2026-09-30 of 50e9, both from one FT article. The 2026-09-30 row has report date 2026-09-08, earlier than its own date, which Epoch's file does not explain. Reported, not reconciled."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's per-row confidence column and the mix of company disclosures and media reports; not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of AIFM's epoch_openai_revenue.csv (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["audited revenue", "product-line revenue (excluded by scope)", "the exact OpenAI series AIFM bundled (three rows differ)"]
   # AI Futures Model (issue #14): outputs are source-model outputs, never observations. Their present-day horizon,
   # revenue and ECI levels are fitted to METR and Epoch data, so `fitted_to` marks them non-independent of those
   # records. METR links point at #12's primary records since #45: AIFM's bundled METR file is byte-identical to
   # METR's published TH1.1 file (sha256 aae31902...), i.e. the post-correction TH1.1 records plus three TH1.0 values
   # (GPT-2, davinci-002, gpt-3.5-turbo-instruct; EV-METR-TH10-2026-03-03). fitted_to lists the TH1.1 records: the
   # horizon level is Claude Mythos Preview's p80 (186 min) and the elicited doubling time was formed with METR's
-  # published TH1.1 trend in view. The Epoch placeholder has no primary record yet. See
+  # published TH1.1 trend in view. Epoch links point at primary records read 2026-10-25 (#66) plus the bundled-vintage record, since the served vintage differs. See
   # research_notes/external/ai-futures-model/ (HELDOUT.md).
   - id: EV-AIFM-REFERENCE-TRAJECTORY
     kind: source_model_output
@@ -929,8 +1017,8 @@ records:
     uncertainty:
       kind: unquantified
       description: "Single parameter point; parameter and model-form uncertainty not represented by this record."
-    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     intended_use: ["source-model replication (#14)", "basis for coupling AIFM trajectories to other components"]
     not_for: ["empirical support for any milestone date", "a held-out test against METR or Epoch data it was fitted to"]
 
@@ -957,8 +1045,8 @@ records:
     uncertainty:
       kind: sampling
       description: "Monte Carlo sampling error of quantiles and achievement rates; the elicited measure itself is judgment."
-    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     intended_use: ["source-model replication (#14)"]
     not_for: ["empirical support", "a calibrated probability of any milestone"]
 
@@ -1009,14 +1097,14 @@ records:
       locator: "inputs/epoch/epoch_capabilities_index.csv, epoch_openai_revenue.csv, epoch_anthropic_revenue.csv"
       by: "the #14 replication session"
       date: "2026-10-25"
-      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series."
+      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series. Since #66 this records the BUNDLED vintage only; it stays secondary because that vintage is not obtainable in primary form: Anthropic revenue matches the primary file served 2026-10-25 (EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25), OpenAI revenue differs by three rows (EV-EPOCH-REVENUE-OPENAI-2026-10-25), and the bundled ECI file (latest release 2026-08-02) is no longer served; its scores differ from EV-EPOCH-ECI-2026-10-25. Details: research_notes/external/ai-futures-model/epoch_primary/compare_epoch.json."
     uncertainty:
       kind: measurement
       description: "confidence column per row (Epoch); not quantified here"
-    depends_on: []
+    depends_on: [EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     fitted_to: []
-    intended_use: ["marking AIFM outputs as non-independent of Epoch data"]
-    not_for: ["empirical support until read in primary form"]
+    intended_use: ["marking AIFM outputs as non-independent of Epoch data", "what AIFM bundles; cite the EV-EPOCH-* records for Epoch's data"]
+    not_for: ["empirical support (cite the primary EV-EPOCH-* records, noting the vintage differences)"]
 
   # Units bridge (issue #39): the measured scale of the Earth-industry unit's output rate.
   - id: EV-WB-WDI-GDP-2026

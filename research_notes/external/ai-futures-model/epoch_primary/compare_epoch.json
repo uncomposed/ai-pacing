@@ -1,0 +1,116 @@
+{
+ "primary_sha256": {
+  "eci_scores.csv": "540796e67e6158f290edfb97a2633ca871edf9f1a89c78fc9d06cd20ca33cf64",
+  "ai_companies_revenue_reports.csv": "192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7"
+ },
+ "bundled_sha256": {
+  "epoch_anthropic_revenue.csv": "f6b3a407e2b43e58064f115e472c9238423c0e2fe376ff6b1d3cfa8862865359",
+  "epoch_capabilities_index.csv": "867439b9bd958829228da4129234b6435ad9aeeb6800646f896079e832d9abe7",
+  "epoch_openai_revenue.csv": "b82831b468a0ee35d329377d344e6d512a1c6b146766569dac30d8cbfb2a7fb9"
+ },
+ "eci": {
+  "bundled_scored_rows": 521,
+  "bundled_model_names": 193,
+  "primary_models": 270,
+  "bundled_names_absent_from_primary": [
+   "Amazon Nova Pro",
+   "DeepSeek-V2 (MoE-236B)",
+   "GLM-4.6",
+   "GPT-3.5 Turbo",
+   "GPT-4o",
+   "GPT-5.1-Codex-Max",
+   "Gemini 1.5 Flash",
+   "Gemini 1.5 Pro",
+   "Gemini 2.0 Flash",
+   "Gemini 2.0 Flash Thinking",
+   "Gemini 2.5 Flash",
+   "Grok-2",
+   "Kimi K2",
+   "Mistral 7B",
+   "Mistral Large 2",
+   "Qwen2.5-Coder (32B)",
+   "Qwen3-235B-A22B (Jul 2025)"
+  ],
+  "primary_names_absent_from_bundled": 94,
+  "paired_rows_same_name_and_date": 450,
+  "rows_with_identical_score": 7,
+  "diff_bundled_minus_primary": {
+   "mean": -0.239,
+   "min": -3.14,
+   "max": 1.87
+  },
+  "latest_release_bundled": "2026-08-02",
+  "latest_release_primary": "2026-10-15",
+  "frontier_tail_bundled": [
+   [
+    "2026-04-23",
+    161.49
+   ],
+   [
+    "2026-06-09",
+    161.53
+   ],
+   [
+    "2026-07-09",
+    161.65
+   ]
+  ],
+  "frontier_tail_primary": [
+   [
+    "2026-09-01",
+    166.49
+   ],
+   [
+    "2026-09-03",
+    168.81
+   ],
+   [
+    "2026-09-22",
+    168.83
+   ]
+  ]
+ },
+ "revenue_anthropic": {
+  "bundled_rows": 15,
+  "primary_rows_after_AIFM_filter": 15,
+  "identical": true,
+  "only_in_bundled": [],
+  "only_in_primary": []
+ },
+ "revenue_openai": {
+  "bundled_rows": 16,
+  "primary_rows_after_AIFM_filter": 17,
+  "identical": false,
+  "only_in_bundled": [
+   [
+    "2026-08-13",
+    "40000000000",
+    "Annualized run rate",
+    "Likely",
+    "Media report",
+    "https://www.bloomberg.com/news/articles/2026-08-13/openai-s-revenue-run-rate-tops-40-billion-ahead-of-ipo",
+    "2026-08-13"
+   ]
+  ],
+  "only_in_primary": [
+   [
+    "2026-07-15",
+    "30000000000",
+    "Annualized run rate",
+    "Likely",
+    "Media report",
+    "https://www.ft.com/content/b66a9858-f8fb-46cb-b506-44bfe26fca2a?syn-25a6b1a6=1",
+    "2026-10-08"
+   ],
+   [
+    "2026-09-30",
+    "50000000000",
+    "Annualized run rate",
+    "Likely",
+    "Media report",
+    "https://www.ft.com/content/b66a9858-f8fb-46cb-b506-44bfe26fca2a?syn-25a6b1a6=1",
+    "2026-09-08"
+   ]
+  ]
+ }
+}
