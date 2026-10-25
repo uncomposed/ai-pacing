@@ -17,6 +17,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
 import robust_design as rd
+import run_identity as ri
 
 BLUE, ORANGE, SKY, BLACK, GREY = rd.BLUE, rd.ORANGE, rd.SKY, rd.BLACK, rd.GREY
 plt.rcParams.update({"figure.dpi": 130, "savefig.dpi": 150, "font.size": 10, "axes.spines.top": False,
@@ -33,8 +34,7 @@ def load(ens, key):
     p = os.path.join(rd.RUNS, f"{ens}__{key}.npz")
     if not os.path.exists(p):
         return None
-    z = np.load(p)
-    return {k: z[k] for k in z.files}
+    return ri.load_for_read(p)      # checks bytes and identity; legacy caches are counted and reported
 
 
 def savefig(fig, name):
@@ -221,6 +221,8 @@ def report():
                 + "\n".join(TABLES))
     json.dump(OUT, open(os.path.join(rd.RES, "robust_design_summary.json"), "w"), indent=1, default=float)
     print("\n".join(TABLES))
+    if ri.legacy_read_summary():
+        print("\nNOTE: " + ri.legacy_read_summary())
 
 
 md_table = rd.md_table

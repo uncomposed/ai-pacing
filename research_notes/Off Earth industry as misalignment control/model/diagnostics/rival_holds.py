@@ -3,7 +3,7 @@ import os, sys, glob, numpy as np
 sys.path.insert(0, os.getcwd())
 R = "results/robust_runs"
 def load(p):
-    z = np.load(p); return {k: z[k] for k in z.files}
+    import run_identity as ri; return ri.load_for_read(p)
 def h_old(r): return np.isin(r["act0"], ["C","P"]) & (r["att"] < 0.01)
 def h_new(r, th): return h_old(r) & (r["riv"] < th)
 best = "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1"

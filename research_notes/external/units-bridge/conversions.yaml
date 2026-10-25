@@ -120,10 +120,10 @@ conversions:
     class: empirical_scale_estimate
     form: linear
     factor: {unit: "1"}
-    mechanism: "Effective compute is physical compute times the software-efficiency multiplier (QTY-SOFTWARE-EFFICIENCY)."
-    delay: {kind: unknown, note: "efficiency gains apply to runs after they are found; lag to pin in #14"}
-    constraints: "The multiplier is relative to a reference year the adapter must state; same dimension as FLOP, different meaning."
-    evidence: {status: external_pending, ref: "#13, #14"}
+    mechanism: "Effective compute is physical compute times the software-efficiency multiplier, 10^SE (QTY-SOFTWARE-EFFICIENCY, in OOMs)."
+    delay: {kind: unknown, note: "AIFM applies efficiency gains at once to all training compute (no lag, #14); GATE's lag not pinned (#13)"}
+    constraints: "The multiplier is relative to a reference date each source states: AIFM SE = 0 at 2025.13, GATE S = 1 at the start of 2025. Same dimension as FLOP, different meaning. No common efficiency path, so no value."
+    evidence: {status: external_pending, ref: "#13; AIFM side pinned in #14 (EV-UNITS-AIFM-CONVENTIONS)"}
     coupled: false
     used_by: []
   # ---- bounded scenarios ----------------------------------------------------------------------------------------
@@ -149,19 +149,33 @@ conversions:
     mechanism: "lam: design and integration throughput per unit of research compute (the coding-speed lever), plus a constant human term D_h."
     delay: {kind: bounded, bounds: [0.0, 5.0], unit: yr, note: "years from research output to designs used in construction; not modelled (0) in the toy, since with constant lam a delay only shifts the design-bound path and cannot lift a physical cap"}
     constraints: "Applies to the research share phi of compute only. It cannot raise energy capacity, chip supply or the investment budget."
-    evidence: {status: scenario, ref: "coupling_toy.py; no observable fixes lam (CV-HORIZON-TO-DEV-TIME and CV-DEV-TIME-TO-RESEARCH are unidentified)"}
+    evidence: {status: scenario, ref: "coupling_toy.py; no observable fixes lam (CV-HORIZON-TO-DEV-TIME and CV-DEV-TIME-TO-RESEARCH stay unidentified after the #42 recheck)"}
     coupled: true
     used_by: [coupling_toy.py]
   # ---- unidentified: kept uncoupled -----------------------------------------------------------------------------
+  # The chain time horizon -> developer time -> research output, rechecked in #42 after the METR (#12) and AI Futures
+  # (#14) replications landed. A link counts as identified only with an evidence record and a stated conversion; none
+  # of these has both, so each stays unidentified and unused (stopping rule of #42). README "Recheck after #12 and #14".
   - id: CV-HORIZON-TO-DEV-TIME
     from: QTY-METR-HORIZON
     to: QTY-DEV-TIME-RATIO
     class: unidentified
     form: linear
     mechanism: "Longer task horizons might shorten realized developer task time."
-    delay: {kind: unknown, note: "adoption lag"}
-    constraints: "Measured productivity effects can have the opposite sign to benchmark gains; #12 decides what METR data identify."
-    evidence: {status: external_pending, ref: "#12"}
+    delay: {kind: unknown, note: "adoption lag; not observed"}
+    constraints: >-
+      Rechecked in #42; not identified. (1) One usable paired observation: the 2025 RCT ratio 1.19 (95% CI 1.02 to
+      1.39; EV-METR-RCT-2025) with models whose TH1.0 p50 was 29 min (Claude 3.5 Sonnet New) and 59 min (Claude 3.7
+      Sonnet) when the study ran (EV-METR-TH10-2025-03-19). One point cannot fix a slope, and it is a slowdown while
+      horizons were rising, so not even the sign of the link is established. (2) The 2026 follow-up (EV-METR-UPLIFT-2026)
+      is judged unreliable by METR itself (30 to 50% of developers withheld tasks; time accounting fails with
+      concurrent agents): no second point. (3) The two quantities measure different populations: self-contained,
+      automatically scored tasks against issues in developers' own large repositories with implicit requirements. In
+      METR's follow-up 38% of agent PRs passed the maintainers' tests and none was mergeable as-is (EV-METR-ALGO-2025),
+      so the gap is task-dependent, not a factor. (4) The from-quantity has no forecast either: the #12 holdout and the
+      #56 per-model holdout both have the verdict 'not established'. (5) AIFM's serial coding uplift (2.0 at 2026.578) is an elicited belief, not
+      a reading of these studies (EV-UNITS-AIFM-CONVENTIONS), so it does not identify the link.
+    evidence: {status: observed_secondary, ref: "EV-METR-RCT-2025, EV-METR-UPLIFT-2026, EV-METR-ALGO-2025, EV-METR-TH10-2025-03-19 (#12); the records support the reasons above, not a conversion"}
     coupled: false
     used_by: []
   - id: CV-DEV-TIME-TO-RESEARCH
@@ -169,10 +183,23 @@ conversions:
     to: QTY-RESEARCH-OUTPUT
     class: unidentified
     form: linear
-    mechanism: "Faster coding might raise software-efficiency growth, limited by compute for experiments."
-    delay: {kind: unknown, note: "research lag"}
-    constraints: "Compute-bound research does not speed up with labor alone (AI Futures and GATE treat this differently; #13, #14)."
-    evidence: {status: external_pending, ref: "#14"}
+    mechanism: "Faster coding might raise software-efficiency growth, limited by compute for experiments and by research judgment."
+    delay: {kind: unknown, note: "research lag; AIFM has none (software efficiency applies at once to all training compute)"}
+    constraints: >-
+      Rechecked in #42; not identified. AIFM gives a functional form, not an estimate: serial coding labor (a CES of
+      human FTEs and AI labor, rho -2, raised to parallel_penalty 0.5) enters research effort in a CES with experiment
+      compute^0.655, times research taste; effort accumulates to a research stock RS and SE = r_software log10(RS/RS_0).
+      (1) Its parameters are elicited or calibrated, not fitted to research-output data (ai-futures-model/MECHANISMS.md);
+      r_software is calibrated to an uncited 1 OOM/yr at 2024 (EV-UNITS-AIFM-CONVENTIONS). (2) Before 2026 the
+      feedback-on and feedback-off paths differ by under 0.1 OOM (ai-futures-model/results/feedback_off.json), so the
+      historical record cannot tell whether AI coding has moved software progress at all; in horizon units the on and
+      off curves fit METR's observations equally well (ai-futures-model/HELDOUT.md, #45). (3) AIFM's input is a serial
+      labor multiplier of one aggregate project, not a per-issue time ratio of individual developers; no conversion
+      between them is stated by either source. (4) No review or integration stage: every unit of effort becomes
+      efficiency, which overstates any coding effect. (5) The repository holds no observation of research output
+      (QTY-RESEARCH-OUTPUT is a source-model assumption). Compute-bound research does not speed up with labor alone, and
+      GATE treats research inputs differently (#13).
+    evidence: {status: source_model_output, ref: "EV-AIFM-REFERENCE-TRAJECTORY and ai-futures-model/results/feedback_off.json (#14); EV-UNITS-AIFM-CONVENTIONS. The structure is the source model's, not evidence for a conversion."}
     coupled: false
     used_by: []
   - id: CV-INFERENCE-TO-AGENT-LABOR
@@ -182,20 +209,42 @@ conversions:
     form: linear
     mechanism: "Agent-hours per year that an inference allocation can run."
     delay: {kind: none, note: "contemporaneous"}
-    constraints: "Depends on model size, tokens per agent-hour and utilization; a production function uses this or the compute, not both (mode contract accounting)."
+    constraints: >-
+      Depends on model size, tokens per agent-hour and utilization; a production function uses this or the compute,
+      not both (mode contract accounting). AIFM (#14) does not supply it: it maps inference H100e straight to AI coding
+      labor on an optimal-CES task frontier with an elicited efficiency slope (3 OOMs per anchor-progress-year), never
+      through agent-hours.
     evidence: {status: not_collected, ref: "no data in the repository"}
     coupled: false
     used_by: []
+  - id: CV-AIFM-FTE-TO-PERSON-HOURS
+    from: QTY-AIFM-HUMAN-CODING-LABOR
+    to: QTY-HUMAN-RESEARCH-LABOR
+    class: unidentified
+    form: linear
+    factor: {unit: person*h/FTE/yr}
+    mechanism: "Hours worked per full-time-equivalent year."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "AIFM states no hours per FTE and its series has no per-row sources; a conventional value (about 2000 h) would be this project's assumption, and nothing here needs it, so none is set (#42)."
+    evidence: {status: not_collected, ref: "AIFM input series at 1c40ecdb; no hours stated"}
+    coupled: false
+    used_by: []
   - id: CV-OOM-TO-FLOP
-    from: QTY-AIFM-ECI
+    from: QTY-AIFM-PROGRESS
     to: QTY-EFFECTIVE-COMPUTE
     class: unidentified
     form: exp10
     factor: {unit: FLOP}
     mechanism: "Effective FLOP = reference FLOP times 10 to the OOM index."
     delay: {kind: none, note: "definition"}
-    constraints: "The reference FLOP and year must come from the pinned AI Futures version (#14)."
-    evidence: {status: external_pending, ref: "#14"}
+    constraints: >-
+      Rechecked in #42. The reference is now known: AIFM's logE is log10 of FLOP itself (reference 1 FLOP), at 2025.13
+      software efficiency in its output (progress_model/_impl.py:1835-1837 at 1c40ecdb). It stays unidentified because
+      the meanings differ: logE is cumulative effective compute over all training capacity since the start of the
+      data, while QTY-EFFECTIVE-COMPUTE is one training run (GATE's C_T, base S(start of 2025) = 1). The upstream notes
+      that logE and the log of the training stock do not coincide at the reference year; mapping one to a single run
+      needs a run-length assumption that neither source states.
+    evidence: {status: source_model_output, ref: "EV-AIFM-REFERENCE-TRAJECTORY; EV-UNITS-AIFM-CONVENTIONS"}
     coupled: false
     used_by: []
   - id: CV-METZGER-RATE-TO-G
@@ -252,6 +301,12 @@ conversions:
     to: QTY-LE-CLOSURE-THRESHOLD
     class: forbidden
     reason: "#11 stopping rule: industrial closure is not calibrated from coding benchmarks; it is a bill-of-materials question."
+    coupled: false
+  - id: CV-NO-HORIZON-TO-AIFM-PROGRESS
+    from: QTY-METR-HORIZON-P80
+    to: QTY-AIFM-PROGRESS
+    class: forbidden
+    reason: "AIFM's present horizon level is fitted to METR's TH1.1 p80 (fitted_to of EV-AIFM-REFERENCE-TRAJECTORY: EV-METR-TH11-2026-03-03 to -05-08; #45). Feeding METR values back into AIFM's progress, or scoring AIFM against the same values, counts one observation twice. METR values published after AIFM's fit date can serve as held-out targets under the #8 protocol (a #14 follow-up), never as an input to its progress."
     coupled: false
   - id: CV-NO-MILESTONE-TO-CLOSURE
     from: QTY-AIFM-MILESTONE

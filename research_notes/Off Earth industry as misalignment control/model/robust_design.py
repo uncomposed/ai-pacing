@@ -12,7 +12,8 @@ that humans control widen the region of uncertain parameters where the pact hold
     python3 robust_design.py --report             # tables, scenario discovery, figures (no solving)
 
 Every solved (ensemble, design) pair is cached in results/robust_runs/ as .npz, so stages can be
-re-run or resumed cheaply and --report only reads the cache.
+re-run or resumed cheaply and --report only reads the cache. Each cache has a manifest (<tag>.manifest.json) and is
+reused only if its full experiment identity matches the request (run_identity.py, issue #6).
 Outputs: results/robust_design_tables.md, results/robust_design_summary.json, figures/rd_*.png.
 results/robust_design.md is hand-written from those tables.
 Colours: Okabe-Ito blue and orange, always backed by hatching, markers, line style or text labels.
@@ -31,6 +32,7 @@ os.environ.setdefault("OMP_NUM_THREADS", "1")
 import numpy as np
 
 import equilibrium_model as em
+import run_identity as ri
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")
@@ -151,9 +153,19 @@ def u_to_params(U: np.ndarray, box: str) -> list[dict]:
     return out
 
 
+class Ensemble(list):
+    """Parameter draws that remember how they were sampled (box, n, seed) and their unit-cube sample U, for the
+    run manifest (run_identity.inputs_identity)."""
+    sampling: dict = None
+    U: np.ndarray = None
+
+
 def ensemble(box: str, n: int, seed: int = 20261016):
     U = lhs(n, len(UNCERTAIN), seed)
-    return U, u_to_params(U, box)
+    th = Ensemble(u_to_params(U, box))
+    th.sampling = dict(box=box, n=n, seed=seed)
+    th.U = U
+    return U, th
 
 
 # ---------------------------------------------------------------------------
@@ -200,18 +212,25 @@ def batches_for(thetas: list[dict]) -> list[np.ndarray]:
 
 
 def run_tag(ens_name: str, design: dict, **kw) -> str:
-    """Cache name of one (ensemble, design, solver settings) run; ci_sims.py uses it too."""
+    """Cache name of one (ensemble, design, solver settings) run; ci_sims.py uses it too. The name is only an
+    address: reuse is decided by the manifest's identity (request_for, run_identity.load_cached)."""
     cfg = dict(CFG, **kw)
     return f"{ens_name}__{design_key(design)}" + ("" if cfg == CFG else "__" + "_".join(f"{k}{v}" for k, v in sorted(kw.items())))
+
+
+def request_for(ens_name: str, thetas: list[dict], design: dict, **kw) -> dict:
+    """Run manifest (identity) of solving `design` over `thetas` with solver settings CFG + kw."""
+    return ri.request("robust_design", ens_name, thetas, design, dict(CFG, **kw))
 
 
 def run_design(ens_name: str, thetas: list[dict], design: dict, pool=None, **kw) -> dict:
     cfg = dict(CFG, **kw)
     tag = run_tag(ens_name, design, **kw)
     path = os.path.join(RUNS, tag + ".npz")
-    if os.path.exists(path):
-        z = np.load(path)
-        return {k: z[k] for k in z.files}
+    want = request_for(ens_name, thetas, design, **kw)
+    hit = ri.load_cached(path, want)      # raises IdentityError if a cache exists but was made by another run
+    if hit is not None:
+        return hit
     params = [apply_design(t, design) for t in thetas]
     groups = batches_for(thetas)
     jobs = [([params[i] for i in g], cfg) for g in groups]
@@ -224,7 +243,7 @@ def run_design(ens_name: str, thetas: list[dict], design: dict, pool=None, **kw)
         for k in out:
             out[k][g] = r[k]
     out["holds"] = holds(out).astype(float)
-    np.savez(path, **out)
+    ri.save_cached(path, out, want, produced=dict(by="robust_design.run_design", batches=len(groups)))
     print(f"  solved {tag}: {n} sets in {time.time() - t0:.0f} s; holds {out['holds'].mean():.3f}", flush=True)
     return out
 
@@ -319,6 +338,37 @@ def check_failures(errors: dict) -> list[str]:
             if k in errors and not (abs(errors[k]) <= tol)]
 
 
+# Approximation invariants of the saturation closed form against the solver (check 3). The closed form leaves out
+# the failed-strike branch (docking.md, summary item 7), which only lowers the value of striking, so it can strike
+# earlier than the solver but never later; HALF_PERIOD allows for the solver reporting a mean year on a 1-year grid.
+HALF_PERIOD = 0.5
+Q_BASE = 0.7        # baseline q used in the q_ea threshold formula printed by check 3
+
+
+def invariant_failures(rows: list, q_star: float) -> list[str]:
+    """Closed form against solver, independent of any committed file: (a) both say strike or both say none;
+    (b) the closed-form first strike year is no later than the solver's mean year + HALF_PERIOD; (c) the
+    closed-form q_ea threshold 1 - (q*/q)^(1/9) lies between the largest q_ea the solver survives and the
+    smallest it strikes at; (d) 0 < q* < q."""
+    out = []
+    if not 0.0 < q_star < Q_BASE:
+        out.append(f"q* = {q_star:.4g} is not inside (0, {Q_BASE})")
+    safe, strike = [], []
+    for lab, cf, sv, ps in rows:
+        if (cf == "none") != (sv == "none"):
+            out.append(f"{lab}: closed form says {cf}, solver says {sv} (P(strike) {ps})")
+            continue
+        if cf != "none" and float(cf) > float(sv) + HALF_PERIOD:
+            out.append(f"{lab}: closed-form strike year {cf} is later than the solver's {sv} + {HALF_PERIOD}")
+        if lab.startswith("q_ea"):
+            (safe if sv == "none" else strike).append(float(lab.split("=")[1]))
+    thr = 1 - (q_star / Q_BASE) ** (1 / 9)
+    if safe and strike and not (max(safe) < thr < min(strike)):
+        out.append(f"q_ea threshold {thr:.4f} is not between the solver's {max(safe):g} (no strike) and "
+                   f"{min(strike):g} (strike)")
+    return out
+
+
 def checks():
     lines = []
     t0 = time.time()
@@ -361,7 +411,7 @@ def checks():
     lines.append(f"   q_ea threshold, closed form: 1 - (q*/q)^(1/9) = {1 - (qs / 0.7) ** (1 / 9):.4f}.")
     lines.append(f"(checks took {time.time() - t0:.0f} s)")
     errors = dict(reg_maxdiff=md, identity_rotation=float(d1), identity_size_erosion=float(d2))
-    return "\n".join(lines), dict(reg_maxdiff=md, q_star_cap=qs, rows=rows), check_failures(errors)
+    return "\n".join(lines), dict(reg_maxdiff=md, q_star_cap=qs, rows=rows), check_failures(errors) + invariant_failures(rows, qs)
 
 
 # ---------------------------------------------------------------------------
@@ -548,7 +598,8 @@ def main():
         if failed:
             # the files are written first so CI can upload them for inspection
             raise SystemExit("robust_design.py --check FAILED: " + "; ".join(failed))
-        print("tolerance checks passed: " + ", ".join(f"{k} <= {v:g}" for k, v in CHECK_TOL.items()))
+        print("tolerance checks passed: " + ", ".join(f"{k} <= {v:g}" for k, v in CHECK_TOL.items())
+              + "; closed-form invariants hold (strike agreement, closed form never later, q_ea threshold bracketed)")
     if a.stage:
         with ProcessPoolExecutor(WORKERS) as pool:
             stage(a.stage, pool)

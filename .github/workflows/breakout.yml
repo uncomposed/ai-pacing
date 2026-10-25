@@ -47,7 +47,9 @@ jobs:
           name: breakout-ens-${{ matrix.cfg }}
           retention-days: 30
           if-no-files-found: error
-          path: ${{ env.MODEL }}/results/breakout_runs/*__${{ matrix.cfg }}.npz
+          path: |
+            ${{ env.MODEL }}/results/breakout_runs/*__${{ matrix.cfg }}.npz
+            ${{ env.MODEL }}/results/breakout_runs/*__${{ matrix.cfg }}.manifest.json
 
   worlds:
     name: baseline-world sweeps

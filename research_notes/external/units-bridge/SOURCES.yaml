@@ -41,6 +41,27 @@ sources:
     licence: "CC BY 4.0"
     read: "yes, primary: the API JSON values for 2022-2025, copied unchanged (#39)"
     used_for: [data/world_gdp_wdi.json, CV-GWP-TO-EIU-OUTPUT, DEF-EIU rejected readings]
+  - id: EV-UNITS-AIFM-CONVENTIONS
+    title: "AI Futures Model code: unit conventions and default beliefs (#42)"
+    url: https://github.com/AI-Futures-Project/aifm-public
+    version: "commit 1c40ecdb246c25980515441a66571931c5604e11, fetched 2026-10-25 with ai-futures-model/fetch_upstream.sh"
+    licence: MIT
+    read: "yes, primary: progress_model/config.py (H100e, reference years, software progress rate, serial uplift, parallel penalty), progress_model/_impl.py (SE rebase), config/sampling_config_q2_daniel.yaml (uplift range)"
+    used_for: [units H100e and OOM, QTY-AIFM-*, QTY-SOFTWARE-EFFICIENCY, QTY-RESEARCH-OUTPUT, CV-DEV-TIME-TO-RESEARCH, CV-OOM-TO-FLOP]
+  - id: ai-futures-replication
+    title: "AI Futures Model replication (#14)"
+    url: research_notes/external/ai-futures-model/
+    version: "main at ad413f5 (includes #45 and #56)"
+    licence: repository
+    read: "README, MECHANISMS.md, modes.md, HELDOUT.md, results/feedback_off.json"
+    used_for: [QTY-AIFM-*, CV-DEV-TIME-TO-RESEARCH (feedback on/off), README "Recheck after #12 and #14"]
+  - id: metr-replication
+    title: "METR time horizons and productivity studies (#12)"
+    url: research_notes/external/metr-time-horizons/
+    version: "main at ad413f5 (includes #45 and #56)"
+    licence: repository
+    read: "README, data/observations.csv, results/holdout.md; records EV-METR-TH*, EV-METR-RCT-2025, EV-METR-UPLIFT-2026, EV-METR-ALGO-2025"
+    used_for: [QTY-METR-HORIZON, QTY-METR-HORIZON-P80, QTY-DEV-TIME-RATIO, CV-HORIZON-TO-DEV-TIME]
   - id: mode-contract
     title: "AI development mode and transition contract"
     url: systems/modes.yaml
