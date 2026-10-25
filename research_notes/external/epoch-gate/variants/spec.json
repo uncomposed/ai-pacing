@@ -1,0 +1,55 @@
+{
+ "about": "Variant set for issue #33. Each variant is a preset of the pinned playground bundle with the listed modelParams overrides, run by official/run_official.mjs at every optimizer iteration cap in `caps`. make_jobs.py expands this file into jobs.json. Values are inside the playground's soft ranges unless noted.",
+ "caps": [40, 80, 160],
+ "variants": [
+  {"name": "default", "group": "baseline", "preset": 0, "label": "Default preset (T = 1e36.5, FLOP gap 0.55, rho -0.65, eta 1.45)"},
+
+  {"name": "max_frac_0.5", "group": "partial automation", "preset": 0, "label": "at most 50% of tasks automatable (planner certain)",
+   "modelParams": {"beliefs.max_frac_beliefs": [{"prob": 1, "max_frac": 0.5}]}},
+  {"name": "max_frac_0.8", "group": "partial automation", "preset": 0, "label": "at most 80% of tasks automatable (planner certain)",
+   "modelParams": {"beliefs.max_frac_beliefs": [{"prob": 1, "max_frac": 0.8}]}},
+  {"name": "max_frac_0.9", "group": "partial automation", "preset": 0, "label": "at most 90% of tasks automatable (planner certain)",
+   "modelParams": {"beliefs.max_frac_beliefs": [{"prob": 1, "max_frac": 0.9}]}},
+
+  {"name": "labor_friction", "group": "labor reallocation", "preset": 0, "label": "labor reallocation friction on (playground add-on)",
+   "modelParams": {"main.labor_reallocation_friction": 1}},
+
+  {"name": "rnd_wedge_2", "group": "R&D wedge", "preset": 0, "label": "planner sees 1/2 of R&D returns",
+   "modelParams": {"rnd.rnd_wedge": 2}},
+  {"name": "rnd_wedge_8", "group": "R&D wedge", "preset": 0, "label": "planner sees 1/8 of R&D returns (playground add-on default)",
+   "modelParams": {"rnd.rnd_wedge": 8}},
+  {"name": "rnd_wedge_20", "group": "R&D wedge", "preset": 0, "label": "planner sees 1/20 of R&D returns (soft maximum)",
+   "modelParams": {"rnd.rnd_wedge": 20}},
+
+  {"name": "rho_-0.3", "group": "rho (task substitution)", "preset": 0, "label": "rho -0.3 (tasks less complementary)",
+   "modelParams": {"main.ces_term_rho": -0.3}},
+  {"name": "rho_-1.0", "group": "rho (task substitution)", "preset": 0, "label": "rho -1.0",
+   "modelParams": {"main.ces_term_rho": -1.0}},
+  {"name": "rho_-2.0", "group": "rho (task substitution)", "preset": 0, "label": "rho -2.0 (tasks more complementary)",
+   "modelParams": {"main.ces_term_rho": -2.0}},
+
+  {"name": "eta_1.2", "group": "eta (relative risk aversion)", "preset": 0, "label": "eta 1.2",
+   "modelParams": {"objective.eta": 1.2}},
+  {"name": "eta_2.0", "group": "eta (relative risk aversion)", "preset": 0, "label": "eta 2.0",
+   "modelParams": {"objective.eta": 2.0}},
+  {"name": "eta_3.0", "group": "eta (relative risk aversion)", "preset": 0, "label": "eta 3.0",
+   "modelParams": {"objective.eta": 3.0}},
+
+  {"name": "train_reqs_36.0", "group": "AGI training requirement", "preset": 0, "label": "T = 1e36.0 eFLOP",
+   "modelParams": {"automation.train_reqs": 36.0}},
+  {"name": "train_reqs_36.4", "group": "AGI training requirement", "preset": 0, "label": "T = 1e36.4 eFLOP",
+   "modelParams": {"automation.train_reqs": 36.4}},
+  {"name": "train_reqs_36.6", "group": "AGI training requirement", "preset": 0, "label": "T = 1e36.6 eFLOP",
+   "modelParams": {"automation.train_reqs": 36.6}},
+  {"name": "train_reqs_37.0", "group": "AGI training requirement", "preset": 0, "label": "T = 1e37.0 eFLOP",
+   "modelParams": {"automation.train_reqs": 37.0}},
+
+  {"name": "flop_gap_0.4", "group": "FLOP gap", "preset": 0, "label": "FLOP gap fraction 0.40 (soft minimum)",
+   "modelParams": {"automation.flop_gap_frac": 0.4}},
+  {"name": "flop_gap_0.7", "group": "FLOP gap", "preset": 0, "label": "FLOP gap fraction 0.70",
+   "modelParams": {"automation.flop_gap_frac": 0.7}},
+
+  {"name": "conservative", "group": "presets", "preset": 1, "label": "Conservative preset (T = 1e38, HW returns 1, SW returns 1)"},
+  {"name": "aggressive", "group": "presets", "preset": 2, "label": "Aggressive preset (T = 1e33, HW returns 7.1, SW returns 2)"}
+ ]
+}

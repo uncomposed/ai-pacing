@@ -31,6 +31,7 @@ test:
 	@python3 research_notes/external/units-bridge/tests/test_units_bridge.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_measure_sensitivity.py"
 	@python3 research_notes/external/epoch-gate/tests/test_epoch_gate.py
+	@python3 research_notes/external/epoch-gate/tests/test_variants.py
 	@python3 research_notes/external/hugging-face-incident/test_hf_incident.py
 
 systems-check:
