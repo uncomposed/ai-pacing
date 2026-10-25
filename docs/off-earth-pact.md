@@ -170,8 +170,8 @@ Each item ends with what result would settle it.
    Read literally, it treats any autonomous off-Earth base as a hazard. The pact
    resolves this by phase: pacing keeps vetoes during the transition, and the pact
    governs what comes after.
-3. The research report lists candidate YAML nodes (D7, D8, H7 to H11, I8 to I10,
-   Q6 to Q8), systems-model losses and hazards, and an acceptance test. Those need
+3. The research report lists candidate YAML nodes (D20, D21, H7 to H11, I8 to I10,
+   Q14 to Q16), systems-model losses and hazards, and an acceptance test. Those need
    rework to match the clarified thesis. In particular, the "defended human
    off-Earth capacity" items no longer apply, and a hypothesis for the low-bar
    preference in section 5 should be added.

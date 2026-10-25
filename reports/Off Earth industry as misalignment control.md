@@ -137,16 +137,16 @@ Here is a restatement that keeps your goal and your "Tai Chi" instinct of redire
 2. **Repair provenance.** Expand the `SRC-AI-BREAKOUT` contribution to name the Peaceful Breakout Clause, the Earth cap with throttles, off-Earth break-even, and the deterrence framing. Consider adding vault "AI Pacing" section XXI as a source. Keep Potapov recorded as convergent work, not as the origin, as the existing test already enforces.
 3. **Fix the audit crash.** `make clean-room-audit` fails under a US-ASCII locale at `tools/clean_room_tool.rb:98`. Force UTF-8 reads in the tool, or set `LC_ALL` in the Makefile.
 4. **Add missing YAML nodes, kept non-kernel.** Coordinate numbering with issue #1, which already claims `H6` and `Q5`. Candidates:
-   - **D7:** redirect the misalignment blast radius outward, restated around threat reduction.
-   - **D8:** denial as plugging, grounded in D4 and I4.
+   - **D20:** redirect the misalignment blast radius outward, restated around threat reduction.
+   - **D21:** denial as plugging, grounded in D4 and I4.
    - **H7:** seizing Earth does not remove the threat, because colonies are independent.
    - **H8:** denial credibility under full adversary knowledge, with issue #1's "do not assume uncertainty is always stabilizing" built into its stopping rule.
    - **H9:** domain separability and bounded return, including the high ground.
    - **H10:** dependence vetoes can be scoped to Earth-reachable compute.
    - **H11:** a credible cooperation deal exists.
    - **I8–I10:** Earth cap with throttles; off-Earth acceleration commitments; a maintained denial reserve.
-   - **Q6–Q8:** which objective classes are redirected; legitimate de-industrialization; return risk and symbiosis.
-   - **Acceptance test AT-011:** asserts D7 and D8 stay non-kernel and conditioned on their hypotheses.
+   - **Q14–Q16:** which objective classes are redirected; legitimate de-industrialization; return risk and symbiosis.
+   - **Acceptance test AT-011:** asserts D20 and D21 stay non-kernel and conditioned on their hypotheses.
    - **Non-claims:** "not a substitute for alignment", "physical distance is not safe sovereignty", "denial is not a first-strike posture".
 5. **Add systems-model losses and hazards.** Losses: `LOSS-RETURN`, `LOSS-DEINDUSTRIAL`, `LOSS-DENIAL-HARM`. Hazards: `HAZ-THREAT-REMOVAL` (Earth seizure removes the AI's main threat), `HAZ-RETURN` (includes the high ground), `HAZ-DENIAL-FAIL`, `HAZ-DENIAL-MISFIRE`, `HAZ-COUPLING`, and `HAZ-AUTH-CAPTURE` (the AI captures the authorization chain). Scenario and challenge: `SC-REDIRECT` and `CH-REDIRECT`. Requirements: `REQ-DENIAL`, `REQ-RETURN`, `REQ-TRANSITION-LEGITIMACY`. Also:
    - add a "relocate / expand off-Earth" choice to `UC-SOVEREIGNTY`;

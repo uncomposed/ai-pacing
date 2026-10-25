@@ -98,7 +98,7 @@ A claim whose text reports a share (a percentage or "k of n") must carry an
 - Wilson 95% intervals, which the checker recomputes from k and n;
 - the four uncertainty types: random outcome, parameter, model form and normative.
 
-H10 is the only register claim that reports shares, and it now carries a label.
+AR-H10 is the only register claim that reports shares, and it now carries a label.
 `measure_sensitivity.py` writes the same label into its outputs.
 
 ## 4. Alternative measures and dependence
