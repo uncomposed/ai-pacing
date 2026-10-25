@@ -30,6 +30,12 @@ mechanisms, and evaluation plans with
 `python3 tools/systems_tool.py trace --requirement REQ-COMPETE`.
 See [traceability examples and limitations](docs/requirement-traceability.md).
 
+The [AI development mode contract](docs/ai-development-modes.md) (proposed, issue #5)
+defines human-run lab, sovereign-capable and sovereign AI modes as derived views over
+a factored state, with bidirectional transitions and adapter boundaries for METR,
+GATE, AI Futures and the pact solver. `make modes-check` checks
+[`systems/modes.yaml`](systems/modes.yaml); `make check` includes it.
+
 The [evidence and validation contract](docs/evidence-protocol.md) (issue #8) holds
 dated evidence records, input roles, outcome-share labels, the shared historical
 evaluation protocol and the parameter-admission rule. `make evidence-check` checks
