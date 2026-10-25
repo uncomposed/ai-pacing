@@ -1,0 +1,218 @@
+{
+ "forecasts": [
+  {
+   "B-FLAT": {
+    "interval80": [
+     1712.4179940766585,
+     3268.4231457813657
+    ],
+    "n_changes": 3,
+    "point": 1044.780145
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-04-30",
+    "doubling_days": 124.76559063324224,
+    "interval80": [
+     2549.711919581341,
+     12275.642783860269
+    ],
+    "lag_days": 0.0,
+    "n": 15,
+    "point": 5594.58244434124
+   },
+   "frontier_definition": "all published values",
+   "metric": "p50_min",
+   "target_date": "2027-04-30"
+  },
+  {
+   "B-FLAT": {
+    "interval80": null,
+    "n_changes": 0,
+    "point": 1044.780145
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-10-31",
+    "doubling_days": 124.76559063324224,
+    "interval80": [
+     6695.563274976888,
+     36111.505666728895
+    ],
+    "lag_days": 0.0,
+    "n": 15,
+    "point": 15549.497456389701
+   },
+   "frontier_definition": "all published values",
+   "metric": "p50_min",
+   "target_date": "2027-10-31"
+  },
+  {
+   "B-FLAT": {
+    "interval80": [
+     810.5584759222716,
+     1547.080264793704
+    ],
+    "n_changes": 3,
+    "point": 718.80683
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-04-30",
+    "doubling_days": 128.74380265074527,
+    "interval80": [
+     2081.747673347277,
+     10505.727948500939
+    ],
+    "lag_days": 0.0,
+    "n": 14,
+    "point": 4676.566551821035
+   },
+   "frontier_definition": "values with p50 <= 960 min only",
+   "metric": "p50_min",
+   "target_date": "2027-04-30"
+  },
+  {
+   "B-FLAT": {
+    "interval80": null,
+    "n_changes": 0,
+    "point": 718.80683
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-10-31",
+    "doubling_days": 128.74380265074527,
+    "interval80": [
+     5255.355971973089,
+     30179.582935305993
+    ],
+    "lag_days": 0.0,
+    "n": 14,
+    "point": 12593.825924266122
+   },
+   "frontier_definition": "values with p50 <= 960 min only",
+   "metric": "p50_min",
+   "target_date": "2027-10-31"
+  },
+  {
+   "B-FLAT": {
+    "interval80": [
+     518.4483645073252,
+     785.7888502172226
+    ],
+    "n_changes": 3,
+    "point": 185.911829
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-04-30",
+    "doubling_days": 126.70442885228768,
+    "interval80": [
+     370.24318427893115,
+     2512.941394886061
+    ],
+    "lag_days": 0.0,
+    "n": 14,
+    "point": 964.5721455386083
+   },
+   "frontier_definition": "all published values",
+   "metric": "p80_min",
+   "target_date": "2027-04-30"
+  },
+  {
+   "B-FLAT": {
+    "interval80": null,
+    "n_changes": 0,
+    "point": 185.911829
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-10-31",
+    "doubling_days": 126.70442885228768,
+    "interval80": [
+     943.701449620894,
+     7381.515138583134
+    ],
+    "lag_days": 0.0,
+    "n": 14,
+    "point": 2639.3079654863086
+   },
+   "frontier_definition": "all published values",
+   "metric": "p80_min",
+   "target_date": "2027-10-31"
+  },
+  {
+   "B-FLAT": {
+    "interval80": [
+     120.96470559708386,
+     183.340759534124
+    ],
+    "n_changes": 3,
+    "point": 89.801503
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-04-30",
+    "doubling_days": 130.76071318307305,
+    "interval80": [
+     296.4673555377112,
+     2207.2998773976365
+    ],
+    "lag_days": 0.0,
+    "n": 13,
+    "point": 808.9452129352095
+   },
+   "frontier_definition": "values with p50 <= 960 min only",
+   "metric": "p80_min",
+   "target_date": "2027-04-30"
+  },
+  {
+   "B-FLAT": {
+    "interval80": null,
+    "n_changes": 0,
+    "point": 89.801503
+   },
+   "B-LOGLINEAR": {
+    "at_date": "2027-10-31",
+    "doubling_days": 130.76071318307305,
+    "interval80": [
+     724.5618961425314,
+     6352.603239561137
+    ],
+    "lag_days": 0.0,
+    "n": 13,
+    "point": 2145.4263559249953
+   },
+   "frontier_definition": "values with p50 <= 960 min only",
+   "metric": "p80_min",
+   "target_date": "2027-10-31"
+  }
+ ],
+ "id": "FC-METR-TH11-LOCK-2026-10-25",
+ "information_cutoff": "2026-10-25",
+ "information_set_frontier": {
+  "p50_min": 1044.780145,
+  "p80_min": 185.911829
+ },
+ "inputs": [
+  "EV-METR-TH11-2026-01-29",
+  "EV-METR-TH11-2026-02-04",
+  "EV-METR-TH11-2026-02-12",
+  "EV-METR-TH11-2026-03-03",
+  "EV-METR-TH11-2026-04-10",
+  "EV-METR-TH11-2026-04-15",
+  "EV-METR-TH11-2026-05-08"
+ ],
+ "issued": "2026-10-25",
+ "label": "locked",
+ "not_claimed": "a forecast of AI capability, adoption or productivity in general: only of METR's TH1.1 measurements",
+ "resolution": {
+  "saturation": "METR calls values above 16 h (960 min) unreliable on this suite; both frontier definitions are scored and reported",
+  "scoring": [
+   "S-ABSLOGERR",
+   "S-INTERVAL80 (natural-log scale)",
+   "S-COVERAGE80"
+  ],
+  "source": "metr.org/time-horizons and metr.org/assets/benchmark_results_1_1.yaml, or a METR release that labels its values TH1.1",
+  "unresolved_if": [
+   "METR publishes no new TH1.1 value for a model released after 2026-05-08 by the target date (the page has not been updated since 2026-09-08; an unchanged frontier is not evidence for B-FLAT)",
+   "METR's new values use a different task suite or protocol (TH1.2, TH2, ...): not comparable without a declared mapping"
+  ],
+  "vintage": "values as public on the target date (first-published); a second score uses the latest vintage"
+ },
+ "target": "F(T): the largest TH1.1 50% (80%) time horizon among values METR has published by date T",
+ "units": "minutes of human expert time on METR's TH1.1 task suite (source-native)"
+}
