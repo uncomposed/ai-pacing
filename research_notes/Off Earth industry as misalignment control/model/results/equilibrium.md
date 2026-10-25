@@ -574,7 +574,7 @@ So the sequencing rule is:
 2. **A strike costs a small AI far less than its whole size.** That would mean c_A small, or a cost that does not scale with Earth's defence. The plugged branch then stops being a disaster, and the firing probability needed rises toward the (G) values (inference; c_A = 0 flipped the round-1 baseline).
 3. **Off-Earth growth is slow next to the AI's patience (g near r).** A head start is then worth more, and the bar rises (inference; not run).
 4. **A model with human strikes on the AI.** If it finds that AI security removes a large human first-strike risk, the case for early security improves. R6 would then be only the cost side of the ledger.
-5. **What the AI wants from Earth is not pluggable.** If Earth's matter, people or sunlight matter more than its industry, unplugging does not devalue it (round-2 question 8).
+5. **What the AI wants from Earth is not pluggable.** If Earth's matter, people or sunlight matter more than its industry, unplugging does not devalue it (round-2 EQ-Q8).
 
 **How the R6 numbers were checked.**
 1. **Needed q (d = 1).** Over all 30 (A_close, L_f) cells, the closed form agrees with the solver without rivals to within one bisection step (0.004). This is the solver run with μ = 0 and the AI starting at closure (R6c).
@@ -629,19 +629,19 @@ Read this section as an interpretation, not as extra results.
 
 ## 7. Questions for Cole (each changes the conclusion; both variants are run)
 
-Updated after round 2. Questions 1 and 4 are partly answered; questions 7 to 10 are new.
+Updated after round 2. Questions are numbered EQ-Q1 to EQ-Q10 so they are not mistaken for spec IDs. EQ-Q1 and EQ-Q4 are partly answered; EQ-Q7 to EQ-Q10 are new.
 
-1. **Can a rival AI ever threaten a much larger AI (ℓ_∞ = 0 or > 0)?** This is still the single biggest switch. Even ℓ_∞ = 0.01 flips S1 from cooperation to a strike at year 0. Your round-2 answer (100 times smaller is not a threat) covers the ratio part, and the model agrees with it (R1). What stays open is whether anything *irreducible* remains. If it does, the gravity-well blockade must let fewer than about 1 rival in a million escape.
-2. **What would a seizure do to humans (w_seized)?** If seizure is lethal, humans race and the strike moves to year 0. If it is not, the AI waits about 40 years and then strikes. Your thesis is silent on this, and it decides which failure you get.
-3. **Should the pact let the off-Earth AI remove covert fabs it detects (police)?** In the model it helps at the margin (the human-best design in world A uses it) but does not rescue high temptation. It also hands the AI a pact-sanctioned use of force on Earth.
-4. **Is trade a consumption flow or reinvested growth (reinv)?** Your round-2 answer (trade is not a defence) agrees with the model. The denial reserve carries the growth phase, and preference carries the late stage (R3).
-5. **How confident are you that a failed early strike would end the AI (kill_pre)?** Your plan keeps humans holding the chip supply during bootstrap, which is what makes a failed early strike fatal. If the AI's compute were already off-Earth or distributed, that protection goes away (S21: strike now).
-6. **Is fab relocation to orbit (b) feasible on a 10-year timescale?** It is the human-best sequencing in the model, but it assumes orbital fabs supply chips under the pact and are plugged by the denial reserve if the pact breaks.
+1. **EQ-Q1: Can a rival AI ever threaten a much larger AI (ℓ_∞ = 0 or > 0)?** This is still the single biggest switch. Even ℓ_∞ = 0.01 flips S1 from cooperation to a strike at year 0. Your round-2 answer (100 times smaller is not a threat) covers the ratio part, and the model agrees with it (R1). What stays open is whether anything *irreducible* remains. If it does, the gravity-well blockade must let fewer than about 1 rival in a million escape.
+2. **EQ-Q2: What would a seizure do to humans (w_seized)?** If seizure is lethal, humans race and the strike moves to year 0. If it is not, the AI waits about 40 years and then strikes. Your thesis is silent on this, and it decides which failure you get.
+3. **EQ-Q3: Should the pact let the off-Earth AI remove covert fabs it detects (police)?** In the model it helps at the margin (the human-best design in world A uses it) but does not rescue high temptation. It also hands the AI a pact-sanctioned use of force on Earth.
+4. **EQ-Q4: Is trade a consumption flow or reinvested growth (reinv)?** Your round-2 answer (trade is not a defence) agrees with the model. The denial reserve carries the growth phase, and preference carries the late stage (R3).
+5. **EQ-Q5: How confident are you that a failed early strike would end the AI (kill_pre)?** Your plan keeps humans holding the chip supply during bootstrap, which is what makes a failed early strike fatal. If the AI's compute were already off-Earth or distributed, that protection goes away (S21: strike now).
+6. **EQ-Q6: Is fab relocation to orbit (b) feasible on a 10-year timescale?** It is the human-best sequencing in the model, but it assumes orbital fabs supply chips under the pact and are plugged by the denial reserve if the pact breaks.
 
-7. **Is a tiny but non-zero preference for humans realistic?** Under the pact, a preference of about 3e-10 of the AI's resources keeps Earth safe; without the pact it takes about 6% (R3). That gain only matters if preferences can be that small and still be there. If they are all-or-nothing, the pact's reduction buys nothing.
-8. **What would a late AI want from Earth: its sunlight or its mass?** Sunlight makes the needed preference tiny (3e-10 to 8e-10). Mass could make it orders of magnitude larger. The model has only computed the sunlight case.
-9. **How soon would the "aliens judge us" moment come, and would the AI discount it?** With a patient AI, the reputation argument needs only about a one-in-a-billion credence under the pact (R4). Discounted at 2% a year over 1,000 years, it needs a 13 to 40% credence.
-10. **Who would run a covert fab?** In the model a fab is harmless unless someone runs a rival programme on it (R2b). With rogue actors, each fab adds about 6 points of rival risk over 300 years (R2a). Your answer turns on whether retained fabs would be state-held and deterred, or leak to rogue actors.
+7. **EQ-Q7: Is a tiny but non-zero preference for humans realistic?** Under the pact, a preference of about 3e-10 of the AI's resources keeps Earth safe; without the pact it takes about 6% (R3). That gain only matters if preferences can be that small and still be there. If they are all-or-nothing, the pact's reduction buys nothing.
+8. **EQ-Q8: What would a late AI want from Earth: its sunlight or its mass?** Sunlight makes the needed preference tiny (3e-10 to 8e-10). Mass could make it orders of magnitude larger. The model has only computed the sunlight case.
+9. **EQ-Q9: How soon would the "aliens judge us" moment come, and would the AI discount it?** With a patient AI, the reputation argument needs only about a one-in-a-billion credence under the pact (R4). Discounted at 2% a year over 1,000 years, it needs a 13 to 40% credence.
+10. **EQ-Q10: Who would run a covert fab?** In the model a fab is harmless unless someone runs a rival programme on it (R2b). With rogue actors, each fab adds about 6 points of rival risk over 300 years (R2a). Your answer turns on whether retained fabs would be state-held and deterred, or leak to rogue actors.
 
 ## 8. Not modelled (limits)
 

@@ -60,17 +60,20 @@ something else. `ruby tools/spec_tool.rb next-id H` prints the next free ID.
 | #3 | H7, D7, I8, Q6 | H10, D18, I11, Q11 | Renumbered in the issue |
 | #3 addendum | D8, Q7 | D19, Q12 | Renumbered in the comment |
 | off-Earth report | H10 (optional) | H11 | Collides with #3's H10 |
+| off-Earth report | D7, D8 | D20, D21 | Editorial D7 and D8 exist (issue #23) |
+| off-Earth report | Q6, Q7, Q8 | Q14, Q15, Q16 | Editorial Q6 to Q8 exist (issue #23) |
 
-Two findings the registry records rather than resolves:
+Two earlier findings are now resolved (issue #23):
 
-- **H10 has a lexical overlap the issue's renumbering did not mention.** The
-  off-Earth report proposed an optional H10, and the model's assumption register
-  (`model/assumptions.yaml`) numbers its own result claims H1–H13. The register's
-  claims are a separate local namespace, not proposition IDs. H10 follows the
-  editor's decision; the report's optional H10 is reserved as H11.
-- **The off-Earth report's D7, D8, Q6, Q7 and Q8 collide with editorial IDs.**
-  They are marked `reserved-conflict` and must be renumbered before they land.
-  `docs/off-earth-pact.md` already says those candidates need rework.
+- **Register claim IDs looked like proposition IDs.** The model's assumption
+  register numbered its result claims H1–H13, and `equilibrium.md` section 7
+  numbered its questions 1–10. They are now `AR-H1` to `AR-H13` and `EQ-Q1` to
+  `EQ-Q10`, declared as prefixed local namespaces in the registry. The report's
+  optional H10 stays reserved as H11; H10 follows the editor's decision.
+- **The off-Earth report's D7, D8, Q6, Q7 and Q8 collided with editorial IDs.**
+  They are renumbered to D20, D21, Q14, Q15 and Q16 in the report and the
+  registry. No `reserved-conflict` entries remain. The report's other candidates
+  (H7 to H9, I8 to I10) did not collide and keep their numbers.
 
 The 16 legacy collisions between the YAML and the editorial reference (D1–D6,
 H1–H5, I1–I3, Q3, Q4) are recorded as `legacy` and remain the open conformance

@@ -28,6 +28,10 @@ class AssumptionRegisterTest(unittest.TestCase):
         self.assertEqual([], tool.validate(self.reg, self.params))
         self.assertTrue(all(a['status'] != 'human_validated' for a in self.reg['assumptions']))
 
+    def test_unprefixed_claim_id_is_rejected(self):
+        self.claim('AR-H1')['id'] = 'H1'
+        self.rejects('claim H1: ID must look like AR-H1')
+
     def test_new_param_without_entry_is_rejected(self):
         self.rejects('PARAMS entry new_knob has no register entry', dict(self.params, new_knob=0.0))
 
@@ -139,20 +143,20 @@ class AssumptionRegisterTest(unittest.TestCase):
         self.rejects('derived_from names unknown input IN-MISSING')
 
     def test_share_claim_needs_outcome_label(self):
-        del self.claim('H10')['outcome_label']
-        self.rejects('claim H10: reports an outcome share but has no outcome_label')
+        del self.claim('AR-H10')['outcome_label']
+        self.rejects('claim AR-H10: reports an outcome share but has no outcome_label')
 
     def test_outcome_label_cannot_claim_calibrated_probability(self):
-        self.claim('H10')['outcome_label']['interpretation'] = 'probability the pact holds'
-        self.rejects('claim H10: schema outcome_label')
+        self.claim('AR-H10')['outcome_label']['interpretation'] = 'probability the pact holds'
+        self.rejects('claim AR-H10: schema outcome_label')
 
     def test_outcome_label_interval_must_match_counts(self):
-        self.claim('H10')['outcome_label']['numerical_uncertainty'][1]['k'] = 30
+        self.claim('AR-H10')['outcome_label']['numerical_uncertainty'][1]['k'] = 30
         self.rejects('is not the Wilson 95% interval')
 
     def test_outcome_label_needs_all_uncertainty_types(self):
-        del self.claim('H10')['outcome_label']['uncertainty_types']['normative']
-        self.rejects('claim H10: schema outcome_label')
+        del self.claim('AR-H10')['outcome_label']['uncertainty_types']['normative']
+        self.rejects('claim AR-H10: schema outcome_label')
 
     def test_new_param_needs_admission(self):
         params = dict(self.params, new_knob=0.0)
@@ -161,7 +165,7 @@ class AssumptionRegisterTest(unittest.TestCase):
         self.rejects('PARAMS entry new_knob was added after 2026-10-25 and has no admission record', params)
         self.reg['parameter_roles']['new_knob']['admission'] = {
             'basis': 'consequential_omission', 'evidence_path': 'planned: #9 comparison',
-            'falsifier': 'no ranking change when varied', 'decision_impact': 'H1 under renegotiation'}
+            'falsifier': 'no ranking change when varied', 'decision_impact': 'AR-H1 under renegotiation'}
         self.assertEqual([], tool.validate(self.reg, params))
         self.reg['parameter_roles']['new_knob']['admission']['basis'] = 'hunch'
         self.rejects('new_knob: admission basis must be one of', params)

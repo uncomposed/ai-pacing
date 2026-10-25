@@ -36,6 +36,7 @@ ABLATION = {'run', 'partial', 'not_run'}
 SURVIVED = {'yes', 'no', 'partly', 'pending', 'n/a'}
 STATUS = {'implemented', 'verified', 'human_validated'}
 DEPENDENCE = {'high': 3, 'medium': 2, 'low': 1}
+CLAIM_ID = r'AR-H[1-9][0-9]*'
 FIELDS = {'id', 'statement', 'encoded_by', 'source', 'favours_pact', 'ablation', 'claims', 'dependence', 'status'}
 OPTIONAL = {'why_favours', 'note', 'priority', 'validated_by', 'evidence'}
 ROLES = {'observed_measurement', 'source_model_assumption', 'project_assumption', 'policy_choice', 'derived'}
@@ -81,6 +82,9 @@ def load_params(path=SOLVER):
 def validate(reg, params, records=None):
     errors = []
     claims = {c['id'] for c in reg.get('claims', [])}
+    for c in sorted(claims):
+        if not re.fullmatch(CLAIM_ID, str(c)):
+            errors.append(f'claim {c}: ID must look like AR-H1 (the AR- prefix keeps register claims apart from spec proposition IDs, issue #23)')
     ids = [a.get('id') for a in reg.get('assumptions', [])]
     known = set(ids)
     for ident in {i for i in ids if ids.count(i) > 1}:
