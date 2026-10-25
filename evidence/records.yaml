@@ -870,3 +870,118 @@ records:
     fitted_to: []
     intended_use: ["link between benchmark-style success and realized usefulness (#12)"]
     not_for: ["a general benchmark-to-productivity conversion factor"]
+  # AI Futures Model (issue #14): outputs are source-model outputs, never observations. Their present-day horizon,
+  # revenue and ECI levels are fitted to METR and Epoch data, so `fitted_to` marks them non-independent of those
+  # records. The two bundled-data records stand in until #12 adds METR's primary release. See
+  # research_notes/external/ai-futures-model/.
+  - id: EV-AIFM-REFERENCE-TRAJECTORY
+    kind: source_model_output
+    title: "AI Futures Model default-parameter trajectory and milestone dates"
+    source:
+      citation: "AI Futures Project, AI Futures Model (aifm-public), tests/golden_data/default_trajectory.json and default_milestones.json"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09)"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-09-09"
+    availability_basis: "Commit date of the public release; the golden files may be older but earlier history is not public."
+    units: "progress in OOMs of cumulative effective compute; milestone dates in decimal years"
+    population: "one model trajectory at the upstream default parameters, time range 2015-2050"
+    protocol: "re-run at the pinned commit and compared with the golden files (research_notes/external/ai-futures-model/results/reference_trajectory.json)"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/results/reference_trajectory.json (series max relative difference about 1e-8; AC 2027.786)"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "Replication of the source model's own output; says nothing about the world."
+    uncertainty:
+      kind: unquantified
+      description: "Single parameter point; parameter and model-form uncertainty not represented by this record."
+    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    intended_use: ["source-model replication (#14)", "basis for coupling AIFM trajectories to other components"]
+    not_for: ["empirical support for any milestone date", "a held-out test against METR or Epoch data it was fitted to"]
+
+  - id: EV-AIFM-DANIEL-08-16-26
+    kind: source_model_output
+    title: "AI Futures Model Monte Carlo forecast, Daniel 08-16-26 (10,000 samples)"
+    source:
+      citation: "AI Futures Project, app/forecast/data/simulations/daniel-08-16-26/milestone_pdfs_overlay_statistics.csv"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "commit 1c40ecdb246c25980515441a66571931c5604e11; exported 2026-08-10 (metadata.json), seed 20260810"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-09-09"
+    availability_basis: "First public in the release commit; the website may have shown it earlier (not checked)."
+    units: "milestone dates in decimal years; shares of draws under the sampled parameter measure"
+    population: "10,000 draws (9,612 successful) from Daniel's Q2 2026 elicited distributions"
+    protocol: "upstream batch_rollout.py and forecast export; re-run at N=1000 in research_notes/external/ai-futures-model/results/seeded_published-daniel-08-16-26_n1000.json"
+    extraction:
+      method: quoted
+      locator: "milestone_pdfs_overlay_statistics.csv, all rows"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "Shares are draws under a sampling measure, not calibrated probabilities."
+    uncertainty:
+      kind: sampling
+      description: "Monte Carlo sampling error of quantiles and achievement rates; the elicited measure itself is judgment."
+    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    intended_use: ["source-model replication (#14)"]
+    not_for: ["empirical support", "a calibrated probability of any milestone"]
+
+  - id: EV-AIFM-METR-HORIZON-V1-1
+    kind: observation
+    title: "METR-Horizon-v1.1 benchmark results as bundled in the AI Futures Model"
+    source:
+      citation: "METR, time-horizon benchmark results, copy at inputs/metr/benchmark_results_1_1.yaml in aifm-public"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "aifm-public commit 1c40ecdb; long_tasks_version 799cc9c4b4483a93fc3445623a49ea1bd74fdeb2"
+    reading: read_secondary_only
+    observation_date: {start: "2024-06", end: "2026"}
+    availability_date: "2026"
+    availability_basis: "Latest model release in the bundled file not checked; year only, compared conservatively."
+    units: "p50 and p80 horizon length in minutes; doubling time in days"
+    population: "frontier models evaluated by METR on its task suite"
+    protocol: "METR's own; not re-derived here"
+    extraction:
+      method: summarized_from_secondary
+      locator: "inputs/metr/benchmark_results_1_1.yaml"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "A copy inside the source model, not METR's primary release. #12 owns the primary record; replace this one with it."
+    uncertainty:
+      kind: measurement
+      description: "METR confidence intervals as bundled"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["marking AIFM outputs as non-independent of METR data"]
+    not_for: ["empirical support until read in primary form (#12)"]
+
+  - id: EV-AIFM-EPOCH-SERIES
+    kind: observation
+    title: "Epoch Capabilities Index and lab revenue series as bundled in the AI Futures Model"
+    source:
+      citation: "Epoch AI data, copies at inputs/epoch/*.csv in aifm-public"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "aifm-public commit 1c40ecdb"
+    reading: read_secondary_only
+    observation_date: {start: "2023", end: "2026"}
+    availability_date: "2026"
+    availability_basis: "Year of the latest rows; compared conservatively."
+    units: "ECI score; annualized revenue in USD"
+    population: "frontier models (ECI); OpenAI and Anthropic (revenue)"
+    protocol: "Epoch's own; media reports and company disclosures for revenue"
+    extraction:
+      method: summarized_from_secondary
+      locator: "inputs/epoch/epoch_capabilities_index.csv, epoch_openai_revenue.csv, epoch_anthropic_revenue.csv"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series."
+    uncertainty:
+      kind: measurement
+      description: "confidence column per row (Epoch); not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["empirical support until read in primary form"]
