@@ -29,6 +29,7 @@ Verification describes fidelity and the declared relationship to an exact specif
 - [ ] Hypotheses remain uncertain and retain their falsifiers.
 - [ ] Implementation choices are not presented as necessary kernel claims.
 - [ ] Open questions are not silently answered.
+- [ ] Proposed nodes (`author_status: proposed`) are not presented as accepted canon.
 - [ ] Criticism is judged for accurate targeting, not agreement with the specification.
 
 ## Judgment

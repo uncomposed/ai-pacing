@@ -18,6 +18,30 @@ module AIPacing
   ].freeze
   NODE_REFERENCE_FIELDS = %w[derived_from supports implements relates_to].freeze
   GRAPH_RELATIONS = %w[grounds conditions implements].freeze
+  DEFAULT_REGISTRY = File.join(ROOT, "spec", "id-registry.yaml")
+  EDITORIAL_REFERENCE = File.join(ROOT, "AI_Pacing_Canonical_Spec_v0.1.md")
+  # Statuses the canonical editor has given. "unresolved" marks an open question
+  # the editor accepted as a question; it is accepted canon, not a proposal.
+  ACCEPTED_STATUSES = %w[
+    accepted accepted-after-revision accepted-after-wording-correction
+    accepted-as-hypothesis accepted-as-option unresolved
+  ].freeze
+  # A proposed node is recorded in the YAML for review but is not accepted canon.
+  PROPOSED_STATUS = "proposed"
+  AUTHOR_STATUSES = (ACCEPTED_STATUSES + [PROPOSED_STATUS]).freeze
+  KIND_PREFIXES = {
+    "kernel" => "K", "derived" => "D", "hypothesis" => "H",
+    "implementation" => "I", "open_question" => "Q"
+  }.freeze
+  # IDs whose YAML and editorial-reference meanings already differed when the
+  # registry was created (the 2026-08-29 conformance gap). No other ID may be
+  # registered as a legacy collision.
+  LEGACY_COLLISION_IDS = %w[D1 D2 D3 D4 D5 D6 H1 H2 H3 H4 H5 I1 I2 I3 Q3 Q4].freeze
+  REGISTRY_COLLISIONS = %w[none same-proposition legacy reserved-conflict].freeze
+  REGISTRY_STATUSES = {
+    "yaml" => %w[accepted proposed],
+    "editorial" => %w[editorial]
+  }.freeze
 
   module_function
 
@@ -50,6 +74,34 @@ module AIPacing
 
   def nodes_by_id(spec)
     Array(spec["nodes"]).to_h { |node| [node["id"], node] }
+  end
+
+  def proposed?(node)
+    node.is_a?(Hash) && node.dig("provenance", "author_status") == PROPOSED_STATUS
+  end
+
+  def accepted?(node)
+    !proposed?(node)
+  end
+
+  def accepted_kernel_ids(spec)
+    Array(spec["nodes"]).select { |node| node["kind"] == "kernel" && accepted?(node) }.map { |node| node["id"] }.sort
+  end
+
+  def proposed_ids(spec)
+    Array(spec["nodes"]).select { |node| proposed?(node) }.map { |node| node["id"] }.sort
+  end
+
+  # The accepted canon: proposed nodes and every relation touching one removed.
+  # Identity and dependency-path acceptance assertions run against this view.
+  def accepted_spec(spec)
+    proposed = proposed_ids(spec).to_set
+    canon = spec.dup
+    canon["nodes"] = Array(spec["nodes"]).reject { |node| proposed.include?(node["id"]) }
+    canon["relations"] = Array(spec["relations"]).reject do |relation|
+      proposed.include?(relation["from"]) || proposed.include?(relation["to"])
+    end
+    canon
   end
 
   def sources_by_id(spec)
@@ -174,6 +226,16 @@ module AIPacing
       %w[origin sources ai_roles author_status].each do |field|
         errors << "node #{id} provenance missing #{field}" if blank?(provenance[field])
       end
+      status = provenance["author_status"]
+      if !blank?(status) && !AUTHOR_STATUSES.include?(status)
+        errors << "node #{id} has unknown author_status #{status.inspect}"
+      end
+      if proposed?(node)
+        proposal = node["proposal"]
+        if !proposal.is_a?(Hash) || blank?(proposal["issue"])
+          errors << "proposed node #{id} must name its proposal issue"
+        end
+      end
       Array(provenance["sources"]).each do |source_id|
         errors << "node #{id} references unknown source #{source_id}" unless source_ids.include?(source_id)
       end
@@ -181,6 +243,9 @@ module AIPacing
       NODE_REFERENCE_FIELDS.each do |field|
         Array(node[field]).each do |target|
           errors << "node #{id} #{field} references unknown node #{target}" unless node_ids.include?(target)
+          if accepted?(node) && proposed?(nodes_by_id(spec)[target])
+            errors << "accepted node #{id} #{field} references proposed node #{target}"
+          end
         end
       end
 
@@ -223,6 +288,11 @@ module AIPacing
       errors << "relation #{index} unknown to #{relation['to']}" unless node_ids.include?(relation["to"])
       signature = [relation["from"], relation["to"], relation["type"]]
       errors << "duplicate relation #{signature.join(' -> ')}" if seen.include?(signature)
+      from_node = nodes_by_id(spec)[relation["from"]]
+      to_node = nodes_by_id(spec)[relation["to"]]
+      if %w[grounds implements].include?(relation["type"]) && proposed?(from_node) && to_node && accepted?(to_node)
+        errors << "accepted node #{relation['to']} cannot be #{relation['type'] == 'grounds' ? 'grounded' : 'implemented'} by proposed node #{relation['from']}"
+      end
       seen << signature
     end
   end
@@ -280,28 +350,36 @@ module AIPacing
     value.nil? || (value.respond_to?(:empty?) && value.empty?)
   end
 
+  # Identity assertions (exact_kind_ids, node_exists, path_exists) see only the
+  # accepted canon, so a proposed node can neither satisfy nor break them.
+  # Field assertions apply to every node, proposed ones included.
   def evaluate_acceptance(spec)
-    nodes = nodes_by_id(spec)
+    canon = accepted_spec(spec)
     spec["acceptance_tests"].map do |test|
       failures = Array(test["assertions"]).filter_map do |assertion|
-        evaluate_assertion(spec, nodes, assertion)
+        evaluate_assertion(spec, canon, assertion)
       end
       { "id" => test["id"], "title" => test["title"], "passed" => failures.empty?, "failures" => failures }
     end
   end
 
-  def evaluate_assertion(spec, nodes, assertion)
+  def evaluate_assertion(spec, canon, assertion)
+    nodes = nodes_by_id(spec)
+    accepted_nodes = nodes_by_id(canon)
     type = assertion["type"]
     case type
     when "exact_kind_ids"
-      actual = nodes.values.select { |node| node["kind"] == assertion["kind"] }.map { |node| node["id"] }.sort
+      actual = accepted_nodes.values.select { |node| node["kind"] == assertion["kind"] }.map { |node| node["id"] }.sort
       expected = assertion["ids"].sort
       "expected #{assertion['kind']} ids #{expected.inspect}, got #{actual.inspect}" unless actual == expected
     when "node_exists"
-      node = nodes[assertion["id"]]
-      "missing #{assertion['id']} as #{assertion['kind']}" unless node && node["kind"] == assertion["kind"]
+      node = accepted_nodes[assertion["id"]]
+      "missing accepted #{assertion['id']} as #{assertion['kind']}" unless node && node["kind"] == assertion["kind"]
     when "path_exists"
-      "no dependency path #{assertion['from']} -> #{assertion['to']}" unless path_exists?(spec, assertion["from"], assertion["to"])
+      unless accepted_nodes.key?(assertion["from"]) && accepted_nodes.key?(assertion["to"]) &&
+             path_exists?(canon, assertion["from"], assertion["to"])
+        "no accepted dependency path #{assertion['from']} -> #{assertion['to']}"
+      end
     when "all_kind_have_fields"
       missing = nodes.values.select { |node| node["kind"] == assertion["kind"] }.filter_map do |node|
         absent = assertion["fields"].select { |field| blank?(node[field]) }
@@ -342,7 +420,7 @@ module AIPacing
   end
 
   def render_minimal(spec)
-    kernels = spec["nodes"].select { |node| node["kind"] == "kernel" }.sort_by { |node| node["id"] }
+    kernels = spec["nodes"].select { |node| node["kind"] == "kernel" && accepted?(node) }.sort_by { |node| node["id"] }
     lines = [
       "# #{spec.dig('specification', 'title')}: minimal reconstruction",
       "",
@@ -396,6 +474,11 @@ module AIPacing
     spec["relations"].sort_by { |relation| [relation["from"], relation["to"], relation["type"]] }.each do |relation|
       lines << "  #{relation['from']} -->|#{relation['type']}| #{relation['to']}"
     end
+    proposed = proposed_ids(spec)
+    unless proposed.empty?
+      lines << "  classDef proposed stroke-dasharray: 5 5"
+      lines << "  class #{proposed.join(',')} proposed"
+    end
     lines << ""
     lines.join("\n")
   end
@@ -429,11 +512,20 @@ module AIPacing
       lines << "| #{result['id']} — #{result['title']} | #{tests[result['id']]['rationale'].gsub('|', '\\|')} | #{status.gsub('|', '\\|')} |"
     end
     lines += ["", "Overall: **#{results.all? { |result| result['passed'] } ? 'PASS' : 'FAIL'}**", ""]
+    proposed = proposed_ids(spec)
+    unless proposed.empty?
+      lines += [
+        "Proposed nodes, not accepted by the canonical editor: #{proposed.join(', ')}. " \
+        "They are excluded from kernel-identity, node-existence, and dependency-path assertions " \
+        "and are still subject to field assertions.",
+        ""
+      ]
+    end
     lines.join("\n")
   end
 
   def render_review_checklist(spec)
-    kernel_ids = spec["nodes"].select { |node| node["kind"] == "kernel" }.map { |node| node["id"] }.sort
+    kernel_ids = accepted_kernel_ids(spec)
     policy = spec.dig("publication", "verification_policy")
     lines = [
       "# Rendering verification checklist",
@@ -463,6 +555,7 @@ module AIPacing
       "- [ ] Hypotheses remain uncertain and retain their falsifiers.",
       "- [ ] Implementation choices are not presented as necessary kernel claims.",
       "- [ ] Open questions are not silently answered.",
+      "- [ ] Proposed nodes (`author_status: proposed`) are not presented as accepted canon.",
       "- [ ] Criticism is judged for accurate targeting, not agreement with the specification.",
       "",
       "## Judgment",
@@ -471,6 +564,143 @@ module AIPacing
     policy["outcomes"].each { |outcome| lines << "- [ ] `#{outcome}`" }
     lines << ""
     lines.join("\n")
+  end
+
+  def load_registry(path = DEFAULT_REGISTRY)
+    YAML.safe_load(File.read(path), permitted_classes: [Date], aliases: false)
+  rescue Errno::ENOENT
+    raise ArgumentError, "missing reserved-ID registry #{path}"
+  rescue Psych::Exception => e
+    raise ArgumentError, "registry YAML parse error: #{e.message}"
+  end
+
+  def id_number(id)
+    id.to_s[1..].to_i
+  end
+
+  def editorial_headings(path = EDITORIAL_REFERENCE)
+    return {} unless File.exist?(path)
+
+    File.foreach(path).each_with_object({}) do |line, headings|
+      match = line.match(/^## ([KDIHQ]\d+) — (.+?)\s*$/)
+      headings[match[1]] = match[2] if match
+    end
+  end
+
+  # Enforces spec/id-registry.yaml: every YAML node ID is registered and unique
+  # across the YAML, the editorial reference, and reserved research/issue IDs.
+  def validate_registry(spec, registry, editorial_path = EDITORIAL_REFERENCE)
+    errors = []
+    return ["registry root must be a mapping"] unless registry.is_a?(Hash)
+
+    sources = registry["sources"]
+    entries = registry["ids"]
+    return ["registry missing sources"] unless sources.is_a?(Hash) && !sources.empty?
+    return ["registry missing ids"] unless entries.is_a?(Array)
+
+    entries.map { |entry| entry["id"] }.tally.select { |_id, count| count > 1 }.each_key do |id|
+      errors << "registry: duplicate entry #{id}"
+    end
+    by_id = entries.to_h { |entry| [entry["id"], entry] }
+
+    entries.each do |entry|
+      id = entry["id"].to_s
+      kind = entry["kind"]
+      prefix = KIND_PREFIXES[kind]
+      if prefix.nil?
+        errors << "registry: #{id} has unknown kind #{kind.inspect}"
+      elsif !id.match?(/\A#{prefix}[1-9]\d*\z/)
+        errors << "registry: #{id} does not use #{kind} prefix #{prefix}"
+      end
+      definitions = Array(entry["definitions"])
+      errors << "registry: #{id} has no definitions" if definitions.empty?
+      definitions.each do |definition|
+        source = definition["source"]
+        status = definition["status"]
+        if !sources.key?(source)
+          errors << "registry: #{id} cites undeclared source #{source.inspect}"
+        elsif !REGISTRY_STATUSES.fetch(source, %w[reserved]).include?(status)
+          errors << "registry: #{id} #{source} definition has invalid status #{status.inspect}"
+        end
+        errors << "registry: #{id} #{source} definition missing title" if blank?(definition["title"])
+      end
+      errors << "registry: #{id} defined twice by #{definitions.map { |d| d['source'] }.tally.select { |_s, c| c > 1 }.keys.join(', ')}" if definitions.map { |d| d["source"] }.uniq.length != definitions.length
+
+      collision = entry["collision"]
+      if !REGISTRY_COLLISIONS.include?(collision)
+        errors << "registry: #{id} has invalid collision #{collision.inspect}"
+      elsif definitions.length <= 1 && collision != "none"
+        errors << "registry: #{id} has one definition but collision #{collision}"
+      elsif definitions.length > 1 && collision == "none"
+        errors << "registry: #{id} has #{definitions.length} definitions; declare same-proposition, legacy, or reserved-conflict"
+      end
+      yaml_definition = definitions.find { |d| d["source"] == "yaml" }
+      if collision == "legacy" && !LEGACY_COLLISION_IDS.include?(id)
+        errors << "registry: #{id} cannot be a legacy collision; only the 2026-08-29 conformance gap is grandfathered"
+      end
+      if collision == "reserved-conflict" && yaml_definition
+        errors << "registry: #{id} is a reserved conflict and cannot be used in the YAML"
+      end
+      if collision == "legacy" && !yaml_definition
+        errors << "registry: legacy collision #{id} has no YAML definition"
+      end
+      if yaml_definition && yaml_definition["status"] == "proposed" && collision != "none" && collision != "same-proposition"
+        errors << "registry: proposed YAML node #{id} must not collide with another definition"
+      end
+    end
+
+    nodes = nodes_by_id(spec)
+    nodes.each_value do |node|
+      id = node["id"]
+      entry = by_id[id]
+      definition = entry && Array(entry["definitions"]).find { |d| d["source"] == "yaml" }
+      if definition.nil?
+        errors << "registry: YAML node #{id} is not registered with a yaml definition"
+        next
+      end
+      errors << "registry: #{id} kind #{entry['kind']} differs from YAML kind #{node['kind']}" if entry["kind"] != node["kind"]
+      errors << "registry: #{id} yaml title differs from YAML node title" if definition["title"] != node["title"]
+      expected = proposed?(node) ? "proposed" : "accepted"
+      errors << "registry: #{id} yaml status #{definition['status']} differs from YAML (#{expected})" if definition["status"] != expected
+    end
+    entries.each do |entry|
+      next unless Array(entry["definitions"]).any? { |d| d["source"] == "yaml" }
+
+      errors << "registry: #{entry['id']} has a yaml definition but no YAML node" unless nodes.key?(entry["id"])
+    end
+
+    editorial_headings(editorial_path).each do |id, title|
+      definition = by_id[id] && Array(by_id[id]["definitions"]).find { |d| d["source"] == "editorial" }
+      if definition.nil?
+        errors << "registry: editorial reference ID #{id} is not registered"
+      elsif definition["title"] != title
+        errors << "registry: #{id} editorial title differs from the editorial reference"
+      end
+    end
+
+    local_ids = Array(registry["local_namespaces"]).flat_map { |namespace| Array(namespace["ids"]) }
+    next_free = registry["next_free"] || {}
+    KIND_PREFIXES.each do |kind, prefix|
+      candidate = next_free[prefix]
+      if candidate.nil? || !candidate.to_s.match?(/\A#{prefix}[1-9]\d*\z/)
+        errors << "registry: next_free #{prefix} missing or malformed"
+        next
+      end
+      used = entries.select { |entry| entry["kind"] == kind }.map { |entry| id_number(entry["id"]) }
+      used += local_ids.select { |id| id.to_s.start_with?(prefix) }.map { |id| id_number(id) }
+      if used.any? && id_number(candidate) <= used.max
+        errors << "registry: next_free #{candidate} is not above every used or reserved #{prefix} ID"
+      end
+    end
+
+    Array(registry["renumbering"]).each do |mapping|
+      errors << "registry: renumbering #{mapping['old']} cites undeclared source #{mapping['source'].inspect}" unless sources.key?(mapping["source"])
+      errors << "registry: renumbering target #{mapping['new']} is not registered" unless by_id.key?(mapping["new"])
+      if mapping["old"].to_s[0] != mapping["new"].to_s[0]
+        errors << "registry: renumbering #{mapping['old']} -> #{mapping['new']} changes kind"
+      end
+    end
+    errors
   end
 
   def write_views(spec)
@@ -558,6 +788,11 @@ if $PROGRAM_NAME == __FILE__
     puts ([node_id] + AIPacing.transitive_impact(spec, node_id)).join("\n")
   when "check"
     errors = AIPacing.validate(spec)
+    begin
+      errors += AIPacing.validate_registry(spec, AIPacing.load_registry)
+    rescue ArgumentError => e
+      errors << e.message
+    end
     results = errors.empty? ? AIPacing.evaluate_acceptance(spec) : []
     stale = errors.empty? ? AIPacing.stale_views(spec) : []
     errors.each { |error| warn "FAIL #{error}" }
@@ -567,14 +802,22 @@ if $PROGRAM_NAME == __FILE__
     stale.each { |failure| warn "FAIL #{failure}" }
     if errors.empty? && results.all? { |result| result["passed"] } && stale.empty?
       puts "PASS structural validation"
+      puts "PASS reserved-ID registry"
       puts "PASS #{results.length} semantic acceptance tests"
       puts "PASS #{AIPacing.render_views(spec).length} deterministic views are current"
       puts "Semantic SHA-256 #{AIPacing.semantic_digest(spec)}"
     else
       exit 1
     end
+  when "next-id"
+    prefix = ARGV.shift.to_s.upcase
+    unless AIPacing::KIND_PREFIXES.value?(prefix)
+      warn "usage: ruby tools/spec_tool.rb next-id K|D|H|I|Q"
+      exit 2
+    end
+    puts AIPacing.load_registry.fetch("next_free").fetch(prefix)
   else
-    warn "usage: ruby tools/spec_tool.rb [validate|accept|generate|digest|impact NODE|check] [spec.yaml]"
+    warn "usage: ruby tools/spec_tool.rb [validate|accept|generate|digest|impact NODE|next-id PREFIX|check] [spec.yaml]"
     exit 2
   end
 end
