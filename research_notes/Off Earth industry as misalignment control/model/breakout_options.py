@@ -25,6 +25,7 @@ import numpy as np
 
 import equilibrium_model as em
 import robust_design as rd
+import run_identity as ri
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 RES = os.path.join(HERE, "results")
@@ -81,9 +82,11 @@ def _solve(args):
 
 def run_ens(box, thetas, design, opts, pool, tag, cache=True, path_dir=RUNS):
     path = os.path.join(path_dir, f"{box}__{tag}.npz")
-    if cache and os.path.exists(path):
-        z = np.load(path)
-        return {k: z[k] for k in z.files}
+    want = ri.request("breakout", box, thetas, design, CFG, opts) if cache else None
+    if cache:
+        hit = ri.load_cached(path, want)    # raises IdentityError if the cache was made by another run
+        if hit is not None:
+            return hit
     params = [dict(rd.apply_design(t, design), **opts) for t in thetas]
     groups = rd.batches_for(thetas)
     t0 = time.time()
@@ -94,7 +97,7 @@ def run_ens(box, thetas, design, opts, pool, tag, cache=True, path_dir=RUNS):
         for k in out:
             out[k][g] = r[k]
     if cache:
-        np.savez(path, **out)
+        ri.save_cached(path, out, want, produced=dict(by="breakout_options.run_ens", batches=len(groups)))
     print(f"  {box} {tag}: {len(thetas)} draws in {time.time() - t0:.0f} s; holds {holds(out).sum()}", flush=True)
     return out
 
@@ -149,7 +152,7 @@ def checks(pool):
     rows = []
     for box, des, ck in (("r0.1", "base", "base"), ("r0.1", "best", "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1"),
                          ("full", "base", "base"), ("full", "best", "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1")):
-        c = dict(np.load(os.path.join(rd.RUNS, f"{box}__{ck}.npz")))
+        c = ri.load_for_read(os.path.join(rd.RUNS, f"{box}__{ck}.npz"))
         for nm, op in (("defaults", {}), ("tracking on", TRACK)):
             r = run_ens(box, bx[box], DESIGNS[des], op, pool, f"chk_{des}_{nm}", cache=False)
             d = max(float(np.nanmax(np.abs(c[k] - r[k]))) for k in rd.KEEP if k in c)
@@ -163,7 +166,7 @@ def checks(pool):
     dg = os.path.join(HERE, "diagnostics", "out")
     for box, des, stem, extra in (("r0.1", "base", "r0.1_base_kp0", dict(kill_pre=0.0)), ("r0.1", "best", "r0.1_best_kp0", dict(kill_pre=0.0)),
                                   ("full", "base", "full_base", {}), ("full", "best", "full_best", {})):
-        ref = dict(np.load(os.path.join(dg, f"{stem}_nr1.npz")))
+        ref = ri.load_for_read(os.path.join(dg, f"{stem}_nr1.npz"))
         for nm, op in (("k_rat 1e-12", dict(noretry=1.0, k_rat=1e-12)), ("k_rat 0", dict(noretry=1.0))):
             if box == "full" and nm == "k_rat 0":
                 continue
@@ -350,7 +353,7 @@ def report():
                 p = os.path.join(RUNS, f"{box}__{des}__{name}.npz")
                 if not os.path.exists(p):
                     continue
-                r = dict(np.load(p))
+                r = ri.load_for_read(p)
                 s = summarise(r)
                 summ[f"{box}/{des}/{name}"] = s
                 rows.append([name, des, f"{s['holds']}/{s['n']}", s["holds_rival"], s["strike_now"] + s["dis_now"],
@@ -369,12 +372,12 @@ def report():
             p0 = os.path.join(RUNS, f"{box}__{des}__off.npz")
             if not os.path.exists(p0):
                 continue
-            r0 = dict(np.load(p0))
+            r0 = ri.load_for_read(p0)
             for name in CONFIGS:
                 p = os.path.join(RUNS, f"{box}__{des}__{name}.npz")
                 if name == "off" or not os.path.exists(p):
                     continue
-                r = dict(np.load(p))
+                r = ri.load_for_read(p)
                 rows.append([name, des, int(np.sum(holds(r) & ~holds(r0))), int(np.sum(holds(r0) & ~holds(r))),
                              int(np.sum(holds_rival(r) & ~holds_rival(r0))), int(np.sum(holds_rival(r0) & ~holds_rival(r))),
                              f"{np.mean(r['suc'] - r0['suc']):+.3f}", f"{np.mean(r['WH'] - r0['WH']):+.3f}"])

@@ -40,6 +40,7 @@ CONTRACT_UNITS = {
     'date a threshold on the effective-compute scale is crossed': 'yr',
     'eFLOP (software-adjusted, S(0) = 1)': 'FLOP', 'real USD per year': 'USD/yr',
     'Earth-industry units (EIU, a stock; H = 1)': 'EIU', 'per year': '1/yr',
+    'fraction of coding tasks, 0 to 1': '1', 'SDs of the human researcher taste distribution': '1',
 }
 # Quantity kinds that the stock/flow rule applies to (issue #39). Other kinds (rate, state, share, ...) are not checked.
 STOCK_FLOW = ('stock', 'flow')
@@ -466,6 +467,11 @@ def check_stock_flow(q, c, e, modes, units, qty, dims, normalized):
     for d in normalized:
         if d not in defined:
             errors.append(f'normalized dimension {d} has no definition; a normalized unit is defined once (#39)')
+    # #61: every contract quantity booked to an accounting quantity declares its kind, linked here or not
+    for ad_id, quants in adapters.items():
+        for name, found in quants.items():
+            if 'accounting' in found and 'kind' not in found:
+                errors.append(f'{ad_id}: contract quantity {name!r} is booked to {found["accounting"]} but declares no kind (#61)')
     # stocks and flows
     for x in q['quantities']:
         ident, kind, d = x['id'], x['kind'], dims.get(x['id'])
@@ -483,7 +489,12 @@ def check_stock_flow(q, c, e, modes, units, qty, dims, normalized):
         found = adapters.get(aq['adapter'], {}).get(aq['name']) if aq else None
         if found is None:
             continue
-        if kind in STOCK_FLOW and acc_kind.get(found.get('accounting')) in STOCK_FLOW and found.get('kind') != kind:
+        if found.get('kind') == 'ambiguous':
+            # #61: the contract records the source as ambiguous; the dictionary may pick a candidate, never another kind.
+            if kind in STOCK_FLOW and kind not in found.get('kind_ambiguity', {}).get('candidates', []):
+                errors.append(f'{ident}: the contract quantity {aq["adapter"]} {aq["name"]!r} is ambiguous between '
+                              f'{found.get("kind_ambiguity", {}).get("candidates")}, not {kind}')
+        elif kind in STOCK_FLOW and acc_kind.get(found.get('accounting')) in STOCK_FLOW and found.get('kind') != kind:
             errors.append(f'{ident}: the contract quantity {aq["adapter"]} {aq["name"]!r} must declare kind {kind} '
                           f'(it declares {found.get("kind")})')
         rate = found.get('output_rate')

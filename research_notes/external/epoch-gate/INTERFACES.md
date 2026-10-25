@@ -10,14 +10,14 @@ marked as such.
 | quantity | GATE unit | GATE ledger | contract accounting quantity | conversion and caveats |
 |---|---|---|---|---|
 | Physical compute stock Q (`compute`) | FLOP/year (stock of capacity) | aggregate (planner) | `compute_training` + `compute_inference` (shared stock) | Contract uses FLOP/s: divide by 3.156e7 s/year. Q is *not* capped at C_L; only usable compute g(Q) is (E19). |
-| Training compute D (`training_compute`) | solver-native per step; the paper says eFLOP | aggregate | `compute_training` | Ratio of D + runtime to Q unresolved (E7); do not convert until it is. |
-| Runtime compute (`runtime_compute`) | as D | aggregate | `compute_inference` | as D. |
+| Training compute D (`training_compute`) | solver-native per step; the paper says eFLOP | aggregate | `compute_training` (kind recorded `ambiguous`, contract 0.4.0) | Ratio of D + runtime to Q unresolved (E7); do not convert until it is. |
+| Runtime compute (`runtime_compute`) | as D | aggregate | `compute_inference` (`ambiguous`) | as D. |
 | Largest training run C_T (`best_training_run`) | eFLOP, software-adjusted with S(start of 2025) = 1 | aggregate | `capability` (state) | eFLOP depends on GATE's own S(t); not comparable to another model's effective compute without re-basing (below). `physical_best_training_run` is FLOP. |
 | Task coverage f (`frac_automated`) | fraction of a unit task continuum | aggregate | `capability` | Planner's deployed share, below the frontier until f = 1 (E9). Not an `rd_capability` level. |
-| Digital workers N_i | human-worker equivalents per task | aggregate | `agent_labor` (derived from `compute_inference`) | Never take both N and runtime compute as inputs to another model. |
-| Hardware efficiency H | FLOP/year per USD | aggregate | `research_output` | |
-| Software efficiency S | eFLOP/FLOP | aggregate | `research_output` | |
-| Human labor L | workers (not hours) | aggregate | `human_labor` (person-hours/year) | Multiply by hours per worker-year; GATE has no hours. Exogenous growth g_L = 0.25%/yr. |
+| Digital workers N_i | human-worker equivalents per task | aggregate | `agent_workforce` (a stock, derived from `compute_inference`; #61) | Never take both N and runtime compute as inputs to another model. `agent_labor` (hours/year) needs hours per worker-year, which GATE does not give. |
+| Hardware efficiency H | FLOP/year per USD | aggregate | `efficiency_level` (a stock, derived from `research_output`; #61) | A level, not research output. |
+| Software efficiency S | eFLOP/FLOP | aggregate | `efficiency_level` (#61) | A level, not research output. |
+| Human labor L | workers (not hours) | aggregate | `human_workforce` (a stock; #61) | `human_labor` (person-hours/year) needs hours per worker-year; GATE has no hours. Exogenous growth g_L = 0.25%/yr. |
 | Output Y, consumption, investment flows | real USD/year (price base not stated beyond "real USD") | aggregate | `industrial_output` | Not the pact solver's Earth-industry units. Readable in EIU/yr through units-bridge `CV-GWP-TO-EIU-OUTPUT` (measured, uncoupled; #39). |
 | Capital K | real USD | aggregate | none | Non-compute capital; no contract quantity. |
 | Physical resources | non-accumulable factor F with elasticity mu (default 0); heat limit C_L = 2e38 FLOP/year | aggregate | none | Energy and land enter only through mu and C_L. No chips, fabs or power as separate stocks (fab scale-up is reported as `chip_fabrication_scale_up`, a ratio). |

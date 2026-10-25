@@ -10,6 +10,7 @@ import hashlib
 import json
 import math
 import pathlib
+import subprocess
 import sys
 import unittest
 
@@ -21,6 +22,7 @@ sys.path.insert(0, str(HERE))
 import holdout as H  # noqa: E402
 import horizon_fit as hf  # noqa: E402
 import lock_forecast as LF  # noqa: E402
+import permodel as PM  # noqa: E402
 
 ROOT = HERE.parents[2]
 OBS = list(csv.DictReader((HERE / "data/observations.csv").open(encoding="utf-8")))
@@ -183,6 +185,74 @@ class LockedForecast(unittest.TestCase):
             self.assertEqual(f["label"], "locked")
             self.assertRegex(f["lock_commit"], r"^[0-9a-f]{40}$")
             self.assertIsNone(f["resolution"])
+
+
+class PerModel(unittest.TestCase):
+    """#56: the per-model holdout and its pre-declared B-COMPUTE."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rows = H.load_observations()
+        cls.res = PM.compute_all()
+
+    def test_protocol_is_the_declared_version(self):
+        self.assertEqual(hashlib.sha256(PM.PROTOCOL.read_bytes()).hexdigest(), PM.PROTOCOL_SHA256)
+
+    def test_protocol_was_committed_before_the_scoring_code(self):
+        def git(*a):
+            return subprocess.run(["git", "-C", str(ROOT), *a], capture_output=True, text=True)
+        if git("cat-file", "-e", f"{PM.DECLARED_COMMIT}^{{commit}}").returncode != 0:
+            self.skipTest("declaration commit not in this clone (shallow or squashed); the sha256 check still applies")
+        rel = PM.PROTOCOL.relative_to(ROOT).as_posix()
+        self.assertEqual(git("show", f"{PM.DECLARED_COMMIT}:{rel}").stdout.encode(), PM.PROTOCOL.read_bytes())
+        for later in ("permodel.py", "results/permodel.json"):
+            path = (HERE / later).relative_to(ROOT).as_posix()
+            self.assertNotEqual(git("cat-file", "-e", f"{PM.DECLARED_COMMIT}:{path}").returncode, 0, later)
+
+    def test_information_sets_exclude_target_and_later_values(self):
+        for f in self.res["forecasts"]:
+            c = dt.date.fromisoformat(f["cutoff"])
+            srows = PM.suite_rows(self.rows, f["suite"], False)
+            info = PM.information_set(srows, c, f["model_key"], "V-FIRST")
+            self.assertNotIn(f["model_key"], info)
+            self.assertTrue(all(r["_avail"] <= c for r in info.values()))
+            self.assertEqual(f["by_resolution"]["V-FIRST"]["B-FLAT"]["point"], max(r[f["metric"]] for r in info.values()))
+            self.assertTrue(all(i in {r["record_id"] for r in srows if r["_avail"] <= c} for i in f["inputs"]))
+
+    def test_targets_follow_the_declared_rule(self):
+        got = {(f["suite"], f["model_key"]) for f in self.res["forecasts"]}
+        self.assertEqual(len([g for g in got if g[0] == "TH1.0"]), 15)
+        self.assertEqual({k for s, k in got if s == "TH1.1"},
+                         {"claude_opus_4_6_inspect", "gpt_5_3_codex", "gemini_3_1_pro", "gpt_5_4",
+                          "claude_mythos_preview_early_inspect"})
+        self.assertEqual(self.res["skipped"], [])
+
+    def test_compute_baseline_definition(self):
+        info = {"a": {"p50_min": 10.0, "_rel": dt.date(2025, 1, 1)}, "b": {"p50_min": 20.0, "_rel": dt.date(2025, 7, 1)}}
+        self.assertAlmostEqual(PM.compute(info, "p50_min", dt.date(2025, 7, 1), 4.2)["point"], 20.0)
+        one_year = PM.compute(info, "p50_min", dt.date(2025, 7, 1) + dt.timedelta(days=365.25), 4.2)["point"]
+        self.assertAlmostEqual(one_year, 20.0 * 4.2 ** (365 / 365.25))
+        self.assertEqual(float(PM.load_protocol()["baselines"]["B-COMPUTE"]["g"]), 4.2)
+
+    def test_committed_results_reproduce(self):
+        self.assertTrue(H.close(json.loads((HERE / "results/permodel.json").read_text()), self.res))
+        self.assertEqual((HERE / "results/permodel.md").read_text(), PM.to_markdown(self.res))
+
+    def test_declared_verdicts_are_preserved(self):
+        self.assertEqual(self.res["verdict"]["B-COMPUTE"], "not established")
+        self.assertEqual(self.res["verdict"]["B-LOGLINEAR vs B-FLAT"], "not established")
+
+    def test_registry_matches(self):
+        reg = {f["id"]: f for f in H.ET.load_yaml(ROOT / "evidence/protocol.yaml")["forecasts"] if f["id"].startswith("FC-METR-PM-")}
+        want = {}
+        for f in self.res["forecasts"]:
+            want[f"FC-METR-PM-{f['suite'].replace('.', '')}-{f['model_key'].upper().replace('_', '-')}"] = f
+        self.assertEqual(set(reg), set(want))
+        for k, f in want.items():
+            self.assertEqual(reg[k]["information_cutoff"], f["cutoff"])
+            self.assertEqual(reg[k]["inputs"], f["inputs"] + [PM.COMPUTE_RECORD])
+            self.assertEqual(reg[k]["resolution"]["record"], f["resolution_record"])
+            self.assertIn("B-COMPUTE", reg[k]["baselines"])
 
 
 if __name__ == "__main__":
