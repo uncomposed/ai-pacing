@@ -106,6 +106,9 @@ def main():
                      a["solver"]] for a in agree[::2]],
                    ["q", "R4 (Clark, per yr)", "solver S - C (per yr, comply region)", "solver act0"]))
     print("wrote", save("clark", out))
+    if not all(a["ok"] for a in agree):
+        raise SystemExit(f"clark dock FAILED: solver and ledger disagree in sign at q = "
+                         f"{[a['q'] for a in agree if not a['ok']]}")
 
 
 if __name__ == "__main__":

@@ -1018,6 +1018,36 @@ records:
     intended_use: ["marking AIFM outputs as non-independent of Epoch data"]
     not_for: ["empirical support until read in primary form"]
 
+  # Units bridge recheck (issue #42): AIFM's own unit conventions and the beliefs that stand where the units bridge
+  # would need a measured link from coding speed to research output.
+  - id: EV-UNITS-AIFM-CONVENTIONS
+    kind: source_model_assumption
+    title: "AI Futures Model unit conventions and default beliefs on coding uplift and software progress"
+    source:
+      citation: "AI Futures Project, AI Futures Model (aifm-public), progress_model/config.py and progress_model/_impl.py"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09), fetched with research_notes/external/ai-futures-model/fetch_upstream.sh on 2026-10-25"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-09-09"
+    availability_basis: "Commit date of the public release; earlier history is not public."
+    units: "H100e (FLOP/s); OOMs of effective FLOP per physical FLOP; OOM per year; serial coding uplift (ratio); months"
+    population: "default parameters of one source model; no observed system"
+    protocol: "read from the code at the pinned commit"
+    extraction:
+      method: quoted
+      locator: "config.py:113-115 (TRAINING_COMPUTE_REFERENCE_YEAR = 2025.13, 'Normalize 0 software efficiency to Grok 3'); config.py:111 (SOFTWARE_PROGRESS_SCALE_REFERENCE_YEAR = 2024.0); config.py:122 (FLOP_PER_H100E_YEAR = 0.4e15 * 3.15576e7, 'H100 nameplate 1e15 FLOP/s * 0.4 utilization'); config.py:248 (software_progress_rate_at_reference_year = 1); config.py:299-301 (serial_uplift_at_reference_date = 2.0, 'Daniel Q2: sqrt(0.25 * 4) + 1'; excess_uplift_doubling_time = 5.0 months; uplift_reference_date = 2026.578082); config.py:335 (parallel_penalty = 0.5); _impl.py:1835-1837 (software_efficiency and effective_compute shifted so SE = 0 at the reference year)"
+      by: "issue #42 session"
+      date: "2026-10-25"
+      note: "The serial uplift is an elicited belief (a geometric mean of an elicited range), not read from an uplift study. The 1 OOM/yr software progress rate at 2024 is described in #14's MECHANISMS.md as literature-based; the code cites no source."
+    uncertainty:
+      kind: unquantified
+      description: "Judgment values; the sampling configs carry 80% ranges for the elicited ones (serial uplift: 1 plus a lognormal with 80% range 0.25 to 4, i.e. 1.25 to 5; config/sampling_config_q2_daniel.yaml:45-50). Unit conventions (H100e utilization 0.4) are not measurements."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["units of AIFM quantities in the units bridge (#42)", "stating why the coding-speed-to-research-output link is not identified"]
+    not_for: ["empirical support for any uplift, software progress rate or utilization", "a conversion from METR time horizons or developer-productivity ratios to research output"]
+
   # Units bridge (issue #39): the measured scale of the Earth-industry unit's output rate.
   - id: EV-WB-WDI-GDP-2026
     kind: observation

@@ -296,6 +296,20 @@ None is relabelled as verified. Each legacy entry records the identity its reque
 
 **Consequence.** Reusing legacy caches for *solving* now needs Python 3.12 and numpy 1.26.4 (the pinned CI environment). Elsewhere `run_design` refuses them and asks for a re-solve into another `--runs-dir`. Reading them for reports works anywhere and prints a count of legacy files read.
 
+## 8c. Gates by evidence category (issue #7, 2026-10-25)
+
+[[ai gen]] Status: `implemented`; `verified` locally in the pinned venv and by `tests/test_gates.py`. Nothing `human_validated`. Full description and the recommended required checks: `docs/ci-gates.md` at the repo root.
+
+- `model_gates.py numerics | software | replication | empirical | report`: one command and one status per category. Empirical is always `not_established`.
+- **Numerics, independent of golden files.** `robust_design.py --check` exits 1 if `reg_maxdiff` or either identity difference exceeds `CHECK_TOL` (1e-9), or if a closed-form invariant breaks. The invariants:
+  - the closed form and the solver agree on strike or no strike;
+  - the closed form's first strike year is never later than the solver's mean year + 0.5, because the closed form omits the failed-strike branch, which only delays strikes;
+  - the q_ea threshold lies between the solver's last safe value and its first strike.
+- **Drift is still reported.** `compare-checks` compares every other number with the committed copy. `tests/test_gates.py` regenerates the reference to match a broken invariant and shows the golden comparison then passes while the invariant gate fails.
+- **Replication** (`docking/replication.py`). Saklakov: Table 1 values and opening moves, the C\* and γ\* switch points at ±1e-6 relative, and no mixed fallback. Clark: the R4 = `cap_gap_fail` identity in 6 worlds, the S > d corollary, the corollary threshold equal to `q_star_cap(fail=False)` within 4 rounding units, and solver sign agreement 21/21. All expectations are pinned in the file with their tolerances, justifications and declared omissions. Nothing is read from `docking/out/`. `--self-test` breaks `cap_strike_gap` by 1% and must fail.
+- **Slow suite.** `.github/workflows/docking.yml` (manual or weekly) runs all five docking scripts. `saklakov.py` and `clark.py` now exit 1 on a failed dock. Powell, Potapov and Metzger are labelled comparisons, not replications.
+- **Not done.** Convergence in nA, T_H and ensemble size is not gated. The breakout checks (`breakout_options.py --check`) print errors without thresholds and run in no workflow.
+
 ## 9. Assumption register and breakout results (2026-10-21 evening)
 
 [[ai gen]] Status: `implemented`; the register check is `verified` by its own tests; nothing `human_validated`.
