@@ -161,11 +161,28 @@ used as a check). Results (`results/coupling_toy.md`):
   software efficiency each have a single owning model when GATE and AI Futures are coupled. The
   dictionary keeps both eFLOP quantities relative to their own base (`QTY-EFFECTIVE-COMPUTE` note).
 
+- **F6. World primary energy: the secondary cross-check disagrees with the lower bound (#40).** The Energy
+  Institute Review was not reachable. Our World in Data's republication of the 2026 edition gives 579.2 EJ
+  (18.35 TW) for 2023 and 592.2 EJ (18.77 TW) for 2024; the latter matches the 592 EJ taken from the 2025
+  edition, the former is 7% below the 620 EJ of the 2024 edition (older method) that sets the upper end of
+  `CV-EIU-TO-PRIMARY-POWER` (1.97e13 W) and 2023 under the new method is below its lower bound (1.88e13 W).
+  Bounds not edited: the factor is a method-dependent scale, and the new-method 2024 to 2025 range is 18.8
+  to 19.0 TW. `evidence: observed_secondary` stays.
+- **F7. GATE's price base is current dollars (#40).** The paper's Y(0) row says 'real USD/year' and names no
+  base year; the default 110 trillion is World Bank GDP (current US$) for 2023 (about 106 trillion) grown by
+  about 3% a year to 2024. So the bounds' constant-2015 end is not supported by GATE's own anchor, and the
+  deflator of GATE's later 'real USD' path remains unstated. Bounds not edited.
+- **F8. Metzger's abstract against Fig. 2 (#40).** The abstract's 40,000 t and 100,000 robots are not Fig. 2's
+  nominal max case (23,100 t); they match the sensitivity figures (Fig. 11: 38,700 to 47,400 t and up to
+  103,000 robonauts across printer speeds; Fig. 13 fast robonauts about 45,000 t). Residual: Fig. 11's 0.5
+  kg/h case is about 39,000 t while Fig. 2's nominal 0.5 kg/h case is 23,100 t; the manuscript does not say why
+  (Fig. 9 holds production at 6 t per generation and lets generation length vary). See `metzger/RECHECK.md`.
+
 ## Not done in this milestone
 
-- World energy is still read from secondary summaries. World GDP is read in primary form (#39), but only
+- World energy is still not read in primary form (#40: the Energy Institute site returned HTTP 403; a secondary cross-check from the 2026 edition via Our World in Data is recorded and does not agree with the older-method 2023 figure, see Findings F6). World GDP is read in primary form (#39), but only
   as a scale at the reference year; no projected path is converted to capacity.
-- No version of record of Metzger et al. was compared (publisher page blocked).
+- No version of record of Metzger et al. was compared beyond its abstract (publisher page blocked again in #40); the issue is resolved to 26(1) from Crossref pagination, not from the publisher.
 - The toy is not run through the pact solver, and its bottleneck parameters are not tied to physical
   data (e.g. radiator mass, launch cadence in `physics_economics.md`).
 - The AI Futures adapter (`AD-AIFM`) was rewritten from code by #14, and its `QTY-AIFM-*` references
