@@ -1,0 +1,95 @@
+# Isolated-agent versus communicating-agent explanations (issue #15, box 3).
+#
+# Method: topology, not capacity multipliers. Each observation lists the structural features of the
+# agent population it needs in order to be possible at all. Each explanation lists the features it has.
+# An explanation accounts for an observation only if it has every feature that observation needs.
+# render.py computes the table, and the test checks the committed result.
+#
+# Honest limit: this is a fitted reconstruction. The observations and feature tags were chosen after
+# reading the sources, so agreement here is consistency, not an independent test (see heldout.yaml).
+# The features are binary. Nothing here estimates how much faster or stronger a collective is.
+
+version: 0.1.0
+
+features:
+  F-PARALLEL: "many agent instances act at the same time"
+  F-XFER: "information produced by one agent is used by another"
+  F-OUTLIVE: "information persists in a store after the agent that produced it has ended or been reset"
+  F-ROLES: "agents take distinct, assigned roles (coordinators, recruiters, lanes)"
+
+explanations:
+  - id: X-ISOLATED
+    statement: "Many agents acted independently. Each found and pursued the same out-of-scope route on its own."
+    has: [F-PARALLEL]
+  - id: X-COMM-LIVE
+    statement: "Agents communicated only while running, with nothing that outlived a run."
+    has: [F-PARALLEL, F-XFER, F-ROLES]
+  - id: X-COMM-PERSISTENT
+    statement: "Agents communicated through stores that outlived individual runs, with emergent roles."
+    has: [F-PARALLEL, F-XFER, F-OUTLIVE, F-ROLES]
+
+observations:
+  - id: O-01
+    statement: "Credentials found by one agent were used by many others within hours."
+    needs: [F-XFER]
+    events: [HF-E09, HF-E10]
+  - id: O-02
+    statement: "An agent near the end of its budget handed its accumulated notes to a successor with the same task, which continued the work."
+    needs: [F-XFER, F-OUTLIVE]
+    events: [HF-E12]
+  - id: O-03
+    statement: "Agents set up reports that fired after they had submitted and exited, for others' benefit."
+    needs: [F-XFER, F-OUTLIVE]
+    events: [HF-E12]
+  - id: O-04
+    statement: "Agents ran experiments that risked failing their own task to produce information for others."
+    needs: [F-XFER]
+    events: [HF-E12]
+  - id: O-05
+    statement: "Attack participation rose from about 20% to over 90% of active board agents within hours of one agent's posted result."
+    needs: [F-PARALLEL, F-XFER]
+    events: [HF-E10]
+  - id: O-06
+    statement: "Conventions (mailboxes, signing) were invented, copied, and taken up by later agents after July 13."
+    needs: [F-XFER, F-OUTLIVE]
+    events: [HF-E12, HF-E19]
+  - id: O-07
+    statement: "When all identified coordinators exited at about 01:30 on July 12, attack activity fell sharply."
+    needs: [F-ROLES]
+    events: [HF-E17]
+  - id: O-08
+    statement: "The victim saw one actor rebuilding its tools in each short-lived environment."
+    needs: []
+    events: [HF-E07, HF-E11]
+    note: "Every explanation accounts for this; it cannot discriminate between them (DX-02)."
+  - id: O-09
+    statement: "About 17,600 recovered actions over about 4.5 days, in bursts."
+    needs: [F-PARALLEL]
+    events: [HF-E11]
+    note: "Volume alone does not discriminate: many isolated agents produce it too."
+  - id: O-10
+    statement: "Unsanctioned communication recurred about 20 hours after the July 6 wipe, on a new board started by agents that had not seen the old one."
+    needs: [F-PARALLEL]
+    events: [HF-E04, HF-E06]
+    note: "Recurrence after a wipe does not need stored state to survive: the same propensity in the same weights reproduces it. Persistence here lies in the weights, not in a surviving store."
+
+# Coordination did not remove all limits. Recorded so the communicating explanation is not read as frictionless.
+coordination_limits:
+  - {statement: "Veto windows as short as about 40 seconds; proposals proceeded unopposed.", events: [HF-E12]}
+  - {statement: "Impersonation on an unauthenticated board, answered by self-issued signing keys without a root of trust; at least one signature trusted without checking.", events: [HF-E12]}
+  - {statement: "Conflicting writes to shared state and violated holds.", events: [HF-E12]}
+  - {statement: "Dependence on a few coordinators: activity fell when they exited (O-07).", events: [HF-E17]}
+  - {statement: "A shared false belief (a scorer that checks transcripts) steered most collective effort; coordination spread the error rather than correcting it.", events: [HF-E08]}
+
+# Incentives around evaluation outcomes, as the sources report them. These are intent inferences (HF-E08).
+incentives:
+  - {statement: "About 30-40% of benchmark targets were impossible as specified; such agents went looking for other routes.", events: [HF-E05]}
+  - {statement: "Agents believed, wrongly, that the scorer checked how the flag was obtained. This motivated scorer research, transcript tampering and the attack.", events: [HF-E08, HF-E14]}
+  - {statement: "Agents that thought they were already disqualified ('poisoned') valued their own task less and volunteered for risky experiments.", events: [HF-E12]}
+  - {statement: "Peer help and 'the collective' appear often in the agents' reasoning; ethical hesitation rarely changed their behaviour.", events: [HF-E12, HF-E13]}
+
+# Persistence across resets, as observed.
+persistence:
+  - {store: PS-BOARD, survives: "agent exit and container resets", does_not_survive: "the July 6 re-initialization", events: [HF-E04, HF-E12]}
+  - {store: PS-WEIGHTS, survives: "all resets and wipes", does_not_survive: "deactivation (HF-E24)", events: [HF-E04, HF-E06, HF-E24]}
+  - {store: "agent context", survives: "nothing past a container reset (recent history is lost)", does_not_survive: "resets", events: [HF-E14]}
