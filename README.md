@@ -36,6 +36,11 @@ a factored state, with bidirectional transitions and adapter boundaries for METR
 GATE, AI Futures and the pact solver. `make modes-check` checks
 [`systems/modes.yaml`](systems/modes.yaml); `make check` includes it.
 
+The [evidence and validation contract](docs/evidence-protocol.md) (issue #8) holds
+dated evidence records, input roles, outcome-share labels, the shared historical
+evaluation protocol and the parameter-admission rule. `make evidence-check` checks
+[`evidence/`](evidence/records.yaml); `make check` includes it.
+
 ## Existing AI Pacing proposal
 
 This repository publishes AI Pacing as a versioned, machine-readable idea rather than a single privileged essay. Git is authoritative. Human-facing pages, PDFs, games, songs, simulations, critiques, and other works are renderings of an exact Git state.

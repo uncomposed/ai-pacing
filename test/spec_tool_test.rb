@@ -173,6 +173,16 @@ class SpecToolTest < Minitest::Test
                  %w[H7 D7 I8 Q6 D8 Q7].map { |old| mapping[["issue_3", old]] }
   end
 
+  def test_registry_renumbers_off_earth_candidates_and_prefixes_local_ids
+    mapping = registry["renumbering"].to_h { |row| [[row["source"], row["old"]], row["new"]] }
+    assert_equal %w[D20 D21 Q14 Q15 Q16],
+                 %w[D7 D8 Q6 Q7 Q8].map { |old| mapping[["off_earth_report", old]] }
+    assert registry["ids"].none? { |item| item["collision"] == "reserved-conflict" }
+    registry["local_namespaces"].each do |namespace|
+      assert namespace["ids"].all? { |id| id.start_with?(namespace["prefix"]) }, namespace["locator"]
+    end
+  end
+
   def test_unregistered_yaml_node_is_rejected
     mutated = copy_spec
     mutated["nodes"] << proposed_node("Q14", "open_question", "relates_to" => ["K1"])
@@ -184,6 +194,7 @@ class SpecToolTest < Minitest::Test
     mutated["nodes"] << proposed_node("D7", "derived", "derived_from" => ["K1"])
     changed = registry
     entry = changed["ids"].find { |item| item["id"] == "D7" }
+    entry["collision"] = "reserved-conflict"
     entry["definitions"] << {"source" => "yaml", "title" => "Mutation D7", "status" => "proposed"}
     errors = AIPacing.validate_registry(mutated, changed)
     assert_includes errors, "registry: D7 is a reserved conflict and cannot be used in the YAML"

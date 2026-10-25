@@ -29,8 +29,9 @@
         "properties": {
           "locator": {"type": "string"},
           "field": {"type": "string"},
+          "prefix": {"type": "string", "pattern": "^[A-Z]+-$"},
           "meaning": {"type": "string"},
-          "ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}
+          "ids": {"type": "array", "items": {"$ref": "#/$defs/local_id"}}
         }
       }
     },
@@ -90,6 +91,7 @@
     }
   },
   "$defs": {
-    "id": {"type": "string", "pattern": "^[KDHIQ][1-9][0-9]*$"}
+    "id": {"type": "string", "pattern": "^[KDHIQ][1-9][0-9]*$"},
+    "local_id": {"type": "string", "pattern": "^[A-Z]+-[KDHIQ][1-9][0-9]*$"}
   }
 }
