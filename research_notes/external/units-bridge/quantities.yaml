@@ -453,7 +453,29 @@ quantities:
     observable: "installed accelerator FLOP/s times seconds per year"
     models: [AD-GATE]
     contract: {accounting: compute_training}
-    evidence: {status: external_pending, ref: "#13 (epoch-gate/INTERFACES.md); the split into training and runtime is unresolved there (E7)"}
+    evidence: {status: external_pending, ref: "#13 (epoch-gate/INTERFACES.md); split resolved in #35 (E7): D + R = g(Q) at the start of each step"}
+    note: "Not booked by AD-GATE itself: its allocations QTY-GATE-TRAINING-COMPUTE and QTY-GATE-RUNTIME-COMPUTE exhaust usable capacity, so booking Q too would count it twice."
+  - id: QTY-GATE-TRAINING-COMPUTE
+    name: "GATE training compute D"
+    category: compute_training
+    unit: FLOP/yr
+    kind: stock
+    semantic: "the training share of usable capacity g(Q) at the start of a one-year step, in physical FLOP/year; the FLOP performed over that step accumulates into the physical training run"
+    observable: "none directly; a model output (training_compute)"
+    models: [AD-GATE]
+    contract: {adapter_quantity: {adapter: AD-GATE, name: "training compute D"}, accounting: compute_training}
+    evidence: {status: source_model_output, ref: "#13 baseline target; identity checked in epoch-gate/coupling_example.py (#35)"}
+  - id: QTY-GATE-RUNTIME-COMPUTE
+    name: "GATE runtime compute R"
+    category: compute_inference
+    unit: FLOP/yr
+    kind: stock
+    semantic: "the runtime share of usable capacity g(Q) at the start of a one-year step, in physical FLOP/year; it runs GATE's digital workers in production"
+    observable: "none directly; a model output (runtime_compute)"
+    models: [AD-GATE]
+    contract: {adapter_quantity: {adapter: AD-GATE, name: "runtime compute (all automated tasks)"}, accounting: compute_inference}
+    evidence: {status: source_model_output, ref: "#13 baseline target; identity checked in epoch-gate/coupling_example.py (#35)"}
+    note: "Never passed to another model's inference compute: GATE already turns it into digital workers (systems/modes.yaml couplings, #35)."
   - id: QTY-GROWTH-RATE-G
     name: "Off-Earth growth rate g (pact solver)"
     category: physical_output

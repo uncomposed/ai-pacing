@@ -25,7 +25,10 @@
 #      quantity has that quantity's kind (or is a ratio on it, or is recorded ambiguous with a source locator); an
 #      output_rate leads from a stock to a flow derived from it, and trace resources (held by shares) are stocks;
 #   8. a milestone event (#47) sets only the capability level its binding declares; it applies no transition, carries
-#      no rate or probability, and every bound milestone may inform transitions in both directions.
+#      no rate or probability, and every bound milestone may inform transitions in both directions;
+#   9. every feedback loop has exactly one owning adapter (#35), and a coupling passes a quantity only from the owner
+#      of every loop that carries it, never a capability or efficiency level, never compute its source already turns
+#      into labor on a loop it owns, and states how each loop a coupled adapter yields is treated.
 #
 # 0.2.0 (issue #32, gaps found by the Hugging Face trace): T-LOSS-OF-CONTROL may change external_resources;
 # T-RESTRICT may be applied when effective_control is unknown; effective_control may be split by principal
@@ -49,8 +52,13 @@
 # they may inform, without hazards or probabilities; trace steps may carry milestone events. New accounting quantity
 # compute_experiment (a stock); AIFM's experiment compute is booked there and research_output is derived from it.
 # New trace TR-MILESTONE-CONSTRAINED. Every 0.4.0 trace is valid unchanged.
+#
+# 0.6.0 (issue #35): GATE's training and runtime compute are resolved (D_t + R_t = g(Q_{t-1}) exactly in the pinned
+# solver output, so both are allocations of the capacity stock, in FLOP/year) and booked as stocks. New sections
+# feedback_loops (the five loops of research_notes/external/epoch-gate/INTERFACES.md, each with one owner recorded in
+# the adapters) and couplings (the worked example XC-GATE-AIFM-TRAINING). Every trace is valid unchanged.
 
-contract_version: 0.5.0
+contract_version: 0.6.0
 status: proposed
 
 entity_kinds:
@@ -480,18 +488,15 @@ adapters:
     quantities:
       - {name: "largest training run C_T", unit: "eFLOP (software-adjusted, S(0) = 1)", owner: "economy aggregate (planner)", accounting: capability, kind: state}
       - {name: "deployed automated task share f", unit: "fraction of a unit continuum of tasks", owner: "economy aggregate (planner)", accounting: capability, kind: state}
-      - name: "training compute D"
-        unit: "solver-native; reported per one-year step (scale relative to the stock unresolved, see #13 EQUATIONS.md E7)"
-        owner: "economy aggregate (planner)"
-        accounting: compute_training
-        kind: ambiguous
-        kind_ambiguity: {candidates: [stock, flow], locator: "arXiv:2503.04941v2 lines 248, 626, 704 (E3 and E7 in research_notes/external/epoch-gate/EQUATIONS.md)", note: "The paper writes D as dC_T/dt (a flow of eFLOP per year) and as a share of the compute budget C (a capacity stock); the solver's training_compute + runtime_compute is 0.19-0.46 of Q, then 0 by step 25. Booked to compute_training provisionally; not convertible until E7 is resolved (#35)."}
-      - name: "runtime compute (all automated tasks)"
-        unit: "solver-native, same unit as training compute"
-        owner: "economy aggregate (planner)"
-        accounting: compute_inference
-        kind: ambiguous
-        kind_ambiguity: {candidates: [stock, flow], locator: "arXiv:2503.04941v2 lines 527, 626 (E3, E7 and E10 in research_notes/external/epoch-gate/EQUATIONS.md)", note: "As training compute D: the integral of C_I,i shares the budget C with D. Booked to compute_inference provisionally (#35)."}
+      # Resolved in #35 (EQUATIONS.md E7, research_notes/external/epoch-gate/coupling_example.py): in every pinned run that
+      # reports them, training_compute[t] + runtime_compute[t] = g(Q[t-1]) = Q/(Q/C_L + 1) to machine precision, with
+      # Q[-1] = training_compute_init + runtime_compute_init, and physical_best_training_run[t] = [t-1] + training_compute[t].
+      # So D and R are the training and runtime shares of the usable capacity at the start of the step, in physical
+      # FLOP/year: allocated capacity (a stock, as compute_training and compute_inference are). Over a one-year step the
+      # same number is the FLOP performed, which accumulates into the physical training run. Q itself is not booked:
+      # D + R already exhaust it.
+      - {name: "training compute D", unit: "FLOP/year (physical)", owner: "economy aggregate (planner)", accounting: compute_training, kind: stock}
+      - {name: "runtime compute (all automated tasks)", unit: "FLOP/year (physical)", owner: "economy aggregate (planner)", accounting: compute_inference, kind: stock}
       - {name: "digital workers N_i", unit: "human-worker equivalents per task", owner: "economy aggregate (planner)", accounting: agent_workforce, kind: stock}
       - {name: "hardware efficiency H", unit: "FLOP/year/$", owner: "economy aggregate (planner)", accounting: efficiency_level, kind: stock}
       - {name: "software efficiency S", unit: "eFLOP/FLOP", owner: "economy aggregate (planner)", accounting: efficiency_level, kind: stock}
@@ -507,7 +512,13 @@ adapters:
       - "using the planner's optimal allocation as a lab, state or AI decision"
       - "reading full automation (f = 1) as a mode change or loss of control"
       - "counting its compute-investment and software-efficiency feedback again when coupled with AD-AIFM"
-    attach_point: "World-level output, compute and automation trajectories as an exogenous background for MODE-HUMAN-LAB entities, through #11's quantity bridge; see research_notes/external/epoch-gate/INTERFACES.md."
+    attach_point: "World-level output, compute and automation trajectories as an exogenous background for MODE-HUMAN-LAB entities, through #11's quantity bridge; see research_notes/external/epoch-gate/INTERFACES.md. Coupled with AD-AIFM only as in couplings (#35)."
+    feedback_loops:
+      L-COMPUTE-INVESTMENT: {role: owner, rationale: "The only model here in which compute investment is endogenous: output funds compute and compute raises output (E4). AIFM's compute series are forecasts that already embed investment beliefs."}
+      L-SOFTWARE-EFFICIENCY: {role: yields, rationale: "S grows from R&D dollars under a law #13 could not reproduce (E6). It stays live inside GATE's solved path and is never passed or applied to another model's compute."}
+      L-RESEARCH-AUTOMATION: {role: absent, rationale: "GATE does not automate R&D; R&D is funded in dollars (paper line 325, TFP footnote line 664)."}
+      L-CAPABILITY-MAPPING: {role: yields, rationale: "f is the planner's deployed share below its frontier (E9); comparison only against AIFM's milestones."}
+      L-AGENT-LABOR: {role: owner, rationale: "Digital workers from runtime compute in goods production are GATE's core channel (E10, E13)."}
   - id: AD-AIFM
     source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public at commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09, MIT); code read and run in #14 (research_notes/external/ai-futures-model/, mapping in modes.md there)"
     kind: model
@@ -542,6 +553,12 @@ adapters:
       - "adding a compute-investment feedback from GATE on top of AIFM's compute series without replacing them: AIFM's compute paths are forecasts that already embed investment beliefs"
       - "counting AIFM's software-efficiency feedback and GATE's algorithmic-progress feedback as two separate accelerations of the same research"
     attach_point: "Pre-transition development trajectories under MODE-HUMAN-LAB, as rd_capability levels for a lab's model_weights. Its milestones attach to transitions only through milestone_interface (#47): a milestone sets a capability level and names the transitions it may inform, in both directions; it carries no hazard or probability."
+    feedback_loops:
+      L-COMPUTE-INVESTMENT: {role: absent, rationale: "Labor and compute are exogenous input series; the ODE decides no budget."}
+      L-SOFTWARE-EFFICIENCY: {role: owner, rationale: "An explicit research production function (labor, experiment compute, automation and taste) drives software efficiency, verified in code in #14."}
+      L-RESEARCH-AUTOMATION: {role: owner, rationale: "Automation of AI research is its core mechanism."}
+      L-CAPABILITY-MAPPING: {role: owner, rationale: "Its milestones are what milestone_interface binds (#47); the mapping from effective compute to capability is its own."}
+      L-AGENT-LABOR: {role: yields, rationale: "AI coding labor is derived internally from its own research inference compute and enters research only; it never adds to GATE's production labor."}
   - id: AD-PACT
     source: "Off-Earth pact equilibrium solver, research_notes/Off Earth industry as misalignment control/model/equilibrium_model.py"
     kind: model
@@ -566,6 +583,51 @@ adapters:
       - "applying its results to multi-agent collectives by scaling A (AS-SINGLE-AI, #9)"
       - "applying its results before t = 0, where no development dynamics exist"
     attach_point: "Downstream of a T-AUTHORIZED-AUTONOMY or T-LOSS-OF-CONTROL transition; its strike and exit moves map to T-DEGRADATION and T-COMMITMENT-LAPSE."
+
+# Feedback loops that two coupled models could each close (issue #35; research_notes/external/epoch-gate/INTERFACES.md,
+# "Where coupling with AI Futures would count the same thing twice"). Each loop is owned by exactly one adapter, recorded
+# in the adapters' feedback_loops entries; `carries` lists the ledgers a pass would move the loop through.
+feedback_loops:
+  - id: L-COMPUTE-INVESTMENT
+    meaning: "Output funds compute and compute raises output."
+    carries: [compute_training, compute_inference, compute_experiment]
+    interfaces_item: 1
+  - id: L-SOFTWARE-EFFICIENCY
+    meaning: "Research raises software (and hardware) efficiency, which multiplies compute into effective compute."
+    carries: [efficiency_level]
+    interfaces_item: 2
+  - id: L-RESEARCH-AUTOMATION
+    meaning: "AI automates research, which raises research output."
+    carries: [research_output]
+    interfaces_item: 3
+  - id: L-CAPABILITY-MAPPING
+    meaning: "Effective compute maps to capability (automation share, milestones)."
+    carries: [capability]
+    interfaces_item: 4
+  - id: L-AGENT-LABOR
+    meaning: "Inference compute becomes worker-equivalents or agent labor that produces output or research."
+    carries: [agent_workforce, agent_labor]
+    interfaces_item: 5
+
+# Worked couplings (issue #35). Checked by tools/modes_tool.py; numbers in research_notes/external/epoch-gate/coupling_example.py.
+couplings:
+  - id: XC-GATE-AIFM-TRAINING
+    status: proposed
+    purpose: "GATE supplies the training-compute budget; AIFM turns it into capability. One direction only, one ledger."
+    adapters: [AD-GATE, AD-AIFM]
+    passes:
+      - from: {adapter: AD-GATE, quantity: "training compute D"}
+        to: {adapter: AD-AIFM, quantity: "frontier training capacity"}
+        accounting: compute_training
+        conversion: "H100e = s * D / (1.262e22 FLOP per H100e-year), AIFM's own constant. s is the frontier project's share of world training compute: unidentified (units-bridge CV-GATE-D-TO-FRONTIER-TRAINING); s = 1 gives an upper bound only."
+    uncoupled:
+      - {accounting: compute_inference, reason: "GATE's runtime compute R is already turned into digital workers in production (L-AGENT-LABOR, owned by GATE); passing it would count it again as AIFM coding labor. AIFM keeps its own research-inference series, which lies outside GATE's budget: GATE funds research in dollars (q_software_rnd), and D + R exhaust usable compute."}
+      - {accounting: compute_experiment, reason: "GATE has no experiment compute; AIFM keeps its own series. Converting GATE's software R&D dollars into H100e is unidentified."}
+    yielded:
+      - {loop: L-SOFTWARE-EFFICIENCY, adapter: AD-GATE, treatment: embedded_bracketed, note: "GATE's own S shaped the planner's choice of D. It cannot be switched off without re-solving GATE, so it is bracketed by running the pass on GATE's conservative and aggressive presets; the bracket is a scenario range, not a bound."}
+      - {loop: L-CAPABILITY-MAPPING, adapter: AD-GATE, treatment: embedded_bracketed, note: "GATE's f and C_T also shaped D (through output); bracketed as above. GATE's f and milestones are compared with AIFM's, never passed."}
+      - {loop: L-AGENT-LABOR, adapter: AD-AIFM, treatment: separate_ledger, note: "AIFM's coding labor runs on its own research-inference compute (uncoupled above), never on GATE's runtime compute."}
+    result: "A specification with a bounded scenario, not a coupled run: AIFM is not rerun on the passed series in #35."
 
 # How a source model's capability milestone attaches to transitions (issue #47, from #14). A milestone is an event
 # on the capability scale of a model_weights entity (or the agents running those weights). It is evidence for a

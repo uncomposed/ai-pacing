@@ -70,7 +70,7 @@ conversions:
     factor: {value: 1.0, unit: "1"}
     mechanism: "A change of time unit only (FLOP/yr to FLOP/s); the unit table carries the 3.156e7."
     delay: {kind: none, note: "identity"}
-    constraints: "Q is the shared stock; only its training share maps to compute_training. The share is unresolved in #13 (E7), so nothing is coupled through this yet."
+    constraints: "Q is the shared stock; only its training share maps to compute_training. The share is resolved in #35 (E7: D + R = g(Q) at the start of the step), so the training share is QTY-GATE-TRAINING-COMPUTE, not Q."
     evidence: {status: normalization, ref: "epoch-gate/INTERFACES.md"}
     coupled: false
     used_by: []
@@ -153,6 +153,17 @@ conversions:
     coupled: true
     used_by: [coupling_toy.py]
   # ---- unidentified: kept uncoupled -----------------------------------------------------------------------------
+  - id: CV-GATE-D-TO-FRONTIER-TRAINING
+    from: QTY-GATE-TRAINING-COMPUTE
+    to: QTY-AIFM-TRAINING-CAPACITY
+    class: unidentified
+    form: linear
+    mechanism: "World training compute (GATE, economy aggregate) to one frontier project's training capacity (AIFM): the project's share s."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "s is in (0, 1]; s = 1 gives an upper bound only (systems/modes.yaml coupling XC-GATE-AIFM-TRAINING). Apart from s it is a change of unit: 1 H100e = 4e14 FLOP/s (1.262e22 FLOP per H100e-year), AIFM's convention (EV-UNITS-AIFM-CONVENTIONS)."
+    evidence: {status: not_collected, ref: "#35; no source for the frontier share of world training compute is pinned"}
+    coupled: false
+    used_by: [epoch-gate/coupling_example.py (upper bound, s = 1)]
   # The chain time horizon -> developer time -> research output, rechecked in #42 after the METR (#12) and AI Futures
   # (#14) replications landed. A link counts as identified only with an evidence record and a stated conversion; none
   # of these has both, so each stays unidentified and unused (stopping rule of #42). README "Recheck after #12 and #14".

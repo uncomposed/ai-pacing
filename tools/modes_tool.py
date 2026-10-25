@@ -234,6 +234,109 @@ def _check_stock_flow(ident, q, acc, errors):
         errors.append(f'{where}: output_rate leads to {rate["accounting"]}, which is not derived from {q.get("accounting")}')
 
 
+def _ancestors(acc, q, seen=()):
+    out = set()
+    for p in acc.get(q, {}).get('derived_from', []):
+        if p not in seen:
+            out |= {p} | _ancestors(acc, p, seen + (q,))
+    return out
+
+
+def _check_loops_and_couplings(contract, errors):
+    """Issue #35: one owner per feedback loop; a coupling cannot close a loop twice (epoch-gate/INTERFACES.md)."""
+    acc = by_id(contract['accounting'])
+    loops = by_id(contract['feedback_loops'])
+    adapters = by_id(contract['adapters'])
+    for lp in contract['feedback_loops']:
+        for a in lp['carries']:
+            if a not in acc:
+                errors.append(f'feedback loop {lp["id"]}: carries unknown accounting quantity {a}')
+    owners = {lid: [] for lid in loops}
+    for ad in contract['adapters']:
+        for lid, entry in ad.get('feedback_loops', {}).items():
+            if lid not in loops:
+                errors.append(f'{ad["id"]}: feedback_loops names unknown loop {lid}')
+            elif entry['role'] == 'owner':
+                owners[lid].append(ad['id'])
+    for lid, who in owners.items():
+        if len(who) != 1:
+            errors.append(f'feedback loop {lid}: must have exactly one owning adapter (has {who or "none"})')
+    owner = {lid: who[0] for lid, who in owners.items() if len(who) == 1}
+    carried_by = {}
+    for lp in contract['feedback_loops']:
+        for a in lp['carries']:
+            carried_by.setdefault(a, []).append(lp['id'])
+    for xc in contract['couplings']:
+        where = f'coupling {xc["id"]}'
+        coupled = [a for a in xc['adapters'] if a in adapters]
+        for a in xc['adapters']:
+            if a not in adapters:
+                errors.append(f'{where}: unknown adapter {a}')
+            elif set(adapters[a].get('feedback_loops', {})) != set(loops):
+                errors.append(f'{where}: {a} must state a role for every feedback loop {sorted(loops)}')
+        quants = {a: {q['name']: q for q in adapters[a]['quantities']} for a in coupled}
+        passed, targets = set(), set()
+        for p in xc['passes']:
+            src, dst, led = p['from'], p['to'], p['accounting']
+            pw = f'{where}: pass {src["adapter"]} {src["quantity"]!r} -> {dst["adapter"]}'
+            qs = quants.get(src['adapter'], {}).get(src['quantity'])
+            qd = quants.get(dst['adapter'], {}).get(dst['quantity'])
+            if qs is None or qd is None:
+                errors.append(f'{pw}: both ends must be quantities of coupled adapters')
+                continue
+            if src['adapter'] == dst['adapter']:
+                errors.append(f'{pw}: a pass joins two different adapters')
+            if qs.get('accounting') != led or qd.get('accounting') != led:
+                errors.append(f'{pw}: both ends must be booked to {led} (they are {qs.get("accounting")}, {qd.get("accounting")})')
+            if 'ambiguous' in (qs['kind'], qd['kind']) or qs['kind'] != qd['kind']:
+                errors.append(f'{pw}: kinds must be resolved and equal ({qs["kind"]}, {qd["kind"]})')
+            if 'event' in (qs['kind'], qd['kind']) or led in ('capability', 'efficiency_level'):
+                errors.append(f'{pw}: {led} never crosses a coupling (rival capability mappings and one software-efficiency '
+                              f'base; INTERFACES.md items 2 and 4)')
+            if led not in adapters[dst['adapter']]['inputs']:
+                errors.append(f'{pw}: {led} is not an input of {dst["adapter"]}')
+            if (dst['adapter'], led) in targets:
+                errors.append(f'{pw}: {dst["adapter"]} already receives {led} from another pass')
+            targets.add((dst['adapter'], led))
+            passed.add(led)
+            for lid in carried_by.get(led, []):
+                if owner.get(lid) != src['adapter']:
+                    errors.append(f'{pw}: {led} carries loop {lid}, owned by {owner.get(lid)}, not by the source')
+            # INTERFACES.md item 5: compute the source already turns into a derived quantity on a loop it owns is used up.
+            for q in adapters[src['adapter']]['quantities']:
+                b = q.get('accounting')
+                if b and led in _ancestors(acc, b):
+                    for lid in carried_by.get(b, []):
+                        if owner.get(lid) == src['adapter']:
+                            errors.append(f'{pw}: {src["adapter"]} already turns {led} into {b} on loop {lid}, which it '
+                                          f'owns; passing it counts the same {led} twice')
+        unc = {u['accounting'] for u in xc['uncoupled']}
+        for u in unc - set(acc):
+            errors.append(f'{where}: uncoupled names unknown accounting quantity {u}')
+        for u in unc & passed:
+            errors.append(f'{where}: {u} is both passed and uncoupled')
+        # each input of a coupled adapter carried by a loop another coupled adapter owns is passed or declared uncoupled
+        for a in coupled:
+            for i in adapters[a]['inputs']:
+                for lid in carried_by.get(i, []):
+                    if owner.get(lid) in coupled and owner[lid] != a and i not in passed | unc:
+                        errors.append(f'{where}: {a} takes {i} (loop {lid}, owned by {owner[lid]}) from its own series; '
+                                      f'pass it from the owner or list it as uncoupled')
+        # each loop a coupled adapter yields is treated explicitly (never both live unannounced)
+        yielded = {(y['adapter'], y['loop']): y for y in xc['yielded']}
+        for a in coupled:
+            for lid, entry in adapters[a].get('feedback_loops', {}).items():
+                if entry['role'] == 'yields' and owner.get(lid) in coupled and (a, lid) not in yielded:
+                    errors.append(f'{where}: {a} yields {lid}; state its treatment under yielded')
+        for (a, lid), y in yielded.items():
+            if adapters.get(a, {}).get('feedback_loops', {}).get(lid, {}).get('role') != 'yields':
+                errors.append(f'{where}: yielded lists {lid} for {a}, which does not yield it')
+            elif y['treatment'] == 'separate_ledger' and set(loops[lid]['carries']) & passed:
+                errors.append(f'{where}: {lid} is treated as a separate ledger but a pass carries it')
+            elif y['treatment'] == 'embedded_bracketed' and not any(p['from']['adapter'] == a for p in xc['passes']):
+                errors.append(f'{where}: {lid} is embedded in {a}\'s passed series, but {a} passes nothing')
+
+
 def _check_milestone_interface(contract, errors):
     """Issue #47: a milestone sets one capability level, informs transitions in both directions, and carries no rate."""
     mi = contract['milestone_interface']
@@ -518,6 +621,7 @@ def validate(contract, register=None, params=None):
     _check_transitions(contract, errors)
     _check_accounting_and_adapters(contract, errors)
     _check_milestone_interface(contract, errors)
+    _check_loops_and_couplings(contract, errors)
     _check_solver_mapping(contract, errors, register, params)
     _check_traces(contract, errors)
     _check_evidence(contract, errors)
