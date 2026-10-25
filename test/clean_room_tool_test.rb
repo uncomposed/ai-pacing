@@ -46,6 +46,13 @@ class CleanRoomToolTest < Minitest::Test
     assert audit["title_mismatches"].any? { |item| item["id"] == "D1" }
   end
 
+  def test_audit_lists_proposed_yaml_nodes_separately
+    audit = CleanRoom.audit
+    assert_equal %w[D18 D19 H10 H14 I11 Q11 Q12 Q13], audit["yaml_proposed_nodes"]
+    assert_empty audit["proposed_ids_in_editorial"]
+    refute_includes audit["extra_in_yaml"], "H10"
+  end
+
   def test_complete_model_output_passes_deterministic_preflight
     spec = AIPacing.load_spec
     nodes = AIPacing.nodes_by_id(spec).values

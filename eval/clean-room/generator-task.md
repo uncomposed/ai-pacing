@@ -17,6 +17,11 @@ distinctions among kernel propositions, derived mechanisms, empirical
 hypotheses, replaceable implementations, and open questions. It need not follow
 the source ordering or reproduce source language.
 
+Nodes whose `provenance.author_status` is `proposed` are recorded for review
+and have not been accepted by the canonical editor. Do not present them as part
+of the proposal. Either omit them in `coverage.yaml` with that reason, or cover
+them explicitly as proposals.
+
 Do not add facts merely to make the prose smoother. If an inference is useful
 but is not contained in the source, identify it in `coverage.yaml`. Declare any
 omission or deviation instead of silently changing the proposal. Do not claim

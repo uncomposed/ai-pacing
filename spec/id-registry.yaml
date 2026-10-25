@@ -1,0 +1,611 @@
+# Reserved-ID registry for AI Pacing proposition IDs (K, D, H, I, Q).
+#
+# One list of every proposition ID that is used or reserved anywhere in the
+# repository or its proposal issues, so a new YAML node cannot silently reuse an
+# ID that already means something else. `ruby tools/spec_tool.rb check` (and so
+# `make check`) enforces it:
+#   - every node in spec/ai-pacing.yaml has an entry here with a `yaml`
+#     definition whose kind, title, and status (accepted or proposed) match;
+#   - every heading ID in the editorial reference is registered with its title;
+#   - an ID with more than one definition declares how they relate, only the
+#     IDs in LEGACY_COLLISION_IDS may be `legacy`, a `reserved-conflict` ID
+#     cannot appear in the YAML, and a proposed YAML node cannot collide;
+#   - `next_free` is above every registered ID and every local-namespace ID.
+# `ruby tools/spec_tool.rb next-id H` prints the next free ID for a kind.
+#
+# Allocating a new ID: take `next_free`, add an entry, and bump `next_free`.
+# Reserving an ID for a research note or issue: add an entry with that source
+# and status `reserved`. Renaming an ID used in an issue: add a `renumbering` row.
+#
+# Collision values:
+#   none               one definition.
+#   same-proposition   the YAML and the editorial reference state the same
+#                      proposition in different words (a judgment recorded when
+#                      the registry was created; the editor may revise it).
+#   legacy             the YAML and the editorial reference give the ID different
+#                      meanings. This is the known conformance gap described in
+#                      CANONICALITY.md and docs/clean-room-reconstruction.md; it
+#                      is recorded, not resolved, here.
+#   reserved-conflict  a reserved candidate shares an ID with a different
+#                      definition. It must be renumbered before it lands in YAML.
+
+schema_version: 1
+created: "2026-10-25"
+
+sources:
+  yaml:
+    locator: spec/ai-pacing.yaml
+    authority: normative
+  editorial:
+    locator: AI_Pacing_Canonical_Spec_v0.1.md
+    authority: editorial reference
+  off_earth_report:
+    locator: research_notes/Off Earth industry as misalignment control/repo_review.md
+    authority: research proposal (section Q6, candidate YAML nodes)
+    note: >-
+      docs/off-earth-pact.md section 8 cites these candidates as "D7, D8, H7 to
+      H11, I8 to I10, Q6 to Q8" and says they need rework before landing.
+  issue_1:
+    locator: https://github.com/uncomposed/ai-pacing/issues/1
+    authority: proposal
+  issue_3:
+    locator: https://github.com/uncomposed/ai-pacing/issues/3
+    authority: proposal
+
+# Files that use the same lexical form (H10, Q7, ...) for their own local
+# numbering. These are not proposition IDs. New proposition IDs avoid them where
+# a free ID exists; H10 overlaps by the editor's decision in issue #3.
+local_namespaces:
+  - locator: research_notes/Off Earth industry as misalignment control/model/assumptions.yaml
+    field: claims[].id
+    meaning: model-result claims checked by the assumption register
+    ids: [H1, H2, H3, H4, H5, H6, H7, H8, H9, H10, H11, H12, H13]
+  - locator: research_notes/Off Earth industry as misalignment control/model/results/equilibrium.md
+    field: section 7 question numbers
+    meaning: open questions about the equilibrium model
+    ids: [Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10]
+
+next_free:
+  K: K8
+  D: D20
+  H: H15
+  I: I12
+  Q: Q14
+
+# IDs proposed in issues or notes under a different number.
+renumbering:
+  - {source: issue_1, old: H6, new: H14, reason: "H6 is editorial H6; H10 and H11 are taken; H12 and H13 overlap the model's claim IDs."}
+  - {source: issue_1, old: Q5, new: Q13, reason: "Q5 is editorial Q5; Q11 and Q12 are taken by issue 3."}
+  - {source: issue_3, old: H7, new: H10, reason: "Renumbered in the issue on 2026-10-21."}
+  - {source: issue_3, old: D7, new: D18, reason: "Renumbered in the issue on 2026-10-21."}
+  - {source: issue_3, old: I8, new: I11, reason: "Renumbered in the issue on 2026-10-21."}
+  - {source: issue_3, old: Q6, new: Q11, reason: "Renumbered in the issue on 2026-10-21."}
+  - {source: issue_3, old: D8, new: D19, reason: "Renumbered in the addendum comment on 2026-10-21."}
+  - {source: issue_3, old: Q7, new: Q12, reason: "Renumbered in the addendum comment on 2026-10-21."}
+  - {source: off_earth_report, old: H10, new: H11, reason: "The report's optional H10 collides with issue 3's H10; H11 is inside the range docs/off-earth-pact.md already cites."}
+
+ids:
+  - id: K1
+    kind: kernel
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: Separate capability, substrate, and power
+      status: accepted
+    - source: editorial
+      title: Capability is not power
+      status: editorial
+  - id: K2
+    kind: kernel
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: Pace conversion into irreversible power
+      status: accepted
+    - source: editorial
+      title: Pace conversion into irreversible power
+      status: editorial
+  - id: K3
+    kind: kernel
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: Govern bounded research and consequential use differently
+      status: accepted
+    - source: editorial
+      title: Research and deployment should be governed differently
+      status: editorial
+  - id: K4
+    kind: kernel
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: Require adversarial assurance above the public frontier
+      status: accepted
+    - source: editorial
+      title: Frontier deployment requires adversarial control assurance
+      status: editorial
+  - id: K5
+    kind: kernel
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: Start domestically and remain internationally extensible
+      status: accepted
+    - source: editorial
+      title: Domestic first, international by construction
+      status: editorial
+  - id: K6
+    kind: kernel
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: Make foreign public capability an automatic reciprocity input
+      status: accepted
+    - source: editorial
+      title: Public-frontier reciprocity
+      status: editorial
+  - id: K7
+    kind: kernel
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: Maximize warning time
+      status: accepted
+    - source: editorial
+      title: Preserve warning time
+      status: editorial
+  - id: D1
+    kind: derived
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Capability Release Compact
+      status: accepted
+    - source: editorial
+      title: Adversarial rival-lab review
+      status: editorial
+  - id: D2
+    kind: derived
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Rival laboratories provide the technical attack surface
+      status: accepted
+    - source: editorial
+      title: Safety becomes part of the profit function
+      status: editorial
+  - id: D3
+    kind: derived
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Safety becomes part of the profit function
+      status: accepted
+    - source: editorial
+      title: Selective diffusion without total research transparency
+      status: editorial
+  - id: D4
+    kind: derived
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Compute stock and compute entanglement differ
+      status: accepted
+    - source: editorial
+      title: Unauthorized external agency as a regulatory tripwire
+      status: editorial
+  - id: D5
+    kind: derived
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Unauthorized agency can be made epistemically valuable
+      status: accepted
+    - source: editorial
+      title: Surveil, preserve, report
+      status: editorial
+  - id: D6
+    kind: derived
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: International cooperation can deepen in stages
+      status: accepted
+    - source: editorial
+      title: Safe harbor for prompt disclosure; severe penalties for concealment
+      status: editorial
+  - id: D7
+    kind: derived
+    collision: reserved-conflict
+    definitions:
+    - source: editorial
+      title: Warning-shot ladder
+      status: editorial
+    - source: off_earth_report
+      title: Redirect the misalignment blast radius outward
+      status: reserved
+  - id: D8
+    kind: derived
+    collision: reserved-conflict
+    definitions:
+    - source: editorial
+      title: Prefer learning before building maximum physical dry tinder
+      status: editorial
+    - source: off_earth_report
+      title: Make Earth's industrial base a poor prize
+      status: reserved
+  - id: D9
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Compute stock and compute entanglement are different
+      status: editorial
+  - id: D10
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Physical activation latency
+      status: editorial
+  - id: D11
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Industrial dry tinder matters separately from GPUs
+      status: editorial
+  - id: D12
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Preserve multiple human vetoes
+      status: editorial
+  - id: D13
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Begin with control assurance, not general research licensing
+      status: editorial
+  - id: D14
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Incremental domestic sequence
+      status: editorial
+  - id: D15
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Strategic-compute licensing creates a fiscal control point
+      status: editorial
+  - id: D16
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: Cooperation should be divisible
+      status: editorial
+  - id: D17
+    kind: derived
+    collision: none
+    definitions:
+    - source: editorial
+      title: International ladder
+      status: editorial
+  - id: D18
+    kind: derived
+    collision: none
+    definitions:
+    - source: yaml
+      title: Closing-window dynamics may pull strikes earlier (risk to test)
+      status: proposed
+  - id: D19
+    kind: derived
+    collision: none
+    definitions:
+    - source: yaml
+      title: Review-based model sharing compresses inter-lab capability gaps
+      status: proposed
+  - id: H1
+    kind: hypothesis
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: A/H/P separability remains actionable
+      status: accepted
+    - source: editorial
+      title: Permanent containment may not be a stable final state
+      status: editorial
+  - id: H2
+    kind: hypothesis
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Rival review has positive safety value after proliferation costs
+      status: accepted
+    - source: editorial
+      title: A/H/P separability persists long enough to govern
+      status: editorial
+  - id: H3
+    kind: hypothesis
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: The foreign public frontier is measurable enough to govern
+      status: accepted
+    - source: editorial
+      title: Adversarial review can discover materially important failures
+      status: editorial
+  - id: H4
+    kind: hypothesis
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Physical activation latency can preserve reversibility
+      status: accepted
+    - source: editorial
+      title: Economic gating materially changes lab incentives
+      status: editorial
+  - id: H5
+    kind: hypothesis
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Domestic benefits can sustain the institution
+      status: accepted
+    - source: editorial
+      title: Public-frontier reciprocity produces restraint rather than only ratcheting upward
+      status: editorial
+  - id: H6
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: editorial
+      title: Physical reserve status can remain observable enough to matter
+      status: editorial
+  - id: H7
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Relative-prize gradient
+      status: reserved
+  - id: H8
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Denial credibility under ambiguity
+      status: reserved
+  - id: H9
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Domain separability and bounded return
+      status: reserved
+  - id: H10
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: Retrospective audit makes concealment a losing long-run strategy
+      status: proposed
+  - id: H11
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Physical dependence and off-Earth autonomy can be scoped (report's optional H10, renumbered)
+      status: reserved
+  - id: H14
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: External-signal dependence preserves some A/P separation
+      status: proposed
+  - id: I1
+    kind: implementation
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Architecture-neutral unauthorized-agency boundary
+      status: accepted
+    - source: editorial
+      title: Data-center tax with visible local return
+      status: editorial
+  - id: I2
+    kind: implementation
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Surveil, preserve, and report
+      status: accepted
+    - source: editorial
+      title: Catastrophic biological capability as an early abstention domain
+      status: editorial
+  - id: I3
+    kind: implementation
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: Weights-as-bond review process
+      status: accepted
+    - source: editorial
+      title: Off-Earth pathway to machine autonomy
+      status: editorial
+  - id: I4
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Observable uncommissioned hardware reserve
+      status: accepted
+  - id: I5
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Separate gate for the AI industrial survival chain
+      status: accepted
+  - id: I6
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Seven-stage international ladder
+      status: accepted
+  - id: I7
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Licensed compute deployment and data-center taxation
+      status: accepted
+  - id: I8
+    kind: implementation
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Earth industrial cap with automatic throttles
+      status: reserved
+  - id: I9
+    kind: implementation
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Off-Earth industrial acceleration commitments
+      status: reserved
+  - id: I10
+    kind: implementation
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Maintained denial reserve
+      status: reserved
+  - id: I11
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Do not optimize against the audit signal
+      status: proposed
+  - id: Q1
+    kind: open_question
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: How should practical public capability be measured?
+      status: accepted
+    - source: editorial
+      title: Frontier measurement
+      status: editorial
+  - id: Q2
+    kind: open_question
+    collision: same-proposition
+    definitions:
+    - source: yaml
+      title: What access makes adversarial review credible without unacceptable leakage?
+      status: accepted
+    - source: editorial
+      title: Review access
+      status: editorial
+  - id: Q3
+    kind: open_question
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: How many independent human vetoes are enough?
+      status: accepted
+    - source: editorial
+      title: Safe-harbor design
+      status: editorial
+  - id: Q4
+    kind: open_question
+    collision: legacy
+    definitions:
+    - source: yaml
+      title: When does capability itself collapse A/H/P separability?
+      status: accepted
+    - source: editorial
+      title: Compute threshold
+      status: editorial
+  - id: Q5
+    kind: open_question
+    collision: none
+    definitions:
+    - source: editorial
+      title: Tax base
+      status: editorial
+  - id: Q6
+    kind: open_question
+    collision: reserved-conflict
+    definitions:
+    - source: editorial
+      title: Industrial vetoes
+      status: editorial
+    - source: off_earth_report
+      title: Which agent objective classes does an outward payoff gradient redirect, and which does it not?
+      status: reserved
+  - id: Q7
+    kind: open_question
+    collision: reserved-conflict
+    definitions:
+    - source: editorial
+      title: Covert software
+      status: editorial
+    - source: off_earth_report
+      title: How should the decision to de-industrialize Earth be made legitimately, and who bears its costs?
+      status: reserved
+  - id: Q8
+    kind: open_question
+    collision: reserved-conflict
+    definitions:
+    - source: editorial
+      title: Domestic coalition
+      status: editorial
+    - source: off_earth_report
+      title: What is the return-risk trajectory of a successful off-Earth machine civilization?
+      status: reserved
+  - id: Q9
+    kind: open_question
+    collision: none
+    definitions:
+    - source: editorial
+      title: International verification
+      status: editorial
+  - id: Q10
+    kind: open_question
+    collision: none
+    definitions:
+    - source: editorial
+      title: Regime adaptation
+      status: editorial
+  - id: Q11
+    kind: open_question
+    collision: none
+    definitions:
+    - source: yaml
+      title: How independent must auditors be to resist correlated misalignment?
+      status: proposed
+  - id: Q12
+    kind: open_question
+    collision: none
+    definitions:
+    - source: yaml
+      title: What inter-lab and international convergence minimizes singleton and correlated-failure risk?
+      status: proposed
+  - id: Q13
+    kind: open_question
+    collision: none
+    definitions:
+    - source: yaml
+      title: Can a credible cooperative autonomy path reduce incentives for AI defection?
+      status: proposed

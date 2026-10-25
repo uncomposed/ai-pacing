@@ -38,6 +38,8 @@ separates:
 
 Every proposition records sources, the role AI played, and the canonical editor's acceptance status. The audit trail distinguishes documentary evidence from historical inference.
 
+Nodes with `author_status: proposed` are recorded for review and are not accepted canon; see [`docs/proposed-extensions.md`](docs/proposed-extensions.md). Every proposition ID used or reserved anywhere in the repository is listed in [`spec/id-registry.yaml`](spec/id-registry.yaml); `ruby tools/spec_tool.rb next-id H` prints the next free ID of a kind.
+
 ## Quality gate
 
 Run the complete local gate:
@@ -46,7 +48,7 @@ Run the complete local gate:
 make check
 ```
 
-It checks YAML structure, typed and referential integrity, dependency cycles, provenance, hypothesis falsifiability, ten semantic acceptance tests, mutation tests, JSON Schema conformance, and whether committed deterministic views are stale.
+It checks YAML structure, typed and referential integrity, the reserved-ID registry, dependency cycles, provenance, hypothesis falsifiability, ten semantic acceptance tests, mutation tests, JSON Schema conformance, and whether committed deterministic views are stale.
 
 Regenerate all views after an accepted model change:
 
