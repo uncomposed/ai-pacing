@@ -30,6 +30,8 @@ UNKNOWN = 'unknown'
 CONSEQUENTIAL = ('objective_selection', 'authorization', 'effective_control', 'custody_weights', 'custody_compute',
                  'custody_credentials', 'external_resources', 'enforceable_commitments', 'intervention_latency')
 FORBIDDEN_MODE_KEYS = ('unit', 'units', 'owner', 'ownership', 'decision_authority', 'quantities')
+# The only dimensions a milestone event may set (#47); authority and resource dimensions move only by transitions.
+CAPABILITY = ('strategic_capability', 'rd_capability', 'cyber_capability')
 
 _spec = importlib.util.spec_from_file_location('assumptions_tool', ROOT / 'tools/assumptions_tool.py')
 assumptions_tool = importlib.util.module_from_spec(_spec)
@@ -232,6 +234,66 @@ def _check_stock_flow(ident, q, acc, errors):
         errors.append(f'{where}: output_rate leads to {rate["accounting"]}, which is not derived from {q.get("accounting")}')
 
 
+def _check_milestone_interface(contract, errors):
+    """Issue #47: a milestone sets one capability level, informs transitions in both directions, and carries no rate."""
+    mi = contract['milestone_interface']
+    dims = by_id(contract['dimensions'])
+    trans = by_id(contract['transitions'])
+    kinds = {k['id'] for k in contract['entity_kinds']}
+    adapters = {a['id']: {q['name']: q for q in a['quantities']} for a in contract['adapters']}
+    listed = {}
+    for s in mi['sources']:
+        q = adapters.get(s['adapter'], {}).get(s['quantity'])
+        if q is None:
+            errors.append(f'milestone_interface: adapter {s["adapter"]} has no quantity {s["quantity"]!r}')
+        elif q['kind'] != 'event':
+            errors.append(f'milestone_interface: {s["adapter"]} {s["quantity"]!r} is a {q["kind"]}, not an event')
+        for m in s['milestones']:
+            listed[(s['adapter'], m)] = q or {}
+    covered = {}
+    ids = [b['id'] for b in mi['bindings']]
+    for dup in sorted({i for i in ids if ids.count(i) > 1}):
+        errors.append(f'milestone_interface: duplicate binding {dup}')
+    for b in mi['bindings']:
+        where = f'milestone_interface {b["id"]}'
+        key = (b['adapter'], b['milestone'])
+        covered.setdefault(key, []).append(b['id'])
+        q = listed.get(key)
+        if q is None:
+            errors.append(f'{where}: {b["milestone"]} is not a milestone listed for {b["adapter"]}')
+            q = {}
+        d, level = b['sets']['dimension'], b['sets']['level']
+        if d not in CAPABILITY:
+            errors.append(f'{where}: sets {d}; a milestone sets a capability dimension only {list(CAPABILITY)}')
+        elif q.get('dimension') not in (None, d):
+            errors.append(f'{where}: sets {d}, but its adapter quantity attaches to {q["dimension"]}')
+        if d in dims and level not in dims[d]['levels']:
+            errors.append(f'{where}: level {level!r} is not a declared level of {d}')
+        for k in b['entity_kinds']:
+            if k not in kinds:
+                errors.append(f'{where}: unknown entity kind {k}')
+            elif d in dims and k not in dims[d]['applies_to']:
+                errors.append(f'{where}: {d} does not apply to a {k}')
+        directions = set()
+        for t in b['may_inform']:
+            if t not in trans:
+                errors.append(f'{where}: may_inform names unknown transition {t}')
+            else:
+                directions.add(trans[t]['direction'])
+        if directions != {'toward_autonomy', 'toward_constraint'}:
+            errors.append(f'{where}: may_inform must name transitions in both directions (a milestone opens no one-way takeoff), '
+                          f'has {sorted(directions)}')
+    for u in mi['unbound']:
+        key = (u['adapter'], u['milestone'])
+        if key not in listed:
+            errors.append(f'milestone_interface: unbound {u["milestone"]} is not a milestone listed for {u["adapter"]}')
+        covered.setdefault(key, []).append('unbound')
+    for key in sorted(listed):
+        n = len(covered.get(key, []))
+        if n != 1:
+            errors.append(f'milestone_interface: {key[0]} milestone {key[1]} must be bound or listed unbound exactly once ({n})')
+
+
 def _check_solver_mapping(contract, errors, register=None, params=None):
     sm = contract['solver_mapping']
     register = register if register is not None else load_yaml(ROOT / sm['register'])
@@ -296,6 +358,7 @@ def _check_traces(contract, errors):
     acc = by_id(contract['accounting'])
     stock_ids = {s['id'] for s in contract['stocks']}
     modes = {m['id'] for m in contract['modes']}
+    bindings = by_id(contract['milestone_interface']['bindings'])
     for tr in contract['traces']:
         prev = None
         for n, step in enumerate(tr['steps']):
@@ -363,9 +426,26 @@ def _check_traces(contract, errors):
                     errors.append(f'{where}: transition {a["type"]} on {a["entity"]}, which is not in the step')
                     continue
                 applied.setdefault(a['entity'], []).append(trans[a['type']])
+            # milestone events (#47): each sets one capability level and applies no transition
+            events = {}
+            for m in step.get('milestones', []):
+                b = bindings.get(m['binding'])
+                if b is None:
+                    errors.append(f'{where}: unknown milestone binding {m["binding"]}')
+                elif m['entity'] not in ents:
+                    errors.append(f'{where}: milestone {m["binding"]} on {m["entity"]}, which is not in the step')
+                elif ents[m['entity']]['kind'] not in b['entity_kinds']:
+                    errors.append(f'{where}: milestone {m["binding"]} cannot attach to a {ents[m["entity"]]["kind"]}')
+                else:
+                    d = b['sets']['dimension']
+                    if d in events.get(m['entity'], {}):
+                        errors.append(f'{where}: {m["entity"]} has two milestone events on {d}')
+                    events.setdefault(m['entity'], {})[d] = b
             if prev is None:
                 if applied:
                     errors.append(f'{where}: the first step cannot apply a transition')
+                if events:
+                    errors.append(f'{where}: the first step cannot carry a milestone event')
                 prev = (step, got)
                 continue
             pstep, pgot = prev
@@ -376,6 +456,16 @@ def _check_traces(contract, errors):
                     continue
                 changed = {d for d in set(e['state']) | set(before['state']) if e['state'].get(d) != before['state'].get(d)}
                 allowed = set().union(*[set(t['changes']) for t in ts]) if ts else set()
+                # A milestone moves its own dimension to its level, first; preconditions then read that value.
+                read = {'state': dict(before['state']), 'host': before.get('host')}
+                for d, b in events.get(eid, {}).items():
+                    level = b['sets']['level']
+                    if before['state'].get(d) == level:
+                        errors.append(f'{where}: milestone {b["id"]} on {eid} sets {d} to {level}, which it already was')
+                    if e['state'].get(d) != level and d not in allowed:
+                        errors.append(f'{where}: milestone {b["id"]} sets {eid} {d} to {level}, but the step has {e["state"].get(d)}')
+                    allowed.add(d)
+                    read['state'][d] = level
                 for d in sorted(changed - allowed):
                     errors.append(f'{where}: {eid} {d} changed from {before["state"].get(d)} to {e["state"].get(d)} '
                                   f'without a transition that declares it')
@@ -383,8 +473,8 @@ def _check_traces(contract, errors):
                     if not changed & set(t['changes']):
                         errors.append(f'{where}: {eid} applies {t["id"]} but none of its dimensions changed (relabelling)')
                     for d, levels in t['preconditions'].items():
-                        if value_of(before, d) not in levels:
-                            errors.append(f'{where}: {eid} applies {t["id"]} but {d} was {value_of(before, d)}, not in {levels}')
+                        if value_of(read, d) not in levels:
+                            errors.append(f'{where}: {eid} applies {t["id"]} but {d} was {value_of(read, d)}, not in {levels}')
                 views_before = {m for m, v in pgot.get(eid, {}).items() if v}
                 views_after = {m for m, v in got.get(eid, {}).items() if v}
                 if views_before != views_after and not ts:
@@ -427,6 +517,7 @@ def validate(contract, register=None, params=None):
     _check_dimensions_and_modes(contract, errors)
     _check_transitions(contract, errors)
     _check_accounting_and_adapters(contract, errors)
+    _check_milestone_interface(contract, errors)
     _check_solver_mapping(contract, errors, register, params)
     _check_traces(contract, errors)
     _check_evidence(contract, errors)

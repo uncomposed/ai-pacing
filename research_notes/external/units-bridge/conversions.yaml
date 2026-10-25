@@ -277,3 +277,15 @@ conversions:
     class: forbidden
     reason: "AD-PACT unsupported extrapolation: industrial capacity A is not AI capability."
     coupled: false
+  - id: CV-NO-EXPERIMENT-AS-INFERENCE
+    from: QTY-EXPERIMENT-COMPUTE-RATE
+    to: QTY-INFERENCE-COMPUTE-RATE
+    class: forbidden
+    reason: "Same unit, different ledger (#47): inference compute powers agent labor in AIFM, experiment compute enters research effort directly. Reading one as the other counts agent labor that does not exist."
+    coupled: false
+  - id: CV-NO-EXPERIMENT-AS-TRAINING
+    from: QTY-EXPERIMENT-COMPUTE-RATE
+    to: QTY-TRAINING-COMPUTE-RATE
+    class: forbidden
+    reason: "Same unit, different ledger (#47): experiment compute does not train the released model, and AIFM takes both series as separate inputs."
+    coupled: false
