@@ -52,25 +52,28 @@ sources:
     locator: https://github.com/uncomposed/ai-pacing/issues/3
     authority: proposal
 
-# Files that use the same lexical form (H10, Q7, ...) for their own local
-# numbering. These are not proposition IDs. New proposition IDs avoid them where
-# a free ID exists; H10 overlaps by the editor's decision in issue #3.
+# Files that number their own items with a local namespace. These are not
+# proposition IDs. Each uses a prefix so its IDs cannot be mistaken for K, D, H,
+# I or Q nodes (issue #23), and the prefixed IDs do not constrain `next_free`.
+# `tools/assumptions_tool.py check` enforces the AR- prefix on register claims.
 local_namespaces:
   - locator: research_notes/Off Earth industry as misalignment control/model/assumptions.yaml
     field: claims[].id
-    meaning: model-result claims checked by the assumption register
-    ids: [H1, H2, H3, H4, H5, H6, H7, H8, H9, H10, H11, H12, H13]
+    prefix: AR-
+    meaning: model-result claims checked by the assumption register (formerly H1 to H13)
+    ids: [AR-H1, AR-H2, AR-H3, AR-H4, AR-H5, AR-H6, AR-H7, AR-H8, AR-H9, AR-H10, AR-H11, AR-H12, AR-H13]
   - locator: research_notes/Off Earth industry as misalignment control/model/results/equilibrium.md
     field: section 7 question numbers
-    meaning: open questions about the equilibrium model
-    ids: [Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10]
+    prefix: EQ-
+    meaning: open questions about the equilibrium model (formerly cited as question 1 to 10)
+    ids: [EQ-Q1, EQ-Q2, EQ-Q3, EQ-Q4, EQ-Q5, EQ-Q6, EQ-Q7, EQ-Q8, EQ-Q9, EQ-Q10]
 
 next_free:
   K: K8
-  D: D20
+  D: D22
   H: H15
   I: I12
-  Q: Q14
+  Q: Q17
 
 # IDs proposed in issues or notes under a different number.
 renumbering:
@@ -83,6 +86,11 @@ renumbering:
   - {source: issue_3, old: D8, new: D19, reason: "Renumbered in the addendum comment on 2026-10-21."}
   - {source: issue_3, old: Q7, new: Q12, reason: "Renumbered in the addendum comment on 2026-10-21."}
   - {source: off_earth_report, old: H10, new: H11, reason: "The report's optional H10 collides with issue 3's H10; H11 is inside the range docs/off-earth-pact.md already cites."}
+  - {source: off_earth_report, old: D7, new: D20, reason: "D7 is an editorial ID (warning-shot ladder); the report's candidate is reserved as D20 (issue #23)."}
+  - {source: off_earth_report, old: D8, new: D21, reason: "D8 is an editorial ID (dry-tinder learning); the report's candidate is reserved as D21 (issue #23)."}
+  - {source: off_earth_report, old: Q6, new: Q14, reason: "Q6 is an editorial ID (industrial vetoes); the report's candidate is reserved as Q14 (issue #23)."}
+  - {source: off_earth_report, old: Q7, new: Q15, reason: "Q7 is an editorial ID (covert software); the report's candidate is reserved as Q15 (issue #23)."}
+  - {source: off_earth_report, old: Q8, new: Q16, reason: "Q8 is an editorial ID (domestic coalition); the report's candidate is reserved as Q16 (issue #23)."}
 
 ids:
   - id: K1
@@ -217,24 +225,18 @@ ids:
       status: editorial
   - id: D7
     kind: derived
-    collision: reserved-conflict
+    collision: none
     definitions:
     - source: editorial
       title: Warning-shot ladder
       status: editorial
-    - source: off_earth_report
-      title: Redirect the misalignment blast radius outward
-      status: reserved
   - id: D8
     kind: derived
-    collision: reserved-conflict
+    collision: none
     definitions:
     - source: editorial
       title: Prefer learning before building maximum physical dry tinder
       status: editorial
-    - source: off_earth_report
-      title: Make Earth's industrial base a poor prize
-      status: reserved
   - id: D9
     kind: derived
     collision: none
@@ -312,6 +314,20 @@ ids:
     - source: yaml
       title: Review-based model sharing compresses inter-lab capability gaps
       status: proposed
+  - id: D20
+    kind: derived
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Redirect the misalignment blast radius outward (report D7, renumbered)
+      status: reserved
+  - id: D21
+    kind: derived
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Make Earth's industrial base a poor prize (report D8, renumbered)
+      status: reserved
   - id: H1
     kind: hypothesis
     collision: legacy
@@ -546,34 +562,25 @@ ids:
       status: editorial
   - id: Q6
     kind: open_question
-    collision: reserved-conflict
+    collision: none
     definitions:
     - source: editorial
       title: Industrial vetoes
       status: editorial
-    - source: off_earth_report
-      title: Which agent objective classes does an outward payoff gradient redirect, and which does it not?
-      status: reserved
   - id: Q7
     kind: open_question
-    collision: reserved-conflict
+    collision: none
     definitions:
     - source: editorial
       title: Covert software
       status: editorial
-    - source: off_earth_report
-      title: How should the decision to de-industrialize Earth be made legitimately, and who bears its costs?
-      status: reserved
   - id: Q8
     kind: open_question
-    collision: reserved-conflict
+    collision: none
     definitions:
     - source: editorial
       title: Domestic coalition
       status: editorial
-    - source: off_earth_report
-      title: What is the return-risk trajectory of a successful off-Earth machine civilization?
-      status: reserved
   - id: Q9
     kind: open_question
     collision: none
@@ -609,3 +616,24 @@ ids:
     - source: yaml
       title: Can a credible cooperative autonomy path reduce incentives for AI defection?
       status: proposed
+  - id: Q14
+    kind: open_question
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: Which agent objective classes does an outward payoff gradient redirect, and which does it not? (report Q6, renumbered)
+      status: reserved
+  - id: Q15
+    kind: open_question
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: How should the decision to de-industrialize Earth be made legitimately, and who bears its costs? (report Q7, renumbered)
+      status: reserved
+  - id: Q16
+    kind: open_question
+    collision: none
+    definitions:
+    - source: off_earth_report
+      title: What is the return-risk trajectory of a successful off-Earth machine civilization? (report Q8, renumbered)
+      status: reserved

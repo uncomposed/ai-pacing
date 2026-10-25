@@ -254,11 +254,13 @@ The uncommitted systems model (`systems/model.json`, 148 records, passes `system
 - (d) Consider adding the vault "AI Pacing" essay §XXI as a source, if it is not already the basis of SRC-PLAN-A-BARGAINING.
 
 **2. Two new derived mechanisms (kernel unchanged)**
-- **D7 — Redirect the misalignment blast radius outward.**
+
+> ID note (issue #23): this report first numbered these candidates D7, D8, Q6, Q7 and Q8, which collide with editorial IDs. They are renumbered below to D20, D21, Q14, Q15 and Q16 and recorded in `spec/id-registry.yaml`. The report's section headings Q6 and Q7 are section labels, not proposition IDs.
+- **D20 — Redirect the misalignment blast radius outward.**
   - Candidate statement: "Make off-Earth industrial expansion a higher-return path than seizing terrestrial industry for a broad class of capable agents, so that alignment or control failures are more likely to express themselves away from Earth."
   - `derived_from: [K1, K2, K7]`, conditioned on H7 and H9 below.
   - This is the "Tai Chi" framing.
-- **D8 — Make Earth's industrial base a poor prize.**
+- **D21 — Make Earth's industrial base a poor prize.**
   - Candidate statement: "Combine low compute/industrial entanglement (D4), physical activation latency (I4), and a maintained denial capability so that seized terrestrial capacity has low and uncertain expected value."
   - `derived_from: [D4, K7]`, conditioned on H8.
 - **Choosing between D and I typing:** D typing makes this a mechanism of the proposal. I typing keeps it as an option. Editorial typing was I. Moving it to D is a real editorial change Cole should make knowingly.
@@ -274,7 +276,7 @@ The uncommitted systems model (`systems/model.json`, 148 records, passes `system
 - **H9 — Domain separability and bounded return.**
   - Off-Earth autonomy does not create decisive leverage over Earth within the planning horizon.
   - Falsifier: off-Earth capacity gains positional or supply leverage over Earth's survival chain faster than Earth's denial and bargaining position can adapt.
-- **H10 (optional) — Physical dependence and off-Earth autonomy can be scoped.**
+- **H11 (optional; drafted as H10, renumbered by the ID registry) — Physical dependence and off-Earth autonomy can be scoped.**
   - D12/I5-style vetoes can be kept on Earth-reachable compute while off-Earth autonomy grows.
   - This makes the Q4 tension testable.
 
@@ -285,15 +287,15 @@ The uncommitted systems model (`systems/model.json`, 148 records, passes `system
 
 **5. New open questions**
 - Merge issue #1's Q5 (cooperative autonomy) with the off-Earth venue question, or keep them separate and add:
-  - **Q6:** "Which agent objective classes does an outward payoff gradient redirect, and which does it not?"
-  - **Q7:** "How should the decision to de-industrialize Earth be made legitimately, and who bears its costs?"
-  - **Q8:** "What is the return-risk trajectory of a successful off-Earth machine civilization, and what keeps the relationship symbiotic?"
+  - **Q14:** "Which agent objective classes does an outward payoff gradient redirect, and which does it not?"
+  - **Q15:** "How should the decision to de-industrialize Earth be made legitimately, and who bears its costs?"
+  - **Q16:** "What is the return-risk trajectory of a successful off-Earth machine civilization, and what keeps the relationship symbiotic?"
 
 **6. Relations and tests**
-- Add `grounds` edges K1/K2/K7→D7 and D4/K7→D8.
-- Add `conditions` edges H7→D7, H9→D7 and H8→D8.
-- Add `implements` edges D7→I8 and I9; D8→I10.
-- Consider an acceptance test (AT-011) asserting that D7/D8 are not kernel and are conditioned by H7–H9. That protects against a renderer overstating the thesis.
+- Add `grounds` edges K1/K2/K7→D20 and D4/K7→D21.
+- Add `conditions` edges H7→D20, H9→D20 and H8→D21.
+- Add `implements` edges D20→I8 and I9; D21→I10.
+- Consider an acceptance test (AT-011) asserting that D20/D21 are not kernel and are conditioned by H7–H9. That protects against a renderer overstating the thesis.
 
 **7. Explicit non-claims to add**
 - "Off-Earth expansion is not a substitute for alignment."

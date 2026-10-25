@@ -1,0 +1,50 @@
+# Reruns Epoch's compiled GATE solver (issue #13) and compares it with the committed
+# baseline target. Needs network (epoch.ai) and about two minutes. Run by hand.
+# Never commits: the run is uploaded as an artifact for a person to review.
+# Actions are pinned by full commit SHA (tag in the trailing comment).
+name: epoch-gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LANG: C.UTF-8
+  LC_ALL: C.UTF-8
+  PYTHON_VERSION: "3.12.7"
+
+jobs:
+  rerun:
+    name: rerun official GATE solver and compare with data/baseline_target.json
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: research_notes/external/epoch-gate
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      # Node comes preinstalled on the runner image; its version is recorded in the run file.
+      - run: node --version
+      - name: Fetch the playground bundle and check the pinned hash
+        run: official/fetch_bundle.sh "$RUNNER_TEMP/gate"
+      - name: Run the ten jobs in official/jobs.json
+        run: node official/run_official.mjs "$RUNNER_TEMP/gate/gate.js" "$RUNNER_TEMP/gate/run.json" official/jobs.json
+      - name: Compare with the committed target (relative tolerance 1e-12)
+        run: python official/compare_official.py "$RUNNER_TEMP/gate/run.json"
+      - name: Fast checks
+        run: python tests/test_epoch_gate.py
+      - name: Keep the run
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: epoch-gate-run
+          retention-days: 14
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/gate/run.json

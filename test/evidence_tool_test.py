@@ -46,6 +46,7 @@ class EvidenceRecordsTest(unittest.TestCase):
         self.rejects('an observation needs an observation_date', tool.validate_records(self.doc))
 
     def test_secondary_reading_must_say_how_it_was_extracted(self):
+        self.recs['EV-METR-HF-2026']['reading'] = 'read_secondary_only'
         self.recs['EV-METR-HF-2026']['extraction']['method'] = 'quoted'
         self.rejects('reading is read_secondary_only but extraction method is quoted', tool.validate_records(self.doc))
 

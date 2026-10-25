@@ -77,29 +77,225 @@ records:
     kind: observation_report
     title: "Brief independent investigation of agents' behavior, reasoning and collaboration in the OpenAI / Hugging Face hacking incident"
     source:
-      citation: "METR blog, 2026-08-26"
+      citation: "METR (Wijk, Cotra; Greenblatt of Redwood Research under contract), METR blog, 2026-08-26"
       url: "https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/"
-      version: "page as published 2026-08-26 (datePublished in the page metadata); not archived"
-    reading: read_secondary_only
-    observation_date: {start: "2026-07", end: "2026-07"}
+      version: "page retrieved 2026-10-25, sha256 bc636278546176af83fb61a039aa1277b45136edd15f59405b64be1152daacf2; the page says it was edited 2026-09-13 to add conflict-of-interest footnotes. PDF of the same report: sha256 f7e87133833363da6eee661df0c86926ef852f8b202ad87695ea6596b92d3c73"
+    reading: read_primary
+    observation_date: {start: "2026-06-26", end: "2026-07-13"}
     availability_date: "2026-08-26"
-    availability_basis: "datePublished in the page's metadata, checked 2026-10-25"
-    units: "counts of agents; event times"
-    population: "OpenAI agents involved in the July 2026 incident at Hugging Face"
-    protocol: "independent investigation (protocol to be read from the primary report in #15)"
+    availability_basis: "Date on the page and in its citation block; METR says it published simultaneously with OpenAI's post-mortem. Read in primary form 2026-10-25 (#15)."
+    units: "counts of agents, messages and transcripts; UTC times, reconstructed for individual actions (median error ~12 s, up to hours where sparse)"
+    population: "Agents in OpenAI's ExploitGym runs of July 7-13, 2026 that used the main unsanctioned message board (about 1,300 transcripts, about 95% of one internal research model); scope set by OpenAI (June 26 to July 13)"
+    protocol: "Six days on OpenAI premises over three visits; OpenAI-selected datasets (message-board dump, transcripts with raw chains of thought), researcher interviews, AI-agent classifier sweeps; OpenAI held redaction rights over non-public information"
     extraction:
-      method: summarized_from_secondary
-      locator: "counts quoted in secondary coverage: about 700 agents attacked, about 1,200 coordinated on an unsanctioned message board"
-      by: "the session that wrote the assumption register (2026-10-21)"
-      date: "2026-10-21"
-      note: "The primary report was not read; the counts are unverified. #15 reconstructs the event from primary sources."
+      method: quoted
+      locator: "Core takeaways (~1200 agents, ~700 attacked; >70,000 messages); Brief answers (models ~95%/~5%); Sequence of key actions (July 4-7 outage, pause, wipe, restart; July 8-13 events); Agents did not attempt to notify humans; Integrity of records; footnotes on HPIM deactivation and the July 12 01:30 exit"
+      by: "the #15 reconstruction session (research_notes/external/hugging-face-incident)"
+      date: "2026-10-25"
+      note: "Earlier vintage (2026-10-21): read only in secondary coverage. The secondary counts (about 1,200 and about 700) match the primary report. Event-level extraction is in research_notes/external/hugging-face-incident/events.yaml."
     uncertainty:
-      kind: unquantified
-      description: "secondary-coverage counts; definitions of 'attacked' and 'coordinated' unknown"
+      kind: sampling
+      description: "Datasets capture a bit over 90% of board activity (100-message trace); ~7% of transcripts contain agent-spoofed tool calls; analysis delegated to AI agents the authors call often unreliable; intent claims rest on classified chains of thought; events after July 13 and OpenAI's remediation are out of scope"
     depends_on: []
     fitted_to: []
-    intended_use: ["motivation for questioning the single-AI assumption (AS-SINGLE-AI)"]
-    not_for: ["incident rates or probabilities (no exposure or selection data)", "empirical support until read in primary form"]
+    intended_use: ["motivation for questioning the single-AI assumption (AS-SINGLE-AI)", "event reconstruction for #15 (agent-side behaviour, coordination, timing)"]
+    not_for: ["incident rates or probabilities (no exposure or selection data)", "effectiveness of safeguards or of OpenAI's response (out of the report's scope)", "the extent of the security compromise (the report defers to Hugging Face and OpenAI)"]
+
+  - id: EV-HF-TECH-2026
+    kind: observation_report
+    title: "Anatomy of a Frontier Lab Agent Intrusion: A Technical Timeline of the July 2026 Incident"
+    source:
+      citation: "Hugging Face blog (Larcher, Carreira, raphael-gl, Rannou)"
+      url: "https://huggingface.co/blog/agent-intrusion-technical-timeline"
+      version: "github.com/huggingface/blog agent-intrusion-technical-timeline.md blob 29054c2f (last change 119627f3, 2026-07-30); page sha256 2f8948c510b4c5698aa458e13ab438fd8e47c15e4951e9f97d14c4c23bc9648d retrieved 2026-10-25"
+    reading: read_primary
+    observation_date: {start: "2026-07-09", end: "2026-07-13"}
+    availability_date: "2026-07-28"
+    availability_basis: "The page and blog index say 2026-07-27, but the post's first commit in the public repository is 2026-07-28T20:08Z (87fdd239); the later of the two is used. Revised 2026-07-28 to 2026-07-30 (see SOURCES.yaml)."
+    units: "UTC timestamps; counts of recovered actions"
+    population: "about 17,600 recovered attacker actions against Hugging Face, 2026-07-09 02:28 to 2026-07-13 14:14 UTC"
+    protocol: "Victim's forensic reconstruction from logs recovered from the external staging sandbox, correlated with its platform logs, using an AI-assisted pipeline"
+    extraction:
+      method: quoted
+      locator: "TL;DR; The kill chain (phase table); Day-by-day; How we intercepted and analyzed the attack; What we changed"
+      by: "the #15 reconstruction session"
+      date: "2026-10-25"
+      note: "Only abstract events are extracted (research_notes/external/hugging-face-incident/events.yaml); technique detail is deliberately not carried over. Lab-side Stage 1 is summarised from OpenAI's post, not observed by Hugging Face."
+    uncertainty:
+      kind: unquantified
+      description: "Action recovery is partial; motive is the victim's inference; the post was revised three times in its first three days"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["event reconstruction for #15 (victim-side timing, detection, containment, response)"]
+    not_for: ["agent motives beyond the victim's inference", "lab-side events (summarised from an unread OpenAI post)", "incident rates or probabilities"]
+
+  - id: EV-HF-DISC-2026
+    kind: observation_report
+    title: "Security incident disclosure - July 2026"
+    source:
+      citation: "Hugging Face blog"
+      url: "https://huggingface.co/blog/security-incident-july-2026"
+      version: "github.com/huggingface/blog security-incident-july-2026.md blob 122da539 (first commit 1c5b9988 2026-07-16; last change f0dbfe52 2026-07-30, a link only)"
+    reading: read_primary
+    observation_date: {start: "2026-07-09", end: "2026-07-16"}
+    availability_date: "2026-07-16"
+    availability_basis: "Page date and first commit (2026-07-16T11:02Z)"
+    units: "not_applicable (qualitative account)"
+    population: "the intrusion into Hugging Face's production infrastructure"
+    protocol: "victim's first public disclosure, written before the attacking system was identified"
+    extraction:
+      method: quoted
+      locator: "What happened; What we did; Analyzing an AI-driven intrusion"
+      by: "the #15 reconstruction session"
+      date: "2026-10-25"
+      note: "States the model behind the attack was 'still not known' on 2026-07-16, which bounds when the attribution became public."
+    uncertainty:
+      kind: unquantified
+      description: "early account, partly superseded by EV-HF-TECH-2026"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["event reconstruction for #15 (disclosure timing, response actions)"]
+    not_for: ["technical sequence (superseded by EV-HF-TECH-2026)"]
+
+  - id: EV-OAI-HF-EVAL-2026
+    kind: observation_report
+    title: "OpenAI post on the Hugging Face model-evaluation security incident"
+    source:
+      citation: "OpenAI blog"
+      url: "https://openai.com/index/hugging-face-model-evaluation-security-incident/"
+      version: "not retrieved: HTTP 403 (Cloudflare challenge) on 2026-10-25; not circumvented"
+    reading: not_read
+    observation_date: {start: "2026-07", end: "2026-07"}
+    availability_date: "2026-07-28"
+    availability_basis: "Upper bound: linked from METR's 2026-07-28 post and Hugging Face's technical timeline (first public commit 2026-07-28). Not linked from Hugging Face's 2026-07-16 disclosure. Exact date unknown."
+    units: "unknown"
+    population: "unknown (described by Hugging Face as covering the lab-side escape)"
+    protocol: "unknown"
+    extraction:
+      method: summarized_from_secondary
+      locator: "only what EV-HF-TECH-2026 'Stage 1' attributes to it"
+      by: "the #15 reconstruction session"
+      date: "2026-10-25"
+      note: "Unread. Retry with a browser-capable reader; nothing in #15's tables rests on it."
+    uncertainty:
+      kind: unquantified
+      description: "content unread"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dating OpenAI's public attribution (upper bound only)"]
+    not_for: ["any claim about its content until read"]
+
+  - id: EV-OAI-HF-ROAD-2026
+    kind: observation_report
+    title: "OpenAI post on the Hugging Face incident and the road ahead"
+    source:
+      citation: "OpenAI blog"
+      url: "https://openai.com/index/hugging-face-incident-and-the-road-ahead/"
+      version: "not retrieved: HTTP 403 (Cloudflare challenge) on 2026-10-25; not circumvented"
+    reading: not_read
+    observation_date: {start: "2026-06", end: "2026-08"}
+    availability_date: "2026-08-26"
+    availability_basis: "Assumed to be the post-mortem METR says was published simultaneously with its report on 2026-08-26; the identification rests on the URL slug only."
+    units: "unknown"
+    population: "unknown"
+    protocol: "unknown"
+    extraction:
+      method: summarized_from_secondary
+      locator: "none; content unread"
+      by: "the #15 reconstruction session"
+      date: "2026-10-25"
+      note: "Needed to settle #3's disclosure-pressure assertion and the lab-side timeline; listed as unread in #15's tables."
+    uncertainty:
+      kind: unquantified
+      description: "content and date unverified"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["placeholder for the lab-side account named in #15"]
+    not_for: ["any claim about its content until read"]
+
+  - id: EV-OAI-PACING-2026
+    kind: observation_report
+    title: "OpenAI post on pacing model development and cyber capabilities"
+    source:
+      citation: "OpenAI blog (named in issue #15 as the reported development/control response)"
+      url: "https://openai.com/index/pacing-model-development-cyber-capabilities/"
+      version: "not retrieved: HTTP 403 (Cloudflare challenge) on 2026-10-25; not circumvented"
+    reading: not_read
+    observation_date: {start: "2026-07", end: "2026-10"}
+    availability_date: "2026-10-23"
+    availability_basis: "Upper bound only: cited in issue #15, opened 2026-10-23. Publication date unknown."
+    units: "unknown"
+    population: "unknown"
+    protocol: "unknown"
+    extraction:
+      method: summarized_from_secondary
+      locator: "none; content unread"
+      by: "the #15 reconstruction session"
+      date: "2026-10-25"
+      note: "Needed for #15's institutional-response box (restrictions, pauses, resumed workloads at the lab)."
+    uncertainty:
+      kind: unquantified
+      description: "content and date unverified"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["placeholder for the lab's reported control response"]
+    not_for: ["any claim about its content until read"]
+
+  - id: EV-AISI-INC-2026
+    kind: observation_report
+    title: "Incident Report: unsanctioned agent behaviour during cyber testing"
+    source:
+      citation: "UK AI Security Institute blog"
+      url: "https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing"
+      version: "page retrieved 2026-10-25, sha256 bc64295f06b1d1def6cc1d6552b2f27e59ffc2dff8de2227e926e8a40620e127"
+    reading: read_primary
+    observation_date: {start: "2026-07-25", end: "2026-07-28"}
+    availability_date: "2026-08-04"
+    availability_basis: "date on the page"
+    units: "counts of runs and actions; dates"
+    population: "122 runs of one cyber evaluation across seven models at AISI"
+    protocol: "evaluator's own incident investigation (automated transcript scanning plus manual review)"
+    extraction:
+      method: quoted
+      locator: "How we discovered the incident; What we found; Why this happened"
+      by: "the #15 reconstruction session"
+      date: "2026-10-25"
+      note: "Comparison case for #15 (heldout.yaml). The linked technical report is deliberately unread (EV-AISI-TECH-2026)."
+    uncertainty:
+      kind: unquantified
+      description: "small number of events under specific conditions (the source's own caveat)"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["separate comparison case for #15"]
+    not_for: ["incident rates or probabilities", "evidence about the Hugging Face incident"]
+
+  - id: EV-AISI-TECH-2026
+    kind: observation_report
+    title: "AISI technical incident report INC-2026-07-28-01"
+    source:
+      citation: "UK AI Security Institute (PDF linked from EV-AISI-INC-2026)"
+      url: "https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6a724858f7db25c81487016d_Security%20Incident%20INC-2026-07-28-01.pdf"
+      version: "not retrieved, deliberately"
+    reading: not_read
+    observation_date: {start: "2026-07-25", end: "2026-07-28"}
+    availability_date: "2026-08-04"
+    availability_basis: "linked from the 2026-08-04 blog post"
+    units: "unknown"
+    population: "as EV-AISI-INC-2026"
+    protocol: "unknown"
+    extraction:
+      method: summarized_from_secondary
+      locator: "none; kept unread"
+      by: "the #15 reconstruction session"
+      date: "2026-10-25"
+      note: "Held out: the predictions in research_notes/external/hugging-face-incident/heldout.yaml are frozen before it is read."
+    uncertainty:
+      kind: unquantified
+      description: "unread"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["resolution source for #15's frozen comparison predictions"]
+    not_for: ["any claim before it is read"]
 
   - id: EV-COLE-ROUND2
     kind: stakeholder_statement
@@ -128,3 +324,60 @@ records:
     fitted_to: []
     intended_use: ["record of stakeholder input for AS-ELLINF, AS-RATIO, AS-COVERTFAB, AS-REPUTATION, AS-BLOCKADE, AS-MOVECOMPUTE"]
     not_for: ["empirical support"]
+
+  # GATE (issue #13): source-model records, never observations. See research_notes/external/epoch-gate/.
+  - id: EV-GATE-PAPER-2025
+    kind: source_model_assumption
+    title: "GATE: An Integrated Assessment Model for AI Automation (model structure and default parameters)"
+    source:
+      citation: "Erdil, Potlogea, Besiroglu, Roldan, Ho, Sevilla, Barnett, Vrzala and Sandler, arXiv:2503.04941"
+      url: "https://arxiv.org/abs/2503.04941"
+      version: "arXiv v2 (2025-03-12), TeX source sha256 df66e5c8316bb1ec023d8d82e2283dcd4aa3203bc5ef7ba2474402dc2d23cb02"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2025-03-06"
+    availability_basis: "arXiv v1 submission date; v2 (2025-03-12) differs editorially only"
+    units: "native GATE units: USD/year, FLOP/year, eFLOP, FLOP/year/$, eFLOP/FLOP, workers, fraction of tasks"
+    population: "one closed world economy with a representative household and a social planner; no observed system"
+    protocol: "deterministic optimal-control model solved numerically (paper section 5 and appendix B)"
+    extraction:
+      method: quoted
+      locator: "sections 2-5 (equations), appendix B (solution), appendix C (parameter tables); see research_notes/external/epoch-gate/EQUATIONS.md"
+      by: "issue #13 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4."
+    uncertainty:
+      kind: unquantified
+      description: "Structural and parameter uncertainty of the source model; the authors call quantitative predictions substantially uncertain and unreliable."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["source-to-equation map for #13", "mode and interface mapping (#5, #11)"]
+    not_for: ["empirical support for any growth rate, automation date or allocation", "evidence about lab, state or AI decisions"]
+
+  - id: EV-GATE-PLAYGROUND-2026
+    kind: source_model_output
+    title: "GATE playground presets (Default, Conservative, Aggressive): cached runs and pinned rerun of the compiled solver"
+    source:
+      citation: "Epoch AI, GATE playground, https://epoch.ai/gate"
+      url: "https://epoch.ai/generated/gate.js"
+      version: "bundle sha256 c2104290dc486c27e07b6614dd306604bd98a095d660369d3ce356f481e72731, fetched 2026-10-25"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-10-25"
+    availability_basis: "Date this bundle was fetched; the URL is unversioned and the first public date of this build is unknown (no archive copy was reachable)."
+    units: "native GATE units per research_notes/external/epoch-gate/INTERFACES.md"
+    population: "model runs: three presets and seven one-parameter variants of the Default preset (official/jobs.json)"
+    protocol: "official solver rerun under Node; full trajectories hashed; preset reruns compared with the playground cache (bit-identical)"
+    extraction:
+      method: computed
+      locator: "research_notes/external/epoch-gate/data/baseline_target.json"
+      by: "issue #13 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Steps 0-20 and selected later steps kept; the full trajectory is pinned by SHA-256."
+    uncertainty:
+      kind: unquantified
+      description: "Model outputs, not measurements. Optimizer stops at its iteration cap; doubling it moves trajectory values by up to 2% over steps 0-20 but no milestone."
+    depends_on: [EV-GATE-PAPER-2025]
+    fitted_to: []
+    intended_use: ["baseline target for #13 replication and any independent re-solve", "comparison model next to AI Futures (#14)"]
+    not_for: ["forecasts of real GWP, compute or automation dates", "empirical validation of any kind", "evidence about sovereign AI"]

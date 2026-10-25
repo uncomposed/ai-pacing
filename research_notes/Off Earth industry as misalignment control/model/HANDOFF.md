@@ -138,9 +138,9 @@ TODO, in order:
   - R3 pact ell_inf 0.01: [4.1e-4, 4.6e-4] vs 2.5e-4. Growth-phase lower bound effect (see above).
   - R4 check: rep at 0.3x eps* leaves P(strike) unchanged, at 3x gives 0, in all 6 cases. rep behaves like omega.
 - Plot fixes (R1 label, R2 title and label, R3 colours and legend) made in the runner; a second full run regenerates figures (tables should be identical). Next: write R1-R4 and the summary into equilibrium.md.
-- Step 4-5 done: R1-R4 written into `results/equilibrium.md` section 3R (with numbers, verdicts, "what would show this wrong" and a checks list); section 7 updated (Q1, Q4 revised; Q7-Q10 new); plain-language summary added at the top; file list updated.
+- Step 4-5 done: R1-R4 written into `results/equilibrium.md` section 3R (with numbers, verdicts, "what would show this wrong" and a checks list); section 7 updated (EQ-Q1, EQ-Q4 revised; EQ-Q7 to EQ-Q10 new); plain-language summary added at the top; file list updated.
 - Second full run (after the plot fixes) reproduced the round-2 tables exactly (0 diff lines). R3 figure regenerated alone after moving its band label.
-- No result changed a round-1 conclusion. Open for Cole: questions 7-10 in section 7. Not computed: the mass-based harvest case for R3 (only sunlight).
+- No result changed a round-1 conclusion. Open for Cole: EQ-Q7 to EQ-Q10 in section 7. Not computed: the mass-based harvest case for R3 (only sunlight).
 
 ## 7b. Round-3 progress log (R6 session, 2026-10-16)
 
@@ -271,13 +271,13 @@ gh run download --name sims-results-RUN_ID
 
 **Recommended next ablations** (ranked by how much a headline claim depends on them and how cheap they are):
 1. ~~chi0 from 0.5 to 1~~ **Done** (robust_design.md 13.8): Cole's direction is right; at chi0 1 the baseline design loses 9 of 41 near-baseline holds, and the best stack none (full box 15 to 10). My earlier PRIM-based "higher chi0 helps" was wrong.
-2. **A human-chosen preventive strike or shutdown on a cooperating AI** (Cole's guess (c)). Needs a model change (a human move). Three stand-ins (deadline, discovery, spillover) all break the pact, so this is probably the largest unmodelled risk to H1 and H9.
+2. **A human-chosen preventive strike or shutdown on a cooperating AI** (Cole's guess (c)). Needs a model change (a human move). Three stand-ins (deadline, discovery, spillover) all break the pact, so this is probably the largest unmodelled risk to AR-H1 and AR-H9.
 3. **Two-sided Powell renegotiation** (Cole's guess (b)). Upward (humans pay to buy off prize-only strikes) is expected to help. Downward (humans squeeze the AI as they get stronger; AS-NOEXPLOIT, never ablated) is expected to hurt, by the same mechanism as item 2. Needs a model change. Run the downward side first.
 Not recommended next, though ranked first by the register: the swarm (AS-SINGLE-AI). No cheap stand-in represents many coordinating agents faithfully; it needs a design discussion first.
 
 ## 10. Evidence contract (issue #8, 2026-10-25)
 
 [[ai gen]] Status: `implemented`; checked by its own tests; nothing `human_validated` and nothing empirically validated. See `docs/evidence-protocol.md`.
-- `assumptions.yaml` now gives every PARAMS entry and other influential input a role (none is an observed measurement), links literature-based assumptions to dated records in `evidence/records.yaml`, labels H10's shares (sampling measure, horizon, predicate, Wilson intervals, uncertainty types), and requires an admission record for any PARAMS entry added after 2026-10-25.
+- `assumptions.yaml` now gives every PARAMS entry and other influential input a role (none is an observed measurement), links literature-based assumptions to dated records in `evidence/records.yaml`, labels AR-H10's shares (sampling measure, horizon, predicate, Wilson intervals, uncertainty types), and requires an admission record for any PARAMS entry added after 2026-10-25.
 - `measure_sensitivity.py` reweights the cached full-box runs under 31 alternative sampling measures (no solving): best-stack share 0.025 to 0.194 across the 28 identified measures; outputs `results/measure_sensitivity.{md,json}`, checked by `tests/test_measure_sensitivity.py` in `make check`.
 - Not done: fresh-draw runs under widened ranges or new point masses (needs `sims.yml`).

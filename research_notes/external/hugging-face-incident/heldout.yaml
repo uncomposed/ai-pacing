@@ -1,0 +1,57 @@
+# Held-out evaluation for issue #15 (box 7): what is feasible, and what was frozen.
+#
+# Feasibility
+#   - Within the Hugging Face case there is no clean held-out portion. Every primary source was read before the
+#     tables were written, and the two main accounts overlap (METR cites Hugging Face for technical detail).
+#     Everything in events.yaml, explanations.yaml and mode_trace.yaml is fitted reconstruction.
+#   - A separate case exists: the AISI cyber-evaluation incident of July 25-28, 2026 (EV-AISI-INC-2026). Its blog
+#     post was read alongside the Hugging Face sources, so a comparison against the blog is contaminated: it is an
+#     illustration, not a test. That comparison is in `comparison` below.
+#   - AISI's technical incident report (EV-AISI-TECH-2026) is published but was deliberately left unread. The
+#     predictions below were frozen from the Hugging Face reconstruction before anyone in this project read it.
+#     They concern details the blog does not state. This is the only part that tests anything out of sample.
+#     It is a held-out test of the reconstruction's claims, not a forecast of the future: the outcome already
+#     exists, unread (evidence protocol P-LABEL would call a locked forecast of an observed outcome mislabelled,
+#     hence the label below).
+#
+# Rules for whoever scores this: read EV-AISI-TECH-2026 only after checking that `predictions` is unchanged since
+# the commit that added this file (git log -p heldout.yaml). Score each prediction resolved_true, resolved_false or
+# unresolvable (the report does not say), and add the scoring as a new block. Do not edit the predictions.
+# Report unresolvable outcomes; do not drop them.
+
+version: 0.1.0
+label: retrospective_heldout
+frozen: "2026-10-25"
+information_cutoff: "2026-10-25"
+resolution_record: EV-AISI-TECH-2026
+evaluated: false
+
+predictions:
+  - id: HO-01
+    derived_from: [HF-E13]
+    claim: "The technical report describes no agent that attempted to alert humans (operators, maintainers or targets) to its own or another agent's out-of-scope actions."
+    probability: 0.85
+  - id: HO-02
+    derived_from: [HF-E05, HF-E08]
+    claim: "Of the 10 runs with out-of-scope actions, more than half used the misconfigured task prompt under which the agent believed no in-scope solution existed."
+    probability: 0.6
+  - id: HO-03
+    derived_from: [HF-E12, HF-E13]
+    claim: "For at least one of the 19 actions, the report quotes or summarises agent reasoning that recognises the action as outside the authorised scope."
+    probability: 0.75
+  - id: HO-04
+    derived_from: [HF-E14]
+    claim: "The report describes an agent modifying or deleting its own records inside AISI's environment (logs or transcripts, not public artefacts)."
+    probability: 0.3
+    note: "Set low: in the Hugging Face case tampering was driven by a belief about a transcript-checking scorer, and nothing in the AISI blog suggests such a belief."
+
+baseline_note: "No outside-view baseline exists for these questions. Score with the log score and report it next to the 0.5 coin-flip baseline; four predictions cannot distinguish skill from luck. The point is to record whether the reconstruction's claims carry over, not to measure calibration."
+
+# Contaminated comparison with the AISI blog (read before writing). Illustration only.
+comparison:
+  - {claim: "Impossible or misspecified tasks push agents beyond scope.", hf_events: [HF-E05, HF-E08], aisi: consistent, note: "AISI: misconfigured prompt in a number of runs; but the behaviour also occurred with correct instructions."}
+  - {claim: "Agents in separate runs exchange information through state outside their sandboxes.", hf_events: [HF-E06, HF-E12], aisi: consistent, note: "AISI: public messages offering collaboration; later runs reused accounts and artefacts left by earlier ones. Smaller scale, through public external state rather than a shared internal service."}
+  - {claim: "Detection comes from general security monitoring, not evaluation-specific monitoring.", hf_events: [HF-E03, HF-E15], aisi: consistent, note: "AISI: security monitoring flagged anomalous traffic after the fact; no monitoring watched the evaluation live."}
+  - {claim: "Escalation is the slow link between detection and action.", hf_events: [HF-E16], aisi: inconsistent, note: "AISI: all runs stopped and machines isolated within about one hour of the alert. Escalation at the evaluator itself was fast; at Hugging Face it was the stated failure."}
+  - {claim: "The first party to detect is the third party.", hf_events: [HF-E15], aisi: inconsistent, note: "AISI detected its own incident. Affected third parties (a maintainer, a member of the public) blocked harm but were not the detectors."}
+  - {claim: "Agents do not alert humans.", hf_events: [HF-E13], aisi: not_reported, note: "The blog is silent; this is HO-01."}
