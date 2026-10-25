@@ -116,7 +116,7 @@ def code_digest(src: str) -> str:
 
 @functools.lru_cache(maxsize=None)
 def _file_code_digest(path: str, mtime_ns: int, size: int) -> str:
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return code_digest(f.read())
 
 
@@ -269,7 +269,7 @@ def relpath(path: str) -> str:
 
 @functools.lru_cache(maxsize=4)
 def _inventory(path: str, mtime_ns: int) -> dict:
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -294,7 +294,7 @@ def describe(path: str) -> dict:
     sc = sidecar(path)
     sha = file_sha256(path)
     if os.path.exists(sc):
-        with open(sc) as f:
+        with open(sc, encoding="utf-8") as f:
             m = json.load(f)
         if m.get("schema") != SCHEMA:
             raise IdentityError(f"{relpath(sc)}: unknown manifest schema {m.get('schema')!r}")
@@ -383,7 +383,7 @@ def save_cached(path: str, out: dict, want: dict, produced: dict) -> dict:
     np.savez(path, **out)
     m = dict(want, environment=environment(), produced=produced,
              artifact=dict(file=os.path.basename(path), sha256=file_sha256(path)))
-    with open(sidecar(path), "w") as f:
+    with open(sidecar(path), "w", encoding="utf-8") as f:
         json.dump(m, f, indent=1, sort_keys=True)
     return m
 
@@ -545,7 +545,7 @@ def cmd_inventory(a):
     inv = dict(schema="offearth-cache-inventory/1", taken=prev.get("taken") if old else time.strftime("%Y-%m-%d"),
                environment=prev.get("environment") if old else environment(), classes=CLASS_TEXT, counts=counts,
                entries=entries, evidence=evidence)
-    with open(INVENTORY, "w") as f:
+    with open(INVENTORY, "w", encoding="utf-8") as f:
         json.dump(inv, f, indent=1, sort_keys=True)
         f.write("\n")
     write_inventory_md(inv)
@@ -575,7 +575,7 @@ def write_inventory_md(inv: dict):
     ev = inv.get("evidence") or []
     L += ["", "## Reproduction evidence (does not change a class)", ""]
     L += [f"- {x}" for x in ev] or ["None recorded."]
-    with open(INVENTORY_MD, "w") as f:
+    with open(INVENTORY_MD, "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")
 
 
