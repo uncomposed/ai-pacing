@@ -289,3 +289,19 @@ Not recommended next, though ranked first by the register: the swarm (AS-SINGLE-
 - Findings: fixed terms both cause prize-only strikes and act as a commitment device (renegotiation without commitment gives a preventive AI strike when human control jumps); a human preventive option helps or hurts humans depending on when the AI would strike; learning after a failed strike limits retries but never pulls strikes earlier; worst selection flips S4, S14, S16.
 - Open: the R6c cell A_close 0.03, L_f 0.9 disagrees (reduced game 0.19, solver 0.33), where saturation binds in the solver; see `results/variants.md` section 1. Seven omissions unresolved, one excluded by scope.
 
+## 12. The Earth-industry unit (issue #39, 2026-10-25)
+
+[[ai gen]] Documentation and checks only; no parameter value, solver line or committed output changed.
+- **Unit.** H = 1 is one Earth-industry unit (EIU): the whole world economy's productive capacity in the
+  reference year, a **stock**. Its output rate is 1/yr, which the solver leaves implicit (dt = 1 yr): A and H
+  are stocks in growth, seizure, reinvestment and defence, and their yearly output enters the AI's payoff,
+  human welfare and trade. Written once as `DEF-EIU` in
+  `research_notes/external/units-bridge/quantities.yaml`, with the rejected readings (industrial sector,
+  primary energy, GDP) and the equations behind the choice (`equations.yaml`, `PACT-*`).
+- **What it means for existing text.** "Earth's industry" in PARAMS and the notes is this unit's name, not
+  the industrial sector. The docking's "19.6 TW = one unit" and Kmax's "1e13 ~ Dyson-scale" are energy-intensity
+  estimates (`CV-EIU-TO-PRIMARY-POWER`), not the definition.
+- **Mode contract.** `systems/modes.yaml` 0.3.0 books A to `industrial_capacity` with `output_rate` 1 per year
+  to `industrial_output`; `make modes-check` and `make units-check` enforce the stock/flow split.
+- **GATE.** GATE's USD output reads in EIU/yr through measured world GDP (`CV-GWP-TO-EIU-OUTPUT`,
+  `EV-WB-WDI-GDP-2026`) and is not coupled to the solver: the pact freezes Earth at H = 1.

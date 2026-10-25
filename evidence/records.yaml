@@ -985,3 +985,32 @@ records:
     fitted_to: []
     intended_use: ["marking AIFM outputs as non-independent of Epoch data"]
     not_for: ["empirical support until read in primary form"]
+
+  # Units bridge (issue #39): the measured scale of the Earth-industry unit's output rate.
+  - id: EV-WB-WDI-GDP-2026
+    kind: observation
+    title: "World GDP 2022-2025 at market exchange rates (current and constant 2015 US$) and PPP, and industry's share of value added"
+    source:
+      citation: "World Bank, World Development Indicators: NY.GDP.MKTP.CD, NY.GDP.MKTP.KD, NY.GDP.MKTP.PP.CD, NY.GDP.MKTP.PP.KD, NV.IND.TOTL.ZS, NV.IND.MANF.ZS; country WLD (World)"
+      url: "https://api.worldbank.org/v2/country/WLD/indicator/NY.GDP.MKTP.CD?format=json&date=2022:2025"
+      version: "WDI vintage lastupdated 2026-10-08, fetched 2026-10-25; SHA-256 of each raw API response in research_notes/external/units-bridge/data/world_gdp_wdi.json"
+    reading: read_primary
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-10-08"
+    availability_basis: "The API's lastupdated date for this vintage. Earlier vintages of the same years were public before and differ by revisions; this record is about this vintage only."
+    units: "USD per year (current US$; constant 2015 US$); international $ per year (PPP); percent of GDP"
+    population: "the world aggregate as compiled by the World Bank from national accounts"
+    protocol: "national accounts aggregated by the World Bank; market-exchange-rate and PPP conversions per the indicators' own definitions (not re-derived here)"
+    extraction:
+      method: quoted
+      locator: "API JSON, field 'value' for each indicator and year 2022-2025; copied unchanged into research_notes/external/units-bridge/data/world_gdp_wdi.json"
+      by: "issue #39 session"
+      date: "2026-10-25"
+      note: "2024 current US$ 1.1167e14 (central scale of CV-GWP-TO-EIU-OUTPUT); 2023 constant 2015 US$ 9.410e13 and 2025 current US$ 1.1835e14 bound it; PPP 2024 1.998e14; industry incl. construction 25.4% of GDP in 2024."
+    uncertainty:
+      kind: measurement
+      description: "Statistical uncertainty of national accounts and of the world aggregate is not reported by the source. Revisions between vintages and the choice of price base (current or constant, market rates or PPP) are larger than the reported precision; the conversion's bounds carry the price-base and reference-year spread, not measurement error."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["scale of the Earth-industry unit's output rate: one EIU/yr = reference-year GWP (units-bridge CV-GWP-TO-EIU-OUTPUT, DEF-EIU)", "reading GATE's USD output in EIU/yr for comparison", "industry's share of world value added (DEF-EIU rejected readings)"]
+    not_for: ["converting projected GWP paths into capacity growth (a real-USD index stops tracking capacity under large relative price changes)", "coupling GATE output into the pact solver's H or A", "any statement about off-Earth output prices"]

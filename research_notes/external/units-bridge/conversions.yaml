@@ -44,12 +44,12 @@ conversions:
     class: normalization
     form: linear
     factor: {value: 1.0, unit: 1/yr}
-    mechanism: "One EIU of capacity yields one EIU of output per year: the reading of 'Earth industry = 1' under which the solver's per-year trade term (gam times the smaller economy) is a flow."
+    mechanism: "The output rate of DEF-EIU: one EIU of capacity yields one EIU of output per year. This defines the flow unit EIU/yr; it is not a capital-output ratio."
     delay: {kind: none, note: "definition"}
-    constraints: "The solver never states it; A is used as both a stock (growth) and a flow (trade, prize). The mode contract books A to industrial_output (a flow) without this factor."
-    evidence: {status: normalization, ref: "PARAMS H ('Normalisation'), gam; README finding F2"}
+    constraints: "The solver leaves it implicit (dt = 1 yr, rate 1); PACT-AI-FLOW, PACT-HUMAN-FLOW and PACT-TRADE balance only with it. Stated in the mode contract as AD-PACT's output_rate (A booked to industrial_capacity, its output to industrial_output); the units checker requires the two to agree (#39, README finding F2)."
+    evidence: {status: normalization, ref: "DEF-EIU; PARAMS H ('Normalisation'), gam; README finding F2"}
     coupled: true
-    used_by: [coupling_toy.py]
+    used_by: [coupling_toy.py, systems/modes.yaml AD-PACT output_rate]
   - id: CV-TOY-DESIGN-TO-CAPITAL
     from: QTY-TOY-DESIGN
     to: QTY-TOY-CAPITAL
@@ -82,9 +82,9 @@ conversions:
     form: linear
     factor: {value: 1.96e+13, bounds: [1.88e+13, 1.97e+13], unit: W/EIU}
     derivation: P_earth
-    mechanism: "Identify one EIU with today's world primary energy use, as the Metzger docking does."
+    mechanism: "Energy intensity of the unit: the primary energy one EIU of today's capacity uses, i.e. world primary energy use. Not the definition of the EIU (DEF-EIU rejects the energy reading), so the docking's 'one EIU = 19.6 TW' is this estimate."
     delay: {kind: none, note: "contemporaneous"}
-    constraints: "The bounds span the 2023 and 2024 Energy Institute figures and their change of method; the identification of industry with energy use is itself an assumption (energy intensity differs between Earth and off-Earth industry)."
+    constraints: "The bounds span the 2023 and 2024 Energy Institute figures and their change of method. Applying it off Earth assumes Earth's energy per unit of output there, which an off-Earth solar industry need not have (the Metzger bridge and Kmax's 'Dyson-scale' basis both rely on this)."
     evidence: {status: observed_secondary, ref: "decision_model.md (EI Review 2024 via DieselNet); physics_economics.md (EI Review 2025)"}
     coupled: false
     used_by: [docking/metzger.py]
@@ -101,6 +101,19 @@ conversions:
     evidence: {status: observed_secondary, ref: "as CV-EIU-TO-PRIMARY-POWER"}
     coupled: false
     used_by: [docking/metzger.py]
+  - id: CV-GWP-TO-EIU-OUTPUT
+    from: QTY-GWP
+    to: QTY-INDUSTRIAL-OUTPUT
+    class: empirical_scale_estimate
+    form: linear
+    factor: {value: 8.955002108570063e-15, bounds: [8.449502298688144e-15, 1.0626885527300513e-14], unit: EIU/USD}
+    derivation: 1 / Y_ref
+    mechanism: "Under DEF-EIU one EIU/yr is the reference year's gross world output, so a GWP in USD/yr divided by the measured reference-year GWP is output in EIU/yr. Central: 2024 world GDP, current US$, market exchange rates, 1.117e14 USD/yr."
+    delay: {kind: none, note: "contemporaneous"}
+    constraints: "Bounds: reference year 2023 to 2025 times price base (current US$ or constant 2015 US$), market exchange rates: 9.41e13 to 1.18e14 USD/yr. PPP (1.89e14 to 2.11e14) is excluded because GATE's Y(0) = 1.10e14 lies in the market-rate band and far below PPP; GATE's 'real USD' base year is still unstated (#13), which the bounds cover. Valid as a scale at the reference year; at later dates a real-USD path is a quantity index, and with large relative price changes (automation) it stops tracking capacity. Maps units only: GATE's Y is Earth's output, which the pact freezes at H, so it is never fed into H or A (coupled: false)."
+    evidence: {status: observed_primary, ref: "EV-WB-WDI-GDP-2026 (World Bank WDI API, NY.GDP.MKTP.CD and .KD, world, accessed 2026-10-25; data/world_gdp_wdi.json)"}
+    coupled: false
+    used_by: [equations.yaml GATE-Y-IN-EIU, README.md (GATE output in EIU/yr)]
   - id: CV-TRAINING-TO-EFFECTIVE-COMPUTE
     from: QTY-TRAINING-COMPUTE
     to: QTY-EFFECTIVE-COMPUTE
@@ -207,18 +220,6 @@ conversions:
     delay: {kind: unknown, note: "time to build crude fabs"}
     constraints: "The toy shows a supply limit does not act as a constant multiplier at all (results/coupling_toy.md); chi0 stays a swept project assumption."
     evidence: {status: source_model_assumption, ref: "EV-METZGER-2013 p. 8-9"}
-    coupled: false
-    used_by: []
-  - id: CV-GWP-TO-EIU-OUTPUT
-    from: QTY-GWP
-    to: QTY-INDUSTRIAL-OUTPUT
-    class: unidentified
-    form: linear
-    factor: {unit: EIU/USD}
-    mechanism: "Would set one EIU per year equal to the reference year's gross world product."
-    delay: {kind: none, note: "contemporaneous"}
-    constraints: "Two definitions of the unit conflict: the solver's EIU is 'Earth's industry', the docking reads it as primary energy, and GDP-based output includes services. GATE's price base is not stated. Until the EIU is defined once, GATE output stays in USD (README finding F3)."
-    evidence: {status: external_pending, ref: "#13 (price base); this issue (EIU definition)"}
     coupled: false
     used_by: []
   # ---- forbidden: the stopping rule of #11 ----------------------------------------------------------------------
