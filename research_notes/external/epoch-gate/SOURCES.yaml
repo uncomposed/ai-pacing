@@ -1,0 +1,54 @@
+# Pinned sources for the GATE replication (issue #13). [[ai gen]] 2026-10-25.
+# status: used | checked_unavailable | not_used
+
+sources:
+  - id: gate-paper
+    title: "GATE: An Integrated Assessment Model for AI Automation"
+    authors: "Erdil, Potlogea, Besiroglu, Roldan, Ho, Sevilla, Barnett, Vrzala, Sandler"
+    url: "https://arxiv.org/abs/2503.04941"
+    version: "v2, submitted 2025-03-12 22:47:14 UTC; v1 2025-03-06 20:16:59 UTC"
+    files:
+      - {what: "v2 PDF", url: "https://arxiv.org/pdf/2503.04941v2", sha256: "79dbbba5e49e1ea37edbf5bfc6698594bace798761a841b642fbb6ea6fe01dc1"}
+      - {what: "v1 PDF", url: "https://arxiv.org/pdf/2503.04941v1", sha256: "4abe1cd3068ceb0b41aec2d4b014417735081325ea2019c8217ac5d4bd45f3f9"}
+      - {what: "v2 TeX source (gzip tar)", url: "https://arxiv.org/e-print/2503.04941v2", sha256: "df66e5c8316bb1ec023d8d82e2283dcd4aa3203bc5ef7ba2474402dc2d23cb02"}
+    accessed: "2026-10-25"
+    license: "CC BY 4.0 (arXiv record)"
+    used_for: "Equations, parameter tables and the description of the planner problem (EQUATIONS.md, MODES.md). Sections 2-5 and appendices B-C of the v2 TeX read in full; v1-v2 diff checked: editorial only."
+    status: used
+
+  - id: gate-playground-bundle
+    title: "GATE playground bundle (compiled solver, parameter table, cached preset runs)"
+    url: "https://epoch.ai/generated/gate.js"
+    version: "sha256 c2104290dc486c27e07b6614dd306604bd98a095d660369d3ce356f481e72731, 3,167,434 bytes, HTTP ETag a57986ede3e3650235e7737a5285e04f"
+    loaded_by: "https://epoch.ai/gate (Astro island EpochGate, sideloads /generated/gate.js)"
+    accessed: "2026-10-25"
+    license: "No license statement for the code. The epoch.ai/gate page states that Epoch AI's work is free to use, distribute and reproduce with credit under CC BY 4.0; we rely on that only for the documentation and for reproducing model outputs with attribution. The bundle is not vendored; official/fetch_bundle.sh downloads it and checks the hash."
+    used_for: "Executable model (inline Web Worker: emscripten C++ to WebAssembly, run unchanged by official/run_official.mjs), preset arguments and cached runs (cache_default), parameter table (input_default2)."
+    status: used
+
+  - id: gate-documentation
+    title: "GATE Model Playground documentation"
+    url: "https://epoch.ai/gate"
+    version: "page as served 2026-10-25 (no version identifier)"
+    accessed: "2026-10-25"
+    license: "CC BY 4.0 (page footer)"
+    used_for: "Interpretation caveats (conditional forecasts, optimizer errors, poor predictions after full automation), solver description (gradient descent on a utility function), parameter list."
+    status: used
+
+  - id: gate-source-repository
+    title: "epoch-research/gate (cited by the paper's figure README)"
+    url: "https://github.com/epoch-research/gate"
+    version: "commit 6b825f8dee4f6a0d56b382f0f7c8190756e6379a (from plots_latest/README.txt in the arXiv source)"
+    accessed: "2026-10-25"
+    license: "unknown"
+    used_for: "Nothing. git ls-remote asks for credentials (private or absent). Also tried under epoch-research: GATE, gate-model, gate-playground, epoch-gate, GATE-model, gate_model, ai-economic-model, aitm, takeoff-model, epoch-tools, gate-replication; none public. epoch-research/opmodel (a different model) is public, which shows the probe itself works."
+    status: checked_unavailable
+
+  - id: gate-blog
+    title: "Announcing GATE"
+    url: "https://epoch.ai/blog/announcing-gate"
+    version: "redirects to https://epoch.ai/publications/announcing-gate"
+    accessed: "2026-10-25"
+    license: "CC BY 4.0 (site)"
+    used_for: "Not read beyond confirming it exists."
+    status: not_used

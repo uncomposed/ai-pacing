@@ -1,0 +1,32 @@
+{
+ "category": "replication",
+ "title": "external-model replication",
+ "status": "pass",
+ "steps": [
+  {
+   "step": "pinned Saklakov and Clark replication checks",
+   "command": "/tmp/claude-0/-workspace-ai-pacing/c9566026-0cef-5216-a688-8982d7853a34/scratchpad/venv-ci312/bin/python docking/replication.py --out /workspace/ai-pacing/.claude/worktrees/agent-acdbfbf047f808599/research_notes/Off Earth industry as misalignment control/model/gate_status/replication_checks.json",
+   "exit": 0,
+   "seconds": 255.1
+  },
+  {
+   "step": "gate self-test: a deliberately broken solver must fail the Clark checks",
+   "command": "/tmp/claude-0/-workspace-ai-pacing/c9566026-0cef-5216-a688-8982d7853a34/scratchpad/venv-ci312/bin/python docking/replication.py --self-test",
+   "exit": 0,
+   "seconds": 0.7
+  }
+ ],
+ "note": "Powell, Potapov and Metzger are comparisons, not replications; they run in the slow `docking` workflow and never count here. A pass shows reproduction, not that the sources' assumptions hold.",
+ "environment": {
+  "commit": "c7f0d1bba95006af81123202b732c3baa911e263",
+  "dirty_tracked_files": true,
+  "python": "3.12.3",
+  "numpy": "1.26.4",
+  "os": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "system": "Linux",
+  "machine": "x86_64",
+  "omp_num_threads": null,
+  "runner": {},
+  "utc": "2026-10-25T18:19:23Z"
+ }
+}
