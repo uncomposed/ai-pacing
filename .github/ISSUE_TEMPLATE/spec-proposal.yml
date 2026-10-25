@@ -1,0 +1,62 @@
+name: Spec proposal
+description: Propose a new or changed node (K, D, H, I or Q) in spec/ai-pacing.yaml. Nodes enter as proposed; the canonical editor accepts.
+title: "Spec proposal: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposals are not accepted by being merged. New nodes enter `spec/ai-pacing.yaml` as proposed, and only the canonical editor accepts them. See CONTRIBUTING.md.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      description: K kernel (defines the idea), D derived mechanism, H falsifiable feasibility hypothesis, I replaceable implementation choice, Q open question.
+      options:
+        - K - kernel proposition
+        - D - derived mechanism
+        - H - hypothesis
+        - I - implementation option
+        - Q - open question
+        - Change to an existing node
+    validations:
+      required: true
+  - type: input
+    id: reserved_id
+    attributes:
+      label: Reserved ID
+      description: The ID you reserved in the reserved-ID registry under spec/ (for example D12). Reserve it before use; do not guess the next free number. For a change to an existing node, give that node's ID.
+    validations:
+      required: true
+  - type: textarea
+    id: statement
+    attributes:
+      label: Candidate statement
+      description: The exact proposed statement, in the style of the existing nodes.
+    validations:
+      required: true
+  - type: textarea
+    id: supports
+    attributes:
+      label: Supports and depends on
+      description: Node IDs it depends on, node IDs it would support, and the sources behind it. Run `ruby tools/spec_tool.rb impact <ID>` for an existing node.
+    validations:
+      required: true
+  - type: textarea
+    id: falsifier
+    attributes:
+      label: Falsifier
+      description: What observation would show this wrong. For H nodes also give the evidence requirement and stopping rule. For K, D, I and Q say what would make you withdraw it.
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: Provenance and AI role
+      description: Origin of the idea and any AI assistance (critique, synthesis, formalization, and so on).
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Distinctions at risk
+      description: Does this turn an implementation option into a kernel claim, or a hypothesis or question into a conclusion? Say how it avoids that.

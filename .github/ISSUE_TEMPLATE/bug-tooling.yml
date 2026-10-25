@@ -1,0 +1,41 @@
+name: Bug / tooling
+description: A failing check, wrong output, CI problem or tooling request.
+title: "Bug: "
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Expected versus actual behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Exact commands, the commit (full SHA), and the output. State whether you used LANG=C.UTF-8 and the pinned venv from .github/requirements-ci.txt.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: OS, Ruby, Python and numpy versions, or the CI run URL.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - spec tooling (tools/, test/, schema/)
+        - generated views
+        - model (research_notes/.../model/)
+        - CI workflow (.github/)
+        - docs
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Suspected cause or fix. Do not propose regenerating committed outputs to make a check pass.

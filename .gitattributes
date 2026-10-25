@@ -1,0 +1,9 @@
+# Binary result and figure formats. Keep git from diffing, merging or
+# normalising line endings in them.
+*.npz binary
+*.npy binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
