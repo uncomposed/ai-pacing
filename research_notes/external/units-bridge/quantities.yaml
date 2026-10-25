@@ -367,7 +367,7 @@ quantities:
     observable: "Energy Institute Statistical Review"
     models: [AD-PACT]
     contract: {}
-    evidence: {status: observed_secondary, ref: "620 EJ in 2023 = 19.6 TW (EI Review 2024 via DieselNet, decision_model.md); 592 EJ in 2024 = 18.8 TW (EI Review 2025, new 'total energy supply' method, physics_economics.md). Primary not read."}
+    evidence: {status: observed_secondary, ref: "620 EJ in 2023 = 19.6 TW (EI Review 2024 via DieselNet, decision_model.md); 592 EJ in 2024 = 18.8 TW (EI Review 2025, new 'total energy supply' method, physics_economics.md). Primary not read (#40: EV-EI-STATREV-NOT-READ, HTTP 403). Secondary cross-check EV-OWID-EI-ENERGY-2026 (EI 2026 edition via OWID): 2023 579.2 EJ = 18.35 TW, 2024 592.2 EJ = 18.77 TW, 2025 600.3 EJ = 19.02 TW."}
   - id: QTY-METZGER-GEN5-ENERGY
     name: "Energy use of Metzger's Gen 5.0 lunar industry"
     category: energy
@@ -432,7 +432,7 @@ quantities:
     observable: "national accounts"
     models: [AD-GATE]
     contract: {adapter_quantity: {adapter: AD-GATE, name: "gross world product Y"}, accounting: industrial_output}
-    evidence: {status: external_pending, ref: "#13: 'real USD', price base not stated (epoch-gate/INTERFACES.md); GATE's Y(0) = 1.10e14 USD/yr (data/baseline_target.json gwp_init) matches measured GWP at market exchange rates, not PPP (EV-WB-WDI-GDP-2026)"}
+    evidence: {status: external_pending, ref: "#13, #40: 'real USD', no base year or price index stated in the paper's TeX source; Y(0) is derived from World Bank GDP (current US$) 2023 grown 3%/yr (EV-GATE-PAPER-2025; epoch-gate/INTERFACES.md); GATE's Y(0) = 1.10e14 USD/yr (data/baseline_target.json gwp_init) matches measured GWP at market exchange rates, not PPP (EV-WB-WDI-GDP-2026)"}
   - id: QTY-GATE-COMPUTE-STOCK
     name: "GATE physical compute stock Q"
     category: compute_training
