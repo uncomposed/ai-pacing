@@ -107,7 +107,11 @@
         "quantities": {"type": "array", "minItems": 1, "items": {
           "type": "object", "additionalProperties": false, "required": ["name", "unit", "owner"],
           "properties": {"name": {"$ref": "#/$defs/text"}, "unit": {"$ref": "#/$defs/text"}, "owner": {"$ref": "#/$defs/text"},
-                         "dimension": {"type": "string"}, "accounting": {"type": "string"}}}},
+                         "dimension": {"type": "string"}, "accounting": {"type": "string"},
+                         "kind": {"enum": ["stock", "flow", "state"]},
+                         "output_rate": {"type": "object", "additionalProperties": false, "required": ["value", "unit", "accounting", "basis"],
+                                         "properties": {"value": {"type": "number", "exclusiveMinimum": 0}, "unit": {"$ref": "#/$defs/text"},
+                                                        "accounting": {"type": "string"}, "basis": {"$ref": "#/$defs/text"}}}}}},
         "inputs": {"$ref": "#/$defs/ids"},
         "modes": {"type": "object", "additionalProperties": {
           "type": "object", "required": ["coverage", "reason"],

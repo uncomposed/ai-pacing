@@ -1,0 +1,75 @@
+{
+ "source": "World Bank, World Development Indicators, API v2 (country WLD = World)",
+ "url_template": "https://api.worldbank.org/v2/country/WLD/indicator/{indicator}?format=json&date=2022:2025",
+ "accessed": "2026-10-25",
+ "licence": "CC BY 4.0 (World Bank open data terms)",
+ "note": "Values copied from the API JSON without change; sha256 is of each raw response as fetched. Read by tests/test_units_bridge.py to recompute CV-GWP-TO-EIU-OUTPUT.",
+ "indicators": {
+  "NV.IND.MANF.ZS": {
+   "name": "Manufacturing, value added (% of GDP)",
+   "lastupdated": "2026-10-08",
+   "sha256": "55404bc029a322e775fe4a40eeba8933c88cd6b402fc4dbdf7a8b3e8104107d5",
+   "values": {
+    "2022": 15.7099984104883,
+    "2023": 15.2465175130439,
+    "2024": 14.8854431636487,
+    "2025": 14.8720344202053
+   }
+  },
+  "NV.IND.TOTL.ZS": {
+   "name": "Industry (including construction), value added (% of GDP)",
+   "lastupdated": "2026-10-08",
+   "sha256": "393685239dbc00d02dfc8c946777f180764af57477833c0c6ce8a2076f8bef98",
+   "values": {
+    "2022": 27.2094363311311,
+    "2023": 26.1933428273257,
+    "2024": 25.435604452787,
+    "2025": 24.9841960395829
+   }
+  },
+  "NY.GDP.MKTP.CD": {
+   "name": "GDP (current US$)",
+   "lastupdated": "2026-10-08",
+   "sha256": "954710fdde42280628c59343335fd29215fb8830114368d15a300cf2a72f0853",
+   "values": {
+    "2022": 102862471365575,
+    "2023": 107348614073350,
+    "2024": 111669432109121,
+    "2025": 118350166039396
+   }
+  },
+  "NY.GDP.MKTP.KD": {
+   "name": "GDP (constant 2015 US$)",
+   "lastupdated": "2026-10-08",
+   "sha256": "41e9209cda90bd1dfef28e19ea1488100ffc8a955d022ff6b72487c7884abaa2",
+   "values": {
+    "2022": 91485038370116.5,
+    "2023": 94100947773550,
+    "2024": 96829887869984.6,
+    "2025": 99658553419775.2
+   }
+  },
+  "NY.GDP.MKTP.PP.CD": {
+   "name": "GDP, PPP (current international $)",
+   "lastupdated": "2026-10-08",
+   "sha256": "6b57c4edc9e2d9fc256b3ca4e4c1429f987fd3c9eb7d5db1a1d8833a9f662446",
+   "values": {
+    "2022": 175795348354125,
+    "2023": 188524797806804,
+    "2024": 199814055759344,
+    "2025": 211167158659272
+   }
+  },
+  "NY.GDP.MKTP.PP.KD": {
+   "name": "GDP, PPP (constant 2021 international $)",
+   "lastupdated": "2026-10-08",
+   "sha256": "e0fb001fd7d9e065ec61d218531f2f1d3ff13929e093e17ec0314d9fc095f257",
+   "values": {
+    "2022": 163140044693829,
+    "2023": 168473707388178,
+    "2024": 174159721560706,
+    "2025": 180028791385506
+   }
+  }
+ }
+}

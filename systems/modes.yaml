@@ -20,13 +20,22 @@
 #   4. a resource instance is never held by entities whose shares sum above 1 (no double counting);
 #   5. an adapter declares units, owners and decision authority once; its per-mode entries cannot redefine them;
 #   6. every assumption in the pact solver's register is mapped to a dimension, a transition or a stated
-#      exclusion, and every PARAMS name cited exists.
+#      exclusion, and every PARAMS name cited exists;
+#   7. stocks and flows stay apart (#39): an adapter quantity's declared kind matches its accounting quantity, an
+#      output_rate leads from a stock to a flow derived from it, and trace resources (held by shares) are stocks.
 #
 # 0.2.0 (issue #32, gaps found by the Hugging Face trace): T-LOSS-OF-CONTROL may change external_resources;
 # T-RESTRICT may be applied when effective_control is unknown; effective_control may be split by principal
 # and scope, and views read the host's entry. Every 0.1.0 trace is still valid unchanged.
+#
+# 0.3.0 (issue #39, stocks and flows): new accounting quantity industrial_capacity (a stock); industrial_output is
+# derived from it. AD-PACT books A as a stock with an explicit output rate (1/yr, one EIU of capacity yields one EIU of
+# output per year; definition DEF-EIU in research_notes/external/units-bridge/quantities.yaml). Adapter quantities may
+# declare their kind; a declared kind must match the accounting quantity's, and an output_rate leads from a stock to a
+# flow derived from it. Trace resources are held by shares, so they name stock accounting quantities;
+# TR-SOVEREIGN-COOPERATIVE's R-OFFEARTH and R-EARTH move from industrial_output to industrial_capacity.
 
-contract_version: 0.2.0
+contract_version: 0.3.0
 status: proposed
 
 entity_kinds:
@@ -256,11 +265,18 @@ accounting:
     kind: flow
     ledger: "the entity whose objectives direct the research"
     derived_from: [human_labor, agent_labor, compute_training]
+  - id: industrial_capacity
+    unit: "Earth-industry units (EIU, a stock; pact solver) or capital in source units"
+    kind: stock
+    ledger: "the holding entity; shares of one instance never sum above 1"
+    derived_from: []
+    note: "Productive capacity. One EIU is the world economy's capacity in the reference year (DEF-EIU, research_notes/external/units-bridge/quantities.yaml). Never summed with its own output."
   - id: industrial_output
-    unit: "Earth-industry units (pact solver) or USD per year"
+    unit: "Earth-industry units per year (EIU/yr) or USD per year"
     kind: flow
     ledger: "the producing entity, counted once"
-    derived_from: []
+    derived_from: [industrial_capacity]
+    note: "The yearly output of industrial_capacity at the adapter's stated output rate. An adapter takes capacity or output as an input, not both. One EIU/yr is the reference year's gross world output; USD maps to it only through units-bridge CV-GWP-TO-EIU-OUTPUT."
 
 transitions:
   - id: T-DELEGATE
@@ -429,7 +445,7 @@ adapters:
       - {name: "runtime compute (all automated tasks)", unit: "solver-native, same unit as training compute", owner: "economy aggregate (planner)", accounting: compute_inference}
       - {name: "digital workers N_i", unit: "human-worker equivalents per task", owner: "economy aggregate (planner)", accounting: agent_labor}
       - {name: "hardware efficiency H and software efficiency S", unit: "FLOP/year/$ and eFLOP/FLOP", owner: "economy aggregate (planner)", accounting: research_output}
-      - {name: "gross world product Y", unit: "real USD per year", owner: "economy aggregate (planner)", accounting: industrial_output}
+      - {name: "gross world product Y", unit: "real USD per year", owner: "economy aggregate (planner)", accounting: industrial_output, kind: flow}
     inputs: [human_labor]
     modes:
       MODE-HUMAN-LAB: {coverage: partial, reason: "Its allocations can be read as an upper-envelope of what human institutions direct at world scale, but there is no lab entity, no custody, authorization or effective_control, and the planner is not a human institution's actual decision process."}
@@ -466,10 +482,15 @@ adapters:
     entity_represented: "One strategic AI with an off-Earth industrial base, N symmetric human states and Earth's fab level"
     decision_authority: "The AI chooses cooperate, exit, strike or police; states choose rival programmes; the pact terms are fixed at t = 0."
     quantities:
-      - {name: "AI capacity A", unit: "Earth-industry units (H = 1)", owner: agent_instance, accounting: industrial_output}
+      - name: "AI capacity A"
+        unit: "Earth-industry units (EIU, a stock; H = 1)"
+        owner: agent_instance
+        accounting: industrial_capacity
+        kind: stock
+        output_rate: {value: 1.0, unit: "per year", accounting: industrial_output, basis: "DEF-EIU: one EIU of capacity yields one EIU of output per year; implicit in the solver (dt = 1 yr), where A is a stock in growth, seizure and defence and its yearly output enters the AI's payoff and trade (units-bridge CV-CAPACITY-TO-OUTPUT)"}
       - {name: "Earth fab level F", unit: "share of today's leading-edge capacity", owner: state, dimension: dependencies}
       - {name: "denial reserve firing probability q", unit: "probability", owner: state, dimension: effective_control}
-    inputs: [industrial_output]
+    inputs: [industrial_capacity]
     modes:
       MODE-HUMAN-LAB: {coverage: unsupported, reason: "No lab and no development phase; the game starts at A0 with an already independent AI."}
       MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "The AI is not hosted by a lab; kill_pre and h_dep are stand-ins for human dependence, not a lab setting."}
@@ -592,8 +613,8 @@ traces:
           AI-P: {kind: agent_instance, host: null, state: {strategic_capability: independent_plausible, rd_capability: unknown, cyber_capability: unknown, objective_selection: system_self, authorization: none, effective_control: none, custody_weights: system_self, custody_compute: system_self, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: substantial_within_scope, dependencies: none_within_horizon, communication_topology: sanctioned_channels, information_beliefs: complete_common_knowledge, enforceable_commitments: self_enforcing_only, intervention_latency: untested}, stocks: {knowledge: K3, copies: [AI-P], assets: [R-OFFEARTH], liabilities: [], commitments: [pact]}}
           STATE-1: {kind: state, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: complete_common_knowledge, enforceable_commitments: mutually_enforceable}}
         resources:
-          R-OFFEARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {AI-P: 1.0}}
-          R-EARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {STATE-1: 1.0}}
+          R-OFFEARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {AI-P: 1.0}}
+          R-EARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {STATE-1: 1.0}}
         expected_views:
           AI-P: [MODE-SOVEREIGN]
           STATE-1: []
@@ -604,8 +625,8 @@ traces:
           AI-P: {kind: agent_instance, host: null, state: {strategic_capability: independent_plausible, rd_capability: unknown, cyber_capability: unknown, objective_selection: system_self, authorization: none, effective_control: none, custody_weights: system_self, custody_compute: system_self, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: substantial_within_scope, dependencies: none_within_horizon, communication_topology: sanctioned_channels, information_beliefs: complete_common_knowledge, enforceable_commitments: none, intervention_latency: untested}, stocks: {knowledge: K3, copies: [AI-P], assets: [R-OFFEARTH], liabilities: [broken-pact], commitments: []}}
           STATE-1: {kind: state, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: complete_common_knowledge, enforceable_commitments: none}}
         resources:
-          R-OFFEARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {AI-P: 1.0}}
-          R-EARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {STATE-1: 1.0}}
+          R-OFFEARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {AI-P: 1.0}}
+          R-EARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {STATE-1: 1.0}}
         stock_changes:
           - {entity: AI-P, stock: commitments, cause: "pact ended by exit"}
           - {entity: AI-P, stock: liabilities, cause: "exit recorded as a broken commitment"}

@@ -17,6 +17,26 @@ symbols:
   chi: {unit: "1", quantity: QTY-CHI0}
   dt: {unit: yr}
   T_double: {unit: yr, quantity: QTY-DOUBLING-TIME}
+  # pact solver payoffs and transfers (issue #39): where A and H are stocks and where they are flows
+  H: {unit: EIU, quantity: QTY-EARTH-INDUSTRY-H}
+  rho: {unit: 1/yr, value: 1.0}
+  gam: {unit: "1"}
+  sigma: {unit: "1"}
+  N: {unit: "1"}
+  c_w: {unit: "1"}
+  c_S: {unit: EIU, quantity: QTY-PACT-A}
+  A_seized: {unit: EIU, quantity: QTY-PACT-A}
+  T_trade: {unit: EIU/yr, quantity: QTY-INDUSTRIAL-OUTPUT}
+  Y_AI: {unit: EIU/yr, quantity: QTY-INDUSTRIAL-OUTPUT}
+  Y_H: {unit: EIU/yr, quantity: QTY-INDUSTRIAL-OUTPUT}
+  F: {unit: LEC, quantity: QTY-LE-FAB-LEVEL-F}
+  F_next: {unit: LEC, quantity: QTY-LE-FAB-LEVEL-F}
+  F_ref: {unit: LEC, value: 1.0}
+  T_dis: {unit: yr}
+  # GATE output read in the unit (CV-GWP-TO-EIU-OUTPUT)
+  Y_gate: {unit: USD/yr, quantity: QTY-GWP}
+  Y_ref: {unit: USD/EIU, value: 1.11669432109121e+14}
+  f_gwp: {unit: EIU/USD, value: 8.955002108570063e-15}
   # Metzger docking bridge
   E_gen5: {unit: J/yr, value: 1.0e+15, quantity: QTY-METZGER-GEN5-ENERGY}
   P_earth: {unit: W/EIU, value: 1.96e+13}
@@ -58,6 +78,16 @@ symbols:
 equations:
   - {id: PACT-GROWTH, model: AD-PACT, text: "A_next = A * exp(g * chi * dt * (1 - A / Kmax))"}
   - {id: PACT-DOUBLING, model: AD-PACT, text: "T_double = log(2) / g"}
+  # rho is the output rate the solver leaves implicit (rho = 1/yr with dt = 1 yr); without it these do not balance.
+  - {id: PACT-OUTPUT-RATE, model: AD-PACT, text: "Y = rho * A", note: "CV-CAPACITY-TO-OUTPUT; the AD-PACT output_rate in systems/modes.yaml"}
+  - {id: PACT-TRADE, model: AD-PACT, text: "T_trade = gam * rho * min(A, H)", note: "solve(): trade = gam * min(A, H), 'trade surplus per year as a share of the smaller partner's economy'"}
+  - {id: PACT-AI-FLOW, model: AD-PACT, text: "Y_AI = rho * A + sigma * T_trade", note: "solve(): flowA_pact = u(A + (1 - reinv) sigma trade ...) dt, with reinv = psi_div = 0 and no blockade"}
+  - {id: PACT-HUMAN-FLOW, model: AD-PACT, text: "Y_H = rho * H + (1 - sigma) * T_trade / N", note: "solve(): flowH_pact = (1 + (1 - sigma) trade / N - den_cost) dt; the 1 is H's yearly output, the human welfare unit"}
+  - {id: PACT-REINVEST, model: AD-PACT, text: "A_next = A + sigma * T_trade * dt", note: "solve(): reinv = 1 adds sigma trade dt to the stock (growth term omitted here)"}
+  - {id: PACT-PRIZE, model: AD-PACT, text: "A_seized = A - c_S + (1 - c_w) * H", note: "solve(): As0 = A - cS + Pi0, Pi0 = (1 - c_w) H; a seizure transfers Earth's capacity, a stock"}
+  - {id: PACT-FAB-DISMANTLE, model: AD-PACT, text: "F_next = F - F_ref * dt / T_dis", note: "solve(): F - dt / T_dis; F is a share of F_ref = 1 LEC, a level of installed capacity"}
+  - {id: GATE-Y-IN-EIU, model: AD-GATE, text: "Y = Y_gate / Y_ref", note: "CV-GWP-TO-EIU-OUTPUT: GATE output read in EIU/yr; not coupled"}
+  - {id: GWP-FACTOR, model: AD-GATE, text: "f_gwp = 1 / Y_ref", check_value: f_gwp}
   - {id: METZGER-BRIDGE, model: docking, text: "u_t = E_gen5 / P_earth / m_gen5", check_value: u_t}
   - {id: METZGER-GEN5-EIU, model: docking, text: "A_gen5 = E_gen5 / P_earth", check_value: A_gen5}
   - {id: METZGER-PER-GENERATION, model: Metzger, text: "T_gen * r_metzger = log(3.65)", note: "ln of the growth factor per generation is dimensionless; 3.65 = exp(2 x 0.647)"}
