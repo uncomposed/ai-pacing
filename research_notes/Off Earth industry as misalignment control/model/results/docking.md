@@ -221,6 +221,8 @@ In our model the direction is **Potapov's, not Saklakov's**: impatient AIs (r �
 4. **Metzger's own plateau is our χ0, for a different reason.** His reduced-rate case grows at about 0.13 per year until closure, inside our swept range for χ0·g (0.007 to 0.18 per year at g = 0.35; baseline 0.05). But his slowdown is chosen to save launch mass; ours is imposed by denial. Agreement in number, not in mechanism.
 5. **An inconsistency inside the source.** The abstract says the max-rate case ends at "as high as 40,000 MT with as many as 100,000 humanoid robots". Fig. 2 shows about 23,500 t and about 47,000 robots at Gen 6.0. I could not find which case gives the abstract's numbers. I used the figure.
 
+**Addendum 2026-10-25 (#11).** Rechecked against the arXiv manuscript and Crossref, and Fig. 2 re-digitized from its embedded raster: the values above agree within 5%, the max-case fit is 0.647/yr, and the published citation is *J. Aerospace Eng.* 26(1):18-29 (January 2013). The `g` basis text in PARAMS is corrected and `g` is now a project assumption. The tables above are left as written. See `research_notes/external/units-bridge/metzger/RECHECK.md`.
+
 ## 8. Turner et al.: power-seeking
 
 Turner, Smith, Shah, Critch and Tadepalli prove that for most reward functions, under symmetry conditions, optimal policies keep options open and avoid shutdown. It is a statement about distributions of goals, not a parametric model, so there is nothing to dock numerically. What the comparison exposes is that our model **assumes** what Turner derives: the AI's utility is increasing in its own capacity (linear at baseline, `eta = 0`). Every result in `equilibrium.md` is conditional on that one goal.

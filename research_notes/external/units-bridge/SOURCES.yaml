@@ -1,0 +1,57 @@
+# Sources for the units bridge (issue #11). Pinned by URL, version and access date; SHA-256 where bytes were fetched.
+# Nothing is vendored. IDs that start with EV- are dated evidence records in evidence/records.yaml.
+
+accessed: "2026-10-25"
+
+sources:
+  - id: EV-METZGER-2013
+    title: "Affordable, Rapid Bootstrapping of the Space Industry and Solar System Civilization"
+    url: https://arxiv.org/abs/1612.03238v1
+    pdf: https://arxiv.org/pdf/1612.03238v1
+    version: "arXiv v1, 2016-12-10 (only version); accepted manuscript, 'Preprint. To appear in Journal of Aerospace Engineering'"
+    sha256: 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62
+    licence: "arXiv non-exclusive distribution licence 1.0 (not redistributable here)"
+    read: "abstract, model description, growth-rate, launch-mass and discussion sections; Fig. 2 re-digitized"
+    used_for: [metzger/RECHECK.md, metzger/fig2_digitized.json, quantities QTY-METZGER-*, QTY-LOCAL-CHIP-SHARE]
+  - id: crossref-metzger
+    title: "Crossref metadata for doi:10.1061/(ASCE)AS.1943-5525.0000236"
+    url: "https://api.crossref.org/works/10.1061/(ASCE)AS.1943-5525.0000236"
+    version: "record indexed 2026-08-05"
+    licence: "Crossref metadata, CC0"
+    read: "volume 26, issue 1, pages 18-29, published-print 2013-01, DOI created 2012-04-02"
+    used_for: [EV-METZGER-2013 citation]
+  - id: asce-version-of-record
+    title: "Version of record on ascelibrary.org"
+    url: "https://ascelibrary.org/doi/10.1061/%28ASCE%29AS.1943-5525.0000236"
+    version: "not retrieved"
+    licence: "publisher copyright"
+    read: "no: HTTP 403 from this environment; differences from the manuscript unknown"
+    used_for: []
+  - id: energy-institute-review
+    title: "Energy Institute Statistical Review of World Energy, 2024 and 2025 editions"
+    url: "https://dieselnet.com/news/2024/06energyreview.php ; https://dieselnet.com/news/2025/06energyreview.php"
+    version: "as cited in research_notes/Off Earth industry as misalignment control/{decision_model,physics_economics}.md"
+    licence: not checked
+    read: "no: values taken from the repository's own notes, which cite DieselNet summaries (secondary)"
+    used_for: [QTY-WORLD-PRIMARY-POWER, CV-EIU-TO-PRIMARY-POWER]
+  - id: mode-contract
+    title: "AI development mode and transition contract"
+    url: systems/modes.yaml
+    version: "main at f6a676e (includes the #13 AD-GATE update)"
+    licence: repository
+    read: "accounting, dimensions, modes, adapters"
+    used_for: [contract references in quantities.yaml]
+  - id: epoch-gate-interfaces
+    title: "GATE interfaces: units, ownership, and double counting with AI Futures"
+    url: research_notes/external/epoch-gate/INTERFACES.md
+    version: "main at f6a676e"
+    licence: repository
+    read: "units table and the one-owner-per-loop rule"
+    used_for: [QTY-GATE-COMPUTE-STOCK, QTY-EFFECTIVE-COMPUTE, QTY-GWP, CV-GWP-TO-EIU-OUTPUT, README F5]
+  - id: pact-solver
+    title: "Off-Earth pact equilibrium solver"
+    url: "research_notes/Off Earth industry as misalignment control/model/equilibrium_model.py"
+    version: "main; growth law at solve().grow, checked verbatim by coupling_toy.py"
+    licence: repository
+    read: "PARAMS and the growth step"
+    used_for: [coupling_toy.py baseline, pact_params in quantities.yaml]
