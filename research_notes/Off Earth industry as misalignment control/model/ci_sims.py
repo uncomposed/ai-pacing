@@ -35,6 +35,7 @@ import glob
 import json
 import os
 import platform
+import re
 import shlex
 import subprocess
 import sys
@@ -358,27 +359,84 @@ def _json_diff(a, b, path="$"):
     return [] if a == b else [f"{path}: {a!r} != {b!r}"]
 
 
+# Error measures printed by --check. Their committed values are not golden numbers (CPU rounding moves them), so
+# they are masked out of the comparison and judged against robust_design.CHECK_TOL instead. Each entry: the
+# CHECK_TOL key, the JSON key that holds it (or None), and a pattern whose group 2 is the number in the .md.
+DIAGNOSTICS = [
+    ("reg_maxdiff", "reg_maxdiff", re.compile(r"(Largest absolute difference over every reported number: )(\S+?)(\.)$")),
+    ("identity_rotation", None, re.compile(r"(largest relative difference )([^)\s]+)(\))")),
+    ("identity_size_erosion", None, re.compile(r"(changes nothing \()([^)\s]+)(\))")),
+]
+
+
+def _mask(lines: list[str]) -> tuple[list[str], dict]:
+    """Replace each diagnostic number in the .md with a placeholder; return the masked lines and the numbers."""
+    found, out = {}, []
+    for ln in lines:
+        for key, _, pat in DIAGNOSTICS:
+            m = pat.search(ln)
+            if m:
+                found[key] = m.group(2)
+                ln = ln[:m.start(2)] + f"<{key}>" + ln[m.end(2):]
+        out.append(ln)
+    return out, found
+
+
+def compare_check_outputs(ref_md: str, here_md: str, ref_json: str, here_json: str) -> tuple[list[str], list[str]]:
+    """(problems, notes) for --check output against the committed copy. Everything must match the committed
+    copy (floats in the JSON to ATOL + RTOL), except the DIAGNOSTICS, which must be within CHECK_TOL here."""
+    problems, notes = [], []
+    md_rel, js_rel = CHECK_FILES
+    strip = lambda s: [ln for ln in s.splitlines() if not ln.startswith("(checks took")]
+    ref_l, ref_v = _mask(strip(ref_md))
+    here_l, here_v = _mask(strip(here_md))
+    if ref_l != here_l:
+        import difflib
+        problems.append(f"{md_rel} differs:\n```diff\n" + "\n".join(difflib.unified_diff(
+            ref_l, here_l, "committed", "this run", lineterm="")) + "\n```")
+    rj, hj = json.loads(ref_json), json.loads(here_json)
+    for key, jkey, _ in DIAGNOSTICS:
+        tol = rd.CHECK_TOL[key]
+        vals = []
+        if jkey is not None:
+            if jkey not in hj:
+                problems.append(f"{js_rel} has no {jkey}")
+                continue
+            vals.append(hj[jkey])
+            rj.pop(jkey, None)
+            hj.pop(jkey)
+        if key in here_v:
+            try:
+                vals.append(float(here_v[key]))
+            except ValueError:
+                problems.append(f"{md_rel}: {key} printed as {here_v[key]!r}, not a number")
+        elif key in ref_v:
+            problems.append(f"{md_rel}: the line reporting {key} is missing")
+        bad = [v for v in vals if not abs(v) <= tol]
+        if bad:
+            problems.append(f"{key} = {bad[0]:.3g} exceeds its threshold {tol:g}")
+        elif vals:
+            notes.append(f"{key} = {max(abs(v) for v in vals):.3g} (committed {ref_v.get(key, '?')}): within {tol:g}, "
+                         "judged by threshold, not compared with the committed value")
+    for d in _json_diff(rj, hj):
+        (problems if "within tolerance" not in d else notes).append(f"{js_rel} {d}")
+    return problems, notes
+
+
 def cmd_compare_checks(a):
     """--check output against the committed copy. The markdown must match exactly apart from its run-time
-    line; the JSON must match exactly apart from floats within tolerance, which are still listed."""
-    problems, notes = [], []
+    line and the DIAGNOSTICS numbers; the JSON must match exactly apart from floats within tolerance (still
+    listed) and the DIAGNOSTICS, which are judged against robust_design.CHECK_TOL."""
+    texts = []
     for rel in CHECK_FILES:
         ref = _git("show", f"{a.ref}:./{rel}")
         if ref is None:
             sys.exit(f"ci_sims: {rel} is not committed at {a.ref}")
-        here = open(os.path.join(rd.HERE, rel)).read()
-        if rel.endswith(".md"):
-            strip = lambda s: [ln for ln in s.splitlines() if not ln.startswith("(checks took")]
-            if strip(ref) != strip(here):
-                import difflib
-                problems.append(f"{rel} differs:\n```diff\n" + "\n".join(difflib.unified_diff(
-                    strip(ref), strip(here), "committed", "this run", lineterm="")) + "\n```")
-        else:
-            for d in _json_diff(json.loads(ref), json.loads(here)):
-                (problems if "within tolerance" not in d else notes).append(f"{rel} {d}")
+        texts += [ref, open(os.path.join(rd.HERE, rel)).read()]
+    problems, notes = compare_check_outputs(texts[0], texts[1], texts[2], texts[3])
     md = ["### `robust_design.py --check` against the committed reference", ""]
     md += ["Matches the committed output." if not problems else "**Differs from the committed output.**"]
-    md += [f"- {p}" for p in problems] + [f"- float noise, not a failure: {n}" for n in notes]
+    md += [f"- {p}" for p in problems] + [f"- not a failure: {n}" for n in notes]
     summary("\n".join(md))
     sys.exit(1 if problems else 0)
 

@@ -63,7 +63,9 @@ jobs:
         run: |
           python tests/test_run_identity.py
           python run_identity.py inventory --check
-      - name: robust_design.py --check (round-1 regression S1/S7/S14/S16, identities, closed form)
+      - name: Unit tests for the check comparison (no solving)
+        run: python tests/test_check_tolerances.py
+      - name: robust_design.py --check (round-1 regression S1/S7/S14/S16, identities, closed form; error measures fail above CHECK_TOL)
         run: python robust_design.py --check
       - name: Compare --check output with the committed reference
         run: python ci_sims.py compare-checks

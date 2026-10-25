@@ -1,5 +1,14 @@
 # AI Pacing canonical specification
 
+**Contributing and research.** Read [`CONTRIBUTING.md`](CONTRIBUTING.md) first: repository
+layout, how to run `make check`, how spec changes are proposed, and the evidence standards.
+The [off-Earth pact research notes](research_notes/Off%20Earth%20industry%20as%20misalignment%20control/)
+and equilibrium model start at its
+[`HANDOFF.md`](research_notes/Off%20Earth%20industry%20as%20misalignment%20control/model/HANDOFF.md).
+CI is defined in [`.github/workflows/`](.github/workflows/): `check.yml` runs on every pull
+request; `sims.yml` and `breakout.yml` are started by hand and their outputs reviewed before
+commit. Agents: see [`CLAUDE.md`](CLAUDE.md).
+
 ## Stakeholder challenges and candidate solutions
 
 Start with the [actor and use-case analysis](docs/actor-analysis.md) for distinct
