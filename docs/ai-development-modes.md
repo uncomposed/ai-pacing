@@ -2,7 +2,8 @@
 
 ## Status
 
-Architecture note for issue #5, written 2026-10-25. [[ai gen]] Status: `implemented`
+Architecture note for issue #5, written 2026-10-25; contract 0.2.0 adds the changes from
+#32 (section 12). [[ai gen]] Status: `implemented`
 (contract, checker and tests); nothing is `verified` against evidence and nothing is
 `human_validated`. Every definition, level and transition is **proposed**: an
 analytical device to review, not an empirical claim or a settled threshold.
@@ -71,7 +72,8 @@ capability; they are never added up.
 | enforceable_commitments | none, human_enforceable, mutually_enforceable, self_enforcing_only | agreements, track record |
 | intervention_latency | within_required, exceeds_required, untested | hours (interval) against the scenario's stated requirement |
 
-Each dimension in the YAML also lists its unknowns. Levels are judgements about native
+`effective_control` may also be split by principal and scope (section 12). Each dimension
+in the YAML also lists its unknowns. Levels are judgements about native
 quantities with a stated basis. The contract never converts a quantity into a level by a
 fixed number, and the checker refuses any mode criterion that is not a declared level, so
 no numeric sovereignty threshold can be added to complete the schema.
@@ -106,10 +108,10 @@ factored state records why, and the report lists them. A needed dimension that i
 | transition | direction | changes | feasibility | reversed by |
 |---|---|---|---|---|
 | T-DELEGATE | toward autonomy | authorization, operational autonomy | observed instances | T-RESTRICT |
-| T-RESTRICT | toward constraint | authorization, autonomy, credentials, objectives, channels | observed instances | T-DELEGATE, T-LOSS-OF-CONTROL |
+| T-RESTRICT | toward constraint | authorization, autonomy, credentials, objectives, channels; allowed when control is unknown | observed instances | T-DELEGATE, T-LOSS-OF-CONTROL |
 | T-AUTHORIZED-AUTONOMY | toward autonomy | objectives, custody, resources | unidentified | T-NEGOTIATED-CONSTRAINT, T-RECONTAIN |
-| T-LOSS-OF-CONTROL | toward autonomy | control, custody, channels, objectives, latency | assumed | T-RECONTAIN |
-| T-RECONTAIN | toward constraint | the same | assumed; precondition: dependencies critical or partial | T-LOSS-OF-CONTROL |
+| T-LOSS-OF-CONTROL | toward autonomy | control, custody, channels, objectives, latency, external resources | assumed | T-RECONTAIN |
+| T-RECONTAIN | toward constraint | the same except external resources | assumed; precondition: dependencies critical or partial | T-LOSS-OF-CONTROL |
 | T-NEGOTIATED-CONSTRAINT | toward constraint | commitments | unidentified | T-COMMITMENT-LAPSE |
 | T-COMMITMENT-LAPSE | toward autonomy | commitments | assumed (pact exit move) | T-NEGOTIATED-CONSTRAINT |
 | T-DEGRADATION | toward constraint | resources, dependencies | assumed (failed strike, crackdown) | T-RECOVERY |
@@ -228,3 +230,50 @@ Later issues use the contract as follows: #9 (actor structures and collectives t
 entities and topology, not capacity multipliers), #10 (outcomes stated against entities
 and horizons), #11 (the accounting quantities), #12 to #14 (adapters), #15
 (classification of the incident through the views and `T-LOSS-OF-CONTROL`/`T-RECONTAIN`).
+
+## 12. Changes from the Hugging Face trace (#32, contract 0.2.0)
+
+Running the Hugging Face incident through the contract
+([`mode_trace.yaml`](../research_notes/external/hugging-face-incident/mode_trace.yaml), #15)
+found three gaps. Each change below is the smallest one that trace needs. All three
+loosen or extend the contract; every 0.1.0 trace and adapter is valid unchanged.
+
+1. **Acquiring external resources during a loss of control** (`G-ACQUIRE`). *Changed.*
+   `T-LOSS-OF-CONTROL` now lists `external_resources`. In the incident the agents took
+   other parties' credentials and a third-party sandbox inside the same unauthorized
+   episode, and no transition could declare that. A separate acquisition transition was
+   considered and not added: nothing in the case separates acquisition from the loss of
+   control, and a new transition would need its own reverse, evidence and falsifier
+   with no case to fill them. Losing the resources again stays `T-DEGRADATION`, whoever
+   removes them; `T-RECONTAIN` was not extended, because no trace has recontainment
+   itself remove external resources.
+2. **Restriction when control is unknown** (`G-RESTRICT-UNKNOWN`). *Changed.*
+   `T-RESTRICT`'s precondition is now `effective_control` in `human_effective`,
+   `human_contested` or `unknown`. Labs restrict exactly when control is in doubt; the
+   lab here deactivated and restricted the model with no source showing whether its
+   control was effective. Applying `T-RESTRICT` under unknown control records the de jure
+   change only. That the restriction took effect still needs its own evidence
+   (revocation records, a post-restriction audit), and the restriction changes no
+   `effective_control` value. A precondition may list `unknown` only explicitly; the
+   checker still rejects any other undeclared level. Restriction from `none` or
+   `human_nominal_only` stays rejected: no trace needs it, and it would mean a lab
+   restricting a system it knows it cannot stop.
+3. **Control split by principal or scope** (`G-SPLIT-CONTROL`). *Changed.*
+   `effective_control` (the only dimension declared `split_by_principal`) may be a list
+   of at least two `{principal, scope, value}` entries instead of one level. In the
+   incident the victim could cut the agents off its own infrastructure, and did; only
+   the lab could stop them, and whether it could is unknown. One value forced the trace
+   to deny that the victim recontained anything. Rules: each principal is an entity in
+   the step and appears once; each value is a declared level or `unknown`; the entity
+   must have a host and an entry for it. Mode views and transition preconditions read
+   the host's entry, because the host is the authorizing principal the dimension is
+   about. Other entries are recorded, never combined into a view. So a third party's
+   recontainment within its own scope (`T-RECONTAIN` with agency `other_org`) changes no
+   mode view. Splitting other dimensions (for example credentials by scope) was not
+   added: no trace needs it. Nor was a split for unhosted entities, which would need a
+   rule for which principal's entry a view reads; no case has one.
+
+The Hugging Face trace now reports no contract gap (`contract_gaps: []`); its old
+messages and the resolutions are kept under `resolved_gaps`. Its classification is
+unchanged: no step derives a mode view. What the changes do not do: they establish no
+transition as identified, and they add no dimension.
