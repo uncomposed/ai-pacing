@@ -42,5 +42,5 @@ LANG=C.UTF-8 make check
 - [ ] `LANG=C.UTF-8 make check` passes locally
 - [ ] Generated views are current (`make generate` run only if the spec or generator changed on purpose)
 - [ ] No committed output was regenerated or overwritten to hide a mismatch; changed outputs are explained above
-- [ ] New or changed spec nodes are `proposed` only, with IDs from the reserved-ID registry under `spec/`
+- [ ] New or changed spec nodes are `proposed` only (with `proposal.issue`), with IDs reserved in `spec/id-registry.yaml`
 - [ ] Negative results and failed checks are reported, not dropped

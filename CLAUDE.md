@@ -45,10 +45,13 @@ anything you did not mean to change.
   negative results. Do not loosen a check to make it pass. Run `make generate`
   only after an intentional spec or generator change, and commit its output
   with that change.
-- Propose spec nodes only. New nodes get `provenance.author_status: proposed`;
-  never write `accepted*`. The canonical editor accepts.
-- Node IDs come from the single reserved-ID registry under `spec/`. Reserve
-  before use; never pick the next number yourself, reuse or renumber.
+- Propose spec nodes only. New nodes get `provenance.author_status: proposed`
+  and `proposal: {issue: uncomposed/ai-pacing#N}`; never write `accepted*`. The
+  canonical editor accepts. `make check` enforces both fields.
+- Node IDs come from the reserved-ID registry `spec/id-registry.yaml`. Get the
+  next free ID with `ruby tools/spec_tool.rb next-id <K|D|H|I|Q>`, add an entry
+  there and bump `next_free` before use (procedure in CONTRIBUTING.md). Never
+  pick the number yourself, reuse or renumber a registered ID.
 - Keep three things separate: replication of a source model, numerical
   correctness, empirical validation. Never claim more than was shown. Ensemble
   shares are sampling-measure outcomes, not calibrated probabilities.
@@ -57,7 +60,7 @@ anything you did not mean to change.
 
 ## Where things are
 
-- Spec: `spec/ai-pacing.yaml`; tools in `tools/`; tests in `test/`; schemas in `schema/`.
+- Spec: `spec/ai-pacing.yaml`; ID registry: `spec/id-registry.yaml`; tools in `tools/`; tests in `test/`; schemas in `schema/`.
 - Model docs: `research_notes/Off Earth industry as misalignment control/model/HANDOFF.md`
   (start here; CI section), `results/equilibrium.md`, `results/robust_design.md`,
   `results/docking.md`, and the assumption register `assumptions.yaml`

@@ -111,7 +111,7 @@ proposition, so it is left as a recommendation. Run
 
 **Related work.** The systems-engineering workspace already models issue #1's
 split (`HYP-SIGNAL`, `HYP-MARGIN`, `CH-COOPERATE`, `REQ-COOPERATE`; see
-`docs/systems-engineering.md` section 8). Open PR #2 (`docs/bootstrap-pacing.md`)
+`docs/systems-engineering.md` section 8). `docs/bootstrap-pacing.md` (PR #2)
 proposes an "exposure-tax hypothesis" that overlaps H14: both say converting
 hidden capability into external power requires observable interaction with the
 outside world. If both are accepted, they should be reconciled into one
