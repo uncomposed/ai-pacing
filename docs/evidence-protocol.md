@@ -32,8 +32,8 @@ from them) has exactly one role:
 | role | needs | count now |
 |---|---|---|
 | observed_measurement | `empirical_support`: observation records read in primary form | 0 |
-| source_model_assumption | `source_model`: a record of the source model, with locator | 1 (`g`, Metzger; its citation error is AS-GCITE) |
-| project_assumption | nothing beyond its register entry | 75 |
+| source_model_assumption | `source_model`: a record of the source model, with locator | 0 (`g` was one until the #11 recheck showed 0.35 is not a Metzger value) |
+| project_assumption | nothing beyond its register entry | 76 |
 | policy_choice | nothing; a human lever | 16 |
 | derived | `derived_from`: other inputs | 3 |
 
