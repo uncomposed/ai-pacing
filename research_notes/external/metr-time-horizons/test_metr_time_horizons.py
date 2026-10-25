@@ -21,6 +21,7 @@ sys.path.insert(0, str(HERE))
 import holdout as H  # noqa: E402
 import horizon_fit as hf  # noqa: E402
 import lock_forecast as LF  # noqa: E402
+import suite_mapping as SM  # noqa: E402
 
 ROOT = HERE.parents[2]
 OBS = list(csv.DictReader((HERE / "data/observations.csv").open(encoding="utf-8")))
@@ -183,6 +184,166 @@ class LockedForecast(unittest.TestCase):
             self.assertEqual(f["label"], "locked")
             self.assertRegex(f["lock_commit"], r"^[0-9a-f]{40}$")
             self.assertIsNone(f["resolution"])
+
+
+class SuiteMapping(unittest.TestCase):
+    """TH1.0 -> TH1.1 mapping (#57): declared in suite_mapping.yaml, computed by suite_mapping.py."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.res = SM.compute()
+        cls.committed = json.loads((HERE / "results/suite_mapping.json").read_text())
+
+    def test_committed_results_reproduce(self):
+        self.assertTrue(H.close(self.committed, self.res))
+        self.assertEqual((HERE / "results/suite_mapping.md").read_text(), SM.to_markdown(self.res))
+
+    def test_declaration_is_what_was_run(self):
+        d = SM.DECL
+        self.assertEqual(d["interval_level"], 0.9)
+        self.assertEqual(d["bootstrap"], {"over": "models", "n": 10000, "seed": 57})
+        self.assertEqual([c["id"] for c in d["criteria"]], ["C1", "C2", "C3", "C4"])
+        self.assertEqual(len(d["pairs"]), 16)
+        self.assertEqual(sum(p["scaffold_change"] for p in d["pairs"]), 14)
+        self.assertEqual(self.res["n_fit"], 14)
+
+    def test_pairs_are_published_post_correction_values_on_both_suites(self):
+        by = {(r["record_id"], r["model_key"]): r for r in OBS}
+        for p in SM.DECL["pairs"]:
+            a, b = by[(SM.DECL["rows"]["th10"], p["th10"])], by[(SM.DECL["rows"]["th11"], p["th11"])]
+            self.assertEqual((a["suite"], b["suite"]), ("TH1.0", "TH1.1"))
+            self.assertTrue(a["value_source"].startswith("published") and b["value_source"].startswith("published"))
+            self.assertEqual((a["regularization"], b["regularization"]), ("1e-05", "1e-05"))
+            self.assertTrue(a["p50_ci_low"] and b["p50_ci_low"])
+        # Agents the TH1.1 file only repeats from TH1.0 (identical estimates and intervals on both sides, checked
+        # against the two published files) are not pairs.
+        self.assertFalse(set(SM.DECL["excluded_stitched"]) & {p["th10"] for p in SM.DECL["pairs"]})
+
+    def test_ols_and_prediction_interval_on_exact_and_known_data(self):
+        x = np.array([0.0, 1.0, 2.0, 3.0, 4.0])
+        f = SM.ols(x, 2.0 + 0.5 * x)
+        self.assertAlmostEqual(f["a"], 2.0)
+        self.assertAlmostEqual(f["b"], 0.5)
+        self.assertAlmostEqual(f["s"], 0.0, places=12)
+        # Hand-computed: y = (1, 3, 2, 5, 4): Sxy 8, Sxx 10, b = 0.8, a = 1.4, residual sum of squares 3.6, s = sqrt(1.2)
+        g = SM.ols(x, np.array([1.0, 3.0, 2.0, 5.0, 4.0]))
+        self.assertAlmostEqual(g["b"], 0.8)
+        self.assertAlmostEqual(g["a"], 1.4)
+        self.assertAlmostEqual(g["s"], math.sqrt(1.2))
+        pr = SM.predict(g, 2.0, 0.9)  # at the mean of x the leverage is 1/n
+        half = SM.tq(0.95, 3) * g["s"] * math.sqrt(1 + 1 / 5)
+        self.assertAlmostEqual(pr["pi"][1] - pr["ln"], half)
+        self.assertAlmostEqual(SM.tq(0.95, 12), 1.7823, places=3)
+
+    def test_declared_criteria_outcomes_are_preserved(self):
+        # Recorded as found, including the failure: p80 C3 (GPT-4 0314 lies above its interval).
+        met = {m: r["criteria_met"] for m, r in self.res["metrics"].items()}
+        self.assertEqual(met["p50"], {"C1": True, "C2": True, "C3": True, "C4": True})
+        self.assertEqual(met["p80"], {"C1": True, "C2": True, "C3": False, "C4": True})
+        ho = {h["model"]: h for h in self.res["metrics"]["p80"]["held_out"]}
+        self.assertFalse(ho["gpt_4"]["inside"])
+        self.assertTrue(ho["o1_preview"]["inside"])
+
+    def test_mapping_is_not_a_constant_ratio_and_beats_baselines(self):
+        for m, r in self.res["metrics"].items():
+            self.assertGreater(r["fit"]["b"], 1.2, m)
+            self.assertLess(r["fit"]["b"], 1.5, m)
+            self.assertGreater(r["bootstrap"]["b_ci95"][0], 1.0, m)
+            mae = r["loo"]["mean_abs_error_ln"]
+            self.assertLess(mae["mapping"], 0.6 * mae["identity"], m)
+            self.assertLess(mae["mapping"], 0.6 * mae["const_ratio"], m)
+
+    def test_support_limits_are_flagged(self):
+        for m, r in self.res["metrics"].items():
+            lo, hi = r["support_h10"]
+            for t in r["table"]:
+                self.assertEqual(t["in_support"], lo <= t["h10"] <= hi, (m, t["h10"]))
+        self.assertFalse(any(t["in_support"] for t in self.res["metrics"]["p50"]["table"] if t["h10"] in (5.0, 250.0)))
+        # prediction intervals are wider than the interval of the mean line, everywhere
+        for r in self.res["metrics"].values():
+            for t in r["table"]:
+                self.assertLess(t["pi"][0], t["ci"][0])
+                self.assertGreater(t["pi"][1], t["ci"][1])
+
+    def test_residual_scatter_is_below_independent_published_error(self):
+        # The published intervals, taken as independent errors on each side, would scatter the difference by far
+        # more than the residual about the line: so the two suites' errors are positively correlated.
+        for m, r in self.res["metrics"].items():
+            self.assertLess(r["fit"]["s"], 0.6 * r["published_interval_se_ln"]["rms_of_independent_difference"], m)
+
+    def test_leave_one_out_coverage_counts_match_rows(self):
+        for r in self.res["metrics"].values():
+            self.assertEqual(r["loo"]["covered"], sum(x["covered"] for x in r["loo"]["rows"]))
+            self.assertEqual(r["loo"]["n"], 14)
+
+
+class Th10Stopping(unittest.TestCase):
+    """The four TH1.0 agents above the 1e-3 tolerance are scikit-learn's stopping point (#57)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.d = json.loads((HERE / "results/th10_stopping.json").read_text())
+        cls.rep = json.loads((HERE / "results/reproduction.json").read_text())
+
+    def test_tolerance_not_widened(self):
+        self.assertIn("TOL_REL = 1e-3", (HERE / "reproduce.py").read_text())
+        self.assertEqual(self.d["tolerance_rel"], 1e-3)
+
+    def test_the_same_four_agents_exceed_in_both_files(self):
+        four = ["Claude 4 Opus", "Claude 4 Sonnet", "GPT-2", "gpt-3.5-turbo-instruct"]
+        self.assertEqual(self.d["exceeding"], four)
+        self.assertEqual(len(self.d["agents"]), 33)
+        over = sorted(r["alias"] for r in self.rep["th10_points"]
+                      if max(abs(r[n]["rel_diff"]) for n in ("p50", "p80")) > 1e-3)
+        self.assertEqual(over, four)
+        worst = max(max(abs(r[n]["rel_diff"]) for n in ("p50", "p80")) for r in self.rep["th10_points"])
+        self.assertAlmostEqual(worst, 1.7e-3, delta=0.05e-3)
+
+    def test_published_values_are_sklearn_default_stopping_points(self):
+        for a, r in self.d["agents"].items():
+            self.assertLess(r["max_abs_rel_to_published"]["sklearn_default"], 1e-5, a)  # published = default lbfgs (6 decimals)
+            # a tightly converged scikit-learn fit agrees with the independent Newton fit, not with the published value
+            for k in ("sklearn_tight_lbfgs", "sklearn_tight_newton_cholesky"):
+                self.assertLess(abs(r[k]["p50"] / r["ours"]["p50"] - 1), 2e-6, (a, k))
+                self.assertLess(abs(r[k]["p80"] / r["ours"]["p80"] - 1), 2e-6, (a, k))
+
+    def test_independent_fit_has_the_lower_objective_for_the_four(self):
+        for a in self.d["exceeding"]:
+            o = self.d["agents"][a]["objective"]
+            self.assertGreater(o["sklearn_default"] - o["ours"], 1e-3, a)
+            self.assertLess(abs(o["sklearn_tight_lbfgs"] - o["ours"]), 1e-8 * o["ours"], a)
+            g = self.d["agents"][a]["grad_norm"]
+            self.assertLess(g["sklearn_default"], 1e-4, a)       # stopped at its tolerance
+            self.assertLess(g["ours"], 1e-8, a)                  # at the optimum
+            self.assertEqual(self.d["agents"][a]["sklearn_default_warnings"], [], a)  # no convergence warning
+
+    def test_no_agent_is_above_tolerance_except_the_four(self):
+        for a, r in self.d["agents"].items():
+            self.assertEqual(r["exceeds_tolerance_ours"], a in self.d["exceeding"], a)
+
+
+class UpstreamProvenance(unittest.TestCase):
+    """What the public repository says about the run behind the published intervals (#57)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.d = json.loads((HERE / "results/dvc_lock_check.json").read_text())
+
+    def test_every_public_input_matches_the_md5_in_dvc_lock(self):
+        self.assertTrue(self.d["all_inputs_match"])
+        n = 0
+        for st in self.d["stages"].values():
+            for c in st["inputs"]:
+                if "match" in c:
+                    self.assertTrue(c["match"], c["path"])
+                    n += 1
+        self.assertEqual(n, 11)
+
+    def test_recorded_run_parameters(self):
+        text = " ".join(self.d["stages"]["wrangle_bootstrap_logistic@headline"]["params"])
+        for want in ("n_bootstrap: 1000", "weighting: invsqrt_task_weight", "regularization: 1e-05", "categories: ftr", "confidence_level: 0.95"):
+            self.assertIn(want, text)
+        self.assertIn("--n-bootstrap 1000", self.d["stages"]["wrangle_bootstrap_logistic@headline"]["cmd"])
 
 
 if __name__ == "__main__":

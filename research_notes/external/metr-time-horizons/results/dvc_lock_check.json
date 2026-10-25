@@ -1,0 +1,166 @@
+{
+ "all_inputs_match": true,
+ "bootstrap_output_here_vs_recorded": {
+  "md5_here": "0fd61f72dd63c7856fea6bd301058063",
+  "note": "written by METR's code at the lockfile versions (run_upstream.py); floats of an lbfgs fit are not byte-reproducible across machines, so neither value is evidence of different draws",
+  "recorded_md5": "36f71641cff00d67da81d6fef5014c3b",
+  "recorded_size": 774825,
+  "size_here": 774854
+ },
+ "stages": {
+  "wrangle_bootstrap_logistic@headline": {
+   "cmd": "python -m horizon.wrangle.bootstrap --fig-name headline --runs-file data/raw/runs.jsonl --output-bootstrap-horizons-file data/wrangled/bootstrap/headline.csv --n-bootstrap 1000",
+   "inputs": [
+    {
+     "computed_md5": "dc1060094a827042e16ddc4c336f5936",
+     "computed_size": 1998,
+     "match": true,
+     "path": "src/horizon/load_runs.py",
+     "recorded_md5": "dc1060094a827042e16ddc4c336f5936",
+     "recorded_size": 1998
+    },
+    {
+     "computed_md5": "ae23e24e9ab314fc28cd59d958f85165",
+     "computed_size": 2485,
+     "match": true,
+     "path": "src/horizon/utils/logistic.py",
+     "recorded_md5": "ae23e24e9ab314fc28cd59d958f85165",
+     "recorded_size": 2485
+    },
+    {
+     "computed_md5": "e47348c68043c4334fb46b44e8611999",
+     "computed_size": 12152,
+     "match": true,
+     "path": "src/horizon/wrangle/bootstrap.py",
+     "recorded_md5": "e47348c68043c4334fb46b44e8611999",
+     "recorded_size": 12152
+    },
+    {
+     "computed_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "computed_size": 15008064,
+     "match": true,
+     "path": "data/raw/runs.jsonl",
+     "recorded_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "recorded_size": 15008064
+    },
+    {
+     "computed_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "computed_size": 15008064,
+     "match": true,
+     "path": "data/raw/runs.jsonl",
+     "recorded_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "recorded_size": 15008064
+    }
+   ],
+   "outputs_recorded": [
+    {
+     "md5": "36f71641cff00d67da81d6fef5014c3b",
+     "path": "data/wrangled/bootstrap/headline.csv",
+     "size": 774825
+    }
+   ],
+   "params": [
+    "params.yaml:",
+    "n_bootstrap: 1000",
+    "fig_params/figs.yaml:",
+    "figs.wrangle_logistic.headline:",
+    "runs_file: data/raw/runs.jsonl",
+    "additional_runs_dep: data/raw/runs.jsonl",
+    "weighting: invsqrt_task_weight",
+    "categories: ftr",
+    "regularization: 1e-05",
+    "exclude: []",
+    "success_percents:",
+    "- 50",
+    "- 80",
+    "confidence_level: 0.95"
+   ]
+  },
+  "wrangle_logistic_regression@headline": {
+   "cmd": "python -m horizon.wrangle.logistic --fig-name headline --runs-file data/raw/runs.jsonl --output-logistic-fits-file data/wrangled/logistic_fits/headline.csv --release-dates ../../data/external/release_dates.yaml --bootstrap-file data/wrangled/bootstrap/headline.csv --output-metrics-file metrics/logistic_fits/headline.yaml",
+   "inputs": [
+    {
+     "computed_md5": "ab22e7d1436da09901b454e60a77335e",
+     "computed_size": 2442,
+     "match": true,
+     "path": "data/external/release_dates.yaml",
+     "recorded_md5": "ab22e7d1436da09901b454e60a77335e",
+     "recorded_size": 2442
+    },
+    {
+     "computed_md5": "dc1060094a827042e16ddc4c336f5936",
+     "computed_size": 1998,
+     "match": true,
+     "path": "src/horizon/load_runs.py",
+     "recorded_md5": "dc1060094a827042e16ddc4c336f5936",
+     "recorded_size": 1998
+    },
+    {
+     "computed_md5": "ae23e24e9ab314fc28cd59d958f85165",
+     "computed_size": 2485,
+     "match": true,
+     "path": "src/horizon/utils/logistic.py",
+     "recorded_md5": "ae23e24e9ab314fc28cd59d958f85165",
+     "recorded_size": 2485
+    },
+    {
+     "computed_md5": "3beb7fc48a4dc0cd521b2986d08a9b32",
+     "computed_size": 11316,
+     "match": true,
+     "path": "src/horizon/wrangle/logistic.py",
+     "recorded_md5": "3beb7fc48a4dc0cd521b2986d08a9b32",
+     "recorded_size": 11316
+    },
+    {
+     "computed_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "computed_size": 15008064,
+     "match": true,
+     "path": "data/raw/runs.jsonl",
+     "recorded_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "recorded_size": 15008064
+    },
+    {
+     "computed_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "computed_size": 15008064,
+     "match": true,
+     "path": "data/raw/runs.jsonl",
+     "recorded_md5": "0d7aa8717a346d1b4f57bda29372fbf6",
+     "recorded_size": 15008064
+    },
+    {
+     "path": "data/wrangled/bootstrap/headline.csv",
+     "recorded_md5": "36f71641cff00d67da81d6fef5014c3b",
+     "recorded_size": 774825,
+     "status": "output, not public"
+    }
+   ],
+   "outputs_recorded": [
+    {
+     "md5": "b5c921dee08314b6bf61d0b9cd00a1ca",
+     "path": "data/wrangled/logistic_fits/headline.csv",
+     "size": 3895
+    },
+    {
+     "md5": "df4714eca67fb953ea734c61b5691b0c",
+     "path": "metrics/logistic_fits/headline.yaml",
+     "size": 4966
+    }
+   ],
+   "params": [
+    "fig_params/figs.yaml:",
+    "figs.wrangle_logistic.headline:",
+    "runs_file: data/raw/runs.jsonl",
+    "additional_runs_dep: data/raw/runs.jsonl",
+    "weighting: invsqrt_task_weight",
+    "categories: ftr",
+    "regularization: 1e-05",
+    "exclude: []",
+    "success_percents:",
+    "- 50",
+    "- 80",
+    "confidence_level: 0.95"
+   ]
+  }
+ },
+ "upstream_commit": "52cb829c7a2efb2d659285c4b1768d191d97f8d2"
+}

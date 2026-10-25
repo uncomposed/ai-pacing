@@ -5,6 +5,10 @@
 # Needs network (github.com, metr.org) and about 20 minutes. Run by hand.
 # Never commits: outputs are uploaded as an artifact for a person to review.
 # Actions are pinned by full commit SHA (tag in the trailing comment).
+#
+# Job `intervals` (issue #57) runs the interval diagnosis (about 40 simulated bootstraps of 1000 replicates), the
+# dvc.lock input check and the TH1.0 stopping-point check, and uploads results/ files as a second artifact.
+# It never commits either: a person compares the artifact with the committed results/ files.
 name: metr-repro
 
 on:
@@ -61,6 +65,51 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: metr-repro
+          retention-days: 14
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/out/
+
+  intervals:
+    name: why the published TH1.1 intervals differ (issue #57)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    defaults:
+      run:
+        working-directory: research_notes/external/metr-time-horizons
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Fetch pinned sources and verify sha256
+        run: bash fetch_sources.sh
+      - name: Pinned CI packages plus pyyaml, and METR's lockfile versions
+        run: |
+          python -m venv "$RUNNER_TEMP/ci"
+          "$RUNNER_TEMP/ci/bin/pip" install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt" pyyaml==6.0.3
+          python -m venv "$RUNNER_TEMP/up"
+          "$RUNNER_TEMP/up/bin/pip" install numpy==2.4.1 scikit-learn==1.8.0 pandas==2.3.3 joblib==1.5.3 scipy==1.18.1 pyyaml==6.0.3
+      - name: METR's own bootstrap, for the comparison set
+        run: |
+          mkdir -p "$RUNNER_TEMP/out"
+          "$RUNNER_TEMP/up/bin/python" run_upstream.py --cache "$METR_CACHE" --n-bootstrap 1000 --out "$RUNNER_TEMP/out/upstream_th11.json"
+      - name: Public inputs against dvc.lock; TH1.0 stopping point
+        run: |
+          python dvc_lock_check.py --cache "$METR_CACHE" --out "$RUNNER_TEMP/out/dvc_lock_check.json"
+          "$RUNNER_TEMP/up/bin/python" th10_stopping.py --cache "$METR_CACHE" --out "$RUNNER_TEMP/out/th10_stopping.json"
+      - name: Interval diagnosis (independent bootstrap under each configuration)
+        run: |
+          export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+          "$RUNNER_TEMP/ci/bin/python" interval_diagnosis.py run --cache "$METR_CACHE" --out "$RUNNER_TEMP/diag"
+          "$RUNNER_TEMP/ci/bin/python" interval_diagnosis.py summarize --cache "$METR_CACHE" --out "$RUNNER_TEMP/diag" \
+            --json "$RUNNER_TEMP/out/interval_diagnosis.json" --md "$RUNNER_TEMP/out/interval_diagnosis.md"
+      - name: Keep the outputs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: metr-intervals
           retention-days: 14
           if-no-files-found: warn
           path: ${{ runner.temp }}/out/

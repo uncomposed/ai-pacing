@@ -182,8 +182,13 @@ def _unique_inverse(values: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return u, inv.reshape(-1)
 
 
-def bootstrap_indices(runs: Runs, rng: np.random.Generator) -> np.ndarray:
-    cats = [runs.task_family, runs.task_id]
+def bootstrap_indices(runs: Runs, rng: np.random.Generator, levels: str = "ftr") -> np.ndarray:
+    """One hierarchical resample. `levels` picks the hierarchy, in upstream's letters: f task family,
+    t task, r run within (task, agent). The default "ftr" is what upstream's headline bootstrap uses; other
+    values exist only to test what each level contributes to the interval width."""
+    if not levels or any(c not in "ftr" for c in levels) or list(levels) != sorted(set(levels), key="ftr".index):
+        raise ValueError(f"levels must be a non-empty subsequence of 'ftr', got {levels!r}")
+    cats = [c for c, on in ((runs.task_family, "f" in levels), (runs.task_id, "t" in levels)) if on]
     indices = np.arange(len(runs))
     split_ids = np.zeros(len(runs), dtype=np.int32)
     new_split_id = 0
@@ -204,6 +209,8 @@ def bootstrap_indices(runs: Runs, rng: np.random.Generator) -> np.ndarray:
         indices = np.concatenate(new_idx)
         if not last:
             split_ids = np.concatenate(new_split)
+    if "r" not in levels:
+        return indices
     # run level: resample runs within each (task_id, agent) group
     key = np.char.add(np.char.add(runs.task_id.astype(str), "|||"), runs.agent.astype(str))[indices]
     _, kinv, counts = np.unique(key, return_inverse=True, return_counts=True)
@@ -215,14 +222,14 @@ def bootstrap_indices(runs: Runs, rng: np.random.Generator) -> np.ndarray:
 
 
 def bootstrap_horizons(runs: Runs, regularization: float, n: int, percents: Sequence[float] = (0.5, 0.8),
-                       seed0: int = 42) -> dict[str, np.ndarray]:
+                       seed0: int = 42, levels: str = "ftr") -> dict[str, np.ndarray]:
     """Replicate b uses default_rng(seed0 + b). Returns {agent: array (n, len(percents))} with NaN where
     a replicate had no variation in y (upstream skips those)."""
     agents = sorted(set(runs.agent))
     out = {a: np.full((n, len(percents)), np.nan) for a in agents}
     for b in range(n):
         rng = np.random.default_rng(seed0 + b)
-        s = runs.take(bootstrap_indices(runs, rng))
+        s = runs.take(bootstrap_indices(runs, rng, levels))
         for a in agents:
             m = s.agent == a
             y = s.score[m]

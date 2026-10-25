@@ -1,0 +1,67 @@
+# Declared mapping from METR Time Horizon 1.0 to 1.1 horizons (issue #57). [[ai gen]] 2026-10-25.
+#
+# What this is: a descriptive calibration between two published measurements of the same models. It is not a
+# law of the benchmarks, not a conversion of TH1.0 into TH1.1 for models METR did not re-run, and not validated
+# out of sample beyond the two held-out agents below. Computed by suite_mapping.py; tested by the fast tests.
+#
+# Honest status of this declaration: the functional form and the criteria were fixed after an exploratory
+# look at the same 16 published pairs (the log ratio is monotone in the TH1.0 horizon). They are therefore
+# adequacy checks on a fitted description, not pre-registered tests. The held-out pair is the only part that
+# was not used to choose anything, and it has two members.
+
+id: SUITE-MAP-TH10-TH11
+rows:
+  th10: EV-METR-TH10-2026-03-03   # post-correction published TH1.0 (regularization 1e-5)
+  th11: EV-METR-TH11-2026-03-03   # post-correction published TH1.1 (regularization 1e-5)
+metrics: [p50, p80]
+model: "ln(h11) = a + b ln(h10) + e, ordinary least squares, one fit per metric; h in minutes of human time"
+interval_level: 0.90          # prediction intervals (Student t), and leave-one-out coverage is judged at this level
+bootstrap: {over: models, n: 10000, seed: 57}
+
+# The 16 agents with a published post-correction value on both suites. `scaffold_change: true` marks the 14
+# that METR re-ran under its Inspect scaffolds (key suffix _inspect; GPT-5 also switched from flock-secret to
+# triframe); GPT-4 0314 and o1-preview were re-estimated on the TH1.1 tasks in their original scaffolds
+# (modular-public, duet). The first 14 are the fit set; the last two are held out of the fit.
+pairs:
+  - {th10: claude_3_opus,               th11: claude_3_opus_inspect,               scaffold_change: true}
+  - {th10: claude_3_5_sonnet,           th11: claude_3_5_sonnet_20240620_inspect,  scaffold_change: true}
+  - {th10: claude_3_5_sonnet_20241022,  th11: claude_3_5_sonnet_20241022_inspect,  scaffold_change: true}
+  - {th10: claude_3_7_sonnet,           th11: claude_3_7_sonnet_inspect,           scaffold_change: true}
+  - {th10: claude_4_opus,               th11: claude_4_opus_inspect,               scaffold_change: true}
+  - {th10: claude_4_1_opus,             th11: claude_4_1_opus_inspect,             scaffold_change: true}
+  - {th10: claude_opus_4_5,             th11: claude_opus_4_5_inspect,             scaffold_change: true}
+  - {th10: gpt_4_1106,                  th11: gpt_4_1106_inspect,                  scaffold_change: true}
+  - {th10: gpt_4_turbo,                 th11: gpt_4_turbo_inspect,                 scaffold_change: true}
+  - {th10: gpt_4o,                      th11: gpt_4o_inspect,                      scaffold_change: true}
+  - {th10: gpt_5,                       th11: gpt_5_2025_08_07_inspect,            scaffold_change: true}
+  - {th10: gpt_5_1_codex_max,           th11: gpt_5_1_codex_max_inspect,           scaffold_change: true}
+  - {th10: o1_elicited,                 th11: o1_inspect,                          scaffold_change: true}
+  - {th10: o3,                          th11: o3_inspect,                          scaffold_change: true}
+  - {th10: gpt_4,                       th11: gpt_4,                               scaffold_change: false}
+  - {th10: o1_preview,                  th11: o1_preview,                          scaffold_change: false}
+
+# Not pairs: davinci-002, GPT-2 and gpt-3.5-turbo-instruct appear in the published TH1.1 file with TH1.0's
+# values (stitched in by METR, not re-measured); their intervals are identical on both sides. They are excluded.
+excluded_stitched: [davinci_002, gpt2, gpt_3_5_turbo_instruct]
+
+# Adequacy criteria, evaluated for each metric on the 14-agent fit set (leave-one-out) and the 2 held out.
+# `met` is reported, never forced; a failure is a result.
+criteria:
+  - id: C1
+    text: "Leave-one-out mean absolute error of ln(h11) is lower for the declared mapping than for both baselines: the identity (h11 = h10) and the constant ratio (h11 = h10 * exp(mean ln ratio))."
+  - id: C2
+    text: "Leave-one-out 90% prediction intervals contain the held-out log horizon for at least 12 of the 14 fit-set agents."
+  - id: C3
+    text: "Both held-out agents (GPT-4 0314, o1-preview, same scaffold, not used in the fit) lie inside the 90% prediction interval of the fit-set mapping."
+  - id: C4
+    text: "The 90% bootstrap confidence interval of the slope excludes 1, so the mapping is not a constant ratio."
+
+# What the data identify, and what they do not (see README, 'TH1.0 to TH1.1').
+identification:
+  identified:
+    - "A monotone association between the two suites' log horizons across these agents, with a residual scatter and prediction interval stated in results/suite_mapping.md."
+  not_identified:
+    - "A causal decomposition into task-set changes, human-time re-baselining, scaffold changes (14 of 14 fit-set agents changed scaffold with the suite) and re-run noise."
+    - "Values outside the fit-set TH1.0 range (see support in the results); the mapping is not applied there."
+    - "Any mapping for agents METR did not re-run, or for the stitched agents, or for new models."
+    - "Agreement of the slope with anything but these 14 agents: METR chose which models to re-run."
