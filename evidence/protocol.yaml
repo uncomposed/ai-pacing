@@ -28,7 +28,7 @@ baselines:
   - id: B-LOGLINEAR
     description: "least-squares straight line in log(value) against time, fitted on data available by the cutoff"
   - id: B-COMPUTE
-    description: "source-declared compute-driven trend, where the target has one (to be specified per target in #12, #14)"
+    description: "source-declared compute-driven trend, where the target has one. METR time horizons (#56): the frontier value in the information set grown at Epoch's frontier training-compute rate (4.2x/year, EV-EPOCH-COMPUTE-TREND-2024) from the frontier model's release date, elasticity 1 declared, not fitted (research_notes/external/metr-time-horizons/permodel_protocol.yaml)"
 
 scoring_rules:
   - id: S-ABSLOGERR

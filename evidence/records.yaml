@@ -870,6 +870,34 @@ records:
     fitted_to: []
     intended_use: ["link between benchmark-style success and realized usefulness (#12)"]
     not_for: ["a general benchmark-to-productivity conversion factor"]
+
+  - id: EV-EPOCH-COMPUTE-TREND-2024
+    kind: observation_report
+    title: "Training compute of frontier AI models grows by 4-5x per year"
+    source:
+      citation: "Sevilla and Roldan, Epoch AI report, 2024-05-28"
+      url: "https://epoch.ai/publications/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year"
+      version: "page as served 2026-10-25 (datePublished 2024-05-28; HTML sha256 586a413dfc8468ee591021501bd52f1259077fa47eb2b512d221f61013104eb3)"
+    reading: read_primary
+    observation_date: {start: "2010", end: "2024-05"}
+    availability_date: "2024-05-28"
+    availability_basis: "datePublished in the page metadata and the byline date"
+    units: "growth factor per year of training compute (FLOP) of AI models"
+    population: "Epoch's notable-models database to May 2024; 'frontier' = top 10 by training compute at release"
+    protocol: "log-linear and piecewise trend fits by Epoch; not re-derived here"
+    extraction:
+      method: quoted
+      locator: "Appendix C, Table A8: recent frontier models (~2018 to May 2024) 4.2x/year (90% CI 3.6x to 4.9x); also notable models 2010 to May 2024 4.1x/year, frontier models 2010 to May 2024 5.3x/year"
+      by: "issue #56 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Used only as the growth rate g of the declared compute baseline B-COMPUTE (research_notes/external/metr-time-horizons/permodel_protocol.yaml). Epoch summarizes the frontier trend as about 4x/year and says it is not confident in its interpretation."
+    uncertainty:
+      kind: sampling
+      description: "90% CI 3.6x to 4.9x for the recent-frontier trend; the break date (about 2018) is itself uncertain"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["compute growth rate for B-COMPUTE (#56, #45)"]
+    not_for: ["training compute of any individual model", "compute after May 2024", "a capability measurement"]
   # AI Futures Model (issue #14): outputs are source-model outputs, never observations. Their present-day horizon,
   # revenue and ECI levels are fitted to METR and Epoch data, so `fitted_to` marks them non-independent of those
   # records. The two bundled-data records stand in until #12 adds METR's primary release. See
