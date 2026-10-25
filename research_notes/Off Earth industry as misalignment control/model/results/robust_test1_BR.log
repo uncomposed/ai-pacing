@@ -1,0 +1,16 @@
+Wed Oct 21 00:35:59 CDT 2026
+== test1 r0.1
+  solved r0.1__BR_mult=0.5: 64 sets in 49 s; holds 0.672
+  solved r0.1__BR_mult=0.25: 64 sets in 50 s; holds 0.672
+  solved r0.1__BR_mult=0: 64 sets in 52 s; holds 0.672
+  solved r0.1__BR_mult=0.5_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: 64 sets in 51 s; holds 1.000
+  solved r0.1__BR_mult=0.25_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: 64 sets in 51 s; holds 1.000
+Wed Oct 21 00:40:12 CDT 2026
+== test1 full
+  solved full__BR_mult=0.5: 192 sets in 159 s; holds 0.047
+  solved full__BR_mult=0.25: 192 sets in 162 s; holds 0.047
+  solved full__BR_mult=0: 192 sets in 168 s; holds 0.052
+  solved full__BR_mult=0.5_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: 192 sets in 176 s; holds 0.099
+  solved full__BR_mult=0.25_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: 192 sets in 173 s; holds 0.115
+Wed Oct 21 00:54:13 CDT 2026
+TEST1 DONE

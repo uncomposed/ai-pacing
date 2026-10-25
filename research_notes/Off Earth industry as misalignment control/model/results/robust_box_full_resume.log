@@ -1,0 +1,4 @@
+  solved full__T_reloc=4_q_red=2_seq=1: 192 sets in 191 s; holds 0.042
+  solved full__D_mult=3_d=0.99_q_red=2: 192 sets in 195 s; holds 0.073
+  solved full__d=0.99_q_red=2: 192 sets in 202 s; holds 0.052
+  solved full__T_reloc=4_d=0.99_q_red=2_seq=1: 192 sets in 197 s; holds 0.068

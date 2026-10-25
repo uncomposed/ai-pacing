@@ -1,5 +1,28 @@
 # AI Pacing canonical specification
 
+## Stakeholder challenges and candidate solutions
+
+Start with the [actor and use-case analysis](docs/actor-analysis.md) for distinct
+lab, employee, government, executive, entrant, and sovereignty-seeking AI profiles.
+
+The [systems engineering workspace](docs/systems-engineering.md) separates
+stakeholders, use cases, losses, hazards, requirements, and evidence from proposed
+solutions. Its editable [model](systems/model.json) treats AI Pacing mechanisms
+as candidates, with explicit uncertainty and comparison criteria. It is a draft
+for stakeholder validation; the historical specification below remains the
+definition of the existing AI Pacing proposal.
+
+Run `make systems-check` to check the model and `make systems-report` to print
+its traceability table and unresolved obligations. `make check` includes the
+systems model checks and mutation tests.
+
+Trace one requirement through actor goals, interactions, losses, candidate
+mechanisms, and evaluation plans with
+`python3 tools/systems_tool.py trace --requirement REQ-COMPETE`.
+See [traceability examples and limitations](docs/requirement-traceability.md).
+
+## Existing AI Pacing proposal
+
 This repository publishes AI Pacing as a versioned, machine-readable idea rather than a single privileged essay. Git is authoritative. Human-facing pages, PDFs, games, songs, simulations, critiques, and other works are renderings of an exact Git state.
 
 The canonical source is [`spec/ai-pacing.yaml`](spec/ai-pacing.yaml). See

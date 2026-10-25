@@ -1,0 +1,293 @@
+# Equilibrium-model simulation runs on GitHub's free runners (public repo).
+# Started by hand (Actions tab > sims > Run workflow) or weekly as a cache-reproducibility run.
+# Ensemble stages are split into a matrix (one job per run and shard, each well under the 6-hour job cap);
+# a final job merges the pieces, runs robust_report.py and uploads everything new as an artifact.
+# Nothing is ever committed or pushed: a person downloads the artifact, reviews it and commits it.
+# No secrets; read-only token; actions pinned by full commit SHA (tag in the trailing comment).
+name: sims
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Stage. Split into a matrix: box, oat_r, radius, factorial, ensemble, oat, pilot. Run whole: erosion, overnight-test2..5."
+        type: choice
+        default: box
+        options: [box, oat_r, radius, factorial, ensemble, oat, pilot, erosion, overnight-test2, overnight-test3, overnight-test4, overnight-test5]
+      designs:
+        description: "JSON list of lever dicts (box, radius, factorial, ensemble; oat_r: empty means every one-at-a-time design)"
+        type: string
+        default: "[{}]"
+      box:
+        description: "Box for stage box: full, near or r<radius> such as r0.1"
+        type: string
+        default: full
+      best:
+        description: "Erosion stage only: JSON lever dict of the best design (empty = baseline design only)"
+        type: string
+        default: ""
+      n_full:
+        description: "Full-box ensemble size (empty = robust_design default, 192). A non-default size writes to its own cache folder."
+        type: string
+        default: ""
+      n_near:
+        description: "Near-box ensemble size (empty = default, 96)"
+        type: string
+        default: ""
+      shards:
+        description: "Matrix jobs per run (each takes a share of the solver batches)"
+        type: string
+        default: "1"
+      force:
+        description: "Re-solve runs that are already cached and compare them with the cache (reproducibility check)"
+        type: boolean
+        default: false
+      quick:
+        description: "Overnight tests only: --quick smoke version"
+        type: boolean
+        default: false
+      runner:
+        description: "Runner for the solving jobs (macos-15 is arm64, like the laptop)"
+        type: choice
+        default: ubuntu-24.04
+        options: [ubuntu-24.04, macos-15]
+  schedule:
+    # Mondays 06:17 UTC: re-solve the full-box base design in 4 shards and compare with the committed cache.
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+env:
+  PYTHON_VERSION: "3.12.7"
+  MODEL: "research_notes/Off Earth industry as misalignment control/model"
+  STAGE: ${{ github.event_name == 'schedule' && 'box' || inputs.stage }}
+  DESIGNS: ${{ github.event_name == 'schedule' && '[{}]' || inputs.designs }}
+  BOX: ${{ github.event_name == 'schedule' && 'full' || inputs.box }}
+  BEST: ${{ inputs.best }}
+  N_FULL: ${{ inputs.n_full }}
+  N_NEAR: ${{ inputs.n_near }}
+  SHARDS: ${{ github.event_name == 'schedule' && '4' || inputs.shards }}
+  FORCE: ${{ github.event_name == 'schedule' && 'true' || inputs.force }}
+  QUICK: ${{ inputs.quick }}
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      mode: ${{ steps.args.outputs.mode }}
+      args: ${{ steps.args.outputs.args }}
+      runs_dir: ${{ steps.args.outputs.runs_dir }}
+      matrix: ${{ steps.plan.outputs.matrix }}
+      count: ${{ steps.plan.outputs.count }}
+    defaults:
+      run:
+        working-directory: ${{ env.MODEL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - name: Build robust_design arguments from the inputs
+        id: args
+        shell: python
+        run: |
+          import json, os, re, shlex, sys
+          e = os.environ
+          stage, designs = e["STAGE"], e["DESIGNS"].strip()
+          out = {"mode": "whole", "args": "", "runs_dir": ""}
+          for k in ("N_FULL", "N_NEAR"):
+              if e[k] and not e[k].isdigit():
+                  sys.exit(f"{k} must be a whole number, got {e[k]!r}")
+          if e["N_FULL"] or e["N_NEAR"]:
+              out["runs_dir"] = f"results/robust_runs_nfull{e['N_FULL'] or 'default'}_nnear{e['N_NEAR'] or 'default'}"
+          if not e["SHARDS"].isdigit() or int(e["SHARDS"]) < 1:
+              sys.exit(f"shards must be a whole number of at least 1, got {e['SHARDS']!r}")
+          if stage in ("box", "oat_r", "radius", "factorial", "ensemble", "oat", "pilot"):
+              args = ["--stage", stage]
+              if stage in ("box", "radius", "factorial", "ensemble") or (stage == "oat_r" and designs):
+                  d = json.loads(designs)
+                  if not isinstance(d, list) or not all(isinstance(x, dict) for x in d):
+                      sys.exit("designs must be a JSON list of lever dicts")
+                  args += ["--designs", json.dumps(d, separators=(",", ":"))]
+              if stage == "box":
+                  if not re.fullmatch(r"full|near|r[0-9.]+", e["BOX"]):
+                      sys.exit(f"box must be full, near or r<radius>, got {e['BOX']!r}")
+                  args += ["--box", e["BOX"]]
+              out.update(mode="split", args=shlex.join(args))
+          with open(e["GITHUB_OUTPUT"], "a") as f:
+              for k, v in out.items():
+                  f.write(f"{k}={v}\n")
+          print(out)
+      - name: Plan the matrix
+        id: plan
+        if: steps.args.outputs.mode == 'split'
+        env:
+          ARGS: ${{ steps.args.outputs.args }}
+          RUNS_DIR: ${{ steps.args.outputs.runs_dir }}
+        run: |
+          if [ -n "$N_FULL" ]; then export RD_NFULL="$N_FULL"; fi
+          if [ -n "$N_NEAR" ]; then export RD_NNEAR="$N_NEAR"; fi
+          extra=()
+          [ "$FORCE" = true ] && extra+=(--force)
+          python ci_sims.py ${RUNS_DIR:+--runs-dir "$RUNS_DIR"} plan --args "$ARGS" --shards "$SHARDS" "${extra[@]}" > matrix.json
+          echo "matrix=$(cat matrix.json)" >> "$GITHUB_OUTPUT"
+          echo "count=$(python -c 'import json; print(len(json.load(open("matrix.json"))["include"]))')" >> "$GITHUB_OUTPUT"
+
+  solve:
+    needs: plan
+    if: needs.plan.outputs.mode == 'split' && needs.plan.outputs.count != '0'
+    name: solve ${{ matrix.unit }} ${{ matrix.shard }}/${{ matrix.of }}
+    runs-on: ${{ inputs.runner || 'ubuntu-24.04' }}
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    defaults:
+      run:
+        working-directory: ${{ env.MODEL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - name: Solve this shard
+        env:
+          ARGS: ${{ needs.plan.outputs.args }}
+          RUNS_DIR: ${{ needs.plan.outputs.runs_dir }}
+          UNIT: ${{ matrix.unit }}
+          SHARD: ${{ matrix.shard }}
+          OF: ${{ matrix.of }}
+        run: |
+          export RD_WORKERS="$(getconf _NPROCESSORS_ONLN)"
+          if [ -n "$N_FULL" ]; then export RD_NFULL="$N_FULL"; fi
+          if [ -n "$N_NEAR" ]; then export RD_NNEAR="$N_NEAR"; fi
+          python ci_sims.py ${RUNS_DIR:+--runs-dir "$RUNS_DIR"} solve --args "$ARGS" --unit "$UNIT" \
+            --shard "$SHARD" --of "$OF" --out "$RUNNER_TEMP/parts"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: part-${{ strategy.job-index }}
+          path: ${{ runner.temp }}/parts
+          retention-days: 7
+          if-no-files-found: error
+
+  merge:
+    needs: [plan, solve]
+    if: always() && needs.plan.outputs.mode == 'split' && needs.plan.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: ${{ env.MODEL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - name: Stop if a solving job failed
+        if: needs.solve.result != 'success' && needs.solve.result != 'skipped'
+        run: |
+          echo "A solving job ended with '${{ needs.solve.result }}'; not merging a partial run." >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        if: needs.solve.result == 'success'
+        with:
+          pattern: part-*
+          path: ${{ runner.temp }}/parts
+      - name: Merge the shards (re-solved cached runs are compared, never overwritten)
+        env:
+          ARGS: ${{ needs.plan.outputs.args }}
+          RUNS_DIR: ${{ needs.plan.outputs.runs_dir }}
+        run: |
+          if [ -n "$N_FULL" ]; then export RD_NFULL="$N_FULL"; fi
+          if [ -n "$N_NEAR" ]; then export RD_NNEAR="$N_NEAR"; fi
+          mkdir -p "$RUNNER_TEMP/parts" "$RUNNER_TEMP/out"
+          extra=()
+          [ "$FORCE" = true ] && extra+=(--force --resolved "$RUNNER_TEMP/out/resolved_on_runner")
+          python ci_sims.py ${RUNS_DIR:+--runs-dir "$RUNS_DIR"} merge --args "$ARGS" --parts "$RUNNER_TEMP/parts" \
+            "${extra[@]}" --manifest "$RUNNER_TEMP/out/ci_manifest.json"
+      - name: robust_report.py --report (tables, scenario discovery, figures)
+        env:
+          RUNS_DIR: ${{ needs.plan.outputs.runs_dir }}
+        run: |
+          if [ "$FORCE" = true ]; then
+            echo "Reproducibility run: nothing new to report." >> "$GITHUB_STEP_SUMMARY"
+          elif [ -n "$RUNS_DIR" ]; then
+            echo "Non-default ensemble size: runs are in $RUNS_DIR; --report reads only results/robust_runs/, so it was not run." >> "$GITHUB_STEP_SUMMARY"
+          else
+            python robust_design.py --report
+          fi
+      - name: Collect new and changed files for review
+        if: always()
+        run: python ci_sims.py collect-outputs --out "$RUNNER_TEMP/out"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: sims-results-${{ github.run_id }}
+          path: ${{ runner.temp }}/out
+          retention-days: 30
+          if-no-files-found: warn
+
+  whole:
+    needs: plan
+    if: needs.plan.outputs.mode == 'whole'
+    name: run ${{ github.event_name == 'schedule' && 'box' || inputs.stage }} whole
+    runs-on: ${{ inputs.runner || 'ubuntu-24.04' }}
+    timeout-minutes: 350
+    defaults:
+      run:
+        working-directory: ${{ env.MODEL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: .github/requirements-ci.txt
+      - run: python -m pip install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - name: Run the stage
+        run: |
+          export RD_WORKERS="$(getconf _NPROCESSORS_ONLN)"
+          if [ -n "$N_FULL" ]; then export RD_NFULL="$N_FULL"; fi
+          if [ -n "$N_NEAR" ]; then export RD_NNEAR="$N_NEAR"; fi
+          mkdir -p "$RUNNER_TEMP/out"
+          python ci_sims.py provenance --out "$RUNNER_TEMP/out/ci_provenance.json" --note "stage $STAGE"
+          case "$STAGE" in
+            erosion)
+              python robust_design.py --stage erosion ${BEST:+--best "$BEST"}
+              python robust_design.py --report ;;
+            overnight-test[2-5])
+              extra=()
+              [ "$QUICK" = true ] && extra+=(--quick)
+              python overnight_tests.py "${STAGE#overnight-}" "${extra[@]}" ;;
+            *)
+              echo "unknown stage $STAGE"; exit 1 ;;
+          esac
+      - name: Collect new and changed files for review
+        if: always()
+        run: python ci_sims.py collect-outputs --out "$RUNNER_TEMP/out"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: sims-results-${{ github.run_id }}
+          path: ${{ runner.temp }}/out
+          retention-days: 30
+          if-no-files-found: warn

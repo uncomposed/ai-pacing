@@ -1,0 +1,13 @@
+
+## Patience sweep in the full model (N = 2, T_H = 1200, nA = 160)
+
+| world | r=0.005 (gamma 0.995) | r=0.01 (gamma 0.990) | r=0.02 (gamma 0.980) | r=0.035 (gamma 0.966) | r=0.05 (gamma 0.951) | r=0.07 (gamma 0.932) | r=0.1 (gamma 0.905) |
+|---|---|---|---|---|---|---|---|
+| S1 baseline pact | C 0.00 | C 0.00 | C 0.00 | C 0.00 | C 0.00 | S 1.00 @0 | S 1.00 @0 |
+| S14 wait-then-strike (ell_inf 0.01, w_seized 0.9) | C 0.84 @34 | C 0.84 @36 | C 0.84 @38 | C 0.84 @40 | C 0.84 @40 | S 1.00 @0 | S 1.00 @0 |
+| S6 no denial reserve | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 |
+| S21 failed early strike survivable (kill_pre 0) | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 | S 1.00 @0 |
+| S16 harvest (f_E 1e-6), w_seized 0.9 | C 0.82 @87 | C 0.82 @87 | C 0.82 @87 | C 0.82 @87 | C 0.82 @87 | S 1.00 @0 | S 1.00 @0 |
+
+cell = opening move, P(strike ever), @ mean strike year
+wrote /Users/colemiller/Documents/ChatGPT/AI-Pacing/.claude/worktrees/objective-cerf-985c03/research_notes/Off Earth industry as misalignment control/model/docking/out/potapov.json  (739 s)
