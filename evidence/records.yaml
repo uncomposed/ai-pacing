@@ -870,10 +870,42 @@ records:
     fitted_to: []
     intended_use: ["link between benchmark-style success and realized usefulness (#12)"]
     not_for: ["a general benchmark-to-productivity conversion factor"]
+
+  - id: EV-EPOCH-COMPUTE-TREND-2024
+    kind: observation_report
+    title: "Training compute of frontier AI models grows by 4-5x per year"
+    source:
+      citation: "Sevilla and Roldan, Epoch AI report, 2024-05-28"
+      url: "https://epoch.ai/publications/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year"
+      version: "page as served 2026-10-25 (datePublished 2024-05-28; HTML sha256 586a413dfc8468ee591021501bd52f1259077fa47eb2b512d221f61013104eb3)"
+    reading: read_primary
+    observation_date: {start: "2010", end: "2024-05"}
+    availability_date: "2024-05-28"
+    availability_basis: "datePublished in the page metadata and the byline date"
+    units: "growth factor per year of training compute (FLOP) of AI models"
+    population: "Epoch's notable-models database to May 2024; 'frontier' = top 10 by training compute at release"
+    protocol: "log-linear and piecewise trend fits by Epoch; not re-derived here"
+    extraction:
+      method: quoted
+      locator: "Appendix C, Table A8: recent frontier models (~2018 to May 2024) 4.2x/year (90% CI 3.6x to 4.9x); also notable models 2010 to May 2024 4.1x/year, frontier models 2010 to May 2024 5.3x/year"
+      by: "issue #56 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Used only as the growth rate g of the declared compute baseline B-COMPUTE (research_notes/external/metr-time-horizons/permodel_protocol.yaml). Epoch summarizes the frontier trend as about 4x/year and says it is not confident in its interpretation."
+    uncertainty:
+      kind: sampling
+      description: "90% CI 3.6x to 4.9x for the recent-frontier trend; the break date (about 2018) is itself uncertain"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["compute growth rate for B-COMPUTE (#56, #45)"]
+    not_for: ["training compute of any individual model", "compute after May 2024", "a capability measurement"]
   # AI Futures Model (issue #14): outputs are source-model outputs, never observations. Their present-day horizon,
   # revenue and ECI levels are fitted to METR and Epoch data, so `fitted_to` marks them non-independent of those
-  # records. The two bundled-data records stand in until #12 adds METR's primary release. See
-  # research_notes/external/ai-futures-model/.
+  # records. METR links point at #12's primary records since #45: AIFM's bundled METR file is byte-identical to
+  # METR's published TH1.1 file (sha256 aae31902...), i.e. the post-correction TH1.1 records plus three TH1.0 values
+  # (GPT-2, davinci-002, gpt-3.5-turbo-instruct; EV-METR-TH10-2026-03-03). fitted_to lists the TH1.1 records: the
+  # horizon level is Claude Mythos Preview's p80 (186 min) and the elicited doubling time was formed with METR's
+  # published TH1.1 trend in view. The Epoch placeholder has no primary record yet. See
+  # research_notes/external/ai-futures-model/ (HELDOUT.md).
   - id: EV-AIFM-REFERENCE-TRAJECTORY
     kind: source_model_output
     title: "AI Futures Model default-parameter trajectory and milestone dates"
@@ -897,8 +929,8 @@ records:
     uncertainty:
       kind: unquantified
       description: "Single parameter point; parameter and model-form uncertainty not represented by this record."
-    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES]
     intended_use: ["source-model replication (#14)", "basis for coupling AIFM trajectories to other components"]
     not_for: ["empirical support for any milestone date", "a held-out test against METR or Epoch data it was fitted to"]
 
@@ -925,8 +957,8 @@ records:
     uncertainty:
       kind: sampling
       description: "Monte Carlo sampling error of quantiles and achievement rates; the elicited measure itself is judgment."
-    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES]
     intended_use: ["source-model replication (#14)"]
     not_for: ["empirical support", "a calibrated probability of any milestone"]
 
@@ -949,14 +981,14 @@ records:
       locator: "inputs/metr/benchmark_results_1_1.yaml"
       by: "the #14 replication session"
       date: "2026-10-25"
-      note: "A copy inside the source model, not METR's primary release. #12 owns the primary record; replace this one with it."
+      note: "A copy inside the source model. Byte-identical (sha256 aae31902b0519a4da73e16643915e5e8aca13cd3315c3aac893ce3d6dfe92ad9) to METR's published file, read in primary form by #12: the AIFM output records now cite those primary records (#45). Kept as the record of what AIFM bundles."
     uncertainty:
       kind: measurement
       description: "METR confidence intervals as bundled"
-    depends_on: []
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03]
     fitted_to: []
-    intended_use: ["marking AIFM outputs as non-independent of METR data"]
-    not_for: ["empirical support until read in primary form (#12)"]
+    intended_use: ["what AIFM bundles; cite the EV-METR-* records it copies instead"]
+    not_for: ["empirical support (cite the primary EV-METR-* records)"]
 
   - id: EV-AIFM-EPOCH-SERIES
     kind: observation

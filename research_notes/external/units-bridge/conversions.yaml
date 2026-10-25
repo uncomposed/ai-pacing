@@ -172,8 +172,8 @@ conversions:
       concurrent agents): no second point. (3) The two quantities measure different populations: self-contained,
       automatically scored tasks against issues in developers' own large repositories with implicit requirements. In
       METR's follow-up 38% of agent PRs passed the maintainers' tests and none was mergeable as-is (EV-METR-ALGO-2025),
-      so the gap is task-dependent, not a factor. (4) The from-quantity has no forecast either: the #12 holdout verdict
-      for the trend is 'not established'. (5) AIFM's serial coding uplift (2.0 at 2026.578) is an elicited belief, not
+      so the gap is task-dependent, not a factor. (4) The from-quantity has no forecast either: the #12 holdout and the
+      #56 per-model holdout both have the verdict 'not established'. (5) AIFM's serial coding uplift (2.0 at 2026.578) is an elicited belief, not
       a reading of these studies (EV-UNITS-AIFM-CONVENTIONS), so it does not identify the link.
     evidence: {status: observed_secondary, ref: "EV-METR-RCT-2025, EV-METR-UPLIFT-2026, EV-METR-ALGO-2025, EV-METR-TH10-2025-03-19 (#12); the records support the reasons above, not a conversion"}
     coupled: false
@@ -192,7 +192,8 @@ conversions:
       (1) Its parameters are elicited or calibrated, not fitted to research-output data (ai-futures-model/MECHANISMS.md);
       r_software is calibrated to an uncited 1 OOM/yr at 2024 (EV-UNITS-AIFM-CONVENTIONS). (2) Before 2026 the
       feedback-on and feedback-off paths differ by under 0.1 OOM (ai-futures-model/results/feedback_off.json), so the
-      historical record cannot tell whether AI coding has moved software progress at all. (3) AIFM's input is a serial
+      historical record cannot tell whether AI coding has moved software progress at all; in horizon units the on and
+      off curves fit METR's observations equally well (ai-futures-model/HELDOUT.md, #45). (3) AIFM's input is a serial
       labor multiplier of one aggregate project, not a per-issue time ratio of individual developers; no conversion
       between them is stated by either source. (4) No review or integration stage: every unit of effort becomes
       efficiency, which overstates any coding effect. (5) The repository holds no observation of research output
@@ -305,7 +306,7 @@ conversions:
     from: QTY-METR-HORIZON-P80
     to: QTY-AIFM-PROGRESS
     class: forbidden
-    reason: "AIFM's present horizon level is fitted to METR's p80 (EV-AIFM-METR-HORIZON-V1-1, fitted_to). Feeding METR values back into AIFM's progress, or scoring AIFM against the same values, counts one observation twice. METR values published after AIFM's fit date can serve as held-out targets under the #8 protocol (a #14 follow-up), never as an input to its progress."
+    reason: "AIFM's present horizon level is fitted to METR's TH1.1 p80 (fitted_to of EV-AIFM-REFERENCE-TRAJECTORY: EV-METR-TH11-2026-03-03 to -05-08; #45). Feeding METR values back into AIFM's progress, or scoring AIFM against the same values, counts one observation twice. METR values published after AIFM's fit date can serve as held-out targets under the #8 protocol (a #14 follow-up), never as an input to its progress."
     coupled: false
   - id: CV-NO-MILESTONE-TO-CLOSURE
     from: QTY-AIFM-MILESTONE

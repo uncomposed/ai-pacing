@@ -51,14 +51,14 @@ sources:
   - id: ai-futures-replication
     title: "AI Futures Model replication (#14)"
     url: research_notes/external/ai-futures-model/
-    version: "main at 8618cab"
+    version: "main at ad413f5 (includes #45 and #56)"
     licence: repository
-    read: "README, MECHANISMS.md, modes.md, results/feedback_off.json"
+    read: "README, MECHANISMS.md, modes.md, HELDOUT.md, results/feedback_off.json"
     used_for: [QTY-AIFM-*, CV-DEV-TIME-TO-RESEARCH (feedback on/off), README "Recheck after #12 and #14"]
   - id: metr-replication
     title: "METR time horizons and productivity studies (#12)"
     url: research_notes/external/metr-time-horizons/
-    version: "main at 8618cab"
+    version: "main at ad413f5 (includes #45 and #56)"
     licence: repository
     read: "README, data/observations.csv, results/holdout.md; records EV-METR-TH*, EV-METR-RCT-2025, EV-METR-UPLIFT-2026, EV-METR-ALGO-2025"
     used_for: [QTY-METR-HORIZON, QTY-METR-HORIZON-P80, QTY-DEV-TIME-RATIO, CV-HORIZON-TO-DEV-TIME]

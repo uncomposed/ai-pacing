@@ -158,8 +158,8 @@ quantities:
     note: >-
       A time, but not a duration of anything the model does in the world. The contract writes the unit as human-hours;
       METR publishes minutes (same dimension, factor 60), so the dictionary carries minutes. Values above 960 min are
-      unreliable on TH1.1 (METR). The #12 holdout verdict for the trend is 'not established', so no projected horizon
-      is available either. Never converted to calendar time, research labor or strategic odds here.
+      unreliable on TH1.1 (METR). The #12 holdout and the #56 per-model holdout both have the verdict 'not
+      established', so no projected horizon is available either. Never converted to calendar time, research labor or strategic odds here.
   - id: QTY-METR-HORIZON-P80
     name: "METR 80% task time horizon (p80)"
     category: capability_metric
@@ -170,7 +170,7 @@ quantities:
     models: [AD-METR, AD-AIFM]
     contract: {adapter_quantity: {adapter: AD-METR, name: "80% task time horizon"}, dimension: rd_capability}
     evidence: {status: observed_primary, ref: "EV-METR-TH11-2026-03-03 and the other EV-METR-TH* batches (#12)"}
-    note: "AIFM's horizon anchor is a p80 level (186 min at 2026.269, from METR's file as bundled in AIFM, EV-AIFM-METR-HORIZON-V1-1), so AIFM outputs are not independent of these records."
+    note: "AIFM's horizon anchor is a p80 level (186 min at 2026.269, Claude Mythos Preview's p80 in EV-METR-TH11-2026-05-08), and the AIFM output records list the post-correction TH1.1 records in fitted_to (#45), so AIFM outputs are not independent of these records."
   - id: QTY-BENCH-SCORE
     name: "Benchmark score (e.g. RE-Bench normalized score)"
     category: capability_metric
