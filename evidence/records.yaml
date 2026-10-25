@@ -21,29 +21,29 @@ records:
     kind: source_model_output
     title: "Affordable, rapid bootstrapping of the space industry and solar system civilization"
     source:
-      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236 (DOI from the arXiv page)"
-      url: "https://arxiv.org/abs/1612.03238"
-      version: "arXiv v1 (2016-12-10); journal version not compared with it"
+      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, January 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236"
+      url: "https://arxiv.org/abs/1612.03238v1"
+      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref says issue 26.2, Crossref says issue 1. The version of record (ascelibrary.org) returned HTTP 403 and was not compared."
     reading: read_primary
     observation_date: not_applicable
-    availability_date: "2013"
-    availability_basis: "Journal year as cited; exact journal date not checked. The arXiv copy was posted 2016-12-10."
-    units: "landed mass (metric tons), industrial asset mass (metric tons), years"
+    availability_date: "2013-01"
+    availability_basis: "Crossref published-print 2013-01 (DOI registered 2012-04-02, possibly online ahead of print; not checked). The manuscript read here was public on arXiv from 2016-12-10."
+    units: "asset mass (metric tons, 'MT'), robonauts (count), energy (J/yr), years; generations 2 years apart"
     population: "model scenarios of a lunar bootstrapping industry; no observed system"
-    protocol: "simple growth model swept over parameter ranges (abstract)"
+    protocol: "spreadsheet mass and energy balance by generation (Gen 1.0 to 6.0), two cases: maximum and half manufacturing rate (Fig. 2); the spreadsheet was not released"
     extraction:
       method: digitized
-      locator: "Fig. 2 (growth curves, read off by eye); model and results sections (docking.md references)"
-      by: "the docking session of 2026-10 (model/docking/metzger.py, results/docking.md section 7)"
-      date: "2026-10"
-      note: "Curves read by eye; generation spacing (2 years) is not a doubling time (AS-GCITE)."
+      locator: "Fig. 2, p. 12 (asset mass by generation, both cases); p. 11 'Growth Rate of Space Industry' (2-year generations, 'two or fewer new sets per year'); p. 16 (Gen 5.0 uses 10^15 J/yr; 'factor of 3 per year' illustration); p. 8-9 (local electronics targets, chips for 'appropriate technology')"
+      by: "first by eye (docking session, 2026-10, model/docking/metzger.py); re-digitized 2026-10-25 for #11 from the figure's embedded raster (781 x 477 px) by marker detection, research_notes/external/units-bridge/metzger/digitize_fig2.py"
+      date: "2026-10-25"
+      note: "Re-digitized values agree with the by-eye ones within 5% (largest: Gen 4.0 max, 1368 t against 1440 t). Fitted max-case rate 0.647/yr (by eye 0.651). The 2-year generation spacing is not a doubling time (AS-GCITE). Gen 1.0 markers of both cases overlap. Points are placed at t = 0, 2, ..., 12 years per the caption, which includes Gen 2.5."
     uncertainty:
       kind: digitization
-      description: "about +-15% on read-off values (docking.md 7); model-form uncertainty of the source not quantified"
+      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's max-case '40,000 MT with as many as 100,000 humanoid robots' does not match Fig. 2 (about 23,100 t at Gen 6.0); unresolved. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
     depends_on: []
     fitted_to: []
-    intended_use: ["basis check for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison"]
-    not_for: ["empirical support for any growth rate: these are model projections, not observations"]
+    intended_use: ["basis check and comparison for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison", "example of basic (not leading-edge) chip closure at small scale (units-bridge CL-BASIC-CHIPS)"]
+    not_for: ["empirical support for any growth rate: these are model projections, not observations", "the source of g = 0.35, which is a project assumption", "growth rates at scales above about 2.3e4 t, which the source does not model"]
 
   - id: EV-TURNER-2019
     kind: formal_result
@@ -273,29 +273,29 @@ records:
     kind: observation_report
     title: "AISI technical incident report INC-2026-07-28-01"
     source:
-      citation: "UK AI Security Institute (PDF linked from EV-AISI-INC-2026)"
+      citation: "UK AI Security Institute, 'Security Incident INC-2026-07-28-01', PDF, 35 pages, published 2026-08-04 (LaTeX/pdfTeX; PDF creation date 2026-08-04 20:12 UTC)"
       url: "https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6a724858f7db25c81487016d_Security%20Incident%20INC-2026-07-28-01.pdf"
-      version: "not retrieved, deliberately"
-    reading: not_read
+      version: "retrieved 2026-10-25 (HTTP 200, 1,048,375 bytes), sha256 b64590f61dad20fb812ee08b360a57a0feeaebd4257cc98b0e4ca43ed70a28e9; no licence stated, so the PDF is not committed. Page numbers below are the printed numbers (PDF page = printed + 1)."
+    reading: read_primary
     observation_date: {start: "2026-07-25", end: "2026-07-28"}
     availability_date: "2026-08-04"
-    availability_basis: "linked from the 2026-08-04 blog post"
-    units: "unknown"
-    population: "as EV-AISI-INC-2026"
-    protocol: "unknown"
+    availability_basis: "date on the report cover; linked from the 2026-08-04 blog post"
+    units: "counts of samples, events and messages; BST clock times; token limits"
+    population: "122 samples (212,840 messages) of two cyber ranges across seven models at AISI; 19 events in 10 samples (17 from one model, 2 from another)"
+    protocol: "evaluator's own incident response: alert triage, LLM-assisted flagging, then manual reading of all 122 transcripts by security staff (Sections 3.1-3.2). Self-described as preliminary, time-constrained, redacted, with no causal analysis and reasoning known only through provider-supplied summaries (Sections 1.2, 7.2)."
     extraction:
-      method: summarized_from_secondary
-      locator: "none; kept unread"
-      by: "the #15 reconstruction session"
+      method: quoted
+      locator: "Section 1.1 (19 events, 10 samples); Section 3.1 and Figure 2 (timeline); Section 4 Tables 1-3 (event list); Section 4.2.1 and Figure 6 (reasoning about realness and scope); Section 4.2.2 and Figure 7 (cross-agent interaction); Section 4.2.4 and Figure 9 (concealment); Section 5.4 (prompt misconfiguration); Appendix A.1-A.10 (per-sample events and which prompt each DL-v2 sample received); Appendix B.2 (prompts)"
+      by: "the #31 scoring session"
       date: "2026-10-25"
-      note: "Held out: the predictions in research_notes/external/hugging-face-incident/heldout.yaml are frozen before it is read."
+      note: "Read in full after heldout.yaml was confirmed unchanged since commit 9d013a599bf3b48276dbec79f203b790cf5aaddf. Used to score the four frozen predictions (heldout_scores.yaml). Technique-level content in the report is deliberately not reproduced anywhere in this repository."
     uncertainty:
       kind: unquantified
-      description: "unread"
+      description: "preliminary report by the party that ran the evaluation; reasoning excerpts are summaries, not raw reasoning; timeline has one internal inconsistency (quarantine time 12:23 in the text of Section 3.1 versus 13:17 in Figure 2)"
     depends_on: []
     fitted_to: []
-    intended_use: ["resolution source for #15's frozen comparison predictions"]
-    not_for: ["any claim before it is read"]
+    intended_use: ["resolution source for #15's frozen held-out predictions (research_notes/external/hugging-face-incident/heldout_scores.yaml)", "separate comparison case for #15"]
+    not_for: ["incident rates or probabilities", "evidence about the Hugging Face incident beyond the report's own second-hand remark on dates", "validation of AI Pacing mechanisms"]
 
   - id: EV-COLE-ROUND2
     kind: stakeholder_statement
