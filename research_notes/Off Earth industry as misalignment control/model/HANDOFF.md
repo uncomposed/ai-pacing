@@ -272,7 +272,7 @@ gh run download --name sims-results-RUN_ID
 2. the sampling definition (box, n, seed, ranges, FIXED, NEAR_FRAC, sampler source, the baselines the boxes centre on);
 3. the design (every lever after defaults, plus options, plus a hash of the solver's actual inputs);
 4. the numerics (T_H, nA, N, batch size and batch membership, STRIKE_TOL);
-5. the solver source (`equilibrium_model.py` and each wrapper on the solving path, after dropping comments);
+5. the solver source (`equilibrium_model.py` and each wrapper on the solving path, after dropping comments; in `PARAMS` only the numbers count, not the meaning and basis text, which #38 edited);
 6. the dependencies (numpy version, Python major.minor);
 7. the output schema.
 

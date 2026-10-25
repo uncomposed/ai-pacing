@@ -15,7 +15,8 @@ run being requested:
     design         every lever after defaults, any extra option dict, and SHA-256 of the solver's actual input
     numerics       solver settings (T_H, nA, N), batch size, SHA-256 of the batch membership, STRIKE_TOL
     solver         SHA-256 of equilibrium_model.py and of each wrapper function on the solving path,
-                   after dropping comments and blank lines (tokenize), so a comment edit keeps the cache
+                   after dropping comments and blank lines (tokenize), so a comment edit keeps the cache;
+                   in PARAMS only the numbers (baseline, range, scale) count, not the meaning/basis text
     dependencies   numpy version, Python major.minor
     output_schema  field names and dtypes written to the .npz
 
@@ -115,10 +116,37 @@ def code_digest(src: str) -> str:
     return hashlib.sha256("\0".join(toks).encode()).hexdigest()
 
 
+def _split_params(src: str):
+    """Separate a module-level PARAMS = OrderedDict([(name, (baseline, low, high, scale, meaning, basis)), ...])
+    into its numbers and the rest of the source. The meaning and basis strings are documentation: editing them
+    (as #38 did for g) must not invalidate every cache. Returns (source without the PARAMS block, numeric rows),
+    or (source, None) if the block is not in that literal form."""
+    import ast
+    try:
+        tree = ast.parse(src)
+    except SyntaxError:
+        return src, None
+    for node in tree.body:
+        tgt = (node.target if isinstance(node, ast.AnnAssign) else
+               node.targets[0] if isinstance(node, ast.Assign) and len(node.targets) == 1 else None)
+        if not (isinstance(tgt, ast.Name) and tgt.id == "PARAMS" and isinstance(node.value, ast.Call)
+                and node.value.args and isinstance(node.value.args[0], ast.List)):
+            continue
+        try:
+            rows = [(ast.literal_eval(e.elts[0]), [ast.unparse(x) for x in e.elts[1].elts[:4]])
+                    for e in node.value.args[0].elts]          # numbers as normalised source, e.g. "1 / 30"
+        except (ValueError, TypeError, AttributeError, IndexError, SyntaxError):
+            return src, None
+        lines = src.splitlines(keepends=True)
+        return "".join(lines[:node.lineno - 1]) + "PARAMS = None\n" + "".join(lines[node.end_lineno:]), rows
+    return src, None
+
+
 @functools.lru_cache(maxsize=None)
 def _file_code_digest(path: str, mtime_ns: int, size: int) -> str:
     with open(path, encoding="utf-8") as f:
-        return code_digest(f.read())
+        src, rows = _split_params(f.read())
+    return code_digest(src) if rows is None else digest([code_digest(src), rows])
 
 
 def source_digest(obj) -> str:

@@ -149,8 +149,17 @@ class CacheReuse(Base):
         n = CALLS[0]
         rd.run_design("r0.1", self.th(), {})
         self.assertEqual(CALLS[0], n)
-        with open(src, "a") as f:
-            f.write("TIE_TOL_EXTRA = 1e-9\n")
+        with open(src) as f:
+            text = f.read()
+        with open(src, "w") as f:        # PARAMS meaning/basis text is documentation
+            f.write(text.replace('"Off-Earth growth rate (/yr) with full chip access"', '"Growth rate, reworded"'))
+        rd.run_design("r0.1", self.th(), {})
+        self.assertEqual(CALLS[0], n)
+        with open(src, "w") as f:        # a PARAMS number is not
+            f.write(text.replace('("g",        (0.35,', '("g",        (0.36,'))
+        self.assertRefused(lambda: rd.run_design("r0.1", self.th(), {}), "solver")
+        with open(src, "w") as f:
+            f.write(text + "TIE_TOL_EXTRA = 1e-9\n")
         self.assertRefused(lambda: rd.run_design("r0.1", self.th(), {}), "solver")
 
     def test_changed_configuration_is_refused(self):
