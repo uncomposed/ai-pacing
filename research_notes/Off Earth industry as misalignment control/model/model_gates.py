@@ -149,6 +149,7 @@ def main(argv=None):
     p = sub.add_parser("software")
     p.add_argument("--no-repro", action="store_true", help="skip the cache re-solve (about 2 minutes)")
     a = ap.parse_args(argv)
+    os.makedirs(GATE_DIR, exist_ok=True)      # a fresh checkout has none; steps write into it before _write runs
     return dict(numerics=cmd_numerics, software=cmd_software, replication=cmd_replication,
                 empirical=cmd_empirical, report=cmd_report)[a.cmd](a)
 

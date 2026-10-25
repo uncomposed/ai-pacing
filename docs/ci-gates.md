@@ -62,6 +62,14 @@ measure. That was fixed in #17: error measures are now judged by `CHECK_TOL`, no
 - `sims.yml` and `breakout.yml`: only the breakout run of 2026-10-21 (39637590689) has run on GitHub.
   `docking.yml` has not run.
 
+- GitHub's x86 runners differ in CPU features, and numpy's exp/log take different code paths with and without
+  AVX512, so the same commit can give last-bit differences between runs. Locally, with numpy 1.26.4:
+  - with AVX512, `reg_maxdiff` is 1.12e-12 and the `r0.1__base` re-solve is float noise (3.3e-14);
+  - with AVX512 disabled (`NPY_DISABLE_CPU_FEATURES`), both are exactly 0 and the re-solve is identical.
+
+  This is why the error measures are judged by threshold (#17) and why run identity binds the unit-cube sample,
+  not the mapped draws (#6).
+
 This is a snapshot, not a permanent fact. Recheck it before changing settings.
 
 ## 5. Recommended required checks and branch protection
