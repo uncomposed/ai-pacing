@@ -11,10 +11,16 @@
 #      and the adapter quantity's unit is the one declared here (normalized spelling compared by dimension);
 #   4. every pact parameter named exists in equilibrium_model.PARAMS;
 #   5. the four closure and sovereignty concepts are distinct, map to different contract elements, and none is
-#      reachable from another through a coupled conversion.
+#      reachable from another through a coupled conversion;
+#   6. (#39) each normalized dimension has exactly one definition, as a stock with the readings it rejects; the
+#      definition's equations and conversions exist and its output rate is a normalization from a stock to a flow;
+#   7. (#39) stocks and flows stay apart: a stock is never booked to a flow accounting quantity of the contract nor a
+#      flow to a stock; in a normalized unit a flow carries 1/time and a stock does not; an adapter quantity linked
+#      here declares the same kind, and an adapter output rate equals the dictionary's output-rate conversion.
 #
 # Evidence status (per quantity, about the values this repository uses, not about the concept):
 #   normalization      a unit definition; needs no evidence and carries none
+#   observed_primary   a measured value read in primary form in this project (with a dated evidence record)
 #   observed_secondary a measured value cited here from a secondary summary; primary not read in this project
 #   source_model_output a published model's output (not an observation)
 #   source_model_assumption a published model's input
@@ -27,8 +33,8 @@ schema_version: 0.1.0
 status: proposed
 
 # Base dimensions. Two of them are normalizations, not physical dimensions: earth_industry (the pact solver's
-# unit, H = 1) and le_capacity (today's world leading-edge chip capacity, F = 1). Converting either to a physical
-# unit needs an empirical scale estimate (conversions.yaml), never a definition.
+# unit, H = 1; defined in DEF-EIU below) and le_capacity (world leading-edge chip capacity, F = 1; DEF-LEC). Converting
+# either to a physical unit needs an empirical scale estimate (conversions.yaml), never a definition.
 dimensions:
   physical: [time, energy, mass, money, operation, person, agent, task]
   normalized: [earth_industry, le_capacity]
@@ -50,8 +56,80 @@ units:
   person: {factor: 1, dims: {person: 1}}
   agent: {factor: 1, dims: {agent: 1}, note: "one running agent instance"}
   task: {factor: 1, dims: {task: 1}}
-  EIU: {factor: 1, dims: {earth_industry: 1}, note: "Earth-industry unit: the pact solver's H = 1 (today's Earth industry)"}
-  LEC: {factor: 1, dims: {le_capacity: 1}, note: "today's world leading-edge chip-making capacity; the pact solver's F = 1"}
+  EIU: {factor: 1, dims: {earth_industry: 1}, note: "Earth-industry unit, a stock: the world economy's productive capacity in the reference year; the pact solver's H = 1 (DEF-EIU)"}
+  LEC: {factor: 1, dims: {le_capacity: 1}, note: "world leading-edge chip-making capacity in the reference year, a stock; the pact solver's F = 1 (DEF-LEC)"}
+
+# Unit definitions (issue #39). Each normalized dimension has exactly one definition. A definition says what one unit
+# is, that it is a stock, the output rate that turns it into a flow (when any quantity uses the flow), which equations
+# of the solver read it as a stock and which as a flow, which conversions measure it, and the readings it rejects.
+# tools/units_tool.py checks the links and the stock/flow rules (README "What the checker enforces").
+definitions:
+  - id: DEF-EIU
+    unit: EIU
+    dimension: earth_industry
+    kind: stock
+    definition: >-
+      One Earth-industry unit (EIU) is the productive capacity of the whole world economy in the reference year: the
+      capital, energy supply, compute, labour and organisation that together produce that year's gross world output.
+      It is a stock. Its output rate is fixed by convention at one EIU of output per year per EIU of capacity, so one
+      EIU/yr is the reference year's gross world output, as a real quantity. The pact solver's H = 1 is one EIU, and A,
+      A0, A_close, Kmax, D and the rival's s_R are stocks in this unit.
+    reference_year: >-
+      The solver's 'today' is undated. Measured scales take 2024, the middle of the years the repository's other
+      readings use (primary energy 2023 and 2024; GATE's start of 2025), and carry 2023 to 2025 in their bounds.
+    flow_unit: EIU/yr
+    output_rate:
+      conversion: CV-CAPACITY-TO-OUTPUT
+      note: >-
+        1/yr. The solver never writes it because dt = 1 yr and the rate is 1; equations PACT-AI-FLOW, PACT-HUMAN-FLOW
+        and PACT-TRADE do not balance without it. It is a normalization (the definition of the flow unit), not a
+        capital-output ratio: today's measured capital-output ratio is not 1 yr and plays no role here.
+    basis:
+      - {equation: PACT-GROWTH, role: stock, reading: "A compounds and is capped by a resource pool Kmax: capacity that builds more capacity."}
+      - {equation: PACT-PRIZE, role: stock, reading: "A seizure adds (1 - c_w) H to A: Earth's capacity changes hands; destruction c_w is a share of it."}
+      - {equation: PACT-REINVEST, role: stock, reading: "Trade goods reinvested (reinv = 1) add sigma T dt to the stock."}
+      - {equation: PACT-AI-FLOW, role: flow, reading: "The AI's utility each year is over rho A plus its trade share: the stock's yearly output."}
+      - {equation: PACT-HUMAN-FLOW, role: flow, reading: "Human welfare each year is rho H = 1 plus trade: the whole economy's yearly output, the unit in which B_R is 'years of welfare'."}
+      - {equation: PACT-TRADE, role: flow, reading: "The trade surplus is a share gam of the smaller partner's economy, per year."}
+    measured_by: [CV-GWP-TO-EIU-OUTPUT, CV-EIU-TO-PRIMARY-POWER]
+    rejects:
+      - reading: "Industry: the industrial sector (manufacturing, mining, utilities, construction), as the solver's comments ('Earth's industry') suggest."
+        reason: >-
+          The solver's equations treat H as the whole economy: human welfare per year is rho H (PACT-HUMAN-FLOW), the
+          trade surplus is a share of 'the smaller partner's economy' (PACT-TRADE), and the denial reserve kills a share
+          d of 'Earth capacity'. Industry is about a quarter of world value added (25.4% in 2024, World Bank
+          NV.IND.TOTL.ZS; data/world_gdp_wdi.json), so this reading would make three quarters of human welfare
+          disappear from the model. The word 'industry' stays in the unit's name only.
+      - reading: "Primary energy: one EIU is today's world primary energy use (19.6 TW), as the Metzger docking reads it."
+        reason: >-
+          Primary energy is a flow (W), so it repeats the stock/flow confusion; no equation of the solver uses energy;
+          and energy per unit of output differs between Earth and an off-Earth solar industry, so equal energy is not
+          equal capacity. Where the model's text uses energy (the Metzger docking; Kmax '1e13 ~ Dyson-scale'), it relies
+          on an energy-intensity estimate, not on the unit's definition.
+        kept_as: CV-EIU-TO-PRIMARY-POWER
+      - reading: "GDP: one EIU is gross world product in USD."
+        reason: >-
+          GDP is a flow measured in money at a price base. The solver's A and H are stocks (PACT-GROWTH, PACT-PRIZE) and
+          the solver has no prices. GDP measures the unit's output rate in the reference year, not the unit, and a
+          money index stops tracking capacity once relative prices move far (an automated economy).
+        kept_as: CV-GWP-TO-EIU-OUTPUT
+    note: >-
+      Changing the definition changes no parameter value or result of the solver, which is homogeneous in this
+      normalization; it changes only what the conversions to energy, mass and money mean.
+  - id: DEF-LEC
+    unit: LEC
+    dimension: le_capacity
+    kind: stock
+    definition: >-
+      One leading-edge capacity unit (LEC) is the world's leading-edge chip-making capacity in the reference year:
+      the fabs at the leading node and their supply chains. A stock. The solver's F = 1 is one LEC; f_fab (one fab's
+      share) and the covert-fab count n_cf are in this unit. No quantity uses an LEC flow, so no output rate is defined.
+    basis:
+      - {equation: PACT-FAB-DISMANTLE, role: stock, reading: "F falls by dt / T_dis per year of dismantling and rises by dt / T_rebuild: a level of installed capacity, not wafer output."}
+    measured_by: []
+    rejects:
+      - reading: "Leading-edge wafer output per year."
+        reason: "F is reduced by dismantling and restored by rebuilding over years, and covert fabs add n_cf f_fab to it: it is installed capacity, a stock. Output would need a utilization rate the solver does not have."
 
 categories: [capability_metric, research_labor, research_output, software_efficiency, compute_training, compute_inference,
              energy, physical_capital, physical_output, supply_chain_closure, external_control]
@@ -87,7 +165,7 @@ quantities:
     semantic: "calendar date at which a threshold on the effective-compute scale is crossed"
     observable: "none directly; a model output"
     models: [AD-AIFM]
-    contract: {adapter_quantity: {adapter: AD-AIFM, name: "capability milestones (AC, SC, SAR, SIAR, TED-AI, ASI)"}, dimension: rd_capability}
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)"}, dimension: rd_capability}
     evidence: {status: external_pending, ref: "#14"}
   # ---- research labor -----------------------------------------------------------------------------------------
   - id: QTY-HUMAN-RESEARCH-LABOR
@@ -152,7 +230,7 @@ quantities:
     semantic: "log10 of effective training FLOP relative to a stated reference (orders of magnitude)"
     observable: "none directly; a model state"
     models: [AD-AIFM]
-    contract: {adapter_quantity: {adapter: AD-AIFM, name: "cumulative effective compute"}, dimension: rd_capability}
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "progress: log10 cumulative effective compute (latent)"}, dimension: rd_capability}
     evidence: {status: external_pending, ref: "#14"}
     note: "A log of a dimensional quantity, so it is meaningful only with its reference FLOP (conversion CV-OOM-TO-FLOP)."
   # ---- compute ------------------------------------------------------------------------------------------------
@@ -224,20 +302,20 @@ quantities:
     category: physical_capital
     unit: EIU
     kind: stock
-    semantic: "the AI's off-Earth industrial base in units of today's Earth industry"
-    observable: "none directly; would need a declared bridge to energy, mass or output"
+    semantic: "the AI's off-Earth productive capacity, in EIU (DEF-EIU)"
+    observable: "none directly; its output through CV-CAPACITY-TO-OUTPUT, then GWP-equivalent (CV-GWP-TO-EIU-OUTPUT) or energy (CV-EIU-TO-PRIMARY-POWER)"
     models: [AD-PACT]
-    contract: {adapter_quantity: {adapter: AD-PACT, name: "AI capacity A"}, accounting: industrial_output}
+    contract: {adapter_quantity: {adapter: AD-PACT, name: "AI capacity A"}, accounting: industrial_capacity}
     pact_params: [A0, A_close, Kmax]
     evidence: {status: project_assumption, ref: "assumptions.yaml AS-A0, AS-ACLOSE, AS-SCALE"}
-    note: "A is a stock; the contract books it to industrial_output, a flow. The solver's implicit normalization is one EIU of capacity yields one EIU of output per year (CV-CAPACITY-TO-OUTPUT). Finding F2 in README.md."
+    note: "A stock. Booked to industrial_capacity in the contract, with output rate 1/yr to industrial_output (CV-CAPACITY-TO-OUTPUT); until #39 it was booked to industrial_output, a flow (README finding F2, resolved)."
   - id: QTY-EARTH-INDUSTRY-H
     name: "Earth's industry H"
     category: physical_capital
     unit: EIU
     kind: stock
-    semantic: "today's Earth industry, frozen; the unit itself"
-    observable: "none; a definition"
+    semantic: "the world economy's productive capacity in the reference year, frozen in the pact; the unit itself (DEF-EIU)"
+    observable: "none; a definition. Its yearly output is measured as gross world product (CV-GWP-TO-EIU-OUTPUT)"
     models: [AD-PACT]
     contract: {}
     pact_params: [H]
@@ -258,9 +336,9 @@ quantities:
     category: physical_output
     unit: EIU/yr
     kind: flow
-    semantic: "output per year in units of today's Earth industry's annual output"
-    observable: "none directly"
-    models: [AD-PACT, toy]
+    semantic: "output per year; one EIU/yr is the reference year's gross world output, as a real quantity (DEF-EIU)"
+    observable: "gross world product in the reference year at market exchange rates (CV-GWP-TO-EIU-OUTPUT)"
+    models: [AD-PACT, AD-GATE, toy]
     contract: {accounting: industrial_output}
     evidence: {status: normalization, ref: "defined through CV-CAPACITY-TO-OUTPUT"}
   - id: QTY-GWP
@@ -272,7 +350,7 @@ quantities:
     observable: "national accounts"
     models: [AD-GATE]
     contract: {adapter_quantity: {adapter: AD-GATE, name: "gross world product Y"}, accounting: industrial_output}
-    evidence: {status: external_pending, ref: "#13: 'real USD', price base not stated (epoch-gate/INTERFACES.md)"}
+    evidence: {status: external_pending, ref: "#13: 'real USD', price base not stated (epoch-gate/INTERFACES.md); GATE's Y(0) = 1.10e14 USD/yr (data/baseline_target.json gwp_init) matches measured GWP at market exchange rates, not PPP (EV-WB-WDI-GDP-2026)"}
   - id: QTY-GATE-COMPUTE-STOCK
     name: "GATE physical compute stock Q"
     category: compute_training
@@ -423,7 +501,7 @@ quantities:
     semantic: "machines and plant, in EIU of output capacity they support (Leontief normalization)"
     observable: "none; a toy state"
     models: [toy]
-    contract: {accounting: industrial_output}
+    contract: {accounting: industrial_capacity}
     evidence: {status: scenario, ref: "coupling_toy.py"}
   - id: QTY-TOY-ENERGY
     name: "Toy: energy capacity E"

@@ -1,0 +1,308 @@
+# Omission matrix for the off-Earth pact equilibrium model (issue uncomposed/ai-pacing#9).
+#
+# Status: proposed. [[ai gen]] Written 2026-10-25. Links each omission named in #9 (plus the two D18 checks carried over
+# from #3) to the conclusions it could change, and records whether it is implemented and tested in a bounded variant,
+# excluded with a scoped reason, or unresolved. Every entry narrows the dependent claim. The baseline game
+# (equilibrium_model.solve) is unchanged and remains the explicit baseline; the variants are reduced models in
+# variants/ that import it read-only. Nothing here is empirical validation, and nothing is human_validated.
+#
+# Checked by `make check` (tools/omissions_tool.py check); the Markdown view results/omissions.md is rendered from this
+# file. Conclusion IDs: AR-H* are the assumption register's result claims (assumptions.yaml); D18, Q13 and H10 are
+# proposed nodes in spec/ai-pacing.yaml. Results: results/variants.md (write-up) and results/variants/tables.md.
+
+issue: uncomposed/ai-pacing#9
+baseline: {solver: equilibrium_model.solve, changed: false}
+
+omissions:
+  - id: OM-RENEG-UP
+    title: "Upward renegotiation: humans may raise the AI's terms (pay from their own industry) to buy off a strike"
+    issue_items: [renegotiation_up]
+    assumptions: [AS-FIXEDTERMS]
+    conclusions: [AR-H1, AR-H8, Q13]
+    status: implemented_tested
+    variant: variants/bargaining.py
+    results: [results/variants/bargaining.json, results/variants/tables.md]
+    tests:
+      - tests/test_variants.py::Bargaining::test_fixed_terms_is_the_baseline_recursion
+      - tests/test_variants.py::Bargaining::test_renegotiation_buys_off_prize_only_strikes
+      - tests/test_variants.py::Bargaining::test_no_bargain_when_harvest_dominates
+    finding: >-
+      In the reduced saturation game (fixed regime = the baseline recursion, strike year 165 with the eroding reserve),
+      upward renegotiation removes the prize-only strikes: eroding reserve (fixed terms strike at year 165) and no
+      reserve (strike at year 0) both stay at peace, at a transfer of 0.27 and 0.39 a year against a pie of 1.5. It
+      does nothing for the harvest world, where no bargain exists (AI lock-in 500 a year). Confirms docking.md 5
+      items 1 and 2 in an executable game.
+    narrowed_claim: >-
+      Strikes driven only by the prize (S6, denial erosion) are conclusions about fixed pact terms, not about the
+      pact's feasibility; any statement that the reserve or its erosion 'breaks the pact' holds only under
+      AS-FIXEDTERMS. Threat- and harvest-driven strikes are unaffected.
+
+  - id: OM-RENEG-DOWN
+    title: "Downward renegotiation without commitment: humans squeeze the AI as they get stronger"
+    issue_items: [renegotiation_down]
+    assumptions: [AS-NOEXPLOIT, AS-FIXEDTERMS]
+    conclusions: [AR-H12, AR-H8, D18, Q13]
+    status: implemented_tested
+    variant: variants/bargaining.py
+    results: [results/variants/bargaining.json, results/variants/tables.md]
+    tests:
+      - tests/test_variants.py::Bargaining::test_existence_versus_credible_implementation
+    finding: >-
+      Closing-window world (the reserve upgrades from q 0.45 to 0.9 in year 20): a bargain exists in every year
+      (surplus at least 1.39 a year), yet with renegotiation and no commitment the AI strikes preventively in year 19
+      and human welfare falls from 45.7 (fixed terms) to 20.4. Fixed terms and a committed constant transfer (0.115 a
+      year, welfare 46.9) both keep the peace. So existence of a bargain and its credible implementation come apart
+      exactly when human strength jumps (commitment gap 4.1 a year in year 19). With a slowly eroding reserve the
+      sign reverses: two-sided renegotiation keeps the peace and raises human welfare (50.5 against 45.4).
+    narrowed_claim: >-
+      AR-H12 ('a closing window never pulls an AI strike earlier') holds only while humans do not exploit their rising
+      strength (AS-NOEXPLOIT) or can commit to terms; under renegotiation without commitment a fast enough rise in
+      human control produces a preventive AI strike. D18's valence stays unresolved and now has a stated condition.
+      Whether renegotiation helps humans reverses with the direction of the power shift.
+
+  - id: OM-HUMAN-FIRST
+    title: "Human preventive action: humans may try to shut down (or cut off) a cooperating AI"
+    issue_items: [human_preventive_action, d18_humans_strike_first]
+    assumptions: [AS-NOFIRSTSTRIKE]
+    conclusions: [AR-H1, AR-H8, AR-H9, D18, Q13]
+    status: implemented_tested
+    variant: variants/preventive.py
+    results: [results/variants/preventive.json, results/variants/tables.md]
+    tests:
+      - tests/test_variants.py::ReducedGame::test_r6c_cell_matches_full_solver
+      - tests/test_variants.py::ReducedGame::test_saturated_start_matches_closed_form
+      - tests/test_variants.py::ReducedGame::test_switches_off_are_identities
+      - tests/test_variants.py::ReducedGame::test_reproduces_committed_json
+    finding: >-
+      Reduced bootstrap game (baseline limit matches the full solver's R6c brackets in 4 of 5 cells and the
+      saturation closed form). Where the pact holds, humans never use the option and nothing changes. Where the AI
+      would strike at closure (weak reserve), humans strike first at year 0 (success 0.3): conflict moves from year
+      15.5 to year 0, P(seizure) falls from 1 to 0.35 and human welfare rises (13.2 to 22.0). Where the AI would strike
+      late to harvest Earth (year 79), the same option makes humans strike at year 0 and lowers their welfare (36.6 to
+      22.0): they cannot commit not to use it while their window closes. Where early failure is survivable or retries
+      are free, the option deters the AI entirely (P(strike) 1 to 0) and is never used. An option to end the pact
+      (cut chips) without any shutdown capability makes the AI strike at year 0 instead of at closure.
+    narrowed_claim: >-
+      AR-H9 ('the AI waits during the bootstrap') holds only when humans have no preventive option or the AI would not
+      strike anyway; a human option to end the pact or shut the AI down can move a closure-time strike to year 0. The
+      effect of human preventive capability on human welfare has no fixed sign: it reverses between AIs that would
+      strike soon and AIs that would strike late. AR-H1 at the baseline is unaffected in this reduced game.
+
+  - id: OM-LEARNING
+    title: "Human learning after a failed strike (D18 check carried over from #3)"
+    issue_items: [d18_learning_after_failed_strike]
+    assumptions: [AS-CRACKDOWN, AS-FREERETRY]
+    conclusions: [AR-H11, AR-H13, D18, H10]
+    status: implemented_tested
+    variant: variants/preventive.py
+    results: [results/variants/preventive.json, results/variants/tables.md]
+    tests:
+      - tests/test_variants.py::ReducedGame::test_reproduces_committed_json
+      - tests/test_variants.py::ReducedGame::test_switches_off_are_identities
+    finding: >-
+      After a failed strike humans raise the reserve's firing probability and their shutdown odds by one level. In no
+      structure did this pull a strike earlier or start a 'strike now' spiral: strike timing and the first strike's
+      probability are unchanged, because learning acts only after a failure. It lowers P(seizure) where a failed AI
+      survives to retry (1 to 0.81 with a weak reserve, 1 to 0.71 with survivable early failure) and does nothing where
+      the first strike is fatal or decisive. Failed strikes still come paired with eventual seizures.
+    narrowed_claim: >-
+      Learning after a failed strike is a damage limiter on retries, not a deterrent of the first strike, in this
+      model; it supports AR-H13's 'options acting only after a failed strike change little' and gives no support to a
+      warning-shot benefit of D18. H10's deterrence channel (others' excursions tightening the regime) is the
+      separate OM-TIGHTEN entry.
+
+  - id: OM-TIGHTEN
+    title: "Improving human control over time (caught excursions by other systems tighten the regime)"
+    issue_items: [improving_human_control]
+    assumptions: [AS-NOEXPLOIT, AS-TESTSWITCHES]
+    conclusions: [AR-H12, AR-H3, D18, H10]
+    status: implemented_tested
+    variant: variants/preventive.py
+    results: [results/variants/preventive.json, results/variants/tables.md]
+    tests:
+      - tests/test_variants.py::ReducedGame::test_switches_off_are_identities
+      - tests/test_variants.py::ReducedGame::test_reproduces_committed_json
+    finding: >-
+      An exogenous tightening hazard (5 % a year; each step raises q and shutdown odds by 0.2) removes strikes without
+      pulling them earlier in the reduced bootstrap game (P(strike) 1 to 0.64 with a weak reserve and 1 to 0.46 with
+      survivable early failure; conditional strike year 15.5 to 15.4). It changes nothing where the AI strikes at year
+      0 or harvests late. With fixed terms this agrees with AR-H12; under downward renegotiation without commitment
+      (OM-RENEG-DOWN) the same improvement produces a preventive strike.
+    narrowed_claim: >-
+      'Improving human control stabilises' is conditional: true here with fixed terms and with control acting on the
+      reserve; reversed when improving control lets humans cut the AI's terms without commitment. No unconditional
+      sign is claimed.
+
+  - id: OM-DEFENSIVE-ASSETS
+    title: "Defensive human assets (defended capacity, an aligned AI on the human side)"
+    issue_items: [defensive_human_assets]
+    assumptions: [AS-NOALLY, AS-DENIAL]
+    conclusions: [AR-H5, AR-H7, AR-H8]
+    status: unresolved
+    design: AST-ALIGNED-ALLY
+    next_step: >-
+      Make Earth's defence D a state that a human-controlled defender raises over time (contract entity with host
+      STATE), with its own control failures, and rerun the R6 needed-q grid. Only D multipliers exist today (robust
+      design levers), which is a parameter, not an actor.
+    finding: "Not tested. Defence enters only as the fixed parameter D (and the D_mult design lever)."
+    narrowed_claim: >-
+      AR-H7 ('early security needs near-total unplugging') and AR-H5 are statements about a pact with a demilitarised
+      Earth and no human-aligned AI; they say nothing about pacts with defended human assets.
+
+  - id: OM-HETEROGENEITY
+    title: "State heterogeneity and asymmetric state power"
+    issue_items: [state_heterogeneity]
+    assumptions: [AS-STATES]
+    conclusions: [AR-H4, AR-H8]
+    status: unresolved
+    design: AST-HETEROGENEOUS-STATES
+    next_step: >-
+      Two-state solver run with unequal B_R and welfare shares (the stage game already enumerates per-state actions);
+      report the per-state welfare split as the distributional measure the reduced games cannot give.
+    finding: "Not tested. The reduced games use one aggregate human actor, so they report AI-versus-humans distribution only."
+    narrowed_claim: >-
+      AR-H4's threshold (private gain below about 8 years of welfare) is for N = 2 symmetric states; no claim about
+      which state gains or loses under any variant is made.
+
+  - id: OM-PRIVATE-INFO
+    title: "Private information (AI type, state programmes, strike odds)"
+    issue_items: [private_information]
+    assumptions: [AS-COMPLETEINFO]
+    conclusions: [AR-H1, AR-H8, AR-H11]
+    status: unresolved
+    next_step: >-
+      Two-type AI (striker or cooperator) with a human belief updated by observed behaviour in the reduced bootstrap
+      game; test whether screening by a shutdown threat separates types or pools them.
+    finding: "Not tested beyond the misjudged-odds test (pf_bel), in which humans still know the AI's type."
+    narrowed_claim: "All equilibrium claims assume common knowledge of types; signalling and screening are outside them."
+
+  - id: OM-SELECTION-STAGE
+    title: "Alternative equilibrium selection in the states' stage game (human-worst instead of human-best)"
+    issue_items: [equilibrium_selection]
+    assumptions: [AS-SELECTION]
+    conclusions: [AR-H1, AR-H8]
+    status: implemented_tested
+    variant: variants/run_variants.py
+    results: [results/variants/selection.json, results/variants/tables.md]
+    tests:
+      - tests/test_variants.py::Selection::test_best_selection_reproduces_round1
+    finding: >-
+      Full solver, 25 named scenarios, selection 'worst' (an existing solver option): S1 baseline and every scenario
+      that cooperated with no likely rival are unchanged. Three scenarios flip from cooperate to strike now: S4 (never
+      dismantle), S14 (rival stays dangerous, survivable seizure) and S16 (harvest). In each, the human-best
+      equilibrium was one where a rival AI was likely (P(rival) 0.95, 0.16, 0.66).
+    narrowed_claim: >-
+      AR-H1 is robust to stage-game selection at the baseline. Outcomes in worlds where cooperation coexists with a
+      likely rival depend on the states coordinating on the human-best equilibrium and are stated conditionally.
+
+  - id: OM-SELECTION-STRATEGIES
+    title: "Non-Markov strategies (triggers, reputation) and multiple equilibria of the whole game"
+    issue_items: [equilibrium_selection]
+    assumptions: [AS-SELECTION, AS-REPUTATION]
+    conclusions: [AR-H1, AR-H8, Q13]
+    status: unresolved
+    next_step: >-
+      Grim-trigger check in the reduced saturation game: is peace sustainable by punishment where the Markov
+      equilibrium strikes (eroding reserve, fixed terms)? Small and analytical; not done in this pass.
+    finding: "Not tested. All results are Markov perfect equilibria with ties broken toward peace."
+    narrowed_claim: "Every result is conditional on Markov strategies; 'no equilibrium with peace' is never claimed."
+
+  - id: OM-AI-OBJECTIVE
+    title: "Alternative AI objectives and beliefs (goal uncertainty, risk aversion, incoherence, value on humans)"
+    issue_items: [ai_objective_beliefs]
+    assumptions: [AS-COHERENT-EU, AS-POWERSEEK, AS-DISCOUNT]
+    conclusions: [AR-H1, AR-H6, AR-H9, AR-H11]
+    status: unresolved
+    next_step: >-
+      The cheapest discriminating run is goal uncertainty in the reduced saturation game (an AI that values
+      oversight with some probability, Clark 4.5); eta, omega and pf_bel are already swept in the full solver.
+    finding: "Partly covered by existing sweeps (eta, omega, pf_bel); goal uncertainty and incoherence are not represented."
+    narrowed_claim: "Results are for a coherent, risk-neutral (eta 0 baseline) expected-utility maximiser with correct beliefs except where pf_bel is varied."
+
+  - id: OM-POST-RIVAL
+    title: "Post-rival dynamics (a rival's birth is a terminal reduced form)"
+    issue_items: [post_rival_dynamics]
+    assumptions: [AS-RIVAL-HOLDS, AS-ELLINF, AS-RATIO]
+    conclusions: [AR-H5, AR-H10, AR-H8]
+    status: unresolved
+    design: AST-RIVAL-AIS
+    next_step: >-
+      Replace the terminal rival payoff with a continuation game between two AIs (contract entities, no merged
+      capacity), starting with a two-AI saturation bargaining game built on variants/bargaining.py.
+    finding: "Not tested. The selection check shows several holds rest on equilibria with a likely rival."
+    narrowed_claim: "'The pact holds' counts only AI strikes (AS-RIVAL-HOLDS); nothing is claimed about what happens after a rival exists."
+
+  - id: OM-MULTI-AGENT
+    title: "Multiple agents and coalitions (copies, swarms, several AIs)"
+    issue_items: [multi_agent_coalitions]
+    assumptions: [AS-SINGLE-AI, AS-NOALLY]
+    conclusions: [AR-H1, AR-H9, AR-H10, AR-H11, D18]
+    status: unresolved
+    design: AST-COPIES
+    next_step: >-
+      Implement AST-COPIES in the reduced bootstrap game: n parallel attempts with correlated success and a per-copy
+      kill rule, with capability shared by the weights and never summed. Scaling A is ruled out (AD-PACT unsupported
+      extrapolation).
+    finding: "Not tested. A design note maps the structures onto the mode contract (variants/actor_structures.yaml)."
+    narrowed_claim: >-
+      All results are for one AI. The 'failed early strike is fatal' logic behind AR-H9 assumes a single key; it is
+      not claimed for collectives.
+
+  - id: OM-LAB-SYSTEMS
+    title: "Sovereign-capable systems inside labs (before the solver's t = 0)"
+    issue_items: [sovereign_capable_lab_systems]
+    assumptions: [AS-A0, AS-SINGLE-AI]
+    conclusions: [AR-H1, AR-H9, D18, Q13]
+    status: excluded_scoped
+    design: AST-LAB-CAPABLE
+    reason: >-
+      The solver has no lab, no development phase and no custody; the mode contract marks AD-PACT unsupported for
+      MODE-HUMAN-LAB and MODE-SOVEREIGN-CAPABLE. Representing lab systems needs the development adapters (#13, #14),
+      not a variant of this game.
+    scope: >-
+      Conclusions apply only downstream of T-AUTHORIZED-AUTONOMY or T-LOSS-OF-CONTROL, to a partial MODE-SOVEREIGN
+      entity with critical chip dependence until closure.
+    finding: "Excluded by scope; the design note records what a variant would need."
+    narrowed_claim: >-
+      No result here transfers to systems still hosted by a lab; D18 and Q13 evidence from this model concerns a
+      post-autonomy AI only.
+
+variant_selection:
+  - variant: variants/bargaining.py
+    chosen: true
+    discriminates: "Fixed-terms artefact versus commitment problem versus empty bargaining range (AR-H8, AR-H12, D18, Q13)"
+    reason: >-
+      Saturation is where docking.md 5 computed Powell's terms from model quantities, so a one-dimensional time
+      recursion whose fixed regime is exactly the baseline recursion can test renegotiation in both directions in
+      under a second. Five worlds were chosen to span the three bargaining cases (existing and credible, existing but
+      not credible, absent).
+  - variant: variants/preventive.py
+    chosen: true
+    discriminates: "Whether a human first strike, learning or tightening stabilises or destabilises (D18, AR-H9, AR-H12, AR-H13)"
+    reason: >-
+      The bootstrap is where humans are the declining side (Powell's preventive-war case). A stripped copy of the
+      baseline game in its no-rival limit keeps the strike terms and growth, docks to the solver's R6c brackets, and
+      adds one human move and one control state. Six structures differ in what the AI would do without the new
+      options (hold, strike at closure, strike at year 0, strike late), which is what decides the sign.
+  - variant: variants/run_variants.py
+    chosen: true
+    discriminates: "Whether conclusions depend on the human-best stage-equilibrium selection (AR-H1, AR-H8)"
+    reason: "An existing solver option (sel='worst'); no code change; about 7 minutes on the 25 named scenarios."
+  - variant: "human move inside equilibrium_model.solve"
+    chosen: false
+    discriminates: "Same as variants/preventive.py, with rivals and states"
+    reason: >-
+      Deferred: #9's rule is to select bounded variants before expanding the full solver, and the reduced game already
+      shows the sign of the effect depends on structure. Worth doing for the structures where the sign matters.
+  - variant: "two-AI solver"
+    chosen: false
+    discriminates: "Coalitions and post-rival dynamics"
+    reason: "Needs the actor-structure design (variants/actor_structures.yaml) agreed first; too large for this pass."
+  - variant: "Bayesian stage game"
+    chosen: false
+    discriminates: "Private information"
+    reason: "Large change to the stage game; the reduced two-type game (OM-PRIVATE-INFO next step) comes first."
+  - variant: "ensemble over structures"
+    chosen: false
+    discriminates: "none"
+    reason: "#9's stopping rule: keep conditional conclusions rather than average over invented model probabilities."

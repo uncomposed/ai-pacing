@@ -229,8 +229,59 @@ class ModeContractTest(unittest.TestCase):
         self.rejects('AD-PACT: mode MODE-SOVEREIGN redefines')
 
     def test_adapter_double_counting_inputs_is_rejected(self):
-        self.adapter('AD-AIFM')['inputs'].append('compute_inference')
+        self.adapter('AD-AIFM')['inputs'].append('agent_labor')
         self.rejects('input agent_labor is derived from')
+
+    # --- issue #39: stocks and flows
+    def pact_a(self):
+        return next(q for q in self.adapter('AD-PACT')['quantities'] if q['name'] == 'AI capacity A')
+
+    def test_pact_books_a_as_a_stock_with_an_output_rate(self):
+        a = self.pact_a()
+        acc = {q['id']: q for q in self.c['accounting']}
+        self.assertEqual((a['kind'], acc[a['accounting']]['kind']), ('stock', 'stock'))
+        self.assertEqual(acc[a['output_rate']['accounting']]['kind'], 'flow')
+        self.assertEqual((a['output_rate']['value'], a['output_rate']['unit']), (1.0, 'per year'))
+        self.assertIn('industrial_capacity', acc['industrial_output']['derived_from'])
+
+    def test_stock_booked_to_a_flow_is_rejected(self):
+        self.pact_a()['accounting'] = 'industrial_output'
+        self.rejects("quantity 'AI capacity A' is a stock booked to industrial_output, a flow")
+
+    def test_flow_booked_to_a_stock_is_rejected(self):
+        y = next(q for q in self.adapter('AD-GATE')['quantities'] if q['name'] == 'gross world product Y')
+        y['accounting'] = 'industrial_capacity'
+        self.rejects("quantity 'gross world product Y' is a flow booked to industrial_capacity, a stock")
+
+    def test_kind_needs_an_accounting_quantity(self):
+        f = next(q for q in self.adapter('AD-PACT')['quantities'] if q['name'] == 'Earth fab level F')
+        f['kind'] = 'stock'
+        self.rejects('declares kind stock but is booked to no accounting quantity')
+
+    def test_output_rate_only_on_a_stock(self):
+        self.pact_a()['kind'] = 'flow'
+        self.rejects('has an output_rate, so it must be a stock')
+
+    def test_output_rate_must_lead_to_a_flow(self):
+        self.pact_a()['output_rate']['accounting'] = 'compute_inference'
+        self.rejects('output_rate leads to compute_inference, a stock, not a flow')
+
+    def test_output_rate_flow_must_derive_from_the_stock(self):
+        self.pact_a()['output_rate']['accounting'] = 'human_labor'
+        self.rejects('output_rate leads to human_labor, which is not derived from industrial_capacity')
+
+    def test_output_rate_unit_is_per_time(self):
+        self.pact_a()['output_rate']['unit'] = 'EIU'
+        self.rejects("output_rate unit 'EIU' is not per unit of time")
+
+    def test_stock_and_its_flow_are_not_both_inputs(self):
+        self.adapter('AD-PACT')['inputs'] = ['industrial_capacity', 'industrial_output']
+        self.rejects('input industrial_output is derived from')
+
+    def test_trace_resource_must_be_a_stock(self):
+        step = self.trace('TR-SOVEREIGN-COOPERATIVE')['steps'][0]
+        step['resources']['R-OFFEARTH']['accounting'] = 'industrial_output'
+        self.rejects('resource R-OFFEARTH is held by shares, so it is a stock; industrial_output is a flow')
 
     def test_adapter_must_cover_every_mode(self):
         del self.adapter('AD-GATE')['modes']['MODE-SOVEREIGN']

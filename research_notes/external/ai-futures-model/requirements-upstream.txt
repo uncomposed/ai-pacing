@@ -1,0 +1,6 @@
+# Environment for running the pinned AI Futures Model (Python 3.14, per its .python-version).
+# numpy and scipy match the upstream requirements.txt pins at commit 1c40ecdb; pyyaml and pytest are the versions used here.
+numpy==2.4.1
+scipy==1.17.0
+pyyaml==6.0.3
+pytest==9.1.1

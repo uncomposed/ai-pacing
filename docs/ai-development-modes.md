@@ -3,7 +3,7 @@
 ## Status
 
 Architecture note for issue #5, written 2026-10-25; contract 0.2.0 adds the changes from
-#32 (section 12). [[ai gen]] Status: `implemented`
+#32 (section 12), and 0.3.0 the stock/flow accounting of #39 (section 13). [[ai gen]] Status: `implemented`
 (contract, checker and tests); nothing is `verified` against evidence and nothing is
 `human_validated`. Every definition, level and transition is **proposed**: an
 analytical device to review, not an empirical claim or a settled threshold.
@@ -65,7 +65,7 @@ capability; they are never added up.
 | effective_control (de facto) | human_effective, human_contested, human_nominal_only, none | drills, incident outcomes, access audits |
 | custody_weights / _compute / _credentials | human_institution, shared, system_self, third_party | access logs, scheduler records, key rotation |
 | operational_autonomy | step_approved, task_level, long_horizon_unsupervised | hours between approvals |
-| external_resources | none, minor, substantial_within_scope | USD, FLOP/s, Earth-industry units |
+| external_resources | none, minor, substantial_within_scope | USD, FLOP/s, Earth-industry units (a stock, DEF-EIU) |
 | dependencies | critical, partial, none_within_horizon | time to replace withheld inputs |
 | communication_topology | isolated, sanctioned_channels, unsanctioned_channels | channel graph |
 | information_beliefs | complete_common_knowledge, asymmetric, highly_uncertain | disclosures, elicitation |
@@ -138,13 +138,30 @@ system, a sovereign-capable system in a second lab, and a sovereign collective r
 part of a provider's cluster). To prevent double counting:
 
 - each shared quantity (`human_labor`, `compute_training`, `compute_inference`,
-  `agent_labor`, `capability`, `research_output`, `industrial_output`) has one unit and
-  one owner ledger;
-- `agent_labor` is derived from `compute_inference`, and `capability` from
-  `compute_training`, so an adapter that takes a quantity and its parent as inputs is
-  rejected;
-- a resource instance in a trace is split by shares that cannot sum above 1;
+  `agent_labor`, `capability`, `research_output`, `industrial_capacity`,
+  `industrial_output`) has one unit, one kind (stock, flow or state) and one owner ledger;
+- `agent_labor` is derived from `compute_inference`, `capability` from
+  `compute_training`, and `industrial_output` from `industrial_capacity`, so an adapter
+  that takes a quantity and its parent as inputs is rejected;
+- stocks and flows stay apart (#39). An adapter quantity that declares its kind must
+  match the kind of the ledger it is booked to. A stock that yields a flow says so with an
+  `output_rate` (value, unit per time, and the flow it leads to, which must be derived
+  from the stock's ledger). The pact solver's capacity A is booked to
+  `industrial_capacity` with an output rate of 1 per year to `industrial_output`: one
+  Earth-industry unit (EIU) of capacity yields one EIU of output per year. The EIU is
+  defined once, in `research_notes/external/units-bridge/quantities.yaml` (`DEF-EIU`): the
+  world economy's productive capacity in the reference year, so one EIU/yr is that year's
+  gross world output;
+- a resource instance in a trace is split by shares that cannot sum above 1, and is a
+  stock (a holding of a flow is not defined);
 - capability is a state, never summed across copies or agents running the same weights.
+
+GATE's gross world product (USD per year) is a flow booked to `industrial_output`. It can
+be read in EIU/yr through a measured conversion (units-bridge `CV-GWP-TO-EIU-OUTPUT`,
+World Bank GDP, evidence record `EV-WB-WDI-GDP-2026`), but it is not coupled into the pact
+solver: the pact freezes Earth's capacity at H = 1, and GATE's output is Earth's.
+`make units-check` requires the contract and the dictionary to agree on these kinds and on
+the output rate.
 
 ## 7. Adapter boundaries
 
@@ -157,16 +174,18 @@ authority, which is the #5 rule for rejecting an adapter.
 |---|---|---|---|---|
 | AD-METR (evidence, #12) | partial | partial | unsupported | time horizon to strategic capability or control |
 | AD-GATE (#13) | partial | unsupported | unsupported | digital workers as an actor; social-planner allocation as a lab/state/AI decision |
-| AD-AIFM (#14) | supported | partial | unsupported | automation milestones as loss of control; double-counting compute feedback with GATE |
+| AD-AIFM (#14) | supported | unsupported | unsupported | automation milestones as loss of control; effort as validated advances; double-counting compute or efficiency feedback with GATE |
 | AD-PACT (this repo) | unsupported | unsupported | partial | capacity A as capability; scaling A for collectives; anything before t = 0 |
 
 The GATE entry was checked in #13 against the paper (arXiv:2503.04941v2) and a pinned
 rerun of Epoch's compiled solver: a social planner maximizing a representative
 household's utility makes every allocation; there are no labs, states or AI actors.
 See `research_notes/external/epoch-gate/` (MODES.md, INTERFACES.md). The AI Futures entry
-rests on the repository README, read 2026-10-25; that model was not run and no version is
-pinned. Claims about who allocates resources in it are marked "to verify" in the YAML and
-are for #14 to settle.
+was checked in #14 against the code at commit `1c40ecdb`, run with the upstream's pinned
+environment (`research_notes/external/ai-futures-model/`, modes.md): no actor decides
+anything, labor and compute are exogenous input series, and the model takes inference
+compute, not agent labor, as an input. That review moved its sovereign-capable coverage
+from partial to unsupported, because nothing in it corresponds to `strategic_capability`.
 
 ## 8. The pact solver on the contract
 
@@ -277,3 +296,31 @@ The Hugging Face trace now reports no contract gap (`contract_gaps: []`); its ol
 messages and the resolutions are kept under `resolved_gaps`. Its classification is
 unchanged: no step derives a mode view. What the changes do not do: they establish no
 transition as identified, and they add no dimension.
+
+## 13. Stocks and flows (#39, contract 0.3.0)
+
+The units audit (#11, `research_notes/external/units-bridge/README.md` findings F2 and
+F3) found that `AD-PACT` booked the pact solver's capacity A, a stock, to
+`industrial_output`, a flow, and that the Earth-industry unit was read three ways
+(industry, primary energy, GDP). Changes:
+
+1. **`industrial_capacity`** (a stock) is a new accounting quantity; `industrial_output`
+   is derived from it. `AD-PACT` books A there, with `kind: stock` and
+   `output_rate: 1 per year` to `industrial_output`, and its input is
+   `industrial_capacity`. The rate is the solver's implicit one: its payoff and trade
+   terms add A to yearly flows (units-bridge equations `PACT-AI-FLOW`, `PACT-TRADE`), which
+   balance only with it.
+2. **Kinds are checked.** An adapter quantity may declare `kind`; it must match its
+   ledger. `AD-PACT`'s A and `AD-GATE`'s Y declare theirs, and `make units-check` requires
+   it of every adapter quantity the dictionary links as a stock or flow. Other adapter
+   quantities do not declare a kind yet; some may not fit their ledger (GATE's
+   efficiency levels H and S, which are states, are booked to `research_output`, a flow).
+3. **Trace resources are stocks.** `TR-SOVEREIGN-COOPERATIVE`'s off-Earth base and Earth's
+   industry move from `industrial_output` to `industrial_capacity`. Its derived views are
+   unchanged. A 0.2.0 trace that holds shares of a flow is now rejected; none in the
+   repository did besides this one.
+
+The unit is defined once (`DEF-EIU`): the world economy's productive capacity in the
+reference year, so one EIU/yr is that year's gross world output. No parameter value or
+solver result changes; the definition fixes only what conversions to energy, mass and
+money mean.

@@ -381,3 +381,636 @@ records:
     fitted_to: []
     intended_use: ["baseline target for #13 replication and any independent re-solve", "comparison model next to AI Futures (#14)"]
     not_for: ["forecasts of real GWP, compute or automation dates", "empirical validation of any kind", "evidence about sovereign AI"]
+
+  - id: EV-METR-TH10-2025-03-19
+    kind: observation
+    title: "METR TH1.0 time horizons (14 models) public from 2025-03-19"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th10_2025-03-18 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2024-12-14", end: "2025-03-15"}
+    availability_date: "2025-03-19"
+    availability_basis: "arXiv 2503.14499 v1 submitted 2025-03-18; METR blog post 2025-03-19; runs in eval-analysis-public 4f79669 (2025-03-18). Later date used."
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: Claude 3 Opus, Claude 3.5 Sonnet (New), Claude 3.5 Sonnet (Old), Claude 3.7 Sonnet, GPT-2, GPT-4 0125, GPT-4 0314, GPT-4 1106, GPT-4 Turbo, GPT-4o, davinci-002 (GPT-3), gpt-3.5-turbo-instruct, o1, o1-preview"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2025-03-19"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH10-2025-04-16
+    kind: observation
+    title: "METR TH1.0 time horizons (2 models) public from 2025-04-16"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th10_2026-01-20 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-04-14", end: "2025-04-16"}
+    availability_date: "2025-04-16"
+    availability_basis: "time-horizons page Updates: 'April 16th, 2025: Added o3 and o4-mini'"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: o3, o4-mini"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2025-04-16"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH10-2025-06-27
+    kind: observation
+    title: "METR TH1.0 time horizons (3 models) public from 2025-06-27"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th10_2026-01-20 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-04-11", end: "2025-06-05"}
+    availability_date: "2025-06-27"
+    availability_basis: "time-horizons page Updates: 'June 27th, 2025: Added DeepSeek-V3 and Qwen models' (DeepSeek-V3-0324 not assumed included)"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: DeepSeek-V3, Qwen2-72B, Qwen2.5-72B"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2025-06-27"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH10-2025-08-06
+    kind: observation
+    title: "METR TH1.0 time horizons (1 models) public from 2025-08-06"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th10_2026-01-20 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-07-25", end: "2025-08-01"}
+    availability_date: "2025-08-06"
+    availability_basis: "time-horizons page Updates: 'August 6th, 2025: Added GPT-5, gpt-oss-120b, and Claude Opus 4.1' (only GPT-5's public runs predate this; see EV-METR-TH10-2026-01-20)"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: GPT-5"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2025-08-06"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH10-2025-11-19
+    kind: observation
+    title: "METR TH1.0 time horizons (2 models) public from 2025-11-19"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th10_2026-01-20 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-11-12", end: "2025-11-18"}
+    availability_date: "2025-11-19"
+    availability_basis: "time-horizons page Updates: 'November 19th, 2025: Added GPT-5.1-Codex-Max and Kimi K2 Thinking'"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: GPT-5.1-Codex-Max, Kimi K2 Thinking"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2025-11-19"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH10-2025-12-19
+    kind: observation
+    title: "METR TH1.0 time horizons (1 models) public from 2025-12-19"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th10_2026-01-20 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-11-26", end: "2025-12-05"}
+    availability_date: "2025-12-19"
+    availability_basis: "time-horizons page Updates: 'December 19th, 2025: Added Claude Opus 4.5'"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: Claude Opus 4.5"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2025-12-19"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH10-2026-01-20
+    kind: observation
+    title: "METR TH1.0 time horizons (24 models) public from 2026-01-20"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th10_2026-01-20 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2024-12-14", end: "2025-10-07"}
+    availability_date: "2026-01-20"
+    availability_basis: "first public appearance found: eval-analysis-public 52d6b56 (2026-01-20). (a) Models with no dated page entry (Claude 4 Opus/Sonnet, Gemini 2.5 Pro Preview, DeepSeek-R1-0528, DeepSeek-V3-0324). (b) Models whose page entry predates every public run of theirs, so the value first shown on the page came from runs that were later replaced and are not public: DeepSeek-R1 (page 2025-03-06, runs from 2025-06-17), Grok 4 (page 2025-07-20, runs to 2025-07-30), gpt-oss-120b and Claude Opus 4.1 (page 2025-08-06, runs from 2025-09-29 and 2025-08-21), Claude Sonnet 4.5 (page 2025-09-30, runs from 2025-10-03). They enter at the date their public runs appeared: late, not leaked. (c) Re-scored runs of the paper models."
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: Claude 3 Opus, Claude 3.5 Sonnet (New), Claude 3.5 Sonnet (Old), Claude 3.7 Sonnet, Claude 4 Opus, Claude 4 Sonnet, Claude 4.1 Opus, Claude Sonnet 4.5, DeepSeek-R1, DeepSeek-R1-0528, DeepSeek-V3-0324, GPT-2, GPT-4 0125, GPT-4 0314, GPT-4 1106, GPT-4 Turbo, GPT-4o, Gemini 2.5 Pro Preview, Grok 4, davinci-002 (GPT-3), gpt-3.5-turbo-instruct, gpt-oss-120b, o1, o1-preview"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2026-01-20"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH10-2026-03-03
+    kind: observation
+    title: "METR TH1.0 time horizons (33 models) public from 2026-03-03"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://metr.org/assets/benchmark_results_1_0.yaml"
+      version: "benchmark_results_1_0.yaml sha256 in research_notes/external/metr-time-horizons/sources.sha256, fetched 2026-10-25"
+    reading: read_primary
+    observation_date: {start: "2024-12-14", end: "2025-12-05"}
+    availability_date: "2026-03-03"
+    availability_basis: "time-horizons page Updates: 'March 3rd, 2026: Corrected a regularization mistake that affected our measurements' (regularization 0.1 -> 1e-5 in eval-analysis-public 52cb829). Revision of every TH1.0 value."
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.0 task suite; models: Claude 3 Opus, Claude 3.5 Sonnet (New), Claude 3.5 Sonnet (Old), Claude 3.7 Sonnet, Claude 4 Opus, Claude 4 Sonnet, Claude 4.1 Opus, Claude Opus 4.5, Claude Sonnet 4.5, DeepSeek-R1, DeepSeek-R1-0528, DeepSeek-V3, DeepSeek-V3-0324, GPT-2, GPT-4 0125, GPT-4 0314, GPT-4 1106, GPT-4 Turbo, GPT-4o, GPT-5, GPT-5.1-Codex-Max, Gemini 2.5 Pro Preview, Grok 4, Kimi K2 Thinking, Qwen2-72B, Qwen2.5-72B, davinci-002 (GPT-3), gpt-3.5-turbo-instruct, gpt-oss-120b, o1, o1-preview, o3, o4-mini"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: quoted
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH10-2026-03-03"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Copied from METR's published file; 95% bootstrap intervals included in the table."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06", "EV-METR-TH10-2025-11-19", "EV-METR-TH10-2025-12-19", "EV-METR-TH10-2026-01-20"]
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH11-2026-01-29
+    kind: observation
+    title: "METR TH1.1 time horizons (14 models) public from 2026-01-29"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th11_2026-01-20 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-06-03", end: "2025-12-02"}
+    availability_date: "2026-01-29"
+    availability_basis: "METR blog 'Time Horizon 1.1', datePublished 2026-01-29; runs in eval-analysis-public 52d6b56 (2026-01-20). Later date used."
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.1 task suite; models: Claude 3 Opus (Inspect), Claude 3.5 Sonnet (New) (Inspect), Claude 3.5 Sonnet (Old) (Inspect), Claude 3.7 Sonnet (Inspect), Claude 4 Opus (Inspect), Claude 4.5 Opus (Inspect), GPT-4 0314, GPT-4 1106 (Inspect), GPT-4 Turbo (Inspect), GPT-4o (Inspect), GPT-5 (Inspect), o1 (Inspect), o1-preview, o3 (Inspect)"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH11-2026-01-29"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH11-2026-02-04
+    kind: observation
+    title: "METR TH1.1 time horizons (3 models) public from 2026-02-04"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th11_2026-02-12 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-11-26", end: "2026-02-02"}
+    availability_date: "2026-02-04"
+    availability_basis: "time-horizons page Updates: 'February 3rd, 2026: Added Gemini 3 Pro and GPT-5.1 Codex Max'; 'February 4th, 2026: Added GPT-5.2'. One record at the later date."
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.1 task suite; models: GPT-5.1-Codex-Max (Inspect), GPT-5.2, Gemini 3 Pro"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH11-2026-02-04"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH11-2026-02-12
+    kind: observation
+    title: "METR TH1.1 time horizons (1 models) public from 2026-02-12"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "runs vintage th11_2026-02-12 of eval-analysis-public, re-fitted with regularization 0.1"
+    reading: read_primary
+    observation_date: {start: "2025-09-30", end: "2026-01-29"}
+    availability_date: "2026-02-12"
+    availability_basis: "no dated page entry; first public appearance found: eval-analysis-public 571a941 (2026-02-12)"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.1 task suite; models: Claude 4.1 Opus (Inspect)"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: computed
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH11-2026-02-12"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Reconstructs the value public at the time from the runs later committed; the page values of the time were not archived."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH11-2026-03-03
+    kind: observation
+    title: "METR TH1.1 time horizons (20 models) public from 2026-03-03"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://metr.org/assets/benchmark_results_1_1.yaml"
+      version: "benchmark_results_1_1.yaml sha256 in research_notes/external/metr-time-horizons/sources.sha256, fetched 2026-10-25"
+    reading: read_primary
+    observation_date: {start: "2025-06-03", end: "2026-02-18"}
+    availability_date: "2026-03-03"
+    availability_basis: "time-horizons page Updates: regularization correction 2026-03-03. Revision of every TH1.1 value, and the first value we can recover for Claude Opus 4.6 and GPT-5.3-Codex (page entry 2026-02-20; their pre-correction values are in no public vintage, so they enter here, late rather than leaked)."
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.1 task suite; models: Claude 3 Opus (Inspect), Claude 3.5 Sonnet (New) (Inspect), Claude 3.5 Sonnet (Old) (Inspect), Claude 3.7 Sonnet (Inspect), Claude 4 Opus (Inspect), Claude 4.1 Opus (Inspect), Claude Opus 4.5 (Inspect), Claude Opus 4.6 (Inspect), GPT-4 0314, GPT-4 1106 (Inspect), GPT-4 Turbo (Inspect), GPT-4o (Inspect), GPT-5 (Inspect), GPT-5.1-Codex-Max (Inspect), GPT-5.2, GPT-5.3-Codex, Gemini 3 Pro, o1 (Inspect), o1-preview, o3 (Inspect)"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: quoted
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH11-2026-03-03"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Copied from METR's published file; 95% bootstrap intervals included in the table."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12"]
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH11-2026-04-10
+    kind: observation
+    title: "METR TH1.1 time horizons (1 models) public from 2026-04-10"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://metr.org/assets/benchmark_results_1_1.yaml"
+      version: "benchmark_results_1_1.yaml sha256 in research_notes/external/metr-time-horizons/sources.sha256, fetched 2026-10-25"
+    reading: read_primary
+    observation_date: {start: "2026-03-05", end: "2026-04-10"}
+    availability_date: "2026-04-10"
+    availability_basis: "time-horizons page Updates: 'April 10th, 2026: Added GPT-5.4'"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.1 task suite; models: gpt_5_4"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: quoted
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH11-2026-04-10"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Copied from METR's published file; 95% bootstrap intervals included in the table."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH11-2026-04-15
+    kind: observation
+    title: "METR TH1.1 time horizons (1 models) public from 2026-04-15"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://metr.org/assets/benchmark_results_1_1.yaml"
+      version: "benchmark_results_1_1.yaml sha256 in research_notes/external/metr-time-horizons/sources.sha256, fetched 2026-10-25"
+    reading: read_primary
+    observation_date: {start: "2026-02-19", end: "2026-04-15"}
+    availability_date: "2026-04-15"
+    availability_basis: "time-horizons page Updates: 'April 15th, 2026: Added Gemini 3.1 Pro'"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.1 task suite; models: gemini_3_1_pro"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: quoted
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH11-2026-04-15"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Copied from METR's published file; 95% bootstrap intervals included in the table."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-TH11-2026-05-08
+    kind: observation
+    title: "METR TH1.1 time horizons (1 models) public from 2026-05-08"
+    source:
+      citation: "METR, time-horizon measurements (metr.org/time-horizons; github.com/METR/eval-analysis-public)"
+      url: "https://metr.org/assets/benchmark_results_1_1.yaml"
+      version: "benchmark_results_1_1.yaml sha256 in research_notes/external/metr-time-horizons/sources.sha256, fetched 2026-10-25"
+    reading: read_primary
+    observation_date: {start: "2026-04-07", end: "2026-05-08"}
+    availability_date: "2026-05-08"
+    availability_basis: "time-horizons page Updates: 'May 8th, 2026: Added Claude Mythos Preview (early) and notice that Measurements above 16 hrs are unreliable with our current task suite.'"
+    units: "minutes of human expert time at which the fitted success probability is 50% and 80% (source-native)"
+    population: "TH1.1 task suite; models: claude_mythos_preview_early_inspect"
+    protocol: "per-model weighted logistic fit of success on log2 human minutes (invsqrt task weights), METR method; observation dates are the run dates"
+    extraction:
+      method: quoted
+      locator: "research_notes/external/metr-time-horizons/data/observations.csv rows with record_id EV-METR-TH11-2026-05-08"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Copied from METR's published file; 95% bootstrap intervals included in the table."
+    uncertainty:
+      kind: sampling
+      description: "hierarchical bootstrap (task family, task, run); METR's published 95% intervals are often a factor of 2 to 5 wide; values above 960 min are flagged unreliable by METR"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["dated information sets for the #12 holdout and locked forecast", "evidence for rd_capability under AD-METR (systems/modes.yaml)"]
+    not_for: ["realized productivity or adoption", "research output", "any statement about control, custody or sovereignty", "comparison across TH1.0 and TH1.1 without a mapping"]
+  - id: EV-METR-RCT-2025
+    kind: observation_report
+    title: "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity (RCT)"
+    source:
+      citation: "Becker, Rush, Barnes and Rein, METR blog, 2025-07-10 (the accompanying paper was not read)"
+      url: "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/"
+      version: "blog as served 2026-10-25 (datePublished 2025-07-10; now marked out of date by METR)"
+    reading: read_primary
+    observation_date: {start: "2025-02", end: "2025-06"}
+    availability_date: "2025-07-10"
+    availability_basis: "blog datePublished; study months from METR's 2026-02-24 post ('data from February to June 2025')"
+    units: "ratio of implementation time with AI allowed to without (self-reported time, screen-recorded)"
+    population: "16 experienced developers on their own large open-source repositories; 246 issues averaging about two hours; mostly Cursor Pro with Claude 3.5/3.7 Sonnet"
+    protocol: "issue-level randomization to AI allowed or disallowed"
+    extraction:
+      method: quoted
+      locator: "blog sections Methodology and Core Result: 19% longer with AI; developers expected 24% speedup and afterwards believed 20%; 95% CI +2% to +39% (from the 2026-02-24 post)"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "METR lists claims it does not support (no generalization to most developers, other domains or future AI). The paper's factor analysis (5 of 20 factors likely contribute) was read only as summarized in the blog."
+    uncertainty:
+      kind: sampling
+      description: "95% CI +2% to +39% on time; small developer sample; one setting with high quality standards and implicit requirements"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["realized task productivity observable, separate from benchmark capability (#12)"]
+    not_for: ["benchmark capability", "adoption", "generalization to other developers, tasks, tools or later AI", "research output"]
+
+  - id: EV-METR-UPLIFT-2026
+    kind: observation_report
+    title: "We are Changing our Developer Productivity Experiment Design (late-2025 follow-up)"
+    source:
+      citation: "Becker, Rush, Cunningham, Rein and Mahamud, METR blog, 2026-02-24"
+      url: "https://metr.org/blog/2026-02-24-uplift-update/"
+      version: "blog as served 2026-10-25 (datePublished 2026-02-24)"
+    reading: read_primary
+    observation_date: {start: "2025-08", end: "2026-02"}
+    availability_date: "2026-02-24"
+    availability_basis: "blog datePublished; study started August 2025 (blog)"
+    units: "percent change in implementation time with AI allowed"
+    population: "57 developers (10 from the original study, 47 new), 143 repositories, 800+ tasks; paid $50/h"
+    protocol: "as the 2025 RCT; METR judges the design unreliable because of selection"
+    extraction:
+      method: quoted
+      locator: "blog: original developers -18% (CI -38% to +9%); new developers -4% (CI -15% to +9%); 30% to 50% of developers withheld tasks they did not want to do without AI"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "METR calls the estimate likely a lower bound on speedup and 'a bad proxy'; time reports unreliable for developers running agents concurrently."
+    uncertainty:
+      kind: unquantified
+      description: "selection of developers and tasks out of the experiment (direction known, size unknown); concurrency makes time-spent unreliable"
+    depends_on: [EV-METR-RCT-2025]
+    fitted_to: []
+    intended_use: ["realized productivity observable and its measurement failure modes (#12)"]
+    not_for: ["a point estimate of current speedup", "benchmark capability", "adoption rates"]
+
+  - id: EV-METR-ALGO-2025
+    kind: observation_report
+    title: "Research Update: Towards Reconciling Slowdown with Time Horizons (algorithmic vs holistic scoring)"
+    source:
+      citation: "METR blog, 2025-08-12 (datePublished 2025-08-13)"
+      url: "https://metr.org/blog/2025-08-12-research-update-towards-reconciling-slowdown-with-time-horizons/"
+      version: "blog as served 2026-10-25"
+    reading: read_primary
+    observation_date: {start: "2025", end: "2025-08-13"}
+    availability_date: "2025-08-13"
+    availability_basis: "blog datePublished"
+    units: "share of agent PRs passing maintainer tests; share mergeable as-is; minutes to fix"
+    population: "18 issues from two repositories of the 2025 RCT; Claude 3.7 Sonnet in an Inspect ReAct agent"
+    protocol: "algorithmic scoring with the original PR's tests against manual review for five failure modes"
+    extraction:
+      method: quoted
+      locator: "Results: 38% (+-19%) pass tests; none of the reviewed PRs mergeable as-is; about 42 min (26 min for test-passing PRs) to fix, against 1.3 h maintainer time"
+      by: "issue #12 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Small sample; supports context and review overhead as one reconciliation of benchmark success with the RCT slowdown."
+    uncertainty:
+      kind: sampling
+      description: "18 issues; a subset manually reviewed"
+    depends_on: [EV-METR-RCT-2025]
+    fitted_to: []
+    intended_use: ["link between benchmark-style success and realized usefulness (#12)"]
+    not_for: ["a general benchmark-to-productivity conversion factor"]
+  # AI Futures Model (issue #14): outputs are source-model outputs, never observations. Their present-day horizon,
+  # revenue and ECI levels are fitted to METR and Epoch data, so `fitted_to` marks them non-independent of those
+  # records. The two bundled-data records stand in until #12 adds METR's primary release. See
+  # research_notes/external/ai-futures-model/.
+  - id: EV-AIFM-REFERENCE-TRAJECTORY
+    kind: source_model_output
+    title: "AI Futures Model default-parameter trajectory and milestone dates"
+    source:
+      citation: "AI Futures Project, AI Futures Model (aifm-public), tests/golden_data/default_trajectory.json and default_milestones.json"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09)"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-09-09"
+    availability_basis: "Commit date of the public release; the golden files may be older but earlier history is not public."
+    units: "progress in OOMs of cumulative effective compute; milestone dates in decimal years"
+    population: "one model trajectory at the upstream default parameters, time range 2015-2050"
+    protocol: "re-run at the pinned commit and compared with the golden files (research_notes/external/ai-futures-model/results/reference_trajectory.json)"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/results/reference_trajectory.json (series max relative difference about 1e-8; AC 2027.786)"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "Replication of the source model's own output; says nothing about the world."
+    uncertainty:
+      kind: unquantified
+      description: "Single parameter point; parameter and model-form uncertainty not represented by this record."
+    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    intended_use: ["source-model replication (#14)", "basis for coupling AIFM trajectories to other components"]
+    not_for: ["empirical support for any milestone date", "a held-out test against METR or Epoch data it was fitted to"]
+
+  - id: EV-AIFM-DANIEL-08-16-26
+    kind: source_model_output
+    title: "AI Futures Model Monte Carlo forecast, Daniel 08-16-26 (10,000 samples)"
+    source:
+      citation: "AI Futures Project, app/forecast/data/simulations/daniel-08-16-26/milestone_pdfs_overlay_statistics.csv"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "commit 1c40ecdb246c25980515441a66571931c5604e11; exported 2026-08-10 (metadata.json), seed 20260810"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-09-09"
+    availability_basis: "First public in the release commit; the website may have shown it earlier (not checked)."
+    units: "milestone dates in decimal years; shares of draws under the sampled parameter measure"
+    population: "10,000 draws (9,612 successful) from Daniel's Q2 2026 elicited distributions"
+    protocol: "upstream batch_rollout.py and forecast export; re-run at N=1000 in research_notes/external/ai-futures-model/results/seeded_published-daniel-08-16-26_n1000.json"
+    extraction:
+      method: quoted
+      locator: "milestone_pdfs_overlay_statistics.csv, all rows"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "Shares are draws under a sampling measure, not calibrated probabilities."
+    uncertainty:
+      kind: sampling
+      description: "Monte Carlo sampling error of quantiles and achievement rates; the elicited measure itself is judgment."
+    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    intended_use: ["source-model replication (#14)"]
+    not_for: ["empirical support", "a calibrated probability of any milestone"]
+
+  - id: EV-AIFM-METR-HORIZON-V1-1
+    kind: observation
+    title: "METR-Horizon-v1.1 benchmark results as bundled in the AI Futures Model"
+    source:
+      citation: "METR, time-horizon benchmark results, copy at inputs/metr/benchmark_results_1_1.yaml in aifm-public"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "aifm-public commit 1c40ecdb; long_tasks_version 799cc9c4b4483a93fc3445623a49ea1bd74fdeb2"
+    reading: read_secondary_only
+    observation_date: {start: "2024-06", end: "2026"}
+    availability_date: "2026"
+    availability_basis: "Latest model release in the bundled file not checked; year only, compared conservatively."
+    units: "p50 and p80 horizon length in minutes; doubling time in days"
+    population: "frontier models evaluated by METR on its task suite"
+    protocol: "METR's own; not re-derived here"
+    extraction:
+      method: summarized_from_secondary
+      locator: "inputs/metr/benchmark_results_1_1.yaml"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "A copy inside the source model, not METR's primary release. #12 owns the primary record; replace this one with it."
+    uncertainty:
+      kind: measurement
+      description: "METR confidence intervals as bundled"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["marking AIFM outputs as non-independent of METR data"]
+    not_for: ["empirical support until read in primary form (#12)"]
+
+  - id: EV-AIFM-EPOCH-SERIES
+    kind: observation
+    title: "Epoch Capabilities Index and lab revenue series as bundled in the AI Futures Model"
+    source:
+      citation: "Epoch AI data, copies at inputs/epoch/*.csv in aifm-public"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "aifm-public commit 1c40ecdb"
+    reading: read_secondary_only
+    observation_date: {start: "2023", end: "2026"}
+    availability_date: "2026"
+    availability_basis: "Year of the latest rows; compared conservatively."
+    units: "ECI score; annualized revenue in USD"
+    population: "frontier models (ECI); OpenAI and Anthropic (revenue)"
+    protocol: "Epoch's own; media reports and company disclosures for revenue"
+    extraction:
+      method: summarized_from_secondary
+      locator: "inputs/epoch/epoch_capabilities_index.csv, epoch_openai_revenue.csv, epoch_anthropic_revenue.csv"
+      by: "the #14 replication session"
+      date: "2026-10-25"
+      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series."
+    uncertainty:
+      kind: measurement
+      description: "confidence column per row (Epoch); not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["empirical support until read in primary form"]
+
+  # Units bridge (issue #39): the measured scale of the Earth-industry unit's output rate.
+  - id: EV-WB-WDI-GDP-2026
+    kind: observation
+    title: "World GDP 2022-2025 at market exchange rates (current and constant 2015 US$) and PPP, and industry's share of value added"
+    source:
+      citation: "World Bank, World Development Indicators: NY.GDP.MKTP.CD, NY.GDP.MKTP.KD, NY.GDP.MKTP.PP.CD, NY.GDP.MKTP.PP.KD, NV.IND.TOTL.ZS, NV.IND.MANF.ZS; country WLD (World)"
+      url: "https://api.worldbank.org/v2/country/WLD/indicator/NY.GDP.MKTP.CD?format=json&date=2022:2025"
+      version: "WDI vintage lastupdated 2026-10-08, fetched 2026-10-25; SHA-256 of each raw API response in research_notes/external/units-bridge/data/world_gdp_wdi.json"
+    reading: read_primary
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-10-08"
+    availability_basis: "The API's lastupdated date for this vintage. Earlier vintages of the same years were public before and differ by revisions; this record is about this vintage only."
+    units: "USD per year (current US$; constant 2015 US$); international $ per year (PPP); percent of GDP"
+    population: "the world aggregate as compiled by the World Bank from national accounts"
+    protocol: "national accounts aggregated by the World Bank; market-exchange-rate and PPP conversions per the indicators' own definitions (not re-derived here)"
+    extraction:
+      method: quoted
+      locator: "API JSON, field 'value' for each indicator and year 2022-2025; copied unchanged into research_notes/external/units-bridge/data/world_gdp_wdi.json"
+      by: "issue #39 session"
+      date: "2026-10-25"
+      note: "2024 current US$ 1.1167e14 (central scale of CV-GWP-TO-EIU-OUTPUT); 2023 constant 2015 US$ 9.410e13 and 2025 current US$ 1.1835e14 bound it; PPP 2024 1.998e14; industry incl. construction 25.4% of GDP in 2024."
+    uncertainty:
+      kind: measurement
+      description: "Statistical uncertainty of national accounts and of the world aggregate is not reported by the source. Revisions between vintages and the choice of price base (current or constant, market rates or PPP) are larger than the reported precision; the conversion's bounds carry the price-base and reference-year spread, not measurement error."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["scale of the Earth-industry unit's output rate: one EIU/yr = reference-year GWP (units-bridge CV-GWP-TO-EIU-OUTPUT, DEF-EIU)", "reading GATE's USD output in EIU/yr for comparison", "industry's share of world value added (DEF-EIU rejected readings)"]
+    not_for: ["converting projected GWP paths into capacity growth (a real-USD index stops tracking capacity under large relative price changes)", "coupling GATE output into the pact solver's H or A", "any statement about off-Earth output prices"]

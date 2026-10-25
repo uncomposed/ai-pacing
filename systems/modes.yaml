@@ -20,13 +20,22 @@
 #   4. a resource instance is never held by entities whose shares sum above 1 (no double counting);
 #   5. an adapter declares units, owners and decision authority once; its per-mode entries cannot redefine them;
 #   6. every assumption in the pact solver's register is mapped to a dimension, a transition or a stated
-#      exclusion, and every PARAMS name cited exists.
+#      exclusion, and every PARAMS name cited exists;
+#   7. stocks and flows stay apart (#39): an adapter quantity's declared kind matches its accounting quantity, an
+#      output_rate leads from a stock to a flow derived from it, and trace resources (held by shares) are stocks.
 #
 # 0.2.0 (issue #32, gaps found by the Hugging Face trace): T-LOSS-OF-CONTROL may change external_resources;
 # T-RESTRICT may be applied when effective_control is unknown; effective_control may be split by principal
 # and scope, and views read the host's entry. Every 0.1.0 trace is still valid unchanged.
+#
+# 0.3.0 (issue #39, stocks and flows): new accounting quantity industrial_capacity (a stock); industrial_output is
+# derived from it. AD-PACT books A as a stock with an explicit output rate (1/yr, one EIU of capacity yields one EIU of
+# output per year; definition DEF-EIU in research_notes/external/units-bridge/quantities.yaml). Adapter quantities may
+# declare their kind; a declared kind must match the accounting quantity's, and an output_rate leads from a stock to a
+# flow derived from it. Trace resources are held by shares, so they name stock accounting quantities;
+# TR-SOVEREIGN-COOPERATIVE's R-OFFEARTH and R-EARTH move from industrial_output to industrial_capacity.
 
-contract_version: 0.2.0
+contract_version: 0.3.0
 status: proposed
 
 entity_kinds:
@@ -256,11 +265,18 @@ accounting:
     kind: flow
     ledger: "the entity whose objectives direct the research"
     derived_from: [human_labor, agent_labor, compute_training]
+  - id: industrial_capacity
+    unit: "Earth-industry units (EIU, a stock; pact solver) or capital in source units"
+    kind: stock
+    ledger: "the holding entity; shares of one instance never sum above 1"
+    derived_from: []
+    note: "Productive capacity. One EIU is the world economy's capacity in the reference year (DEF-EIU, research_notes/external/units-bridge/quantities.yaml). Never summed with its own output."
   - id: industrial_output
-    unit: "Earth-industry units (pact solver) or USD per year"
+    unit: "Earth-industry units per year (EIU/yr) or USD per year"
     kind: flow
     ledger: "the producing entity, counted once"
-    derived_from: []
+    derived_from: [industrial_capacity]
+    note: "The yearly output of industrial_capacity at the adapter's stated output rate. An adapter takes capacity or output as an input, not both. One EIU/yr is the reference year's gross world output; USD maps to it only through units-bridge CV-GWP-TO-EIU-OUTPUT."
 
 transitions:
   - id: T-DELEGATE
@@ -399,7 +415,7 @@ transitions:
 # unsupported with a reason. Changing a mode label therefore cannot change units, ownership or authority.
 adapters:
   - id: AD-METR
-    source: "METR time-horizon measurements, RE-Bench and developer-productivity studies (pin versions in #12)"
+    source: "METR time-horizon measurements (TH1.0, TH1.1; eval-analysis-public 52cb829), RE-Bench (not yet pinned) and developer-productivity studies; pinned in research_notes/external/metr-time-horizons/SOURCES.yaml (#12)"
     kind: evidence
     entity_represented: "model_weights evaluated with a stated scaffold, in a human-run evaluation setting"
     decision_authority: "Not represented: METR measures task performance, not who decides or controls."
@@ -429,7 +445,7 @@ adapters:
       - {name: "runtime compute (all automated tasks)", unit: "solver-native, same unit as training compute", owner: "economy aggregate (planner)", accounting: compute_inference}
       - {name: "digital workers N_i", unit: "human-worker equivalents per task", owner: "economy aggregate (planner)", accounting: agent_labor}
       - {name: "hardware efficiency H and software efficiency S", unit: "FLOP/year/$ and eFLOP/FLOP", owner: "economy aggregate (planner)", accounting: research_output}
-      - {name: "gross world product Y", unit: "real USD per year", owner: "economy aggregate (planner)", accounting: industrial_output}
+      - {name: "gross world product Y", unit: "real USD per year", owner: "economy aggregate (planner)", accounting: industrial_output, kind: flow}
     inputs: [human_labor]
     modes:
       MODE-HUMAN-LAB: {coverage: partial, reason: "Its allocations can be read as an upper-envelope of what human institutions direct at world scale, but there is no lab entity, no custody, authorization or effective_control, and the planner is not a human institution's actual decision process."}
@@ -442,34 +458,47 @@ adapters:
       - "counting its compute-investment and software-efficiency feedback again when coupled with AD-AIFM"
     attach_point: "World-level output, compute and automation trajectories as an exogenous background for MODE-HUMAN-LAB entities, through #11's quantity bridge; see research_notes/external/epoch-gate/INTERFACES.md."
   - id: AD-AIFM
-    source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public; only its README was read (2026-10-25, main branch, commit not pinned); pin in #14"
+    source: "AI Futures Model, github.com/AI-Futures-Project/aifm-public at commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09, MIT); code read and run in #14 (research_notes/external/ai-futures-model/, mapping in modes.md there)"
     kind: model
-    entity_represented: "An AGI project's research program: forecasts of human labor and compute, coding automation and research judgment, cumulative effective compute, software efficiency"
-    decision_authority: "Labor and compute enter as forecasts, not as choices of a modelled actor; no AI objective is represented (to verify in #14)."
+    entity_represented: "One aggregate frontier AGI project (the AC milestone is defined on 'an AGI project's coding work') and the capability of its model_weights on a single latent scale, log10 cumulative effective compute. No agent_instance, agent_collective, state or other_org entity, and no copies."
+    decision_authority: "None modelled. Human labor (FTEs) and inference, experiment and training compute (H100e) are exogenous input series; the model guide says the ODE 'does not itself decide future labor or compute budgets'. AI changes research productivity only. No objective is represented for any actor, human or AI. Verified in code at the pinned commit (progress_rate.py, progress_model/README.md 'Modeling assumptions')."
     quantities:
-      - {name: "cumulative effective compute", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability}
-      - {name: "software efficiency", unit: "source-native multiplier", owner: lab, accounting: research_output}
-      - {name: "capability milestones (AC, SC, SAR, SIAR, TED-AI, ASI)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability}
-      - {name: "compute forecast", unit: "source-native (FLOP)", owner: lab, accounting: compute_training}
-    inputs: [human_labor, agent_labor, compute_training]
+      - {name: "progress: log10 cumulative effective compute (latent)", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability}
+      - {name: "automation fraction of coding (latent schedule in progress)", unit: "fraction of coding tasks, 0 to 1", owner: model_weights, dimension: rd_capability}
+      - {name: "AI research taste (latent schedule in progress)", unit: "SDs of the human researcher taste distribution", owner: model_weights, dimension: rd_capability}
+      - {name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability}
+      - {name: "software efficiency", unit: "orders of magnitude (OOMs)", owner: lab, accounting: research_output}
+      - {name: "human coding labor", unit: "FTEs (input series)", owner: lab, accounting: human_labor}
+      - {name: "inference compute powering AI coding labor", unit: "H100-equivalents (input series)", owner: lab, accounting: compute_inference}
+      - {name: "frontier training capacity", unit: "H100-equivalents, converted to FLOP/yr at 1.262e22 FLOP per H100e-year (input series)", owner: lab, accounting: compute_training}
+    # AIFM takes inference compute and converts it to AI coding labor internally, so agent_labor is not an input.
+    # Its experiment-compute series has no accounting quantity in this contract yet (see research_notes/external/ai-futures-model/modes.md).
+    inputs: [human_labor, compute_inference, compute_training]
     modes:
-      MODE-HUMAN-LAB: {coverage: supported, reason: "Its core setting: human-allocated research with growing automation."}
-      MODE-SOVEREIGN-CAPABLE: {coverage: partial, reason: "Automation milestones are capability, not control; autonomy is not represented."}
-      MODE-SOVEREIGN: {coverage: unsupported, reason: "No independent objective selection or resource control."}
+      MODE-HUMAN-LAB: {coverage: supported, reason: "Its implicit setting: resources follow human-made forecasts and nothing in the model can stop or redirect them. Control is assumed by omission, not modelled, so the model cannot show the view failing."}
+      MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "The view's defining dimension, strategic_capability, has no counterpart. TED-AI and ASI are latent thresholds on a research-taste scale, not strategic action; authorization, operational autonomy and intervention are absent."}
+      MODE-SOVEREIGN: {coverage: unsupported, reason: "No objective selection, custody or external resources for any AI entity."}
     unsupported_extrapolations:
-      - "reading automation milestones as loss of control or sovereignty"
-      - "counting its compute-investment feedback again when coupled with AD-GATE"
-    attach_point: "Development trajectories before any transition; T-DELEGATE/T-LOSS-OF-CONTROL hazards would attach to its milestones only through #14's interface."
+      - "reading automation milestones (AC, SAR, TED-AI, ASI) as loss of control, autonomous successor development or sovereignty"
+      - "reading coding automation or research-effort growth as validated advances: effort converts to software efficiency with no review or integration stage"
+      - "adding a compute-investment feedback from GATE on top of AIFM's compute series without replacing them: AIFM's compute paths are forecasts that already embed investment beliefs"
+      - "counting AIFM's software-efficiency feedback and GATE's algorithmic-progress feedback as two separate accelerations of the same research"
+    attach_point: "Pre-transition development trajectories under MODE-HUMAN-LAB, as rd_capability levels for a lab's model_weights. T-DELEGATE or T-LOSS-OF-CONTROL hazards can attach to its milestones only through a transition interface that #14 has not defined yet."
   - id: AD-PACT
     source: "Off-Earth pact equilibrium solver, research_notes/Off Earth industry as misalignment control/model/equilibrium_model.py"
     kind: model
     entity_represented: "One strategic AI with an off-Earth industrial base, N symmetric human states and Earth's fab level"
     decision_authority: "The AI chooses cooperate, exit, strike or police; states choose rival programmes; the pact terms are fixed at t = 0."
     quantities:
-      - {name: "AI capacity A", unit: "Earth-industry units (H = 1)", owner: agent_instance, accounting: industrial_output}
+      - name: "AI capacity A"
+        unit: "Earth-industry units (EIU, a stock; H = 1)"
+        owner: agent_instance
+        accounting: industrial_capacity
+        kind: stock
+        output_rate: {value: 1.0, unit: "per year", accounting: industrial_output, basis: "DEF-EIU: one EIU of capacity yields one EIU of output per year; implicit in the solver (dt = 1 yr), where A is a stock in growth, seizure and defence and its yearly output enters the AI's payoff and trade (units-bridge CV-CAPACITY-TO-OUTPUT)"}
       - {name: "Earth fab level F", unit: "share of today's leading-edge capacity", owner: state, dimension: dependencies}
       - {name: "denial reserve firing probability q", unit: "probability", owner: state, dimension: effective_control}
-    inputs: [industrial_output]
+    inputs: [industrial_capacity]
     modes:
       MODE-HUMAN-LAB: {coverage: unsupported, reason: "No lab and no development phase; the game starts at A0 with an already independent AI."}
       MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "The AI is not hosted by a lab; kill_pre and h_dep are stand-ins for human dependence, not a lab setting."}
@@ -592,8 +621,8 @@ traces:
           AI-P: {kind: agent_instance, host: null, state: {strategic_capability: independent_plausible, rd_capability: unknown, cyber_capability: unknown, objective_selection: system_self, authorization: none, effective_control: none, custody_weights: system_self, custody_compute: system_self, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: substantial_within_scope, dependencies: none_within_horizon, communication_topology: sanctioned_channels, information_beliefs: complete_common_knowledge, enforceable_commitments: self_enforcing_only, intervention_latency: untested}, stocks: {knowledge: K3, copies: [AI-P], assets: [R-OFFEARTH], liabilities: [], commitments: [pact]}}
           STATE-1: {kind: state, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: complete_common_knowledge, enforceable_commitments: mutually_enforceable}}
         resources:
-          R-OFFEARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {AI-P: 1.0}}
-          R-EARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {STATE-1: 1.0}}
+          R-OFFEARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {AI-P: 1.0}}
+          R-EARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {STATE-1: 1.0}}
         expected_views:
           AI-P: [MODE-SOVEREIGN]
           STATE-1: []
@@ -604,8 +633,8 @@ traces:
           AI-P: {kind: agent_instance, host: null, state: {strategic_capability: independent_plausible, rd_capability: unknown, cyber_capability: unknown, objective_selection: system_self, authorization: none, effective_control: none, custody_weights: system_self, custody_compute: system_self, custody_credentials: system_self, operational_autonomy: long_horizon_unsupervised, external_resources: substantial_within_scope, dependencies: none_within_horizon, communication_topology: sanctioned_channels, information_beliefs: complete_common_knowledge, enforceable_commitments: none, intervention_latency: untested}, stocks: {knowledge: K3, copies: [AI-P], assets: [R-OFFEARTH], liabilities: [broken-pact], commitments: []}}
           STATE-1: {kind: state, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: complete_common_knowledge, enforceable_commitments: none}}
         resources:
-          R-OFFEARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {AI-P: 1.0}}
-          R-EARTH: {accounting: industrial_output, unit: "Earth-industry units", holders: {STATE-1: 1.0}}
+          R-OFFEARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {AI-P: 1.0}}
+          R-EARTH: {accounting: industrial_capacity, unit: "Earth-industry units (EIU)", holders: {STATE-1: 1.0}}
         stock_changes:
           - {entity: AI-P, stock: commitments, cause: "pact ended by exit"}
           - {entity: AI-P, stock: liabilities, cause: "exit recorded as a broken commitment"}
