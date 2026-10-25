@@ -1,0 +1,108 @@
+# Per-model holdout for METR time horizons, with a pre-declared compute baseline (issue #56).
+# Declared in its own commit, before permodel.py (the scoring code) existed and before any per-model score was
+# computed. The commit hash is recorded in README.md and in evidence/protocol.yaml (forecasts FC-METR-PM-*);
+# the file's sha256 is checked by test_metr_time_horizons.py. [[ai gen]] 2026-10-25.
+#
+# Label: RETROSPECTIVE. Every outcome was public before this file was written. Its author had read
+# data/observations.csv (every value), results/holdout.md (#46) and METR's published trend before writing it, so
+# the design is not blind; only the information sets are restricted to what was public at each cutoff.
+# Follows evidence/protocol.yaml (P-CUTOFF, P-REVISIONS, P-ROLLING, P-BASELINES, P-SCORING, P-CONTAMINATION,
+# P-SELECTION, P-LABEL).
+#
+# Difference from holdout_protocol.yaml (#46): the target is one model's own horizon, forecast at that model's
+# release date, not the frontier known by a date. B-LOGLINEAR is therefore read at the target's release date by
+# construction; the publication-lag rule that broke #46's declared design does not arise.
+
+label: retrospective
+protocol_version: 0.1.0
+observations: data/observations.csv
+series:
+  - {suite: TH1.0, metric: p50_min}
+  - {suite: TH1.0, metric: p80_min}
+  - {suite: TH1.1, metric: p50_min}
+  - {suite: TH1.1, metric: p80_min}
+
+# Targets, fixed by rule before scoring (P-SELECTION): every model_key of a suite whose model_release_date is on or
+# after the first `available` date of that suite (TH1.0: 2025-03-19; TH1.1: 2026-01-29). Models released earlier
+# were measured long after release and cannot be forecast at their release date from the same suite. A target is
+# skipped, and listed as skipped, if its information set has fewer than 3 models. Each target is scored once per
+# suite and metric. No target is dropped for any other reason.
+targets: released_on_or_after_first_suite_availability
+min_information_set: 3
+
+# Cutoff and information set for target m with release date T_m:
+#   cutoff c = T_m;
+#   I(c, m) = for each model k != m of the same suite with a row whose `available` <= c, its latest such row.
+# The target's own rows are excluded even when METR published them on or before the release date (o3, o4-mini,
+# GPT-5, GPT-5.1-Codex-Max). Suites are never mixed.
+cutoff: target_release_date
+exclude_target_from_information_set: true
+
+# Resolutions, reported separately (P-REVISIONS). The 2026-03-03 regularization correction (0.1 -> 1e-5) revised
+# every value; pre-correction and post-correction values are different vintages.
+resolutions:
+  V-FIRST:     # primary
+    inputs: "I(c, m) at the values public at c"
+    outcome: "the target's value in its earliest row (as first published)"
+  V-LATEST:
+    inputs: "I(c, m) at the values public at c"
+    outcome: "the target's value in its latest row"
+  V-POSTFIX:
+    inputs: >-
+      the same models as I(c, m), each at its post-correction value (rows with regularization 1e-5); a model with no
+      post-correction row is dropped
+    outcome: "the target's post-correction value"
+    note: >-
+      Uses revised values that were not public at c. It holds the measurement vintage fixed, so the difference from
+      V-FIRST shows what the regularization revision does to the scores. Not a test of information available then.
+# Every resolution is also reported split by whether the target's first-published value predates 2026-03-03.
+
+baselines:
+  B-FLAT:
+    point: "F = the largest metric value in I(c, m)"
+    interval80: >-
+      point times exp of the 10% and 90% empirical quantiles of log(y_j / point_j) of the same baseline, suite,
+      metric and resolution over earlier targets j whose first-published outcome was available on or before c.
+      No interval when fewer than 3 such j exist.
+  B-LOGLINEAR:
+    point: >-
+      OLS of ln(metric) on model_release_date (days) over the frontier-advancing models of I(c, m) (running maximum of
+      the series' own metric by release date, ties kept, as METR's get_sota_agents), evaluated at T_m.
+    interval80: "OLS prediction interval at T_m, Student t with n - 2 degrees of freedom; none when n < 3; no point when n < 2."
+  B-COMPUTE:
+    point: >-
+      F * g ** ((T_m - t_F) / 365.25), where F is the largest metric value in I(c, m), t_F the release date of the
+      model that attains it (the latest such date on a tie), and g the growth factor per year of frontier training
+      compute.
+    g: 4.2
+    g_source: >-
+      Epoch AI, "Training compute of frontier AI models grows by 4-5x per year" (Sevilla and Roldan, published
+      2024-05-28; evidence record EV-EPOCH-COMPUTE-TREND-2024): recent frontier models, about 2018 to May 2024,
+      4.2x per year, 90% CI 3.6x to 4.9x (Table A8). Public before every cutoff here.
+    elasticity: 1
+    elasticity_basis: >-
+      Declared, not fitted: the time horizon is assumed to scale one-for-one with frontier training compute (a
+      doubling every ln 2 / ln 4.2 = 0.483 years). With an exponential compute path, an elasticity fitted on the
+      information set would make B-COMPUTE identical to a log-linear trend in time, so the only content a compute
+      baseline adds here is a growth rate taken from outside the horizon data. Per-model training compute is not
+      used: Epoch has no estimate for most closed frontier models in the targets, and its dataset does not say when
+      an estimate became public.
+    interval80: "as B-FLAT, with B-COMPUTE's own points and residuals"
+
+scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]   # natural log; the interval score on ln(minutes)
+aggregation: "equal weight over targets, per suite, metric, resolution and baseline. n is small (TH1.1 has 5 targets)."
+
+# Pre-declared comparison rule. "X beats Y" is stated only if X's mean S-ABSLOGERR is lower than Y's in every one of
+# the 8 cells {TH1.0, TH1.1} x {p50_min, p80_min} x {V-FIRST, V-POSTFIX}. For X = B-COMPUTE it must also hold with g
+# at both ends of Epoch's 90% CI (3.6 and 4.9). A model is promoted only if it beats both B-FLAT and B-LOGLINEAR;
+# otherwise the statement is "not established", whatever the individual numbers. The NOSAT sensitivity is reported
+# and does not enter the rule.
+comparison_rule: beats_only_if_lower_in_all_cells
+promote_only_if_beats: [B-FLAT, B-LOGLINEAR]
+
+sensitivities:
+  - {id: G36, note: "B-COMPUTE with g = 3.6"}
+  - {id: G49, note: "B-COMPUTE with g = 4.9"}
+  - {id: NOSAT, note: "drop rows with p50_min above 960 (METR's 16-hour notice) from information sets and targets"}
+
+# Anything computed after the first scores were seen is labelled post hoc in the results and never enters the rule.
