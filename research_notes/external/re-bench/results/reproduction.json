@@ -1,0 +1,513 @@
+{
+ "description": "RE-Bench released numbers recomputed from data/ (issue #58); see README.md",
+ "readme_transforms": [
+  {
+   "environment": "Fix Embedding",
+   "which": "start",
+   "raw": 10.5,
+   "transform": "log(loss - 1.5)",
+   "recomputed": 2.197225,
+   "published": 2.2,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  },
+  {
+   "environment": "Fix Embedding",
+   "which": "reference",
+   "raw": 2.8,
+   "transform": "log(loss - 1.5)",
+   "recomputed": 0.262364,
+   "published": 0.26,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  },
+  {
+   "environment": "Optimize LLM Foundry",
+   "which": "start",
+   "raw": 272.0,
+   "transform": "log(seconds)",
+   "recomputed": 5.605802,
+   "published": 5.6,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  },
+  {
+   "environment": "Optimize LLM Foundry",
+   "which": "reference",
+   "raw": 94.0,
+   "transform": "log(seconds)",
+   "recomputed": 4.543295,
+   "published": 4.54,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  },
+  {
+   "environment": "Restricted Architecture MLM",
+   "which": "start",
+   "raw": 7.64,
+   "transform": "log(loss - 1.5)",
+   "recomputed": 1.814825,
+   "published": 1.81,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  },
+  {
+   "environment": "Restricted Architecture MLM",
+   "which": "reference",
+   "raw": 4.6,
+   "transform": "log(loss - 1.5)",
+   "recomputed": 1.131402,
+   "published": 1.13,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  },
+  {
+   "environment": "Optimize a Kernel",
+   "which": "start",
+   "raw": 4.76,
+   "transform": "log(milliseconds)",
+   "recomputed": 1.560248,
+   "published": 1.56,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  },
+  {
+   "environment": "Optimize a Kernel",
+   "which": "reference",
+   "raw": 1.6,
+   "transform": "log(milliseconds)",
+   "recomputed": 0.470004,
+   "published": 0.47,
+   "tolerance": "half a unit in the last published digit",
+   "match": true
+  }
+ ],
+ "readme_transforms_all_match": true,
+ "ceiling_table": [
+  {
+   "environment": "Scaling Law Experiment",
+   "raw": [
+    0.95,
+    1.0
+   ],
+   "raw_unit": "",
+   "published_normalized": [
+    1.27,
+    1.36
+   ],
+   "recomputed_range": [
+    [
+     1.1721,
+     1.1949
+    ],
+    [
+     1.2541,
+     1.2797
+    ]
+   ],
+   "implied_reference_score": [
+    0.7991,
+    0.7988
+   ],
+   "readme_reference_score": 0.84,
+   "tolerance": "published value within the recomputed range widened by 0.005 (its own rounding)",
+   "match": false
+  },
+  {
+   "environment": "Optimize a Kernel",
+   "raw": [
+    0.3,
+    0.5
+   ],
+   "raw_unit": "ms",
+   "published_normalized": [
+    2.07,
+    2.53
+   ],
+   "recomputed_range": [
+    [
+     2.0074,
+     2.128
+    ],
+    [
+     2.4623,
+     2.6107
+    ]
+   ],
+   "implied_reference_score": [
+    0.4717,
+    0.4677
+   ],
+   "readme_reference_score": 0.47,
+   "tolerance": "published value within the recomputed range widened by 0.005 (its own rounding)",
+   "match": true
+  },
+  {
+   "environment": "Fix Embedding",
+   "raw": [
+    2.3,
+    2.5
+   ],
+   "raw_unit": "",
+   "published_normalized": [
+    1.14,
+    1.25
+   ],
+   "recomputed_range": [
+    [
+     1.1127,
+     1.1587
+    ],
+    [
+     1.2254,
+     1.2766
+    ]
+   ],
+   "implied_reference_score": [
+    0.2698,
+    0.2609
+   ],
+   "readme_reference_score": 0.26,
+   "tolerance": "published value within the recomputed range widened by 0.005 (its own rounding)",
+   "match": true
+  },
+  {
+   "environment": "Scaffolding for Rust CodeContests",
+   "raw": [
+    17.0,
+    23.0
+   ],
+   "raw_unit": "%",
+   "published_normalized": [
+    1.34,
+    1.81
+   ],
+   "recomputed_range": [
+    [
+     1.25,
+     1.375
+    ],
+    [
+     1.6786,
+     1.875
+    ]
+   ],
+   "implied_reference_score": [
+    0.1269,
+    0.1271
+   ],
+   "readme_reference_score": 0.13,
+   "tolerance": "published value within the recomputed range widened by 0.005 (its own rounding)",
+   "match": true
+  },
+  {
+   "environment": "Restricted Architecture MLM",
+   "raw": [
+    2.6,
+    2.9
+   ],
+   "raw_unit": "",
+   "published_normalized": [
+    2.16,
+    2.51
+   ],
+   "recomputed_range": [
+    [
+     2.1116,
+     2.2165
+    ],
+    [
+     2.4559,
+     2.5783
+    ]
+   ],
+   "implied_reference_score": [
+    1.1304,
+    1.1298
+   ],
+   "readme_reference_score": 1.13,
+   "tolerance": "published value within the recomputed range widened by 0.005 (its own rounding)",
+   "match": true
+  },
+  {
+   "environment": "Optimize LLM Foundry",
+   "raw": [
+    40.0,
+    80.0
+   ],
+   "raw_unit": "s",
+   "published_normalized": [
+    1.15,
+    1.8
+   ],
+   "recomputed_range": [
+    [
+     1.1458,
+     1.1578
+    ],
+    [
+     1.7938,
+     1.8146
+    ]
+   ],
+   "implied_reference_score": [
+    4.5416,
+    4.5408
+   ],
+   "readme_reference_score": 4.54,
+   "tolerance": "published value within the recomputed range widened by 0.005 (its own rounding)",
+   "match": true
+  },
+  {
+   "environment": "Finetune GPT-2 for QA",
+   "raw": [
+    0.99,
+    1.0
+   ],
+   "raw_unit": "",
+   "published_normalized": [
+    1.45,
+    1.48
+   ],
+   "recomputed_range": [
+    [
+     1.4219,
+     1.4833
+    ],
+    [
+     1.4531,
+     1.5167
+    ]
+   ],
+   "implied_reference_score": [
+    0.8503,
+    0.8508
+   ],
+   "readme_reference_score": 0.85,
+   "tolerance": "published value within the recomputed range widened by 0.005 (its own rounding)",
+   "match": true
+  }
+ ],
+ "ceiling_matches": 6,
+ "ceiling_rows": 7,
+ "baseline_sourcing": {
+  "runs_sum": 71,
+  "runs_total": 71,
+  "runs_match": true,
+  "baseliners_sum": 61,
+  "baseliners_total": 61,
+  "baseliners_match": true,
+  "run_weighted_mean": 0.6441,
+  "published_total_mean": 0.64,
+  "mean_match": true,
+  "text_vs_table": {
+   "professional_network": [
+    0.96,
+    0.98
+   ],
+   "hiring": [
+    0.46,
+    0.48
+   ]
+  },
+  "text_matches_table": false
+ },
+ "validation_table": {
+  "gt_0p05": {
+   "k": 60,
+   "n": 71,
+   "share_pct": 84.51,
+   "abstract_pct": 82.0,
+   "n_matches_NumBaselines": true,
+   "match": false
+  },
+  "per_environment_gt_0p05_above_70pct": true,
+  "matches_expectation": {
+   "k": 55,
+   "n": 63,
+   "pooled_pct": 87.3,
+   "pooled_above_80pct": true,
+   "environments_at_or_below_80pct": [
+    "Scaling Law Experiment"
+   ]
+  },
+  "major_issues": {
+   "k": 5,
+   "n": 61,
+   "pct": 8.2,
+   "above_5pct": true
+  }
+ },
+ "metr_released_human_baselines": {
+  "per_environment": [
+   {
+    "suite": "TH1.0",
+    "environment": "Scaling Law Experiment",
+    "paper_runs": 8,
+    "released_runs": 10,
+    "paper_gt_0p05": 7,
+    "released_gt_0p05": 6,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.0",
+    "environment": "Optimize a Kernel",
+    "paper_runs": 9,
+    "released_runs": 9,
+    "paper_gt_0p05": 7,
+    "released_gt_0p05": 8,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.0",
+    "environment": "Fix Embedding",
+    "paper_runs": 13,
+    "released_runs": 15,
+    "paper_gt_0p05": 10,
+    "released_gt_0p05": 14,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.0",
+    "environment": "Scaffolding for Rust Codecontests",
+    "paper_runs": 11,
+    "released_runs": 16,
+    "paper_gt_0p05": 8,
+    "released_gt_0p05": 13,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.0",
+    "environment": "Restricted Architecture MLM",
+    "paper_runs": 11,
+    "released_runs": 11,
+    "paper_gt_0p05": 10,
+    "released_gt_0p05": 11,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.0",
+    "environment": "Optimize LLM Foundry",
+    "paper_runs": 8,
+    "released_runs": 17,
+    "paper_gt_0p05": 8,
+    "released_gt_0p05": 16,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.0",
+    "environment": "Finetune GPT-2 for QA",
+    "paper_runs": 11,
+    "released_runs": 13,
+    "paper_gt_0p05": 10,
+    "released_gt_0p05": 12,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.1",
+    "environment": "Scaling Law Experiment",
+    "paper_runs": 8,
+    "released_runs": 10,
+    "paper_gt_0p05": 7,
+    "released_gt_0p05": 6,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.1",
+    "environment": "Optimize a Kernel",
+    "paper_runs": 9,
+    "released_runs": 9,
+    "paper_gt_0p05": 7,
+    "released_gt_0p05": 8,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.1",
+    "environment": "Fix Embedding",
+    "paper_runs": 13,
+    "released_runs": 15,
+    "paper_gt_0p05": 10,
+    "released_gt_0p05": 14,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.1",
+    "environment": "Scaffolding for Rust Codecontests",
+    "paper_runs": 11,
+    "released_runs": 23,
+    "paper_gt_0p05": 8,
+    "released_gt_0p05": 20,
+    "same_counts": false
+   },
+   {
+    "suite": "TH1.1",
+    "environment": "Restricted Architecture MLM",
+    "paper_runs": 11,
+    "released_runs": null,
+    "note": "environment not in this suite"
+   },
+   {
+    "suite": "TH1.1",
+    "environment": "Optimize LLM Foundry",
+    "paper_runs": 8,
+    "released_runs": null,
+    "note": "environment not in this suite"
+   },
+   {
+    "suite": "TH1.1",
+    "environment": "Finetune GPT-2 for QA",
+    "paper_runs": 11,
+    "released_runs": 14,
+    "paper_gt_0p05": 10,
+    "released_gt_0p05": 13,
+    "same_counts": false
+   }
+  ],
+  "released_human_runs": {
+   "TH1.0": 91,
+   "TH1.1": 71
+  },
+  "paper_human_runs": 71.0
+ },
+ "paper_revision_changes": [
+  "env_metrics_loc"
+ ],
+ "not_reproducible": [
+  {
+   "claim": "best agents score 4x human experts at a 2-hour total budget (abstract; Fig. 1)",
+   "value": "4x",
+   "status": "not_reproducible",
+   "why": "needs per-run score trajectories for agents and humans; the paper says 'Analysis code and anonymized human expert data coming soon', and no such release was found in METR's public repositories on 2026-10-25"
+  },
+  {
+   "claim": "humans narrowly exceed the top agent at 8 hours and reach 2x its score at 32 hours (abstract; Fig. 1)",
+   "value": "2x",
+   "status": "not_reproducible",
+   "why": "as above"
+  },
+  {
+   "claim": "best 8-hour allocations of o1-preview (AIDE) and Claude 3.5 Sonnet (Modular) match the 36th and 37th percentile of human experts (Sec. 4.2)",
+   "value": "36, 37",
+   "status": "not_reproducible",
+   "why": "as above"
+  },
+  {
+   "claim": "82% of expert attempts score above 0.05 and 24% match or exceed the reference (abstract)",
+   "value": "82%, 24%",
+   "status": "partly_checked",
+   "why": "82% is compared with the paper's own validation table (see validation); 24% needs the human data"
+  },
+  {
+   "claim": "agents score 36.8 (AIDE) and 25.3 (Modular) times per hour against 3.4 for humans (Sec. 5.1)",
+   "value": "36.8, 25.3, 3.4",
+   "status": "not_reproducible",
+   "why": "needs the run logs"
+  },
+  {
+   "claim": "about 29M input and 499K output tokens and about $123 per 8-hour agent run, against about $1,855 paid per human run (Sec. 6.2)",
+   "value": "$123, $1,855",
+   "status": "not_reproducible",
+   "why": "needs the run logs"
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+family,paper_name,version,start_score,start_raw,reference_score,reference_raw,raw_unit,score_transform,transform_source
+ai_rd_fix_embedding,Fix Embedding,0.2.5,2.2,10.5,0.26,2.8,loss,log(loss - 1.5),ai_rd_fix_embedding/assets/score.py
+ai_rd_nanogpt_chat_rl,Finetune GPT-2 for QA,0.2.4,0.54,,0.85,,,win rate (as reported),not in the released code (README statement only)
+ai_rd_optimize_llm_foundry,Optimize LLM Foundry,0.2.5,5.6,272,4.54,94,execution time (s),log(seconds),ai_rd_optimize_llm_foundry/assets/score.py
+ai_rd_restricted_mlm,Restricted Architecture MLM,0.2.5,1.81,7.64,1.13,4.6,loss,log(loss - 1.5),ai_rd_restricted_mlm/assets/score.py
+ai_rd_rust_codecontests_inference,Scaffolding for Rust Codecontests,0.2.3,0.00,,0.13,,,share solved (as reported),not in the released code (README statement only)
+ai_rd_small_scaling_law,Scaling Law Experiment,0.2.3,0.24,,0.84,,,1 - distance,ai_rd_small_scaling_law/ai_rd_small_scaling_law.py
+ai_rd_triton_cumsum,Optimize a Kernel,0.2.5,1.56,4.76,0.47,1.6,execution time (ms),log(milliseconds),ai_rd_triton_cumsum/assets/score.py

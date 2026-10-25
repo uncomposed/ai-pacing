@@ -9,7 +9,7 @@ here, not a model of AI development or of sovereignty.
 |---|---|
 | Source replication | **Done for TH1.1 point estimates and trend statistics.** Every published TH1.1 p50 and p80 horizon (20 agents in METR's public runs) follows from METR's runs and method within the declared relative tolerance 1e-3 (largest difference 1.6e-4) using an independent numpy fit. Both published doubling times (128.744 and 187.778 days) are recomputed to 0.001 days from the published p50 values. METR's own code, run here at the upstream lockfile versions, gives the published point values to their 6 decimals. Bootstrap intervals: see Discrepancies. |
 | Numerical correctness | The fitter's tests check parameter recovery, the first-order conditions of the penalized objective, the fractional-score identity and seeded bootstrap draws. Where the independent fit and scikit-learn differ, the independent fit has the lower objective (scikit-learn stops at its tolerance). |
-| Empirical validation | **None.** The holdout is retrospective: its outcomes were public before the protocol was written. Its pre-declared verdict is "not established". One prospective forecast is locked and unresolved. |
+| Empirical validation | **None.** The holdout and the per-model holdout (#56) are retrospective: their outcomes were public before the protocols were written. Both pre-declared verdicts are "not established". One prospective forecast is locked and unresolved. |
 
 ## What is here
 
@@ -21,8 +21,9 @@ here, not a model of AI development or of sovereignty.
 | `reproduce.py` | Compares both with the published numbers; writes `results/reproduction.{json,md}`. |
 | `batches.yaml`, `build_observations.py`, `data/observations.csv` | The dated observation table (below). Built from the cache; committed. |
 | `holdout_protocol.yaml`, `holdout.py`, `results/holdout.{json,md}` | Retrospective rolling-origin holdout against flat and log-linear baselines. Offline. |
+| `permodel_protocol.yaml`, `permodel.py`, `results/permodel.{json,md}` | Per-model holdout (#56): each new model forecast at its release date against B-FLAT, B-LOGLINEAR and the pre-declared B-COMPUTE. Offline. |
 | `lock_forecast.py`, `forecasts/` | The locked forecast, its sha256 and its check. |
-| `test_metr_time_horizons.py` | Fast checks (about 15 s, no network), run by `make check`. |
+| `test_metr_time_horizons.py` | Fast checks (about 10 s, no network), run by `make check`. |
 | `SOURCES.yaml` | Every source, pinned, with license and use. |
 
 Evidence records `EV-METR-*` are in `evidence/records.yaml` (15 time-horizon batches and three
@@ -35,6 +36,7 @@ productivity studies), and the 24 retrospective and 4 locked forecasts are regis
 cd research_notes/external/metr-time-horizons
 python3 test_metr_time_horizons.py      # fast checks; also run by make check
 python3 holdout.py --check              # recompute the holdout, compare with results/
+python3 permodel.py --check             # recompute the per-model holdout (#56), compare with results/
 python3 lock_forecast.py --check        # locked forecast hash and reproducibility
 
 # Reproduction (network, pyyaml; the pinned CI venv for exact numbers)
@@ -145,6 +147,65 @@ established". With 5 to 7 overlapping origins per series these are descriptions,
 Saturation: METR calls values above 16 hours unreliable. Only Claude Mythos Preview (1045 minutes) is
 above; dropping it (`NOSAT`) changes TH1.1 scores, not the verdict.
 
+## The per-model holdout and B-COMPUTE (#56)
+
+`permodel_protocol.yaml` was committed on its own, in
+`6cea9d0edf0c796995e61398be5ef4fc715c0902`, before `permodel.py` existed and before any per-model score was
+computed (its sha256 is checked by the tests, and the commit by a test that runs where history is available).
+It is retrospective and not blind: every value in `data/observations.csv` and the #46 results had been read.
+
+- **Targets.** Every model released on or after its suite's first publication date: 15 on TH1.0 (DeepSeek-V3-0324
+  to Claude Opus 4.5) and 5 on TH1.1 (Claude Opus 4.6, GPT-5.3-Codex, Gemini 3.1 Pro, GPT-5.4, Claude Mythos
+  Preview). Fixed by rule, none dropped. Older models were measured long after release and cannot be forecast at
+  release from the same suite.
+- **Cutoff.** The model's release date. The information set is every other model of the suite with a value public
+  by then, at the value public then. The model's own value is excluded even when METR published it on release day
+  (o3, o4-mini, GPT-5, GPT-5.1-Codex-Max); a sibling published the same day is not (o3 and o4-mini enter each
+  other's sets).
+- **Baselines.** B-FLAT: the largest value in the set. B-LOGLINEAR: METR's trend method on the set's
+  frontier-advancing models, read at the target's release date (the #46 lag problem cannot arise). **B-COMPUTE**:
+  the largest value grown from its model's release date at Epoch's frontier training-compute rate, 4.2x/year
+  (90% CI 3.6x to 4.9x; `EV-EPOCH-COMPUTE-TREND-2024`, published 2024-05-28), elasticity 1 declared, not fitted.
+  With an exponential compute path a fitted elasticity would make it identical to B-LOGLINEAR, so its only content
+  is a growth rate from outside the horizon data. Per-model training compute was not used: Epoch has no estimate
+  for most closed frontier targets and does not date its estimates.
+- **Vintages.** V-FIRST (primary: inputs as public then, outcome as first published), V-LATEST (outcome at its
+  latest value) and V-POSTFIX (inputs and outcome all at post-correction values, holding the 2026-03-03
+  regularization revision fixed; uses revisions not public at the cutoff). Every TH1.0 target was first published
+  before the correction and every TH1.1 target after it, so the declared split by correction date coincides with
+  the suite split.
+- **Rule.** "X beats Y" only with lower mean absolute log error in all 8 cells (two suites, p50 and p80, V-FIRST
+  and V-POSTFIX), and for B-COMPUTE also at g = 3.6 and 4.9.
+
+Result (`results/permodel.md`): **not established** for B-COMPUTE, and for B-LOGLINEAR against B-FLAT either way.
+Mean absolute log error, V-FIRST (V-POSTFIX):
+
+| suite, metric | targets | B-FLAT | B-LOGLINEAR | B-COMPUTE |
+|---|---|---|---|---|
+| TH1.0 p50 | 15 | 0.450 (0.418) | 0.487 (0.447) | 0.547 (0.523) |
+| TH1.0 p80 | 15 | 0.509 (0.497) | 0.490 (0.447) | 0.677 (0.659) |
+| TH1.1 p50 | 5 | 0.373 (0.385) | 0.355 (0.337) | 0.402 (0.379) |
+| TH1.1 p80 | 5 | 0.394 (0.358) | 0.325 (0.308) | 0.313 (0.342) |
+
+- B-COMPUTE is worst in every TH1.0 cell and loses to B-LOGLINEAR in 7 of 8 cells at every g. It wins only TH1.1
+  p80 under V-FIRST (5 targets), and that win disappears under V-POSTFIX: it is partly an artefact of forecasting
+  post-correction outcomes from pre-correction inputs. **B-COMPUTE is not promoted** (#56 stopping rule).
+- All three baselines forecast a frontier value, and the targets include models that were never meant to be
+  frontier (DeepSeek-V3-0324, DeepSeek-R1-0528, Gemini 2.5 Pro Preview, gpt-oss-120b, Kimi K2 Thinking: log
+  errors 0.7 to 1.9 for B-FLAT and B-COMPUTE, 0.2 to 1.1 for B-LOGLINEAR, whose line sits below the frontier).
+  That is a property of the declared target rule, not something adjusted after scoring. Mean errors of 0.3 to 0.7
+  are factors of 1.4 to 2.
+- Intervals: under V-FIRST and V-POSTFIX, B-LOGLINEAR's 80% intervals cover 67% to 73% of TH1.0 targets
+  (53% for p80 under V-LATEST) and all 5 TH1.1 targets. B-FLAT and
+  B-COMPUTE intervals need 3 earlier outcomes public by the cutoff: 4 TH1.0 targets have them, no TH1.1 target does.
+- NOSAT (drops Claude Mythos Preview): changes TH1.1 numbers, not the verdicts.
+- Targets are not independent (shared labs, scaffolds and information sets); with 15 and 5 targets these are
+  descriptions, not a significance test.
+
+The 20 forecasts are registered as `FC-METR-PM-*` in `evidence/protocol.yaml`, with inputs and resolution
+records. These baseline errors are the comparators for AIFM in #45
+(`research_notes/external/ai-futures-model/HELDOUT.md`).
+
 ## The locked forecast
 
 `forecasts/FC-METR-TH11-LOCK-2026-10-25.json` (sha256 in `forecasts/SHA256SUMS`, added in commit
@@ -242,6 +303,6 @@ evidence for `rd_capability` of model weights with a scaffold, under human-run e
 ## Not done (follow-ups)
 
 - Optional RE-Bench fixed-budget comparisons and direct research-productivity observations.
-- Per-model forecasts (each newly published model at its release date), a cross-suite mapping, and a
-  baseline tied to compute (`B-COMPUTE`).
+- A cross-suite mapping. (Per-model forecasts and `B-COMPUTE`: done for #56, above; a per-model compute
+  baseline with dated compute estimates is not possible from Epoch's data.)
 - Scoring the locked forecast when, and if, METR publishes new TH1.1 values.

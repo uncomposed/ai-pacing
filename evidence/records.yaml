@@ -23,7 +23,7 @@ records:
     source:
       citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, January 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236"
       url: "https://arxiv.org/abs/1612.03238v1"
-      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref says issue 26.2, Crossref says issue 1. The version of record (ascelibrary.org) returned HTTP 403 and was not compared."
+      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref (author-supplied) says issue 26.2, Crossref says issue 1; #40 resolved this to issue 1 from Crossref's pagination of the whole issue (pages 1-196 contiguous, 18-29 between 5-17 and 30-36; see EV-ASCE-METZGER-VOR-NOT-READ). The version of record (ascelibrary.org) returned HTTP 403 and was not compared; only its abstract was compared, through OpenAlex's copy."
     reading: read_primary
     observation_date: not_applicable
     availability_date: "2013-01"
@@ -39,7 +39,7 @@ records:
       note: "Re-digitized values agree with the by-eye ones within 5% (largest: Gen 4.0 max, 1368 t against 1440 t). Fitted max-case rate 0.647/yr (by eye 0.651). The 2-year generation spacing is not a doubling time (AS-GCITE). Gen 1.0 markers of both cases overlap. Points are placed at t = 0, 2, ..., 12 years per the caption, which includes Gen 2.5."
     uncertainty:
       kind: digitization
-      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's max-case '40,000 MT with as many as 100,000 humanoid robots' does not match Fig. 2 (about 23,100 t at Gen 6.0); unresolved. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
+      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's '40,000 MT with as many as 100,000 humanoid robots' is not Fig. 2's nominal max case (about 23,100 t at Gen 6.0); #40 located it in the sensitivity figures instead: Fig. 11 (Gen 6.0 mass 38,700 to 47,400 t, 18,000 to 103,000 robonauts across printer speeds 0.1 to 0.5 kg/h) and Fig. 13 (fast robonauts, about 45,000 t), both read by eye from page renders (+-5%). Not reconciled: Fig. 11's 0.5 kg/h point (about 39,000 t) against Fig. 2's nominal 0.5 kg/h case (23,100 t), which share the nominal printer speed. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
     depends_on: []
     fitted_to: []
     intended_use: ["basis check and comparison for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison", "example of basic (not leading-edge) chip closure at small scale (units-bridge CL-BASIC-CHIPS)"]
@@ -345,7 +345,7 @@ records:
       locator: "sections 2-5 (equations), appendix B (solution), appendix C (parameter tables); see research_notes/external/epoch-gate/EQUATIONS.md"
       by: "issue #13 session, 2026-10-25"
       date: "2026-10-25"
-      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4."
+      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4. Price base (#40, units-bridge): the appendix C table gives Y(0) as 'real USD/year', 105 to 115 trillion (110 trillion), 'the total economic value produced globally in 2024'; no base year or price index is stated anywhere in the TeX source. The default is derived there from World Bank 'GDP (current US$)' (cited as worldbank2022gdp; 'around $106T' in 2023) grown by about 3% a year, so its price base is current nominal US$ at market rates, not a constant-dollar year."
     uncertainty:
       kind: unquantified
       description: "Structural and parameter uncertainty of the source model; the authors call quantitative predictions substantially uncertain and unreliable."
@@ -870,10 +870,130 @@ records:
     fitted_to: []
     intended_use: ["link between benchmark-style success and realized usefulness (#12)"]
     not_for: ["a general benchmark-to-productivity conversion factor"]
+
+  - id: EV-EPOCH-COMPUTE-TREND-2024
+    kind: observation_report
+    title: "Training compute of frontier AI models grows by 4-5x per year"
+    source:
+      citation: "Sevilla and Roldan, Epoch AI report, 2024-05-28"
+      url: "https://epoch.ai/publications/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year"
+      version: "page as served 2026-10-25 (datePublished 2024-05-28; HTML sha256 586a413dfc8468ee591021501bd52f1259077fa47eb2b512d221f61013104eb3)"
+    reading: read_primary
+    observation_date: {start: "2010", end: "2024-05"}
+    availability_date: "2024-05-28"
+    availability_basis: "datePublished in the page metadata and the byline date"
+    units: "growth factor per year of training compute (FLOP) of AI models"
+    population: "Epoch's notable-models database to May 2024; 'frontier' = top 10 by training compute at release"
+    protocol: "log-linear and piecewise trend fits by Epoch; not re-derived here"
+    extraction:
+      method: quoted
+      locator: "Appendix C, Table A8: recent frontier models (~2018 to May 2024) 4.2x/year (90% CI 3.6x to 4.9x); also notable models 2010 to May 2024 4.1x/year, frontier models 2010 to May 2024 5.3x/year"
+      by: "issue #56 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Used only as the growth rate g of the declared compute baseline B-COMPUTE (research_notes/external/metr-time-horizons/permodel_protocol.yaml). Epoch summarizes the frontier trend as about 4x/year and says it is not confident in its interpretation."
+    uncertainty:
+      kind: sampling
+      description: "90% CI 3.6x to 4.9x for the recent-frontier trend; the break date (about 2018) is itself uncertain"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["compute growth rate for B-COMPUTE (#56, #45)"]
+    not_for: ["training compute of any individual model", "compute after May 2024", "a capability measurement"]
+  # Epoch inputs bundled by AIFM (issue #66). Read in primary form from epoch.ai on 2026-10-25 and pinned by SHA-256
+  # under research_notes/external/ai-futures-model/epoch_primary/ (compare_epoch.json). What epoch.ai serves now is
+  # NOT the vintage AIFM bundles: Anthropic revenue is identical, OpenAI revenue differs by three rows, and the
+  # bundled ECI file (per model version, latest release 2026-08-02) is no longer served; the current per-model scores
+  # differ. The bundled vintage stays recorded by EV-AIFM-EPOCH-SERIES (not readable in primary form).
+  - id: EV-EPOCH-ECI-2026-10-25
+    kind: observation
+    title: "Epoch Capabilities Index scores per model, as served 2026-10-25 (270 models)"
+    source:
+      citation: "Epoch AI, 'Capabilities & benchmarking' (benchmark_data.zip, epoch_capabilities_index/eci_scores.csv). CC-BY 4.0"
+      url: "https://epoch.ai/data/benchmark_data.zip"
+      version: "zip as served 2026-10-25 (6dbc734ba342e2e0957d916fe8e81cc9a9b8147ea8fb96fc76e65d0df004146c, 2356852 bytes, member timestamps 2026-10-25); eci_scores.csv sha256 540796e67e6158f290edfb97a2633ca871edf9f1a89c78fc9d06cd20ca33cf64"
+    reading: read_primary
+    observation_date: {start: "2023-02-24", end: "2026-10-15"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. The file carries no publication date; the latest model release in it is 2026-10-15. Per-row availability earlier than this is not established, so this record must not be used as an information set for any earlier date."
+    units: "ECI score (Epoch's index, higher is more capable) with a bootstrap interval, per model; release date per model"
+    population: "270 models on Epoch's benchmarking hub with an ECI estimate"
+    protocol: "Epoch's own IRT-style fit over benchmark results (processed_data_for_eci.csv and eci_bootstraps.json are in the same zip, not committed); not re-derived here. The scores are re-fitted as models are added, so a past value is not stable."
+    extraction:
+      method: quoted
+      locator: "research_notes/external/ai-futures-model/epoch_primary/eci_scores.csv (member epoch_capabilities_index/eci_scores.csv, all 270 rows, verbatim)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Compared with AIFM's bundled epoch_capabilities_index.csv in epoch_primary/compare_epoch.json: of 450 rows with matching model name and release date, 7 have an identical score (mean bundled minus current -0.24, range -3.14 to +1.87); 17 bundled model names are absent now; 94 current models are absent from the bundle; frontier maximum 161.65 (2026-07-09) in the bundle against 168.83 (2026-09-22) now. Differences are reported, not reconciled."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's published eci_ci_low and eci_ci_high per model (bootstrap); not summarized here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of the ECI series AIFM bundles (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["the exact ECI file AIFM bundled (older, per model version)", "an information set before 2026-10-25", "a held-out test of AIFM (AIFM's eci_at_present_day is consistent with this series)"]
+
+  - id: EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25
+    kind: observation_report
+    title: "Epoch's reports of Anthropic whole-company annualized revenue, 15 rows to 2026-07-31"
+    source:
+      citation: "Epoch AI, 'Data on AI Companies' (Josh You, John Croxton, Venkat Somala, Yafah Edelman), ai_companies_revenue_reports.csv. CC-BY 4.0"
+      url: "https://epoch.ai/data/ai_companies_revenue_reports.csv"
+      version: "as served 2026-10-25 (192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7, 43851 bytes, etag 1369fc51d584c9b775a323418b4ef74a)"
+    reading: read_primary
+    observation_date: {start: "2023-10-01", end: "2026-07-31"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. Each row has its own report date (latest 2026-08-17), which would give a finer information set; the revisions of earlier rows are not archived, so the file as a whole is dated by download."
+    units: "annualized revenue in USD at the row date (run rate); confidence label and source type per row"
+    population: "Anthropic, scope 'Full company', rows with an annualized figure (AIFM's filter, scripts/bridge/epoch_revenue_to_ts.py)"
+    protocol: "Epoch compiles company disclosures and media reports; the figures are not audited and run-rate definitions differ by source"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/epoch_primary/ai_companies_revenue_reports.csv, Company=Anthropic, Scope='Full company', nonempty 'Annualized revenue (USD)' (verbatim file; filter in compare_epoch.py)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "The filtered rows are identical to AIFM's bundled epoch_anthropic_revenue.csv (15 of 15), so for Anthropic the bundled vintage equals the primary one served today."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's per-row confidence column (Confident, Likely, ...) and the mix of company disclosures and media reports; not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of AIFM's epoch_anthropic_revenue.csv (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["audited revenue", "product-line revenue (excluded by scope)", "an information set before the row's report date"]
+
+  - id: EV-EPOCH-REVENUE-OPENAI-2026-10-25
+    kind: observation_report
+    title: "Epoch's reports of OpenAI whole-company annualized revenue, 17 rows to 2026-09-30"
+    source:
+      citation: "Epoch AI, 'Data on AI Companies' (Josh You, John Croxton, Venkat Somala, Yafah Edelman), ai_companies_revenue_reports.csv. CC-BY 4.0"
+      url: "https://epoch.ai/data/ai_companies_revenue_reports.csv"
+      version: "as served 2026-10-25 (192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7, 43851 bytes, etag 1369fc51d584c9b775a323418b4ef74a)"
+    reading: read_primary
+    observation_date: {start: "2023-03-01", end: "2026-09-30"}
+    availability_date: "2026-10-25"
+    availability_basis: "Download date. Row report dates run to 2026-10-08; revisions of earlier rows are not archived."
+    units: "annualized revenue in USD at the row date (run rate); confidence label and source type per row"
+    population: "OpenAI, scope 'Full company', rows with an annualized figure (AIFM's filter)"
+    protocol: "Epoch compiles company disclosures and media reports; the figures are not audited and run-rate definitions differ by source"
+    extraction:
+      method: computed
+      locator: "research_notes/external/ai-futures-model/epoch_primary/ai_companies_revenue_reports.csv, Company=OpenAI, Scope='Full company', nonempty 'Annualized revenue (USD)' (verbatim file; filter in compare_epoch.py)"
+      by: "issue #66 session, 2026-10-25"
+      date: "2026-10-25"
+      note: "Differs from AIFM's bundled epoch_openai_revenue.csv (16 rows): the bundle has a 2026-08-13 row of 40e9 (Bloomberg) that the primary file no longer has; the primary file has 2026-07-15 of 30e9 and 2026-09-30 of 50e9, both from one FT article. The 2026-09-30 row has report date 2026-09-08, earlier than its own date, which Epoch's file does not explain. Reported, not reconciled."
+    uncertainty:
+      kind: measurement
+      description: "Epoch's per-row confidence column and the mix of company disclosures and media reports; not quantified here"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["primary-form counterpart of AIFM's epoch_openai_revenue.csv (#66)", "marking AIFM outputs as non-independent of Epoch data"]
+    not_for: ["audited revenue", "product-line revenue (excluded by scope)", "the exact OpenAI series AIFM bundled (three rows differ)"]
   # AI Futures Model (issue #14): outputs are source-model outputs, never observations. Their present-day horizon,
   # revenue and ECI levels are fitted to METR and Epoch data, so `fitted_to` marks them non-independent of those
-  # records. The two bundled-data records stand in until #12 adds METR's primary release. See
-  # research_notes/external/ai-futures-model/.
+  # records. METR links point at #12's primary records since #45: AIFM's bundled METR file is byte-identical to
+  # METR's published TH1.1 file (sha256 aae31902...), i.e. the post-correction TH1.1 records plus three TH1.0 values
+  # (GPT-2, davinci-002, gpt-3.5-turbo-instruct; EV-METR-TH10-2026-03-03). fitted_to lists the TH1.1 records: the
+  # horizon level is Claude Mythos Preview's p80 (186 min) and the elicited doubling time was formed with METR's
+  # published TH1.1 trend in view. Epoch links point at primary records read 2026-10-25 (#66) plus the bundled-vintage record, since the served vintage differs. See
+  # research_notes/external/ai-futures-model/ (HELDOUT.md).
   - id: EV-AIFM-REFERENCE-TRAJECTORY
     kind: source_model_output
     title: "AI Futures Model default-parameter trajectory and milestone dates"
@@ -897,8 +1017,8 @@ records:
     uncertainty:
       kind: unquantified
       description: "Single parameter point; parameter and model-form uncertainty not represented by this record."
-    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     intended_use: ["source-model replication (#14)", "basis for coupling AIFM trajectories to other components"]
     not_for: ["empirical support for any milestone date", "a held-out test against METR or Epoch data it was fitted to"]
 
@@ -925,8 +1045,8 @@ records:
     uncertainty:
       kind: sampling
       description: "Monte Carlo sampling error of quantiles and achievement rates; the elicited measure itself is judgment."
-    depends_on: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
-    fitted_to: [EV-AIFM-METR-HORIZON-V1-1, EV-AIFM-EPOCH-SERIES]
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
+    fitted_to: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-AIFM-EPOCH-SERIES, EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
     intended_use: ["source-model replication (#14)"]
     not_for: ["empirical support", "a calibrated probability of any milestone"]
 
@@ -949,14 +1069,14 @@ records:
       locator: "inputs/metr/benchmark_results_1_1.yaml"
       by: "the #14 replication session"
       date: "2026-10-25"
-      note: "A copy inside the source model, not METR's primary release. #12 owns the primary record; replace this one with it."
+      note: "A copy inside the source model. Byte-identical (sha256 aae31902b0519a4da73e16643915e5e8aca13cd3315c3aac893ce3d6dfe92ad9) to METR's published file, read in primary form by #12: the AIFM output records now cite those primary records (#45). Kept as the record of what AIFM bundles."
     uncertainty:
       kind: measurement
       description: "METR confidence intervals as bundled"
-    depends_on: []
+    depends_on: [EV-METR-TH11-2026-03-03, EV-METR-TH11-2026-04-10, EV-METR-TH11-2026-04-15, EV-METR-TH11-2026-05-08, EV-METR-TH10-2026-03-03]
     fitted_to: []
-    intended_use: ["marking AIFM outputs as non-independent of METR data"]
-    not_for: ["empirical support until read in primary form (#12)"]
+    intended_use: ["what AIFM bundles; cite the EV-METR-* records it copies instead"]
+    not_for: ["empirical support (cite the primary EV-METR-* records)"]
 
   - id: EV-AIFM-EPOCH-SERIES
     kind: observation
@@ -977,14 +1097,44 @@ records:
       locator: "inputs/epoch/epoch_capabilities_index.csv, epoch_openai_revenue.csv, epoch_anthropic_revenue.csv"
       by: "the #14 replication session"
       date: "2026-10-25"
-      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series."
+      note: "Not read by progress_model; the default present_revenue and eci_at_present_day are elicited values consistent with these series. Since #66 this records the BUNDLED vintage only; it stays secondary because that vintage is not obtainable in primary form: Anthropic revenue matches the primary file served 2026-10-25 (EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25), OpenAI revenue differs by three rows (EV-EPOCH-REVENUE-OPENAI-2026-10-25), and the bundled ECI file (latest release 2026-08-02) is no longer served; its scores differ from EV-EPOCH-ECI-2026-10-25. Details: research_notes/external/ai-futures-model/epoch_primary/compare_epoch.json."
     uncertainty:
       kind: measurement
       description: "confidence column per row (Epoch); not quantified here"
+    depends_on: [EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25, EV-EPOCH-REVENUE-OPENAI-2026-10-25]
+    fitted_to: []
+    intended_use: ["marking AIFM outputs as non-independent of Epoch data", "what AIFM bundles; cite the EV-EPOCH-* records for Epoch's data"]
+    not_for: ["empirical support (cite the primary EV-EPOCH-* records, noting the vintage differences)"]
+
+  # Units bridge recheck (issue #42): AIFM's own unit conventions and the beliefs that stand where the units bridge
+  # would need a measured link from coding speed to research output.
+  - id: EV-UNITS-AIFM-CONVENTIONS
+    kind: source_model_assumption
+    title: "AI Futures Model unit conventions and default beliefs on coding uplift and software progress"
+    source:
+      citation: "AI Futures Project, AI Futures Model (aifm-public), progress_model/config.py and progress_model/_impl.py"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09), fetched with research_notes/external/ai-futures-model/fetch_upstream.sh on 2026-10-25"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-09-09"
+    availability_basis: "Commit date of the public release; earlier history is not public."
+    units: "H100e (FLOP/s); OOMs of effective FLOP per physical FLOP; OOM per year; serial coding uplift (ratio); months"
+    population: "default parameters of one source model; no observed system"
+    protocol: "read from the code at the pinned commit"
+    extraction:
+      method: quoted
+      locator: "config.py:113-115 (TRAINING_COMPUTE_REFERENCE_YEAR = 2025.13, 'Normalize 0 software efficiency to Grok 3'); config.py:111 (SOFTWARE_PROGRESS_SCALE_REFERENCE_YEAR = 2024.0); config.py:122 (FLOP_PER_H100E_YEAR = 0.4e15 * 3.15576e7, 'H100 nameplate 1e15 FLOP/s * 0.4 utilization'); config.py:248 (software_progress_rate_at_reference_year = 1); config.py:299-301 (serial_uplift_at_reference_date = 2.0, 'Daniel Q2: sqrt(0.25 * 4) + 1'; excess_uplift_doubling_time = 5.0 months; uplift_reference_date = 2026.578082); config.py:335 (parallel_penalty = 0.5); _impl.py:1835-1837 (software_efficiency and effective_compute shifted so SE = 0 at the reference year)"
+      by: "issue #42 session"
+      date: "2026-10-25"
+      note: "The serial uplift is an elicited belief (a geometric mean of an elicited range), not read from an uplift study. The 1 OOM/yr software progress rate at 2024 is described in #14's MECHANISMS.md as literature-based; the code cites no source."
+    uncertainty:
+      kind: unquantified
+      description: "Judgment values; the sampling configs carry 80% ranges for the elicited ones (serial uplift: 1 plus a lognormal with 80% range 0.25 to 4, i.e. 1.25 to 5; config/sampling_config_q2_daniel.yaml:45-50). Unit conventions (H100e utilization 0.4) are not measurements."
     depends_on: []
     fitted_to: []
-    intended_use: ["marking AIFM outputs as non-independent of Epoch data"]
-    not_for: ["empirical support until read in primary form"]
+    intended_use: ["units of AIFM quantities in the units bridge (#42)", "stating why the coding-speed-to-research-output link is not identified"]
+    not_for: ["empirical support for any uplift, software progress rate or utilization", "a conversion from METR time horizons or developer-productivity ratios to research output"]
 
   # Units bridge (issue #39): the measured scale of the Earth-industry unit's output rate.
   - id: EV-WB-WDI-GDP-2026
@@ -1014,3 +1164,201 @@ records:
     fitted_to: []
     intended_use: ["scale of the Earth-industry unit's output rate: one EIU/yr = reference-year GWP (units-bridge CV-GWP-TO-EIU-OUTPUT, DEF-EIU)", "reading GATE's USD output in EIU/yr for comparison", "industry's share of world value added (DEF-EIU rejected readings)"]
     not_for: ["converting projected GWP paths into capacity growth (a real-USD index stops tracking capacity under large relative price changes)", "coupling GATE output into the pact solver's H or A", "any statement about off-Earth output prices"]
+
+  # RE-Bench (issue #58): fixed-budget human-agent comparisons, kept apart from time-horizon capability.
+  # research_notes/external/re-bench/. None of these is a research-productivity observation (observables.yaml).
+  - id: EV-REBENCH-PAPER-V1-2024
+    kind: observation_report
+    title: "RE-Bench: Evaluating frontier AI R&D capabilities of language model agents against human experts (arXiv v1)"
+    source:
+      citation: "Wijk, Lin, Becker et al., arXiv:2411.15114v1 (METR), 2024-11-22; same text as metr.org/AI_R_D_Evaluation_Report.pdf (PDF created 2024-11-22)"
+      url: "https://arxiv.org/abs/2411.15114v1"
+      version: "arXiv v1 LaTeX source, report.tex sha256 2f20ec7e63098ce1dbab103b1449435dccc3ef941f0be05850de3707ad4a0ccf; environments at github.com/METR/RE-Bench a0cc6d4 (task files unchanged since 93b9806, 2025-01-30)"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2024-11-22"}
+    availability_date: "2024-11-22"
+    availability_basis: "arXiv v1 submission, Fri 22 Nov 2024 18:30 UTC. Run dates are not stated; agent runs used claude-3-5-sonnet-20241022, so some ran after 2024-10-22."
+    units: "normalized score (0 = starting solution, 1 = reference solution, per environment; averaged over 7 environments); best-of-k over k independent runs; total time budget in hours (k x per-run limit); human percentile; USD"
+    population: "7 RE-Bench environments; 71 eight-hour attempts by 61 human experts; o1-preview (AIDE) and Claude 3.5 Sonnet 20240620 and 20241022 (Modular, AIDE) with 30-minute, 2-hour and 8-hour runs on 0-6 H100s"
+    protocol: "humans and agents under the same environments and hardware; score@k with replacement, best observed score (random choice for Scaling Law Experiment); agent pauses for API errors not counted; 95% percentile-bootstrap intervals"
+    extraction:
+      method: quoted
+      locator: "abstract and macros (lines 75-94 of report.tex): agents 4x human score at a 2-hour total budget, humans narrowly ahead at 8 h and 2x the top agent at 32 h, 82% of expert attempts > 0.05, 24% >= reference; Sec. 4.2 percentiles 36 (o1-preview AIDE) and 37 (Claude 3.5 Sonnet Modular) at 8 h; Fig. 1 caption allocations at 16 h; Table 'baseline-sourcing'; Table 'validation_metrics'; Table 'ceiling_estimates'; Sec. 5.1 attempt rates 36.8/25.3/3.4 per hour; Sec. 6.2 about $123 per 8-hour agent run against about $1,855 per human run"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "Transcribed by regex into research_notes/external/re-bench/data/paper_values.json and checked in results/reproduction.json: table arithmetic and README transforms reproduce; the ceiling table reproduces for 6 of 7 environments (Scaling Law Experiment implies a reference score of about 0.80, README 0.84); the validation table gives 60/71 = 84.5% above 0.05 against the abstract's 82%; the text gives 0.96 and 0.46 for two source groups whose table values are 0.98 and 0.48. The fixed-budget curve (Fig. 1) cannot be reproduced: the promised 'Analysis code and anonymized human expert data' was not found released."
+    uncertainty:
+      kind: sampling
+      description: "Bootstrap 95% intervals shown in Fig. 1 only (not tabulated); 3 to 5 eight-hour agent runs per environment; human scores vary widely by source (0.48 to 0.98 mean); Finetune GPT-2 for QA starting score varies 17-52%; agents saw test scores in 6 of 7 environments (overfitting risk stated by the authors)"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["fixed-budget comparison of AI agents and human experts on short ML research-engineering environments, dated 2024-11 (#58)", "evidence for rd_capability under AD-METR as a benchmark score (QTY-BENCH-SCORE), not as a time horizon"]
+    not_for: ["time-horizon capability (no logistic fit, no human-time scale)", "research productivity or research output", "realized R&D speed-up or labour substitution", "adoption", "a units-bridge conversion: no conversion from benchmark score to research labour or output is identified (#42)", "extrapolation beyond 32-hour budgets or beyond these 7 environments"]
+
+  - id: EV-REBENCH-PAPER-V2-2025
+    kind: observation_report
+    title: "RE-Bench paper, arXiv v2 (revision of EV-REBENCH-PAPER-V1-2024)"
+    source:
+      citation: "Wijk, Lin, Becker et al., arXiv:2411.15114v2, 2025-05-27"
+      url: "https://arxiv.org/abs/2411.15114v2"
+      version: "arXiv v2 LaTeX source, report.tex sha256 d14419e0f673a80cf720fdf633f04161deec01f25868ff52ec462103915f8e6f"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2024-11-22"}
+    availability_date: "2025-05-27"
+    availability_basis: "arXiv v2 submission, Tue 27 May 2025 03:32 UTC"
+    units: "as EV-REBENCH-PAPER-V1-2024"
+    population: "as EV-REBENCH-PAPER-V1-2024"
+    protocol: "as EV-REBENCH-PAPER-V1-2024"
+    extraction:
+      method: quoted
+      locator: "diff of report.tex v1 to v2: only Table 'env_metrics' lines of code change (Optimize a Kernel 180 -> 218, Optimize LLM Foundry 1,651 -> 1,392, Finetune GPT-2 for QA 647 -> 716), plus an added author and acknowledgements; every number used by EV-REBENCH-PAPER-V1-2024 is unchanged"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "Kept as a separate vintage per P-REVISIONS; data/paper_values.json holds v2 values and the v1 differences."
+    uncertainty:
+      kind: sampling
+      description: "as EV-REBENCH-PAPER-V1-2024"
+    depends_on: [EV-REBENCH-PAPER-V1-2024]
+    fitted_to: []
+    intended_use: ["latest vintage of the RE-Bench fixed-budget comparison (#58)"]
+    not_for: ["an independent observation: same runs as v1", "time-horizon capability", "research productivity or research output", "adoption", "a units-bridge conversion"]
+
+  - id: EV-REBENCH-METR-TH10-2026-03-05
+    kind: observation
+    title: "RE-Bench single-run scores of 32 agents against human 8-hour baselines, METR TH1.0 suite release"
+    source:
+      citation: "METR, eval-analysis-public, reports/time-horizon-1-0/data/raw/runs.jsonl, rows with task_source RE-Bench"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "commit 52cb829c7a2efb2d659285c4b1768d191d97f8d2 (2026-03-05); file sha256 f489d11728909937dad99ba1ed2d7c40efe12a766891e67dbc7c2486a3311236"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2025-12-05"}
+    availability_date: "2026-03-05"
+    availability_basis: "commit date of the pinned file. Many rows were public in earlier commits; the later date is used, which is conservative for information-set checks. Human rows carry no run date; agent run starts span 2025-01-13 to 2025-12-05 (data/run_dates.json)."
+    units: "normalized score per run as released in score_cont (range exactly [0, 1]: apparently clipped, unlike the paper's unclipped normalization); mean over runs per environment, then equal weight per environment"
+    population: "7 RE-Bench environments; 1,578 agent runs of 32 agents (7 GPT-2 placeholder rows excluded) with per-run time_limit 36,000 s or 72,000 s; 91 human baseline rows"
+    protocol: "agents in METR scaffolds (modular-public, flock, duet and others per row); humans 8-hour baselines. Agent limits (10 h or 20 h) exceed the human 8 h, so this is not an equal-budget comparison"
+    extraction:
+      method: computed
+      locator: "research_notes/external/re-bench/data/fixed_budget.csv rows with suite TH1.0; data/human_baselines.csv rows with suite TH1.0 (build_data.py)"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "Human rows do not match the paper's 71 baselines (91 rows; per-environment counts differ, results/reproduction.json). These are the same runs METR's TH1.0 time horizons are fitted to (EV-METR-TH10-*), so the two are not independent evidence."
+    uncertainty:
+      kind: sampling
+      description: "95% interval from 2,000 bootstrap draws of runs within environment (seed 20261025); 1 to 13 runs per agent and environment; scaffolds differ across agents; clipping at 1 hides how far a run exceeds the reference"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["fixed-budget (single-run) comparison of agents with human 8-hour baselines on RE-Bench, by agent and release date (#58)"]
+    not_for: ["time-horizon capability (use EV-METR-TH10-*)", "independent confirmation of the TH1.0 horizons (same runs)", "an equal-budget comparison (agent limits 10-20 h, humans 8 h)", "research productivity or research output", "adoption", "a units-bridge conversion"]
+
+  - id: EV-REBENCH-METR-TH11-2026-03-05
+    kind: observation
+    title: "RE-Bench single-run scores of 20 agents against human 8-hour baselines, METR TH1.1 suite release"
+    source:
+      citation: "METR, eval-analysis-public, reports/time-horizon-1-1/data/raw/runs.jsonl, rows with task_source RE-Bench"
+      url: "https://github.com/METR/eval-analysis-public"
+      version: "commit 52cb829c7a2efb2d659285c4b1768d191d97f8d2 (2026-03-05); file sha256 609f904f4b6ae32129388da89d036e00bac511ad94223d2be1e58fc2b45b55cd"
+    reading: read_primary
+    observation_date: {start: "2024", end: "2026-02-17"}
+    availability_date: "2026-03-05"
+    availability_basis: "commit date of the pinned file; agent run starts span 2025-06-03 to 2026-02-17; human rows undated"
+    units: "as EV-REBENCH-METR-TH10-2026-03-05"
+    population: "5 RE-Bench environments (Optimize LLM Foundry and Restricted Architecture MLM are not in TH1.1); 474 agent runs of 20 agents, 18 of them Inspect runs with time_limit 28,800 s (8 h) and two legacy rows (GPT-4 0314, o1-preview) with 36,000 s; 71 human baseline rows"
+    protocol: "Inspect ReAct or triframe agents for the 8-hour runs: per-run limit equal to the human 8-hour budget, the closest to an equal-budget single-attempt comparison in the released data"
+    extraction:
+      method: computed
+      locator: "research_notes/external/re-bench/data/fixed_budget.csv rows with suite TH1.1; data/human_baselines.csv rows with suite TH1.1 (build_data.py)"
+      by: "issue #58 session"
+      date: "2026-10-25"
+      note: "71 human rows, the paper's count, but on 5 environments and with different per-environment counts, so not the paper's set. Same runs as METR's TH1.1 horizons (EV-METR-TH11-*): not independent of them."
+    uncertainty:
+      kind: sampling
+      description: "as EV-REBENCH-METR-TH10-2026-03-05; 19 to 40 runs per agent"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["fixed-budget (single 8-hour run) comparison of agents with human 8-hour baselines on RE-Bench, by agent and release date (#58)"]
+    not_for: ["time-horizon capability (use EV-METR-TH11-*)", "independent confirmation of the TH1.1 horizons (same runs)", "research productivity or research output", "adoption", "a units-bridge conversion", "comparison with TH1.0 rows without a mapping (different environments, scaffolds and limits)"]
+
+  - id: EV-ASCE-METZGER-VOR-NOT-READ
+    kind: source_model_output
+    title: "Metzger et al. 2013, version of record on ascelibrary.org (not read)"
+    source:
+      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, ASCE, doi:10.1061/(ASCE)AS.1943-5525.0000236"
+      url: "https://ascelibrary.org/doi/10.1061/%28ASCE%29AS.1943-5525.0000236"
+      version: "version of record; not retrieved. https://ascelibrary.org and https://doi.org/ both returned HTTP 403 to automated access on 2026-10-25 (#40), with a browser user agent."
+    reading: not_read
+    observation_date: not_applicable
+    availability_date: "2013-01"
+    availability_basis: "Crossref published-print 2013-01; DOI registered 2012-04-02."
+    units: "not_applicable"
+    population: "model scenarios of a lunar bootstrapping industry; no observed system"
+    protocol: "not read"
+    extraction:
+      method: summarized_from_secondary
+      locator: "issue number: Crossref API works/10.1061/(ASCE)AS.1943-5525.0000236 (volume 26, issue 1, page 18-29) and Crossref journal listing for ISSN 0893-1321, 2013-01 to 2013-03 (20 items, all volume 26 issue 1, pages 1-4 to 183-196 contiguous; 18-29 lies between 5-17 and 30-36); abstract: OpenAlex W2135062463 abstract_inverted_index, taken to be the publisher's abstract"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "Abstract compared word by word with the arXiv v1 abstract: numbers identical (156 t, 60 robots, 40,000 t, 100,000 robots, 41 t, 12 t); wording differs only editorially ('metric tons (MT)' to 't', 'due to' to 'because of', 'sub-replicating' to 'subreplicating', one 'it' deleted). Issue: the publisher-deposited metadata gives issue 1 and the page run sits inside issue 1's continuous pagination, so arXiv's 'Journal of Aerospace Engineering 26.2' is taken as an author-supplied error; the publisher's own page was not read, so this is inferred from deposited metadata, not read there. Body text, figures, tables and any changes made after the manuscript (stamped 'Preprint. To appear', PDF created 2012-03-30) are unknown."
+    uncertainty:
+      kind: unquantified
+      description: "Differences between the manuscript read (EV-METZGER-2013) and the version of record beyond the abstract are unknown. OpenAlex's abstract may itself be a secondary copy."
+    depends_on: [EV-METZGER-2013]
+    fitted_to: []
+    intended_use: ["motivation", "record of what was and was not compared"]
+    not_for: ["any claim about the published figures or numbers", "empirical support"]
+
+  - id: EV-EI-STATREV-NOT-READ
+    kind: observation
+    title: "Energy Institute Statistical Review of World Energy: world primary energy, 2024, 2025 and 2026 editions (not read in primary form)"
+    source:
+      citation: "Energy Institute, Statistical Review of World Energy (annual, June); editions 2024, 2025, 2026"
+      url: "https://www.energyinst.org/statistical-review"
+      version: "no edition retrieved. https://www.energyinst.org/, /statistical-review, /statistical-review/resources-and-data-downloads and the 2025 full-report PDF returned HTTP 403 to curl with a browser user agent; the WebFetch tool could not resolve the host (2026-10-25, #40). The Wayback Machine reset the connection."
+    reading: not_read
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-06"
+    availability_basis: "Annual June release; the 2026 edition is the one OWID cites (see EV-OWID-EI-ENERGY-2026)."
+    units: "exajoules per year of primary energy (the 2025 and later editions call it total energy supply)"
+    population: "world energy supply as compiled by the Energy Institute from national statistics"
+    protocol: "not read"
+    extraction:
+      method: summarized_from_secondary
+      locator: "none; the repository's earlier values (620 EJ in 2023, EI 2024; 592 EJ in 2024, EI 2025) come from DieselNet summaries cited in decision_model.md and physics_economics.md"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "Recorded as unread under #40's stopping rule: the uncertainty bounds of CV-EIU-TO-PRIMARY-POWER are kept. The best available substitute is EV-OWID-EI-ENERGY-2026, which republishes the 2026 edition's series and is not a primary reading."
+    uncertainty:
+      kind: unquantified
+      description: "Unknown, since nothing was read. The change of method between editions is documented only in secondary summaries."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["motivation", "record that the primary source was attempted and blocked"]
+    not_for: ["empirical support: it was not read in primary form"]
+
+  - id: EV-OWID-EI-ENERGY-2026
+    kind: observation
+    title: "World total energy supply 2022-2025 as republished by Our World in Data from the Energy Institute Statistical Review 2026"
+    source:
+      citation: "Our World in Data, 'Primary energy use' grapher (primary-energy-cons), citing Energy Institute, Statistical Review of World Energy (2026); Smil (2017); U.S. Energy Information Administration (2026), with major processing by Our World in Data"
+      url: "https://ourworldindata.org/grapher/primary-energy-cons.csv"
+      version: "CSV fetched 2026-10-25, sha256 d0be59ece4013ede9dbcc2dadc9272cdb5cb8da123bd82c03c173b9a8686ac9f (347,323 bytes); metadata JSON (same URL with .metadata.json) says lastUpdated 2026-06-30, nextUpdate 2027-06-30"
+    reading: read_secondary_only
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-06-30"
+    availability_basis: "OWID's lastUpdated date for the series."
+    units: "terawatt-hours of total energy supply per year; converted here at 3.6e-3 EJ/TWh and to mean power over a 365.25-day year"
+    population: "world aggregate (entity 'World', OWID_WRL)"
+    protocol: "Energy Institute data as processed by OWID (extension with EIA data where the Review has no total; Smil for years before 1965); not the Review itself"
+    extraction:
+      method: summarized_from_secondary
+      locator: "CSV rows Entity=World, Year 2022-2025, column 'Total energy supply'"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "2022 157,938.77 TWh = 568.6 EJ = 18.0 TW; 2023 160,876.92 TWh = 579.2 EJ = 18.35 TW; 2024 164,494.10 TWh = 592.2 EJ = 18.77 TW; 2025 166,753.60 TWh = 600.3 EJ = 19.02 TW. 2024 reproduces the 592 EJ the repository took from the EI 2025 summary. 2023 is 579 EJ in this series against 620 EJ in the EI 2024 summary: the change of method is large (about 7%) and applies to earlier years. The repository's lower bound for the factor, 1.88e13 W, sits above this series' 2023 value (1.835e13 W)."
+    uncertainty:
+      kind: unquantified
+      description: "Measurement uncertainty is not reported by the source. OWID's processing and the Review's own method changes are not audited here; the series is a republication, so a transcription or processing difference from the Review itself is possible."
+    depends_on: [EV-EI-STATREV-NOT-READ]
+    fitted_to: []
+    intended_use: ["secondary cross-check of the scale of world primary energy in CV-EIU-TO-PRIMARY-POWER", "showing the method change between editions"]
+    not_for: ["empirical support: read in secondary form only", "any off-Earth energy intensity"]

@@ -5,7 +5,7 @@ empirical validation, and nothing is coupled into the pact solver.
 
 | kind of result | status |
 |---|---|
-| Source replication | Metzger Fig. 2 re-digitized from the arXiv manuscript's raster; rates reproduce the docking's within 0.01/yr. No other source model is replicated here (METR, GATE and AI Futures belong to #12, #13, #14). |
+| Source replication | Metzger Fig. 2 re-digitized from the arXiv manuscript's raster; rates reproduce the docking's within 0.01/yr. No other source model is replicated here (METR, GATE and AI Futures belong to #12, #13, #14); #42 rechecked the dictionary against the METR and AI Futures replications, and no link from horizon to developer time to research output is identified. |
 | Numerical correctness | Every declared conversion and 17 equations pass a dimensional check; derived factors are recomputed; the toy reduces to the solver's unchanged growth law (relative 2e-12). |
 | Empirical validation | None. No conversion is fitted to data. Two measured scales: world GDP, read in primary form (World Bank WDI, #39), which sets the output scale of the Earth-industry unit; world primary energy, read only in secondary summaries. A measured scale is not a validated model. |
 
@@ -107,6 +107,53 @@ homogeneous in its unit). The definition fixes what the conversions to energy, m
 the mode contract now books A to `industrial_capacity` with its output rate (`systems/modes.yaml`
 0.3.0).
 
+## Recheck after #12 and #14 (#42)
+
+[[ai gen]] 2026-10-25. The METR (#12) and AI Futures (#14) replications have landed. This section
+rechecks the bridge against them. Result: **no link from time horizon to developer time to research output is
+identified.** Each link stays unidentified, uncoupled and unused, so the toy's coding speed lam stays a
+bounded scenario. A link would count as identified only with an evidence record and a stated conversion.
+
+**Native units.** Every adapter quantity of `AD-METR` and `AD-AIFM` in `systems/modes.yaml` now has a
+dictionary entry in the replication's own unit:
+
+| adapter quantity | dictionary | unit | evidence status |
+|---|---|---|---|
+| METR 50% / 80% task time horizon | QTY-METR-HORIZON, QTY-METR-HORIZON-P80 | min (human expert minutes, METR's file; the contract writes human-hours) | observed_primary (`EV-METR-TH*`) |
+| METR realized developer task time ratio | QTY-DEV-TIME-RATIO | 1 (time with AI / without; above 1 is a slowdown) | observed_secondary (`EV-METR-RCT-2025`, a blog report; paper not read) |
+| AIFM progress | QTY-AIFM-PROGRESS (was QTY-AIFM-ECI) | OOM: log10 of cumulative effective FLOP at 2025.13 efficiency | source_model_output |
+| AIFM software efficiency | QTY-SOFTWARE-EFFICIENCY | OOM (was a multiplier); SE = 0 at 2025.13 | source_model_output |
+| AIFM research output (rate of SE) | QTY-RESEARCH-OUTPUT | OOM/yr (was ln/yr); 1 OOM/yr = ln 10 /yr | source_model_assumption (calibrated to 1 OOM/yr at 2024) |
+| AIFM milestones | QTY-AIFM-MILESTONE | yr (decimal year) | source_model_output |
+| AIFM automation fraction, AI research taste | QTY-AIFM-AUTOMATION-FRACTION, QTY-AIFM-AI-TASTE | 1 (fraction of coding tasks; SDs of the human taste distribution) | source_model_output |
+| AIFM human coding labor | QTY-AIFM-HUMAN-CODING-LABOR | FTE (own bookkeeping dimension; no hours per FTE stated) | source_model_assumption |
+| AIFM inference compute, training capacity | QTY-AIFM-INFERENCE-COMPUTE, QTY-AIFM-TRAINING-CAPACITY | H100e = 4e14 FLOP/s (AIFM's convention: nameplate times 0.4) | source_model_assumption |
+
+The last three are named in the dictionary but not linked by `adapter_quantity`: they book to stock or flow
+ledgers, and the stock/flow rule needs the contract quantity to declare its kind, which `AD-AIFM` does not yet
+do. The AIFM conventions are in `EV-UNITS-AIFM-CONVENTIONS`, read from the code at `1c40ecdb`.
+
+**The links.**
+
+| link | status | why |
+|---|---|---|
+| horizon to developer time (`CV-HORIZON-TO-DEV-TIME`) | unidentified | One usable paired point: the 2025 RCT measured a ratio of 1.19 (CI 1.02 to 1.39) while the models used had TH1.0 p50 of 29 and 59 minutes (as published 2025-03-19). One point gives no slope, and the sign runs against the naive reading. The 2026 follow-up is unreliable by METR's own account (selection, concurrency). The task populations differ: 38% of agent PRs passed tests, none was mergeable as-is (`EV-METR-ALGO-2025`). The horizon trend itself has holdout verdict "not established" (#12, and #56 per model). |
+| developer time to research output (`CV-DEV-TIME-TO-RESEARCH`) | unidentified | AIFM gives a form, not an estimate: CES of human and AI coding labor, then CES with experiment compute, times taste, into a research stock, SE = r log10(RS/RS_0). Its parameters are elicited or calibrated. Feedback on and off differ by under 0.1 OOM before 2026 and fit METR's horizons equally well, so history cannot tell them apart (#14, #45). Its input is a serial labor multiplier of one project, not a developer's time ratio, and neither source converts one to the other. There is no review or integration stage, and the repository holds no observation of research output. |
+| inference compute to agent labor (`CV-INFERENCE-TO-AGENT-LABOR`) | unidentified | AIFM maps inference H100e straight to AI coding labor with an elicited efficiency slope, never through agent-hours. |
+| AIFM FTE to person-hours (`CV-AIFM-FTE-TO-PERSON-HOURS`, new) | unidentified | No hours per FTE are stated. Nothing needs the factor, so none is set. |
+| AIFM progress to effective FLOP (`CV-OOM-TO-FLOP`) | unidentified | The reference is now known (1 FLOP at 2025.13 efficiency), but logE is cumulative over all training capacity and QTY-EFFECTIVE-COMPUTE is one run. Mapping one to the other needs a run-length assumption. |
+| METR p80 to AIFM progress (`CV-NO-HORIZON-TO-AIFM-PROGRESS`, new) | forbidden | AIFM's present horizon level is fitted to METR's TH1.1 p80 (`fitted_to`, #45). Feeding METR back in would count the same observation twice. |
+
+AIFM's elicited serial coding uplift (2.0 at 2026.578; 80% range 1.25 to 5) and METR's measured ratio of 1.19
+(a 0.84x speed) describe different things at different dates: a project-level serial labor multiplier in
+mid-2026, and the issue time of experienced developers in early 2025. They are recorded side by side. Neither
+is a check on the other.
+
+**Contract changes this recheck would suggest** (not made here; `systems/modes.yaml` belongs to #61/#47/#35):
+`AD-METR` horizons in minutes, METR's unit; `kind` on the three AIFM input quantities, so they can be linked
+by `adapter_quantity`; and booking AIFM's software efficiency, a level in OOMs, to a state, with its rate
+(OOM/yr) booked to `research_output`, a flow. Today the level is booked to the flow.
+
 ## Box 5: four things kept apart
 
 | concept | what it is | contract element | example |
@@ -155,20 +202,38 @@ used as a check). Results (`results/coupling_toy.md`):
   `CV-GWP-TO-EIU-OUTPUT` is now a measured, uncoupled scale estimate.
 - **F4. No identified path from coding capability to industrial growth exists in the repository.**
   Horizon to developer time, developer time to research output, and inference compute to agent labor
-  are all unidentified (#12, #14). The toy's lam is therefore a bounded scenario and the toy is not
+  are all unidentified. *Rechecked in #42 after #12 and #14 landed:* still unidentified, with the
+  reasons in "Recheck after #12 and #14". The toy's lam is therefore a bounded scenario and the toy is not
   coupled to the solver.
 - **F5. One loop, one owner.** epoch-gate/INTERFACES.md requires that compute investment and
   software efficiency each have a single owning model when GATE and AI Futures are coupled. The
   dictionary keeps both eFLOP quantities relative to their own base (`QTY-EFFECTIVE-COMPUTE` note).
 
+- **F6. World primary energy: the secondary cross-check disagrees with the lower bound (#40).** The Energy
+  Institute Review was not reachable. Our World in Data's republication of the 2026 edition gives 579.2 EJ
+  (18.35 TW) for 2023 and 592.2 EJ (18.77 TW) for 2024; the latter matches the 592 EJ taken from the 2025
+  edition, the former is 7% below the 620 EJ of the 2024 edition (older method) that sets the upper end of
+  `CV-EIU-TO-PRIMARY-POWER` (1.97e13 W) and 2023 under the new method is below its lower bound (1.88e13 W).
+  Bounds not edited: the factor is a method-dependent scale, and the new-method 2024 to 2025 range is 18.8
+  to 19.0 TW. `evidence: observed_secondary` stays.
+- **F7. GATE's price base is current dollars (#40).** The paper's Y(0) row says 'real USD/year' and names no
+  base year; the default 110 trillion is World Bank GDP (current US$) for 2023 (about 106 trillion) grown by
+  about 3% a year to 2024. So the bounds' constant-2015 end is not supported by GATE's own anchor, and the
+  deflator of GATE's later 'real USD' path remains unstated. Bounds not edited.
+- **F8. Metzger's abstract against Fig. 2 (#40).** The abstract's 40,000 t and 100,000 robots are not Fig. 2's
+  nominal max case (23,100 t); they match the sensitivity figures (Fig. 11: 38,700 to 47,400 t and up to
+  103,000 robonauts across printer speeds; Fig. 13 fast robonauts about 45,000 t). Residual: Fig. 11's 0.5
+  kg/h case is about 39,000 t while Fig. 2's nominal 0.5 kg/h case is 23,100 t; the manuscript does not say why
+  (Fig. 9 holds production at 6 t per generation and lets generation length vary). See `metzger/RECHECK.md`.
+
 ## Not done in this milestone
 
-- World energy is still read from secondary summaries. World GDP is read in primary form (#39), but only
+- World energy is still not read in primary form (#40: the Energy Institute site returned HTTP 403; a secondary cross-check from the 2026 edition via Our World in Data is recorded and does not agree with the older-method 2023 figure, see Findings F6). World GDP is read in primary form (#39), but only
   as a scale at the reference year; no projected path is converted to capacity.
-- No version of record of Metzger et al. was compared (publisher page blocked).
+- No version of record of Metzger et al. was compared beyond its abstract (publisher page blocked again in #40); the issue is resolved to 26(1) from Crossref pagination, not from the publisher.
 - The toy is not run through the pact solver, and its bottleneck parameters are not tied to physical
   data (e.g. radiator mass, launch cadence in `physics_economics.md`).
-- The AI Futures adapter (`AD-AIFM`) was rewritten from code by #14, and its `QTY-AIFM-*` references
-  here follow its names. The METR adapter (#12) still cites the contract's README-level entry. Both
-  sets of units are rechecked in #42 (`make units-check` fails on any unit or name change in
-  `systems/modes.yaml`).
+- METR and AIFM units were rechecked in #42 (section above). Three AIFM input quantities are not linked by
+  `adapter_quantity` until the contract declares their kind. The contract's METR horizon unit (human-hours)
+  and its booking of AIFM software efficiency (a level, booked to a flow) are left for the contract's owners.
+  `make units-check` fails on any unit or name change in `systems/modes.yaml`.

@@ -20,7 +20,7 @@ narrative and from historical measurements.
 | source-model replication: reference trajectory | **reproduced**: 21 golden series within rtol 1e-3 (observed max relative difference 1.6e-6, horizon lengths; all others below 1.3e-8); AC 2027.786 and AI2027-SC 2028.404 within 1e-10 years | `results/reference_trajectory.json` |
 | source-model replication: seeded milestone distribution | **consistent with the published forecast within sampling tolerance**: 24 of 24 comparisons (p10/p50/p90 and achievement rate for six milestones) pass at z = 3; medians within 0.06 years. Not draw-by-draw identical (not expected) | `results/seeded_published-daniel-08-16-26_n1000.json` |
 | numerical correctness | not checked beyond the upstream's own tests: 594 pass at the pin with Python 3.14.6, numpy 2.4.1, scipy 1.17.0; `tests/test_capability_cdf2d.py` does not collect because it needs matplotlib, which the upstream requirements omit | |
-| empirical validation | **none**. Held-out comparison with METR (#12) and the #8 protocol is a follow-up | |
+| empirical validation | **none**. Held-out comparison with METR (#45): **no held-out test is possible yet**; every METR observation is in AIFM's inputs or predates its cutoff. Feedback on and off are not identifiable from METR data, even in sample | `HELDOUT.md` |
 
 ## What was run
 
@@ -105,8 +105,9 @@ Reading, within the source model only:
   reconstructed historical AI contribution to 2024 software progress is small.
 - Before 2026 the on and off paths differ by under 0.1 OOM, so the historical record
   cannot distinguish feedback-on from feedback-off at these defaults. This is the
-  non-identifiability the issue's stopping rule asks to report; it has not yet been
-  tested against held-out observations.
+  non-identifiability the issue's stopping rule asks to report. #45 confirmed it in
+  horizon units, in sample: on and off differ by at most 0.06 in log p80 horizon at METR's
+  observation dates and fit them equally well; no held-out observation exists (`HELDOUT.md`).
 
 ### Alternative calibration anchors (`results/anchors.json`)
 
@@ -145,6 +146,24 @@ constrained by evidence and which by judgment is in `MECHANISMS.md`.
 - The input series' provenance is a deleted upstream workbook; historical rows and
   forecasts are not distinguished row by row.
 
+## Epoch inputs in primary form (#66)
+
+AIFM bundles three Epoch files (`inputs/epoch/`). `epoch_primary/` holds Epoch's current primary files, fetched
+2026-10-25 and pinned by SHA-256 in `SOURCES.yaml` (`epoch_primary:`), with evidence records `EV-EPOCH-ECI-2026-10-25`,
+`EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25` and `EV-EPOCH-REVENUE-OPENAI-2026-10-25`. `python3 epoch_primary/compare_epoch.py`
+(offline, needs `fetch_upstream.sh`) writes `epoch_primary/compare_epoch.json`. Findings, none reconciled:
+
+- Anthropic revenue: the 15 bundled rows equal Epoch's primary file filtered as AIFM filters it.
+- OpenAI revenue: the bundle has one row (2026-08-13, 40e9) the primary file lacks; the primary file has two the
+  bundle lacks (2026-07-15, 30e9; 2026-09-30, 50e9).
+- ECI: the bundled per-model-version file is no longer served; Epoch now ships per-model `eci_scores.csv`. Of 450
+  rows matching on model name and release date, 7 have the same score (bundled minus current: mean -0.24, range -3.14
+  to +1.87). The bundle's latest release is 2026-08-02 against 2026-10-15 now.
+
+So the bundled vintage is not obtainable in primary form for ECI or OpenAI revenue. `EV-AIFM-EPOCH-SERIES` stays as the
+record of the bundled vintage (secondary only) and now depends on the primary records. The AIFM output records list
+all four in `fitted_to`. These series are not held-out data for AIFM.
+
 ## Files
 
 | file | what |
@@ -158,7 +177,8 @@ constrained by evidence and which by judgment is in `MECHANISMS.md`.
 | `MECHANISMS.md` | research labor, compute, software efficiency, coding automation, research judgment in native units; latent versus observed; evidence versus judgment; bottlenecks |
 | `modes.md` | decision authority and resource control on the #5 mode contract (the `AD-AIFM` entry in `systems/modes.yaml`) |
 | `GATE_OVERLAP.md` | shared compute-investment and research-efficiency feedback with GATE (#13) |
-| `../../../evidence/records.yaml` (`EV-AIFM-*`) | AIFM outputs as source-model-output records with `fitted_to` (#8 contract) |
+| `../../../evidence/records.yaml` (`EV-AIFM-*`) | AIFM outputs as source-model-output records with `fitted_to` (#8 contract); METR links point at #12's primary records |
+| `HELDOUT.md`, `heldout_audit.py` | #45: why no METR observation is held out, the in-sample on/off identifiability diagnostic, and what would make a test possible |
 | `tests/test_aifm.py` | fast checks in `make check` (pins, flags follow from numbers, summary functions) |
 | `requirements-upstream.txt` | environment for running the upstream |
 
@@ -171,6 +191,8 @@ python3.14 -m venv .venv-aifm && .venv-aifm/bin/pip install -r requirements-upst
 .venv-aifm/bin/python aifm_runner.py reference
 .venv-aifm/bin/python aifm_runner.py feedback-off
 .venv-aifm/bin/python aifm_runner.py anchors
+.venv-aifm/bin/python aifm_runner.py horizon-identifiability    # #45, in sample
+python3 heldout_audit.py                 # #45 audit, offline
 .venv-aifm/bin/python aifm_runner.py rollouts --preset published-daniel-08-16-26 -n 1000   # about 4 CPU-s per sample
 python3 tests/test_aifm.py               # what make check runs
 ```
@@ -182,8 +204,9 @@ deliberately.
 
 ## Not done in this milestone
 
-- Held-out comparison with dated METR observations (#12) and simple trend and
-  compute-only baselines under the #8 protocol.
+- Held-out comparison with dated METR observations: not possible yet (#45, `HELDOUT.md`).
+  The comparators exist (#56: B-FLAT, B-LOGLINEAR, B-COMPUTE per model); AIFM has no
+  observation it was not fitted to or that postdates its 2026-09-09 cutoff.
 - Transition interface (knowledge, compute, assets, dependencies, intervention,
   identity; reversible transitions).
 - Bottleneck stages beyond what AIFM represents (review, integration); `MECHANISMS.md`

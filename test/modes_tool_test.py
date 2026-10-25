@@ -253,10 +253,68 @@ class ModeContractTest(unittest.TestCase):
         y['accounting'] = 'industrial_capacity'
         self.rejects("quantity 'gross world product Y' is a flow booked to industrial_capacity, a stock")
 
-    def test_kind_needs_an_accounting_quantity(self):
-        f = next(q for q in self.adapter('AD-PACT')['quantities'] if q['name'] == 'Earth fab level F')
-        f['kind'] = 'stock'
-        self.rejects('declares kind stock but is booked to no accounting quantity')
+    # --- issue #61: a kind for every adapter quantity
+    def quantity(self, adapter, name):
+        return next(q for q in self.adapter(adapter)['quantities'] if q['name'] == name)
+
+    def test_every_adapter_quantity_declares_a_kind(self):
+        acc = {q['id']: q for q in self.c['accounting']}
+        for ad in self.c['adapters']:
+            for q in ad['quantities']:
+                self.assertIn('kind', q, (ad['id'], q['name']))
+                if 'accounting' in q and q['kind'] not in ('ratio', 'ambiguous'):
+                    self.assertEqual(q['kind'], acc[q['accounting']]['kind'], (ad['id'], q['name']))
+
+    def test_missing_kind_is_rejected(self):
+        del self.quantity('AD-GATE', 'digital workers N_i')['kind']
+        self.rejects("'kind' is a required property")
+
+    def test_gate_levels_and_digital_workers_are_stocks(self):
+        acc = {q['id']: q for q in self.c['accounting']}
+        for name, ledger in (('hardware efficiency H', 'efficiency_level'), ('software efficiency S', 'efficiency_level'),
+                             ('digital workers N_i', 'agent_workforce')):
+            q = self.quantity('AD-GATE', name)
+            self.assertEqual((q['kind'], q['accounting'], acc[ledger]['kind']), ('stock', ledger, 'stock'))
+        self.assertIn('research_output', acc['efficiency_level']['derived_from'])
+        self.assertIn('agent_workforce', acc['agent_labor']['derived_from'])
+
+    def test_efficiency_level_booked_to_research_output_again_is_rejected(self):
+        self.quantity('AD-GATE', 'software efficiency S')['accounting'] = 'research_output'
+        self.rejects("quantity 'software efficiency S' is a stock booked to research_output, a flow")
+
+    def test_digital_workers_booked_to_agent_labor_again_is_rejected(self):
+        self.quantity('AD-GATE', 'digital workers N_i')['accounting'] = 'agent_labor'
+        self.rejects("quantity 'digital workers N_i' is a stock booked to agent_labor, a flow")
+
+    def test_level_and_growth_are_not_both_inputs(self):
+        self.adapter('AD-GATE')['inputs'] = ['efficiency_level', 'research_output']
+        self.rejects('input efficiency_level is derived from')
+
+    def test_workforce_and_its_labor_are_not_both_inputs(self):
+        self.adapter('AD-GATE')['inputs'] = ['human_workforce', 'human_labor']
+        self.rejects('input human_labor is derived from')
+
+    def test_ambiguous_needs_candidates_and_locator(self):
+        del self.quantity('AD-AIFM', 'human coding labor')['kind_ambiguity']
+        self.rejects("'human coding labor' is ambiguous but gives no kind_ambiguity")
+
+    def test_ambiguous_ledger_must_be_a_candidate(self):
+        self.quantity('AD-AIFM', 'human coding labor')['accounting'] = 'capability'
+        self.rejects("is ambiguous between ['stock', 'flow'] but is booked to capability, a state")
+
+    def test_ambiguity_note_only_on_ambiguous(self):
+        self.quantity('AD-AIFM', 'human coding labor')['kind'] = 'stock'
+        self.rejects('declares kind stock and also kind_ambiguity')
+
+    def test_ratio_needs_an_accounting_quantity(self):
+        q = self.quantity('AD-METR', 'realized developer task time ratio')
+        del q['accounting']
+        q['dimension'] = 'rd_capability'
+        self.rejects('is a ratio but names no accounting quantity')
+
+    def test_event_is_not_booked(self):
+        self.quantity('AD-AIFM', 'software efficiency')['kind'] = 'event'
+        self.rejects('an event is never booked to an accounting quantity')
 
     def test_output_rate_only_on_a_stock(self):
         self.pact_a()['kind'] = 'flow'
@@ -282,6 +340,148 @@ class ModeContractTest(unittest.TestCase):
         step = self.trace('TR-SOVEREIGN-COOPERATIVE')['steps'][0]
         step['resources']['R-OFFEARTH']['accounting'] = 'industrial_output'
         self.rejects('resource R-OFFEARTH is held by shares, so it is a stock; industrial_output is a flow')
+
+    # --- issue #47: milestone interface and experiment compute
+    def binding(self, ident):
+        return next(b for b in self.c['milestone_interface']['bindings'] if b['id'] == ident)
+
+    def mstep(self, n):
+        return self.trace('TR-MILESTONE-CONSTRAINED')['steps'][n]
+
+    def test_milestone_trace_runs_both_ways(self):
+        tr = self.trace('TR-MILESTONE-CONSTRAINED')
+        applied = [t['type'] for s in tr['steps'] for t in s.get('transitions', [])]
+        self.assertEqual(applied, ['T-DELEGATE', 'T-RESTRICT', 'T-DELEGATE'])
+        self.assertEqual([m['binding'] for s in tr['steps'] for m in s.get('milestones', [])], ['MB-AIFM-AC', 'MB-AIFM-SAR'])
+
+    def test_milestone_does_not_change_authority(self):
+        del self.mstep(1)['transitions']
+        self.rejects('SYS-G authorization changed from supervised_tasks to delegated_autonomy without a transition')
+
+    def test_milestone_sets_its_own_level(self):
+        self.mstep(1)['entities']['SYS-G']['state']['rd_capability'] = 'automates_research_program'
+        self.rejects('milestone MB-AIFM-AC sets SYS-G rd_capability to automates_tasks, but the step has automates_research_program')
+
+    def test_milestone_cannot_change_stocks(self):
+        self.mstep(1)['entities']['SYS-G']['stocks']['knowledge'] = 'K9'
+        self.rejects('SYS-G stock knowledge changed without a declared cause')
+
+    def test_milestone_not_in_first_step(self):
+        self.mstep(0)['milestones'] = [{'entity': 'SYS-G', 'binding': 'MB-AIFM-AC', 'basis': 'x'}]
+        self.rejects('the first step cannot carry a milestone event')
+
+    def test_binding_sets_capability_only(self):
+        self.binding('MB-AIFM-AC')['sets'] = {'dimension': 'effective_control', 'level': 'none'}
+        self.rejects('a milestone sets a capability dimension only')
+
+    def test_binding_cannot_leave_its_quantity_dimension(self):
+        self.binding('MB-AIFM-SAR')['sets'] = {'dimension': 'strategic_capability', 'level': 'independent_plausible'}
+        self.rejects('sets strategic_capability, but its adapter quantity attaches to rd_capability')
+
+    def test_binding_informs_both_directions(self):
+        self.binding('MB-AIFM-SAR')['may_inform'] = ['T-DELEGATE', 'T-AUTHORIZED-AUTONOMY']
+        self.rejects('may_inform must name transitions in both directions')
+
+    def test_binding_carries_no_hazard(self):
+        self.binding('MB-AIFM-AC')['hazard'] = {'T-LOSS-OF-CONTROL': 0.1}
+        self.rejects("Additional properties are not allowed ('hazard' was unexpected)")
+
+    def test_every_listed_milestone_is_bound_or_unbound(self):
+        mi = self.c['milestone_interface']
+        mi['unbound'] = [u for u in mi['unbound'] if u['milestone'] != 'SIAR']
+        self.rejects('AD-AIFM milestone SIAR must be bound or listed unbound exactly once (0)')
+
+    def test_milestone_source_is_an_event(self):
+        self.quantity('AD-AIFM', self.c['milestone_interface']['sources'][0]['quantity'])['kind'] = 'state'
+        self.rejects('is a state, not an event')
+
+    def test_precondition_reads_the_milestone_level(self):
+        # A capability precondition (none exists in the contract) would be read after the milestone in the same step.
+        self.transition('T-RESTRICT')['preconditions']['rd_capability'] = ['automates_research_program']
+        self.assertEqual([], self.errors())
+        step = self.mstep(2)
+        del step['milestones']
+        step['entities']['SYS-G']['state']['rd_capability'] = 'automates_tasks'
+        self.mstep(3)['entities']['SYS-G']['state']['rd_capability'] = 'automates_tasks'
+        self.rejects('SYS-G applies T-RESTRICT but rd_capability was automates_tasks')
+
+    def test_experiment_compute_has_its_own_ledger(self):
+        acc = {q['id']: q for q in self.c['accounting']}
+        self.assertEqual(acc['compute_experiment']['kind'], 'stock')
+        self.assertIn('compute_experiment', acc['research_output']['derived_from'])
+        q = self.quantity('AD-AIFM', 'experiment compute')
+        self.assertEqual((q['accounting'], q['kind']), ('compute_experiment', 'stock'))
+        self.assertIn('compute_experiment', self.adapter('AD-AIFM')['inputs'])
+
+    def test_experiment_compute_and_research_output_not_both_inputs(self):
+        self.adapter('AD-AIFM')['inputs'].append('research_output')
+        self.rejects('input research_output is derived from')
+
+    # --- issue #35: loop owners and the worked coupling
+    def coupling(self):
+        return next(x for x in self.c['couplings'] if x['id'] == 'XC-GATE-AIFM-TRAINING')
+
+    def test_each_loop_has_one_owner(self):
+        owners = {}
+        for ad in self.c['adapters']:
+            for lid, e in ad.get('feedback_loops', {}).items():
+                if e['role'] == 'owner':
+                    owners.setdefault(lid, []).append(ad['id'])
+        self.assertEqual({lp['id'] for lp in self.c['feedback_loops']}, set(owners))
+        self.assertTrue(all(len(v) == 1 for v in owners.values()), owners)
+
+    def test_two_owners_rejected(self):
+        self.adapter('AD-GATE')['feedback_loops']['L-SOFTWARE-EFFICIENCY']['role'] = 'owner'
+        self.rejects("feedback loop L-SOFTWARE-EFFICIENCY: must have exactly one owning adapter (has ['AD-GATE', 'AD-AIFM'])")
+
+    def test_gate_compute_is_resolved(self):
+        for name in ('training compute D', 'runtime compute (all automated tasks)'):
+            q = self.quantity('AD-GATE', name)
+            self.assertEqual((q['kind'], q['unit']), ('stock', 'FLOP/year (physical)'))
+            self.assertNotIn('kind_ambiguity', q)
+
+    def test_unresolved_kind_blocks_a_pass(self):
+        q = self.quantity('AD-GATE', 'training compute D')
+        q['kind'] = 'ambiguous'
+        q['kind_ambiguity'] = {'candidates': ['stock', 'flow'], 'locator': 'E7', 'note': 'x'}
+        self.rejects('kinds must be resolved and equal (ambiguous, stock)')
+
+    def test_runtime_compute_cannot_pass(self):
+        p = self.coupling()['passes'][0]
+        p['from']['quantity'] = 'runtime compute (all automated tasks)'
+        p['to']['quantity'] = 'inference compute powering AI coding labor'
+        p['accounting'] = 'compute_inference'
+        self.coupling()['uncoupled'] = [u for u in self.coupling()['uncoupled'] if u['accounting'] != 'compute_inference']
+        self.rejects('AD-GATE already turns compute_inference into agent_workforce on loop L-AGENT-LABOR')
+
+    def test_efficiency_level_never_crosses(self):
+        p = self.coupling()['passes'][0]
+        p['from']['quantity'] = 'software efficiency S'
+        p['to']['quantity'] = 'software efficiency'
+        p['accounting'] = 'efficiency_level'
+        self.rejects('efficiency_level never crosses a coupling')
+
+    def test_pass_only_from_the_owner(self):
+        p = self.coupling()['passes'][0]
+        p['from'], p['to'] = p['to'], p['from']
+        self.adapter('AD-GATE')['inputs'].append('compute_training')
+        self.rejects('compute_training carries loop L-COMPUTE-INVESTMENT, owned by AD-GATE, not by the source')
+
+    def test_owned_input_must_be_passed_or_uncoupled(self):
+        self.coupling()['uncoupled'] = [u for u in self.coupling()['uncoupled'] if u['accounting'] != 'compute_experiment']
+        self.rejects('AD-AIFM takes compute_experiment (loop L-COMPUTE-INVESTMENT, owned by AD-GATE) from its own series')
+
+    def test_yielded_loop_needs_a_treatment(self):
+        self.coupling()['yielded'] = [y for y in self.coupling()['yielded'] if y['loop'] != 'L-SOFTWARE-EFFICIENCY']
+        self.rejects('AD-GATE yields L-SOFTWARE-EFFICIENCY; state its treatment')
+
+    def test_coupled_adapter_states_every_loop(self):
+        del self.adapter('AD-GATE')['feedback_loops']['L-RESEARCH-AUTOMATION']
+        self.rejects('AD-GATE must state a role for every feedback loop')
+
+    def test_two_passes_to_one_ledger_rejected(self):
+        self.coupling()['passes'].append(copy.deepcopy(self.coupling()['passes'][0]))
+        self.rejects('AD-AIFM already receives compute_training from another pass')
 
     def test_adapter_must_cover_every_mode(self):
         del self.adapter('AD-GATE')['modes']['MODE-SOVEREIGN']

@@ -43,11 +43,12 @@ jobs:
       - name: Upstream's own golden tests (trajectory, milestones, components)
         working-directory: ${{ runner.temp }}/aifm
         run: python -m pytest -q -p no:cacheprovider tests/test_full_trajectory.py tests/test_ces_functions.py tests/test_taste_distribution.py tests/test_automation_model.py
-      - name: Reference trajectory, feedback-off baseline, anchor modes
+      - name: Reference trajectory, feedback-off baseline, anchor modes, horizon identifiability (#45)
         run: |
           python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" reference
           python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" feedback-off
           python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" anchors
+          python "$DIR/aifm_runner.py" --src "$RUNNER_TEMP/aifm" horizon-identifiability
       - name: Seeded Monte Carlo
         env:
           PRESET: ${{ inputs.preset }}

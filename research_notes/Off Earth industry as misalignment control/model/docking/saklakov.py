@@ -152,6 +152,17 @@ def main():
     out["n_mixed"] = int(nm)
     out["runtime_s"] = time.time() - t0
     print(f"\nwrote {save('saklakov', out)}  ({out['runtime_s']:.0f} s)")
+    # Exit status for the slow CI suite. `inside` above is strict; a bracket end that equals the closed form to
+    # 1e-12 relative (the 2e-15 rounding miss at gamma = 0.95, docking.md section 3) is not a disagreement.
+    slack = lambda c, k: c["solver_lo"] - 1e-12 * abs(c[k]) <= c[k] <= c["solver_hi"] + 1e-12 * abs(c[k])
+    bad = ([f"Table 1 row {r['gamma'], r['p'], r['C']}" for r in t1 if (r["ours_act"] == "S") != (r["delta"] > 0)]
+           + [f"C* {c['gamma'], c['p']}" for c in cs if not slack(c, "C_star")]
+           + [f"gamma* p={g['p']}" for g in gs if not slack(g, "gamma_star")]
+           + [f"s* {e['gamma'], e['p'], e['C']}" for e in ext if not slack(e, "s_star")]
+           + (["mixed-strategy fallback used"] if nm else []))
+    if bad:
+        raise SystemExit("saklakov dock FAILED: " + "; ".join(bad))
+    print("saklakov dock: every switch point brackets its closed form; opening moves match in 6 of 6 rows")
 
 
 if __name__ == "__main__":

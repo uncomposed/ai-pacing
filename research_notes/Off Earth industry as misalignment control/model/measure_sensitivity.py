@@ -19,7 +19,8 @@ What reweighting can and cannot do:
    but its ranking is marked not identified at this sample size. More draws under an unsupported measure would
    not make it supported (issue #8 stopping rule).
 4. Draw identity: the draws are regenerated from robust_design.ensemble, not read from the cache (the cache does
-   not store them; issue #6). --verify re-solves cached batches to check that the regenerated draws reproduce the
+   not store them). Each cache read is checked by run_identity (bytes, and run_identity.verify_draws: the
+   regenerated draws must hash to the draws the cache's manifest or inventory entry is bound to; issue #6). --verify re-solves cached batches to check that the regenerated draws reproduce the
    cached outcomes. One batch (16 draws) was checked when this was written; see results/measure_sensitivity.md.
 
 Status: implemented; the reweighting identities are tested in tests/test_measure_sensitivity.py. Not human_validated.
@@ -37,6 +38,7 @@ os.environ.setdefault("OMP_NUM_THREADS", "1")
 import numpy as np
 
 import robust_design as rd
+import run_identity as ri
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT_MD = os.path.join(rd.RES, "measure_sensitivity.md")
@@ -181,7 +183,7 @@ def design_levers(key: str) -> dict[str, str]:
     return {} if key == "base" else dict(_KV.findall(key))
 
 
-def load_designs(ens: str = ENSEMBLE, n: int | None = None) -> dict[str, np.ndarray]:
+def load_designs(ens: str = ENSEMBLE, n: int | None = None, thetas=None) -> dict[str, np.ndarray]:
     """design key -> holds (0/1) for every cached lever design of the ensemble with the default solver settings.
     Runs that also set a test switch or an uncertain parameter (pf_bel, q_up, kill_pre, ...) are not designs and are skipped."""
     n = n or rd.N_FULL
@@ -191,8 +193,11 @@ def load_designs(ens: str = ENSEMBLE, n: int | None = None) -> dict[str, np.ndar
             continue
         if not set(design_levers(f[len(ens) + 2:-4])) <= DESIGN_KEYS:
             continue
-        z = np.load(os.path.join(rd.RUNS, f))
-        h = rd.holds({k: z[k] for k in z.files}).astype(float)
+        path = os.path.join(rd.RUNS, f)
+        z = ri.load_for_read(path)
+        if thetas is not None:
+            ri.verify_draws(path, ens, thetas)
+        h = rd.holds(z).astype(float)
         if len(h) == n:
             out[f[len(ens) + 2:-4]] = h
     return out
@@ -293,13 +298,15 @@ def report(res: dict, n: int) -> tuple[str, dict]:
 def build():
     U, thetas = rd.ensemble(ENSEMBLE, rd.N_FULL, seed=SEED)
     values = {p: np.array([t[p] for t in thetas]) for p in rd.UNAMES}
-    designs = load_designs()
+    designs = load_designs(thetas=thetas)
     return report(analyse(U, values, designs), rd.N_FULL)
 
 
 def verify(k: int) -> None:
     U, thetas = rd.ensemble(ENSEMBLE, rd.N_FULL, seed=SEED)
-    z = np.load(os.path.join(rd.RUNS, f"{ENSEMBLE}__base.npz"))
+    path = os.path.join(rd.RUNS, f"{ENSEMBLE}__base.npz")
+    z = ri.load_for_read(path)
+    print(f"draw identity: {ri.verify_draws(path, ENSEMBLE, thetas)}")
     for g in rd.batches_for(thetas)[:k]:
         r = rd._solve_batch(([rd.apply_design(thetas[i], {}) for i in g], rd.CFG))
         same = bool((r["act0"] == z["act0"][g]).all())

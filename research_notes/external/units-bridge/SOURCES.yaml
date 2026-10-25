@@ -25,15 +25,43 @@ sources:
     url: "https://ascelibrary.org/doi/10.1061/%28ASCE%29AS.1943-5525.0000236"
     version: "not retrieved"
     licence: "publisher copyright"
-    read: "no: HTTP 403 from this environment; differences from the manuscript unknown"
+    read: "no: HTTP 403 from this environment (again in #40, also via doi.org); differences from the manuscript unknown beyond the abstract (compared through OpenAlex). Recorded as EV-ASCE-METZGER-VOR-NOT-READ"
     used_for: []
   - id: energy-institute-review
     title: "Energy Institute Statistical Review of World Energy, 2024 and 2025 editions"
     url: "https://dieselnet.com/news/2024/06energyreview.php ; https://dieselnet.com/news/2025/06energyreview.php"
     version: "as cited in research_notes/Off Earth industry as misalignment control/{decision_model,physics_economics}.md"
     licence: not checked
-    read: "no: values taken from the repository's own notes, which cite DieselNet summaries (secondary)"
+    read: "no: values taken from the repository's own notes, which cite DieselNet summaries (secondary). #40 tried the publisher (energyinst.org: HTTP 403 for the review page, data downloads and the 2025 report PDF; host not resolvable from WebFetch; Wayback reset). Recorded as not read: EV-EI-STATREV-NOT-READ"
     used_for: [QTY-WORLD-PRIMARY-POWER, CV-EIU-TO-PRIMARY-POWER]
+  - id: EV-OWID-EI-ENERGY-2026
+    title: "Our World in Data, Primary energy use (World total energy supply, TWh), from the Energy Institute Statistical Review 2026"
+    url: https://ourworldindata.org/grapher/primary-energy-cons.csv
+    version: "fetched 2026-10-25; sha256 d0be59ece4013ede9dbcc2dadc9272cdb5cb8da123bd82c03c173b9a8686ac9f; metadata lastUpdated 2026-06-30"
+    licence: "CC BY 4.0 (OWID); underlying data Energy Institute, see its licence"
+    read: "yes, secondary: a republication of the Review with OWID processing, World rows 2022-2025 (#40)"
+    used_for: [QTY-WORLD-PRIMARY-POWER, CV-EIU-TO-PRIMARY-POWER cross-check]
+  - id: crossref-jae-2013-listing
+    title: "Crossref listing of Journal of Aerospace Engineering (ISSN 0893-1321), published 2013-01 to 2013-03"
+    url: "https://api.crossref.org/journals/0893-1321/works?filter=from-pub-date:2013-01,until-pub-date:2013-03&rows=200&select=DOI,volume,issue,page,published-print,title"
+    version: "fetched 2026-10-25; sha256 ee9d7936e8b5bc3eaf0b6ebd6255d44b3c0a8bbf6584407738f9c6f3e06ae599"
+    licence: "Crossref metadata, CC0"
+    read: "20 items, all volume 26 issue 1, pages 1-4 to 183-196 contiguous; Metzger 18-29 sits between 5-17 and 30-36 (#40, resolves the 26.1 / 26.2 mismatch to issue 1)"
+    used_for: [EV-ASCE-METZGER-VOR-NOT-READ]
+  - id: openalex-metzger
+    title: "OpenAlex record W2135062463 for the Metzger et al. DOI (publisher abstract, biblio)"
+    url: "https://api.openalex.org/works/doi:10.1061/(ASCE)AS.1943-5525.0000236"
+    version: "fetched 2026-10-25; sha256 a4a90f42f09241874c48823759f36c4c61f43991d6a9fe38cc7370b7085f60d0"
+    licence: "CC0"
+    read: "abstract compared with the arXiv abstract: numbers identical, wording editorial; biblio volume 26 issue 1 pages 18-29 (#40). The publisher's own page was not read."
+    used_for: [EV-ASCE-METZGER-VOR-NOT-READ]
+  - id: gate-paper-tex-price-base
+    title: "GATE paper TeX source, appendix C parameter table, Y(0) row and its derivation"
+    url: "https://arxiv.org/e-print/2503.04941v2"
+    version: "arXiv v2, sha256 df66e5c8316bb1ec023d8d82e2283dcd4aa3203bc5ef7ba2474402dc2d23cb02 (as epoch-gate/SOURCES.yaml)"
+    licence: "CC BY 4.0 (arXiv record)"
+    read: "yes, primary (#40): model-technical.tex, 'Initial GWP Y(0) (real USD/year)', 105 to 115 trillion (110 trillion), 'produced globally in 2024', derived from World Bank 'GDP (current US$)' 2023 (about 106T) plus about 3% growth; no base year stated. epoch.ai/gate page (sha256 8ad0c1b5...3371) also has no base-year text"
+    used_for: [CV-GWP-TO-EIU-OUTPUT constraints, QTY-GWP evidence]
   - id: EV-WB-WDI-GDP-2026
     title: "World Bank World Development Indicators: world GDP (NY.GDP.MKTP.CD, .KD, .PP.CD, .PP.KD) and industry share (NV.IND.TOTL.ZS, NV.IND.MANF.ZS)"
     url: "https://api.worldbank.org/v2/country/WLD/indicator/{indicator}?format=json&date=2022:2025"
@@ -41,6 +69,27 @@ sources:
     licence: "CC BY 4.0"
     read: "yes, primary: the API JSON values for 2022-2025, copied unchanged (#39)"
     used_for: [data/world_gdp_wdi.json, CV-GWP-TO-EIU-OUTPUT, DEF-EIU rejected readings]
+  - id: EV-UNITS-AIFM-CONVENTIONS
+    title: "AI Futures Model code: unit conventions and default beliefs (#42)"
+    url: https://github.com/AI-Futures-Project/aifm-public
+    version: "commit 1c40ecdb246c25980515441a66571931c5604e11, fetched 2026-10-25 with ai-futures-model/fetch_upstream.sh"
+    licence: MIT
+    read: "yes, primary: progress_model/config.py (H100e, reference years, software progress rate, serial uplift, parallel penalty), progress_model/_impl.py (SE rebase), config/sampling_config_q2_daniel.yaml (uplift range)"
+    used_for: [units H100e and OOM, QTY-AIFM-*, QTY-SOFTWARE-EFFICIENCY, QTY-RESEARCH-OUTPUT, CV-DEV-TIME-TO-RESEARCH, CV-OOM-TO-FLOP]
+  - id: ai-futures-replication
+    title: "AI Futures Model replication (#14)"
+    url: research_notes/external/ai-futures-model/
+    version: "main at ad413f5 (includes #45 and #56)"
+    licence: repository
+    read: "README, MECHANISMS.md, modes.md, HELDOUT.md, results/feedback_off.json"
+    used_for: [QTY-AIFM-*, CV-DEV-TIME-TO-RESEARCH (feedback on/off), README "Recheck after #12 and #14"]
+  - id: metr-replication
+    title: "METR time horizons and productivity studies (#12)"
+    url: research_notes/external/metr-time-horizons/
+    version: "main at ad413f5 (includes #45 and #56)"
+    licence: repository
+    read: "README, data/observations.csv, results/holdout.md; records EV-METR-TH*, EV-METR-RCT-2025, EV-METR-UPLIFT-2026, EV-METR-ALGO-2025"
+    used_for: [QTY-METR-HORIZON, QTY-METR-HORIZON-P80, QTY-DEV-TIME-RATIO, CV-HORIZON-TO-DEV-TIME]
   - id: mode-contract
     title: "AI development mode and transition contract"
     url: systems/modes.yaml

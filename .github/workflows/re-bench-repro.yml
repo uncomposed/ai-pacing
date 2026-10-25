@@ -1,0 +1,60 @@
+# Rebuilds the RE-Bench data from the pinned sources (issue #58): fetches RE-Bench at a0cc6d4, METR's
+# eval-analysis-public at 52cb829 and the paper's arXiv LaTeX source (v1, v2), checks their sha256, rebuilds
+# data/ and compares it with the committed files (numbers within 1e-9 relative, text exactly), then re-runs the
+# reproduction checks and the fast tests. Runs no task and no model.
+# Needs network (github.com, arxiv.org) and a few minutes. Run by hand.
+# Never commits: outputs are uploaded as an artifact for a person to review.
+# Actions are pinned by full commit SHA (tag in the trailing comment).
+name: re-bench-repro
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LANG: C.UTF-8
+  LC_ALL: C.UTF-8
+  PYTHON_VERSION: "3.12.7"
+  RB_CACHE: ${{ github.workspace }}/re-bench-cache
+
+jobs:
+  reproduce:
+    name: rebuild RE-Bench data and compare with the committed files
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: research_notes/external/re-bench
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Fetch pinned sources and verify sha256
+        run: bash fetch_sources.sh
+      - name: Pinned CI packages
+        run: |
+          python -m venv "$RUNNER_TEMP/ci"
+          "$RUNNER_TEMP/ci/bin/pip" install -r "$GITHUB_WORKSPACE/.github/requirements-ci.txt"
+      - name: Rebuild data/ and compare with the committed files (tolerance in compare_data.py)
+        run: |
+          "$RUNNER_TEMP/ci/bin/python" build_data.py --cache "$RB_CACHE/files" --out "$RUNNER_TEMP/out/data"
+          "$RUNNER_TEMP/ci/bin/python" compare_data.py "$RUNNER_TEMP/out/data" data --rel 1e-9
+      - name: Reproduction checks against the committed results
+        run: |
+          "$RUNNER_TEMP/ci/bin/python" reproduce.py --check
+          cp results/reproduction.json "$RUNNER_TEMP/out/"
+      - name: Fast checks
+        run: '"$RUNNER_TEMP/ci/bin/python" test_re_bench.py'
+      - name: Keep the outputs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: re-bench-repro
+          retention-days: 14
+          if-no-files-found: warn
+          path: ${{ runner.temp }}/out/

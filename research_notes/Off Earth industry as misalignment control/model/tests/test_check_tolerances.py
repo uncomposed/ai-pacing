@@ -14,8 +14,15 @@ os.environ.setdefault("OMP_NUM_THREADS", "1")
 import ci_sims  # noqa: E402
 import robust_design as rd  # noqa: E402
 
-MD = open(os.path.join(MODEL, "results", "robust_design_checks.md")).read()
-JS = open(os.path.join(MODEL, "results", "robust_design_checks.json")).read()
+
+
+def committed(rel):
+    """The committed copy (robust_design.py --check overwrites the working-tree file), else the file on disk."""
+    return ci_sims._git("show", f"HEAD:./{rel}") or open(os.path.join(MODEL, rel)).read()
+
+
+MD = committed("results/robust_design_checks.md")
+JS = committed("results/robust_design_checks.json")
 REG = "Largest absolute difference over every reported number: 0."
 
 

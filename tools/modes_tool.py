@@ -30,6 +30,8 @@ UNKNOWN = 'unknown'
 CONSEQUENTIAL = ('objective_selection', 'authorization', 'effective_control', 'custody_weights', 'custody_compute',
                  'custody_credentials', 'external_resources', 'enforceable_commitments', 'intervention_latency')
 FORBIDDEN_MODE_KEYS = ('unit', 'units', 'owner', 'ownership', 'decision_authority', 'quantities')
+# The only dimensions a milestone event may set (#47); authority and resource dimensions move only by transitions.
+CAPABILITY = ('strategic_capability', 'rd_capability', 'cyber_capability')
 
 _spec = importlib.util.spec_from_file_location('assumptions_tool', ROOT / 'tools/assumptions_tool.py')
 assumptions_tool = importlib.util.module_from_spec(_spec)
@@ -195,15 +197,27 @@ def _check_accounting_and_adapters(contract, errors):
 
 
 def _check_stock_flow(ident, q, acc, errors):
-    """Issue #39: a declared kind matches the ledger it is booked to; an output rate leads from a stock to a flow derived from it."""
+    """Issues #39 and #61: every quantity declares a kind; one booked to a ledger has the ledger's kind, is a ratio on it, or
+    is recorded ambiguous with a source locator; an output rate leads from a stock to a flow derived from it."""
     where = f'{ident}: quantity {q["name"]!r}'
     led = acc.get(q.get('accounting'))
-    if 'kind' in q:
-        if 'accounting' not in q:
-            errors.append(f'{where} declares kind {q["kind"]} but is booked to no accounting quantity')
-        elif led is not None and led['kind'] != q['kind']:
-            errors.append(f'{where} is a {q["kind"]} booked to {q["accounting"]}, a {led["kind"]}; '
-                          f'book a stock to a stock and give its output_rate to the flow (#39)')
+    kind = q['kind']
+    if kind == 'ambiguous':
+        amb = q.get('kind_ambiguity')
+        if amb is None:
+            errors.append(f'{where} is ambiguous but gives no kind_ambiguity (candidates and source locator) (#61)')
+        elif led is not None and led['kind'] not in amb['candidates']:
+            errors.append(f'{where} is ambiguous between {amb["candidates"]} but is booked to {q["accounting"]}, a {led["kind"]}')
+    elif 'kind_ambiguity' in q:
+        errors.append(f'{where} declares kind {kind} and also kind_ambiguity; drop one (#61)')
+    if 'accounting' not in q:
+        if kind == 'ratio':
+            errors.append(f'{where} is a ratio but names no accounting quantity it applies to (#61)')
+    elif kind == 'event':
+        errors.append(f'{where} is an event; an event is never booked to an accounting quantity (#61)')
+    elif led is not None and kind not in ('ratio', 'ambiguous') and led['kind'] != kind:
+        errors.append(f'{where} is a {kind} booked to {q["accounting"]}, a {led["kind"]}; '
+                      f'book a stock to a stock and give its output_rate to the flow (#39)')
     rate = q.get('output_rate')
     if rate is None:
         return
@@ -218,6 +232,169 @@ def _check_stock_flow(ident, q, acc, errors):
         errors.append(f'{where}: output_rate leads to {rate["accounting"]}, a {out["kind"]}, not a flow')
     elif q.get('accounting') not in out['derived_from']:
         errors.append(f'{where}: output_rate leads to {rate["accounting"]}, which is not derived from {q.get("accounting")}')
+
+
+def _ancestors(acc, q, seen=()):
+    out = set()
+    for p in acc.get(q, {}).get('derived_from', []):
+        if p not in seen:
+            out |= {p} | _ancestors(acc, p, seen + (q,))
+    return out
+
+
+def _check_loops_and_couplings(contract, errors):
+    """Issue #35: one owner per feedback loop; a coupling cannot close a loop twice (epoch-gate/INTERFACES.md)."""
+    acc = by_id(contract['accounting'])
+    loops = by_id(contract['feedback_loops'])
+    adapters = by_id(contract['adapters'])
+    for lp in contract['feedback_loops']:
+        for a in lp['carries']:
+            if a not in acc:
+                errors.append(f'feedback loop {lp["id"]}: carries unknown accounting quantity {a}')
+    owners = {lid: [] for lid in loops}
+    for ad in contract['adapters']:
+        for lid, entry in ad.get('feedback_loops', {}).items():
+            if lid not in loops:
+                errors.append(f'{ad["id"]}: feedback_loops names unknown loop {lid}')
+            elif entry['role'] == 'owner':
+                owners[lid].append(ad['id'])
+    for lid, who in owners.items():
+        if len(who) != 1:
+            errors.append(f'feedback loop {lid}: must have exactly one owning adapter (has {who or "none"})')
+    owner = {lid: who[0] for lid, who in owners.items() if len(who) == 1}
+    carried_by = {}
+    for lp in contract['feedback_loops']:
+        for a in lp['carries']:
+            carried_by.setdefault(a, []).append(lp['id'])
+    for xc in contract['couplings']:
+        where = f'coupling {xc["id"]}'
+        coupled = [a for a in xc['adapters'] if a in adapters]
+        for a in xc['adapters']:
+            if a not in adapters:
+                errors.append(f'{where}: unknown adapter {a}')
+            elif set(adapters[a].get('feedback_loops', {})) != set(loops):
+                errors.append(f'{where}: {a} must state a role for every feedback loop {sorted(loops)}')
+        quants = {a: {q['name']: q for q in adapters[a]['quantities']} for a in coupled}
+        passed, targets = set(), set()
+        for p in xc['passes']:
+            src, dst, led = p['from'], p['to'], p['accounting']
+            pw = f'{where}: pass {src["adapter"]} {src["quantity"]!r} -> {dst["adapter"]}'
+            qs = quants.get(src['adapter'], {}).get(src['quantity'])
+            qd = quants.get(dst['adapter'], {}).get(dst['quantity'])
+            if qs is None or qd is None:
+                errors.append(f'{pw}: both ends must be quantities of coupled adapters')
+                continue
+            if src['adapter'] == dst['adapter']:
+                errors.append(f'{pw}: a pass joins two different adapters')
+            if qs.get('accounting') != led or qd.get('accounting') != led:
+                errors.append(f'{pw}: both ends must be booked to {led} (they are {qs.get("accounting")}, {qd.get("accounting")})')
+            if 'ambiguous' in (qs['kind'], qd['kind']) or qs['kind'] != qd['kind']:
+                errors.append(f'{pw}: kinds must be resolved and equal ({qs["kind"]}, {qd["kind"]})')
+            if 'event' in (qs['kind'], qd['kind']) or led in ('capability', 'efficiency_level'):
+                errors.append(f'{pw}: {led} never crosses a coupling (rival capability mappings and one software-efficiency '
+                              f'base; INTERFACES.md items 2 and 4)')
+            if led not in adapters[dst['adapter']]['inputs']:
+                errors.append(f'{pw}: {led} is not an input of {dst["adapter"]}')
+            if (dst['adapter'], led) in targets:
+                errors.append(f'{pw}: {dst["adapter"]} already receives {led} from another pass')
+            targets.add((dst['adapter'], led))
+            passed.add(led)
+            for lid in carried_by.get(led, []):
+                if owner.get(lid) != src['adapter']:
+                    errors.append(f'{pw}: {led} carries loop {lid}, owned by {owner.get(lid)}, not by the source')
+            # INTERFACES.md item 5: compute the source already turns into a derived quantity on a loop it owns is used up.
+            for q in adapters[src['adapter']]['quantities']:
+                b = q.get('accounting')
+                if b and led in _ancestors(acc, b):
+                    for lid in carried_by.get(b, []):
+                        if owner.get(lid) == src['adapter']:
+                            errors.append(f'{pw}: {src["adapter"]} already turns {led} into {b} on loop {lid}, which it '
+                                          f'owns; passing it counts the same {led} twice')
+        unc = {u['accounting'] for u in xc['uncoupled']}
+        for u in unc - set(acc):
+            errors.append(f'{where}: uncoupled names unknown accounting quantity {u}')
+        for u in unc & passed:
+            errors.append(f'{where}: {u} is both passed and uncoupled')
+        # each input of a coupled adapter carried by a loop another coupled adapter owns is passed or declared uncoupled
+        for a in coupled:
+            for i in adapters[a]['inputs']:
+                for lid in carried_by.get(i, []):
+                    if owner.get(lid) in coupled and owner[lid] != a and i not in passed | unc:
+                        errors.append(f'{where}: {a} takes {i} (loop {lid}, owned by {owner[lid]}) from its own series; '
+                                      f'pass it from the owner or list it as uncoupled')
+        # each loop a coupled adapter yields is treated explicitly (never both live unannounced)
+        yielded = {(y['adapter'], y['loop']): y for y in xc['yielded']}
+        for a in coupled:
+            for lid, entry in adapters[a].get('feedback_loops', {}).items():
+                if entry['role'] == 'yields' and owner.get(lid) in coupled and (a, lid) not in yielded:
+                    errors.append(f'{where}: {a} yields {lid}; state its treatment under yielded')
+        for (a, lid), y in yielded.items():
+            if adapters.get(a, {}).get('feedback_loops', {}).get(lid, {}).get('role') != 'yields':
+                errors.append(f'{where}: yielded lists {lid} for {a}, which does not yield it')
+            elif y['treatment'] == 'separate_ledger' and set(loops[lid]['carries']) & passed:
+                errors.append(f'{where}: {lid} is treated as a separate ledger but a pass carries it')
+            elif y['treatment'] == 'embedded_bracketed' and not any(p['from']['adapter'] == a for p in xc['passes']):
+                errors.append(f'{where}: {lid} is embedded in {a}\'s passed series, but {a} passes nothing')
+
+
+def _check_milestone_interface(contract, errors):
+    """Issue #47: a milestone sets one capability level, informs transitions in both directions, and carries no rate."""
+    mi = contract['milestone_interface']
+    dims = by_id(contract['dimensions'])
+    trans = by_id(contract['transitions'])
+    kinds = {k['id'] for k in contract['entity_kinds']}
+    adapters = {a['id']: {q['name']: q for q in a['quantities']} for a in contract['adapters']}
+    listed = {}
+    for s in mi['sources']:
+        q = adapters.get(s['adapter'], {}).get(s['quantity'])
+        if q is None:
+            errors.append(f'milestone_interface: adapter {s["adapter"]} has no quantity {s["quantity"]!r}')
+        elif q['kind'] != 'event':
+            errors.append(f'milestone_interface: {s["adapter"]} {s["quantity"]!r} is a {q["kind"]}, not an event')
+        for m in s['milestones']:
+            listed[(s['adapter'], m)] = q or {}
+    covered = {}
+    ids = [b['id'] for b in mi['bindings']]
+    for dup in sorted({i for i in ids if ids.count(i) > 1}):
+        errors.append(f'milestone_interface: duplicate binding {dup}')
+    for b in mi['bindings']:
+        where = f'milestone_interface {b["id"]}'
+        key = (b['adapter'], b['milestone'])
+        covered.setdefault(key, []).append(b['id'])
+        q = listed.get(key)
+        if q is None:
+            errors.append(f'{where}: {b["milestone"]} is not a milestone listed for {b["adapter"]}')
+            q = {}
+        d, level = b['sets']['dimension'], b['sets']['level']
+        if d not in CAPABILITY:
+            errors.append(f'{where}: sets {d}; a milestone sets a capability dimension only {list(CAPABILITY)}')
+        elif q.get('dimension') not in (None, d):
+            errors.append(f'{where}: sets {d}, but its adapter quantity attaches to {q["dimension"]}')
+        if d in dims and level not in dims[d]['levels']:
+            errors.append(f'{where}: level {level!r} is not a declared level of {d}')
+        for k in b['entity_kinds']:
+            if k not in kinds:
+                errors.append(f'{where}: unknown entity kind {k}')
+            elif d in dims and k not in dims[d]['applies_to']:
+                errors.append(f'{where}: {d} does not apply to a {k}')
+        directions = set()
+        for t in b['may_inform']:
+            if t not in trans:
+                errors.append(f'{where}: may_inform names unknown transition {t}')
+            else:
+                directions.add(trans[t]['direction'])
+        if directions != {'toward_autonomy', 'toward_constraint'}:
+            errors.append(f'{where}: may_inform must name transitions in both directions (a milestone opens no one-way takeoff), '
+                          f'has {sorted(directions)}')
+    for u in mi['unbound']:
+        key = (u['adapter'], u['milestone'])
+        if key not in listed:
+            errors.append(f'milestone_interface: unbound {u["milestone"]} is not a milestone listed for {u["adapter"]}')
+        covered.setdefault(key, []).append('unbound')
+    for key in sorted(listed):
+        n = len(covered.get(key, []))
+        if n != 1:
+            errors.append(f'milestone_interface: {key[0]} milestone {key[1]} must be bound or listed unbound exactly once ({n})')
 
 
 def _check_solver_mapping(contract, errors, register=None, params=None):
@@ -284,6 +461,7 @@ def _check_traces(contract, errors):
     acc = by_id(contract['accounting'])
     stock_ids = {s['id'] for s in contract['stocks']}
     modes = {m['id'] for m in contract['modes']}
+    bindings = by_id(contract['milestone_interface']['bindings'])
     for tr in contract['traces']:
         prev = None
         for n, step in enumerate(tr['steps']):
@@ -351,9 +529,26 @@ def _check_traces(contract, errors):
                     errors.append(f'{where}: transition {a["type"]} on {a["entity"]}, which is not in the step')
                     continue
                 applied.setdefault(a['entity'], []).append(trans[a['type']])
+            # milestone events (#47): each sets one capability level and applies no transition
+            events = {}
+            for m in step.get('milestones', []):
+                b = bindings.get(m['binding'])
+                if b is None:
+                    errors.append(f'{where}: unknown milestone binding {m["binding"]}')
+                elif m['entity'] not in ents:
+                    errors.append(f'{where}: milestone {m["binding"]} on {m["entity"]}, which is not in the step')
+                elif ents[m['entity']]['kind'] not in b['entity_kinds']:
+                    errors.append(f'{where}: milestone {m["binding"]} cannot attach to a {ents[m["entity"]]["kind"]}')
+                else:
+                    d = b['sets']['dimension']
+                    if d in events.get(m['entity'], {}):
+                        errors.append(f'{where}: {m["entity"]} has two milestone events on {d}')
+                    events.setdefault(m['entity'], {})[d] = b
             if prev is None:
                 if applied:
                     errors.append(f'{where}: the first step cannot apply a transition')
+                if events:
+                    errors.append(f'{where}: the first step cannot carry a milestone event')
                 prev = (step, got)
                 continue
             pstep, pgot = prev
@@ -364,6 +559,16 @@ def _check_traces(contract, errors):
                     continue
                 changed = {d for d in set(e['state']) | set(before['state']) if e['state'].get(d) != before['state'].get(d)}
                 allowed = set().union(*[set(t['changes']) for t in ts]) if ts else set()
+                # A milestone moves its own dimension to its level, first; preconditions then read that value.
+                read = {'state': dict(before['state']), 'host': before.get('host')}
+                for d, b in events.get(eid, {}).items():
+                    level = b['sets']['level']
+                    if before['state'].get(d) == level:
+                        errors.append(f'{where}: milestone {b["id"]} on {eid} sets {d} to {level}, which it already was')
+                    if e['state'].get(d) != level and d not in allowed:
+                        errors.append(f'{where}: milestone {b["id"]} sets {eid} {d} to {level}, but the step has {e["state"].get(d)}')
+                    allowed.add(d)
+                    read['state'][d] = level
                 for d in sorted(changed - allowed):
                     errors.append(f'{where}: {eid} {d} changed from {before["state"].get(d)} to {e["state"].get(d)} '
                                   f'without a transition that declares it')
@@ -371,8 +576,8 @@ def _check_traces(contract, errors):
                     if not changed & set(t['changes']):
                         errors.append(f'{where}: {eid} applies {t["id"]} but none of its dimensions changed (relabelling)')
                     for d, levels in t['preconditions'].items():
-                        if value_of(before, d) not in levels:
-                            errors.append(f'{where}: {eid} applies {t["id"]} but {d} was {value_of(before, d)}, not in {levels}')
+                        if value_of(read, d) not in levels:
+                            errors.append(f'{where}: {eid} applies {t["id"]} but {d} was {value_of(read, d)}, not in {levels}')
                 views_before = {m for m, v in pgot.get(eid, {}).items() if v}
                 views_after = {m for m, v in got.get(eid, {}).items() if v}
                 if views_before != views_after and not ts:
@@ -415,6 +620,8 @@ def validate(contract, register=None, params=None):
     _check_dimensions_and_modes(contract, errors)
     _check_transitions(contract, errors)
     _check_accounting_and_adapters(contract, errors)
+    _check_milestone_interface(contract, errors)
+    _check_loops_and_couplings(contract, errors)
     _check_solver_mapping(contract, errors, register, params)
     _check_traces(contract, errors)
     _check_evidence(contract, errors)
