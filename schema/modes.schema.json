@@ -6,7 +6,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": ["contract_version", "status", "entity_kinds", "dimensions", "modes", "stocks", "accounting", "transitions",
-               "adapters", "solver_mapping", "traces", "falsifiers", "omission_checks", "evidence_requirements"],
+               "adapters", "feedback_loops", "couplings", "milestone_interface", "solver_mapping", "traces", "falsifiers", "omission_checks", "evidence_requirements"],
   "properties": {
     "contract_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
     "status": {"const": "proposed"},
@@ -17,6 +17,12 @@
     "accounting": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/quantity"}},
     "transitions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/transition"}},
     "adapters": {"type": "array", "items": {"$ref": "#/$defs/adapter"}},
+    "milestone_interface": {"$ref": "#/$defs/milestone_interface"},
+    "feedback_loops": {"type": "array", "minItems": 1, "items": {
+      "type": "object", "additionalProperties": false, "required": ["id", "meaning", "carries", "interfaces_item"],
+      "properties": {"id": {"type": "string", "pattern": "^L-"}, "meaning": {"$ref": "#/$defs/text"},
+                     "carries": {"$ref": "#/$defs/ids"}, "interfaces_item": {"type": "integer", "minimum": 1}}}},
+    "couplings": {"type": "array", "items": {"$ref": "#/$defs/coupling"}},
     "solver_mapping": {"$ref": "#/$defs/solver_mapping"},
     "traces": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/trace"}},
     "falsifiers": {"type": "array", "minItems": 1, "items": {
@@ -121,7 +127,10 @@
           "type": "object", "required": ["coverage", "reason"],
           "properties": {"coverage": {"enum": ["supported", "partial", "unsupported"]}, "reason": {"$ref": "#/$defs/text"}}}},
         "unsupported_extrapolations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
-        "attach_point": {"$ref": "#/$defs/text"}
+        "attach_point": {"$ref": "#/$defs/text"},
+        "feedback_loops": {"type": "object", "additionalProperties": {
+          "type": "object", "additionalProperties": false, "required": ["role", "rationale"],
+          "properties": {"role": {"enum": ["owner", "yields", "absent"]}, "rationale": {"$ref": "#/$defs/text"}}}}
       }
     },
     "mapping_entry": {"type": "object", "additionalProperties": false, "required": ["params", "assumptions", "note"],
@@ -150,6 +159,57 @@
                          "properties": {"principal": {"type": "string"}, "scope": {"$ref": "#/$defs/text"}, "value": {"type": "string"}}}}]}},
                      "stocks": {"type": "object", "additionalProperties": {"type": ["string", "array"]}}}
     },
+    "coupling": {
+      "description": "Issue #35. A worked coupling between adapters; tools/modes_tool.py checks it against the loop owners.",
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "status", "purpose", "adapters", "passes", "uncoupled", "yielded", "result"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^XC-"}, "status": {"const": "proposed"}, "purpose": {"$ref": "#/$defs/text"},
+        "adapters": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+        "passes": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["from", "to", "accounting", "conversion"],
+          "properties": {
+            "from": {"$ref": "#/$defs/quantity_ref"}, "to": {"$ref": "#/$defs/quantity_ref"},
+            "accounting": {"type": "string"}, "conversion": {"$ref": "#/$defs/text"}}}},
+        "uncoupled": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["accounting", "reason"],
+          "properties": {"accounting": {"type": "string"}, "reason": {"$ref": "#/$defs/text"}}}},
+        "yielded": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["loop", "adapter", "treatment", "note"],
+          "properties": {"loop": {"type": "string"}, "adapter": {"type": "string"},
+                         "treatment": {"enum": ["comparison_only", "embedded_bracketed", "separate_ledger"]},
+                         "note": {"$ref": "#/$defs/text"}}}},
+        "result": {"$ref": "#/$defs/text"}
+      }
+    },
+    "quantity_ref": {
+      "type": "object", "additionalProperties": false, "required": ["adapter", "quantity"],
+      "properties": {"adapter": {"type": "string"}, "quantity": {"$ref": "#/$defs/text"}}
+    },
+    "milestone_interface": {
+      "description": "Issue #47. Closed objects: no hazard, rate, probability or delay field can be added to a source or binding.",
+      "type": "object", "additionalProperties": false, "required": ["status", "rules", "sources", "bindings", "unbound"],
+      "properties": {
+        "status": {"const": "proposed"},
+        "rules": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "sources": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["adapter", "quantity", "milestones", "locator"],
+          "properties": {"adapter": {"type": "string"}, "quantity": {"$ref": "#/$defs/text"}, "milestones": {"$ref": "#/$defs/ids"},
+                         "locator": {"$ref": "#/$defs/text"}}}},
+        "bindings": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "adapter", "milestone", "definition", "sets", "entity_kinds", "may_inform", "basis"],
+          "properties": {"id": {"type": "string", "pattern": "^MB-"}, "adapter": {"type": "string"}, "milestone": {"type": "string"},
+                         "definition": {"$ref": "#/$defs/text"},
+                         "sets": {"type": "object", "additionalProperties": false, "required": ["dimension", "level"],
+                                  "properties": {"dimension": {"type": "string"}, "level": {"type": "string"}}},
+                         "entity_kinds": {"$ref": "#/$defs/ids"}, "may_inform": {"$ref": "#/$defs/ids"},
+                         "basis": {"$ref": "#/$defs/text"}}}},
+        "unbound": {"type": "array", "items": {
+          "type": "object", "additionalProperties": false, "required": ["adapter", "milestone", "reason"],
+          "properties": {"adapter": {"type": "string"}, "milestone": {"type": "string"}, "reason": {"$ref": "#/$defs/text"}}}}
+      }
+    },
     "trace": {
       "type": "object", "additionalProperties": false, "required": ["id", "title", "purpose", "scope", "horizon", "steps"],
       "properties": {
@@ -167,6 +227,9 @@
               "type": "object", "additionalProperties": false, "required": ["accounting", "unit", "holders"],
               "properties": {"accounting": {"type": "string"}, "unit": {"$ref": "#/$defs/text"},
                              "holders": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "number", "exclusiveMinimum": 0}}}}},
+            "milestones": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["entity", "binding", "basis"],
+                                                       "properties": {"entity": {"type": "string"}, "binding": {"type": "string"},
+                                                                      "basis": {"$ref": "#/$defs/text"}}}},
             "stock_changes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["entity", "stock", "cause"],
                                                            "properties": {"entity": {"type": "string"}, "stock": {"type": "string"}, "cause": {"$ref": "#/$defs/text"}}}},
             "expected_views": {"type": "object", "additionalProperties": {"$ref": "#/$defs/ids"}},

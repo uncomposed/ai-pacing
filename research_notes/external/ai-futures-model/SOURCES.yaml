@@ -54,7 +54,37 @@ inputs:
   - path: inputs/metr/benchmark_results_1_1.yaml
     note: "METR-Horizon-v1.1 results (long_tasks_version 799cc9c4). Read by progress_model only to fill horizon parameters left as None (not the case at defaults) and for the diagnostic metr_mse. Overlaps #12."
   - path: "inputs/epoch/epoch_capabilities_index.csv, epoch_openai_revenue.csv, epoch_anthropic_revenue.csv"
-    note: "Epoch data. Not read by progress_model at the pin; used by website charts and tests. The default present_revenue and eci_at_present_day are elicited values consistent with these series."
+    sha256:
+      epoch_capabilities_index.csv: 867439b9bd958829228da4129234b6435ad9aeeb6800646f896079e832d9abe7
+      epoch_openai_revenue.csv: b82831b468a0ee35d329377d344e6d512a1c6b146766569dac30d8cbfb2a7fb9
+      epoch_anthropic_revenue.csv: f6b3a407e2b43e58064f115e472c9238423c0e2fe376ff6b1d3cfa8862865359
+    note: "Epoch data. Not read by progress_model at the pin; used by website charts and tests. The default present_revenue and eci_at_present_day are elicited values consistent with these series. Primary counterparts read 2026-10-25 (#66): see epoch_primary below."
+
+epoch_primary:
+  # Issue #66. Fetched from epoch.ai on 2026-10-25, committed verbatim under epoch_primary/, compared by compare_epoch.py
+  # (output compare_epoch.json). License of all three: CC-BY 4.0 (Epoch AI; README.md inside benchmark_data.zip, AIFM's
+  # scripts/bridge/*.py). Evidence records: EV-EPOCH-ECI-2026-10-25, EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25,
+  # EV-EPOCH-REVENUE-OPENAI-2026-10-25. How AIFM derived its bundled files: scripts/bridge/epoch_eci_to_ts.py and
+  # epoch_revenue_to_ts.py at the pinned commit.
+  accessed: "2026-10-25"
+  files:
+    - url: "https://epoch.ai/data/benchmark_data.zip"
+      zip_sha256: 6dbc734ba342e2e0957d916fe8e81cc9a9b8147ea8fb96fc76e65d0df004146c
+      zip_bytes: 2356852
+      etag: "a72c4757b21f69153c492cd5bf2a8caf"
+      member_committed: "epoch_capabilities_index/eci_scores.csv -> epoch_primary/eci_scores.csv"
+      sha256: 540796e67e6158f290edfb97a2633ca871edf9f1a89c78fc9d06cd20ca33cf64
+      note: "The zip no longer contains epoch_capabilities_index.csv, the member AIFM's epoch_eci_to_ts.py extracts, so the bundled ECI file cannot be re-derived. Other members (processed_data_for_eci.csv, eci_bootstraps.json) are not committed."
+    - url: "https://epoch.ai/data/ai_companies_revenue_reports.csv"
+      sha256: 192cbb8b467d168a4572c39e3d0a38c20094cc8132fd9a8b28d10f17fba8f7a7
+      bytes: 43851
+      etag: "1369fc51d584c9b775a323418b4ef74a"
+      committed_as: epoch_primary/ai_companies_revenue_reports.csv
+    - url: "https://epoch.ai/data/ai-companies"
+      note: "Landing page, fetched (HTTP 200) but not committed or relied on."
+  not_found:
+    - "https://epoch.ai/data/epoch_capabilities_index.csv (HTTP 404)"
+  other_epoch_inputs: "None. inputs/epoch/ holds exactly the three files above; inputs/old_model and plan-a.csv do not reference Epoch."
 
 published_reference:
   id: daniel-08-16-26

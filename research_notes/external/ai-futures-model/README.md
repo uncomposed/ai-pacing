@@ -146,6 +146,24 @@ constrained by evidence and which by judgment is in `MECHANISMS.md`.
 - The input series' provenance is a deleted upstream workbook; historical rows and
   forecasts are not distinguished row by row.
 
+## Epoch inputs in primary form (#66)
+
+AIFM bundles three Epoch files (`inputs/epoch/`). `epoch_primary/` holds Epoch's current primary files, fetched
+2026-10-25 and pinned by SHA-256 in `SOURCES.yaml` (`epoch_primary:`), with evidence records `EV-EPOCH-ECI-2026-10-25`,
+`EV-EPOCH-REVENUE-ANTHROPIC-2026-10-25` and `EV-EPOCH-REVENUE-OPENAI-2026-10-25`. `python3 epoch_primary/compare_epoch.py`
+(offline, needs `fetch_upstream.sh`) writes `epoch_primary/compare_epoch.json`. Findings, none reconciled:
+
+- Anthropic revenue: the 15 bundled rows equal Epoch's primary file filtered as AIFM filters it.
+- OpenAI revenue: the bundle has one row (2026-08-13, 40e9) the primary file lacks; the primary file has two the
+  bundle lacks (2026-07-15, 30e9; 2026-09-30, 50e9).
+- ECI: the bundled per-model-version file is no longer served; Epoch now ships per-model `eci_scores.csv`. Of 450
+  rows matching on model name and release date, 7 have the same score (bundled minus current: mean -0.24, range -3.14
+  to +1.87). The bundle's latest release is 2026-08-02 against 2026-10-15 now.
+
+So the bundled vintage is not obtainable in primary form for ECI or OpenAI revenue. `EV-AIFM-EPOCH-SERIES` stays as the
+record of the bundled vintage (secondary only) and now depends on the primary records. The AIFM output records list
+all four in `fitted_to`. These series are not held-out data for AIFM.
+
 ## Files
 
 | file | what |

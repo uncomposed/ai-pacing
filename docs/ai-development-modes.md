@@ -3,8 +3,10 @@
 ## Status
 
 Architecture note for issue #5, written 2026-10-25; contract 0.2.0 adds the changes from
-#32 (section 12), 0.3.0 the stock/flow accounting of #39 (section 13), and 0.4.0 a kind for
-every adapter quantity (#61, section 14). [[ai gen]] Status: `implemented`
+#32 (section 12), 0.3.0 the stock/flow accounting of #39 (section 13), 0.4.0 a kind for
+every adapter quantity (#61, section 14), 0.5.0 the milestone interface and experiment
+compute (#47, section 15), and 0.6.0 feedback-loop owners and the GATE-AIFM coupling (#35,
+section 16). [[ai gen]] Status: `implemented`
 (contract, checker and tests); nothing is `verified` against evidence and nothing is
 `human_validated`. Every definition, level and transition is **proposed**: an
 analytical device to review, not an empirical claim or a settled threshold.
@@ -40,8 +42,9 @@ holds, fails, or undetermined when a needed dimension is `unknown`. An entity ca
 two views at once, or none.
 
 **Evidence for the choice** (`python3 tools/modes_tool.py compare`): across the five
-example traces, 10 pairs of states share a three-mode label but differ on a dimension
-that changes who decides or who holds resources. The sharpest one: a lab system before
+example traces of #5, 10 pairs of states share a three-mode label but differ on a dimension
+that changes who decides or who holds resources (18 pairs once `TR-MILESTONE-CONSTRAINED`,
+added for #47, is included). The sharpest one: a lab system before
 and after a failed intervention (`TR-NOMINAL-CONTROL`, steps 1 and 2) has the same
 label, while `effective_control`, `custody_credentials`, `objective_selection` and
 `intervention_latency` all differ. A three-label state would keep calling it a human-run
@@ -228,6 +231,7 @@ All five cases #5 asks for are in the YAML and checked on every `make check`:
 | TR-SOVEREIGN-COOPERATIVE | The pact after closure: sovereign and cooperating; exit changes commitments, not the mode. |
 | TR-RESTRICTED-REGAINS | Delegation, restriction, then regained autonomy through credentials kept through the restriction; still not sovereign. |
 | TR-MIXED-POPULATION | Three systems in three different views in one step, with a shared cluster split by shares. |
+| TR-MILESTONE-CONSTRAINED (#47) | Milestone events AC and SAR set capability levels; delegation, restriction and delegation again follow, each under its own preconditions. |
 
 The traces are illustrations, not reconstructions of real events. #15 is where the
 Hugging Face incident is reconstructed; this contract supplies the vocabulary only.
@@ -373,3 +377,123 @@ Changes:
 
 Every trace is unchanged and still valid: no trace resource used a rebooked ledger. The
 Hugging Face trace is re-pinned to 0.4.0.
+
+## 15. Milestones and transitions; experiment compute (#47, contract 0.5.0)
+
+#14 asked how AI Futures milestones attach to the contract's transitions without losing
+knowledge, compute, assets, dependencies, human intervention or identity, and without
+assuming a one-way takeoff. `milestone_interface` in the YAML answers it as an interface,
+with no rates.
+
+**A milestone is an event on a capability scale.** It is evidence for one capability
+level of a `model_weights` entity or the agents running it, and nothing else. In a trace,
+a step may carry `milestones: [{entity, binding, basis}]`. The checker enforces:
+
+1. The event moves exactly the binding's dimension to the binding's level, and must move
+   it (no repeat). Bindings may set only `rd_capability`, `cyber_capability` or
+   `strategic_capability`, and only the dimension the source quantity attaches to. So
+   AIFM milestones can never set `strategic_capability`, which `AD-AIFM` does not
+   represent.
+2. It applies no transition. Authority, custody, resources, dependencies, effective
+   control, intervention latency, stocks, and the entity's id and kind change only by a
+   transition that declares them, as before. A mode view that changes still needs a
+   transition.
+3. **Preconditions.** A transition applied in the same step reads its preconditions from
+   the previous state with the milestone's dimension updated. No transition has a
+   capability precondition today, so a milestone makes no transition possible or
+   impossible. The rule fixes how one would be read if evidence ever justified one
+   (tested by mutation).
+4. **Both directions.** Each binding's `may_inform` lists the transitions whose
+   preconditions or evidence the milestone bears on, and must include both directions.
+   AC informs `T-DELEGATE`, `T-RESTRICT` and `T-NEGOTIATED-CONSTRAINT`. SAR also informs
+   `T-AUTHORIZED-AUTONOMY`. AIFM's own scenario tools act at milestones on resources only
+   (`sos_mode` freezes labor and compute at AC; the pause transform reduces compute), which
+   is the counterpart of a constraint, not of a takeoff.
+5. **No hazard, rate, probability or delay.** The binding objects are closed in the
+   schema, and `OC-MILESTONE-HAZARD` records this as enforced. A model's forecast date for
+   a milestone is a scenario input, never evidence that it was crossed.
+
+**Bindings.** `MB-AIFM-AC` sets `rd_capability = automates_tasks` and `MB-AIFM-SAR` sets
+`automates_research_program`; both follow the readings in the AIFM `modes.md`.
+AI2027-SC, SIAR, TED-AI and ASI are listed as `unbound`, each with a reason. The first two
+add no contract level. For TED-AI and ASI, binding them to `strategic_capability` would be
+an `AD-AIFM` unsupported extrapolation. The checker requires every milestone the source
+lists to be bound or unbound exactly once. Falsifier `F-MILESTONE-LEVEL` says what would
+show a binding wrong.
+
+**Worked trace.** `TR-MILESTONE-CONSTRAINED` is an illustration, not an AIFM run:
+- before AC, a lab system is in human-run lab mode;
+- AC is reached and the lab delegates coding (`T-DELEGATE`);
+- SAR is reached and the lab restricts (`T-RESTRICT`), and capability and knowledge carry
+  over;
+- the lab delegates again with no new milestone.
+
+The view stays `MODE-HUMAN-LAB` throughout.
+
+**Experiment compute.** `compute_experiment` (a stock, FLOP/s allocated to research
+experiments) is a new accounting quantity, and `research_output` is derived from it.
+AIFM's `experiment_H100e` series is booked there and added to `AD-AIFM`'s inputs. It
+could not be mapped to an existing ledger:
+- AIFM runs experiment compute through research effort, not through agent labor.
+  Booking it to `compute_inference` would create agent labor from it.
+- Booking it to `compute_training` would count it in capability.
+- The series is 10x inference compute in the default series, so either choice would be
+  large.
+
+In the units bridge, `QTY-EXPERIMENT-COMPUTE-RATE` is booked to `compute_experiment`, and
+two forbidden conversions keep it from being read as inference or training compute. No
+H100e-to-FLOP/s rate is stated for it. GATE has no experiment-compute series.
+
+What this does not establish: no milestone was observed. The bindings are readings of
+AIFM's definitions, not calibrations. No transition is more or less likely after a
+milestone.
+
+## 16. Feedback-loop owners and the GATE-AIFM coupling (#35, contract 0.6.0)
+
+`research_notes/external/epoch-gate/INTERFACES.md` named five places where coupling GATE
+with AI Futures would close the same feedback twice. Contract 0.6.0 makes the
+one-owner-per-loop rule checkable.
+
+1. **GATE's compute split is resolved.** In the pinned solver output, training plus runtime
+   compute equals usable compute at the start of the step, g(Q) = Q/(Q/C_L + 1), to machine
+   precision, and the physical training run accumulates D (`epoch-gate/coupling_example.py`,
+   units-bridge equations `GATE-COMPUTE-SPLIT` and `GATE-TRAINING-RUN`). D and R are
+   therefore allocated capacity in physical FLOP/year: stocks, like their ledgers. The
+   `ambiguous` records from 0.4.0 are removed, and the units bridge links them as
+   `QTY-GATE-TRAINING-COMPUTE` and `QTY-GATE-RUNTIME-COMPUTE`. Q itself is not booked: D and
+   R exhaust it.
+2. **`feedback_loops`** lists the five loops, each with the ledgers it `carries`. Each
+   model adapter's `feedback_loops` entry gives every loop a role (`owner`, `yields`,
+   `absent`) with a rationale, and the checker requires exactly one owner per loop:
+   - GATE owns compute investment and agent labor.
+   - AIFM owns software efficiency, research automation and the capability mapping.
+
+   INTERFACES.md has the table and reasons.
+3. **`couplings`** declares worked couplings, and the checker enforces:
+   - a pass moves one quantity between ledgers of the same kind, both resolved, into an
+     input of the target, once;
+   - only the owner of every loop carrying that ledger may pass it;
+   - `capability`, `efficiency_level` and events never cross;
+   - a source never passes compute it already turns into a derived quantity on a loop it
+     owns (INTERFACES item 5);
+   - each input of a coupled model on a loop the other model owns is passed or declared
+     uncoupled;
+   - each yielded loop has a stated treatment.
+
+   Twelve mutation tests break one rule each.
+4. **`XC-GATE-AIFM-TRAINING`.** GATE's training compute D passes to AIFM's frontier
+   training capacity:
+   - **Share.** The frontier project's share of world training compute is unidentified, so
+     the pass gives an upper bound only.
+   - **Uncoupled.** Runtime, inference and experiment compute stay uncoupled. GATE's runtime
+     already runs its digital workers, and AIFM's research compute lies outside GATE's
+     dollar-funded R&D.
+   - **Bracketed (stopping rule).** GATE's own software-efficiency and capability loops shaped
+     D and cannot be switched off without re-solving GATE. Following the stopping rule, they
+     are bracketed by GATE's conservative and aggressive presets, a bounded scenario, rather
+     than counted as cleanly assigned inside D.
+   - **Not rerun.** AIFM is not rerun on the passed series.
+
+What this does not establish: no coupled trajectory exists. The coupling is a checked
+specification with upper-bound numbers. Loop ownership is a design choice with stated
+reasons, not a finding about which model is right.

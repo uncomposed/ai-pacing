@@ -37,6 +37,13 @@ symbols:
   Y_gate: {unit: USD/yr, quantity: QTY-GWP}
   Y_ref: {unit: USD/EIU, value: 1.11669432109121e+14}
   f_gwp: {unit: EIU/USD, value: 8.955002108570063e-15}
+  # GATE compute split (E7, resolved in #35)
+  D_g: {unit: FLOP/yr, quantity: QTY-GATE-TRAINING-COMPUTE}
+  R_g: {unit: FLOP/yr, quantity: QTY-GATE-RUNTIME-COMPUTE}
+  Q_g: {unit: FLOP/yr, quantity: QTY-GATE-COMPUTE-STOCK}
+  C_L: {unit: FLOP/yr, value: 2.0e+38}
+  C_phys: {unit: FLOP, quantity: QTY-TRAINING-COMPUTE}
+  C_phys_next: {unit: FLOP, quantity: QTY-TRAINING-COMPUTE}
   # Metzger docking bridge
   E_gen5: {unit: J/yr, value: 1.0e+15, quantity: QTY-METZGER-GEN5-ENERGY}
   P_earth: {unit: W/EIU, value: 1.96e+13}
@@ -88,6 +95,8 @@ equations:
   - {id: PACT-FAB-DISMANTLE, model: AD-PACT, text: "F_next = F - F_ref * dt / T_dis", note: "solve(): F - dt / T_dis; F is a share of F_ref = 1 LEC, a level of installed capacity"}
   - {id: GATE-Y-IN-EIU, model: AD-GATE, text: "Y = Y_gate / Y_ref", note: "CV-GWP-TO-EIU-OUTPUT: GATE output read in EIU/yr; not coupled"}
   - {id: GWP-FACTOR, model: AD-GATE, text: "f_gwp = 1 / Y_ref", check_value: f_gwp}
+  - {id: GATE-COMPUTE-SPLIT, model: AD-GATE, text: "D_g + R_g = Q_g / (Q_g / C_L + 1)", note: "Q_g at the start of the step (#35, E7); exact in the pinned output, epoch-gate/coupling_example.py"}
+  - {id: GATE-TRAINING-RUN, model: AD-GATE, text: "C_phys_next = C_phys + D_g * dt", note: "physical_best_training_run accumulates D over a one-year step (#35)"}
   - {id: METZGER-BRIDGE, model: docking, text: "u_t = E_gen5 / P_earth / m_gen5", check_value: u_t}
   - {id: METZGER-GEN5-EIU, model: docking, text: "A_gen5 = E_gen5 / P_earth", check_value: A_gen5}
   - {id: METZGER-PER-GENERATION, model: Metzger, text: "T_gen * r_metzger = log(3.65)", note: "ln of the growth factor per generation is dimensionless; 3.65 = exp(2 x 0.647)"}
