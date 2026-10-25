@@ -253,10 +253,68 @@ class ModeContractTest(unittest.TestCase):
         y['accounting'] = 'industrial_capacity'
         self.rejects("quantity 'gross world product Y' is a flow booked to industrial_capacity, a stock")
 
-    def test_kind_needs_an_accounting_quantity(self):
-        f = next(q for q in self.adapter('AD-PACT')['quantities'] if q['name'] == 'Earth fab level F')
-        f['kind'] = 'stock'
-        self.rejects('declares kind stock but is booked to no accounting quantity')
+    # --- issue #61: a kind for every adapter quantity
+    def quantity(self, adapter, name):
+        return next(q for q in self.adapter(adapter)['quantities'] if q['name'] == name)
+
+    def test_every_adapter_quantity_declares_a_kind(self):
+        acc = {q['id']: q for q in self.c['accounting']}
+        for ad in self.c['adapters']:
+            for q in ad['quantities']:
+                self.assertIn('kind', q, (ad['id'], q['name']))
+                if 'accounting' in q and q['kind'] not in ('ratio', 'ambiguous'):
+                    self.assertEqual(q['kind'], acc[q['accounting']]['kind'], (ad['id'], q['name']))
+
+    def test_missing_kind_is_rejected(self):
+        del self.quantity('AD-GATE', 'digital workers N_i')['kind']
+        self.rejects("'kind' is a required property")
+
+    def test_gate_levels_and_digital_workers_are_stocks(self):
+        acc = {q['id']: q for q in self.c['accounting']}
+        for name, ledger in (('hardware efficiency H', 'efficiency_level'), ('software efficiency S', 'efficiency_level'),
+                             ('digital workers N_i', 'agent_workforce')):
+            q = self.quantity('AD-GATE', name)
+            self.assertEqual((q['kind'], q['accounting'], acc[ledger]['kind']), ('stock', ledger, 'stock'))
+        self.assertIn('research_output', acc['efficiency_level']['derived_from'])
+        self.assertIn('agent_workforce', acc['agent_labor']['derived_from'])
+
+    def test_efficiency_level_booked_to_research_output_again_is_rejected(self):
+        self.quantity('AD-GATE', 'software efficiency S')['accounting'] = 'research_output'
+        self.rejects("quantity 'software efficiency S' is a stock booked to research_output, a flow")
+
+    def test_digital_workers_booked_to_agent_labor_again_is_rejected(self):
+        self.quantity('AD-GATE', 'digital workers N_i')['accounting'] = 'agent_labor'
+        self.rejects("quantity 'digital workers N_i' is a stock booked to agent_labor, a flow")
+
+    def test_level_and_growth_are_not_both_inputs(self):
+        self.adapter('AD-GATE')['inputs'] = ['efficiency_level', 'research_output']
+        self.rejects('input efficiency_level is derived from')
+
+    def test_workforce_and_its_labor_are_not_both_inputs(self):
+        self.adapter('AD-GATE')['inputs'] = ['human_workforce', 'human_labor']
+        self.rejects('input human_labor is derived from')
+
+    def test_ambiguous_needs_candidates_and_locator(self):
+        del self.quantity('AD-GATE', 'training compute D')['kind_ambiguity']
+        self.rejects("'training compute D' is ambiguous but gives no kind_ambiguity")
+
+    def test_ambiguous_ledger_must_be_a_candidate(self):
+        self.quantity('AD-GATE', 'training compute D')['accounting'] = 'capability'
+        self.rejects("is ambiguous between ['stock', 'flow'] but is booked to capability, a state")
+
+    def test_ambiguity_note_only_on_ambiguous(self):
+        self.quantity('AD-GATE', 'training compute D')['kind'] = 'stock'
+        self.rejects('declares kind stock and also kind_ambiguity')
+
+    def test_ratio_needs_an_accounting_quantity(self):
+        q = self.quantity('AD-METR', 'realized developer task time ratio')
+        del q['accounting']
+        q['dimension'] = 'rd_capability'
+        self.rejects('is a ratio but names no accounting quantity')
+
+    def test_event_is_not_booked(self):
+        self.quantity('AD-AIFM', 'software efficiency')['kind'] = 'event'
+        self.rejects('an event is never booked to an accounting quantity')
 
     def test_output_rate_only_on_a_stock(self):
         self.pact_a()['kind'] = 'flow'

@@ -7,6 +7,7 @@ environment (see README: Python 3.14, numpy 2.4.1, scipy 1.17.0, pyyaml). Not ru
     python aifm_runner.py reference    --src .upstream   # golden trajectory replication
     python aifm_runner.py feedback-off --src .upstream   # human-only counterfactual, two calibrations
     python aifm_runner.py anchors      --src .upstream   # AC anchor modes at default parameters
+    python aifm_runner.py horizon-identifiability --src .upstream   # feedback on vs off at METR dates (#45)
     python aifm_runner.py rollouts     --src .upstream --preset published-daniel-08-16-26 -n 1000
     python aifm_runner.py summarize-rollouts --run-dir RUN --preset published-daniel-08-16-26
 
@@ -391,6 +392,106 @@ def cmd_summarize(args):
     return 0
 
 
+# ---------------------------------------------------------------------------------------
+# horizon-identifiability: feedback on vs off, in horizon units, at METR's observation dates (#45)
+# ---------------------------------------------------------------------------------------
+
+def _decimal_year(d) -> float:
+    # The upstream's own convention (progress_model/ac_anchor.py, _impl.py compute_metr_mse).
+    return d.year + (d.timetuple().tm_yday - 1) / 365.25
+
+
+def cmd_horizon_identifiability(args):
+    """In-sample diagnostic, not a held-out test: every METR value used here is in AIFM's own input file."""
+    _import_upstream(args.src)
+    import hashlib
+
+    import numpy as np
+    from progress_model.ac_anchor import _load_benchmark_data
+
+    bundled = Path("inputs/metr/benchmark_results_1_1.yaml")
+    tr = [2017.0, 2200.0]
+    model = _default_model(tr)
+    r = model.results
+    times, prog = np.asarray(r["times"], dtype=float), np.asarray(r["progress"], dtype=float)
+    upstream_mse = model.compute_metr_mse()
+    # The progress coordinates the horizon curve was fitted in (what compute_metr_mse uses for "on").
+    m_times, m_prog = (np.asarray(x, dtype=float) for x in model._anchor_mapping)
+
+    r_cal = float(r["r_software"])
+    paths = {}
+    for name, r_soft in (("off_same_calibration", r_cal), ("off_refit", None)):
+        if r_soft is None:  # same refit rule as cmd_feedback_off
+            model.params.r_software = r_cal
+            model.compute_human_only_trajectory(tr, initial_progress=0.0)
+            ho = model.human_only_results
+            from progress_model import config as cfg
+            rate = float(np.interp(cfg.SOFTWARE_PROGRESS_SCALE_REFERENCE_YEAR, ho["times"], ho["sw_progress_rates"]))
+            r_soft = r_cal * float(model.params.software_progress_rate_at_reference_year) / rate
+        model.params.r_software = r_soft
+        model.compute_human_only_trajectory(tr, initial_progress=0.0)
+        ho = model.human_only_results
+        paths[name] = (np.asarray(ho["times"], dtype=float), np.asarray(ho["progress"], dtype=float))
+    model.params.r_software = r_cal
+
+    def prog_at(t_arr, p_arr, t):
+        return float(np.interp(t, t_arr, p_arr)) if t_arr.min() <= t <= t_arr.max() else float(p_arr[0] if t < t_arr.min() else p_arr[-1])
+
+    rows = []
+    for key, info in _load_benchmark_data()["results"].items():
+        rel = info["release_date"]
+        rel = datetime.strptime(rel, "%Y-%m-%d").date() if isinstance(rel, str) else rel
+        y = _decimal_year(rel)
+        p80 = info["metrics"]["p80_horizon_length"]
+        row = {"model_key": key, "release_date": rel.isoformat(), "decimal_year": y,
+               "observed_p80": float(p80["estimate"]), "p80_ci95": [float(p80["ci_low"]), float(p80["ci_high"])],
+               "progress_on": prog_at(m_times, m_prog, y), "progress_on_full_run": prog_at(times, prog, y)}
+        row["horizon_on"] = float(model.horizon_trajectory(row["progress_on"]))
+        for name, (t_arr, p_arr) in paths.items():
+            row[f"progress_{name}"] = prog_at(t_arr, p_arr, y)
+            row[f"horizon_{name}"] = float(model.horizon_trajectory(row[f"progress_{name}"]))
+        rows.append(row)
+    rows.sort(key=lambda x: (x["decimal_year"], x["model_key"]))
+
+    def summary(series):
+        e = np.array([np.log(x[series]) - np.log(x["observed_p80"]) for x in rows])
+        return {"n": int(e.size), "mean_squared_log_error": float(np.mean(e ** 2)), "mean_abs_log_error": float(np.mean(np.abs(e)))}
+
+    sep = {name: float(max(abs(np.log(x["horizon_on"]) - np.log(x[f"horizon_{name}"])) for x in rows)) for name in paths}
+    # Where the paths separate: the source model's own curves at later dates (the dates of the METR suite's
+    # locked forecast, and later). Statements about the source model, not forecasts by this project.
+    later = []
+    for y in (2026.75, 2027.3274, 2027.8301, 2028.0):
+        row = {"decimal_year": y, "horizon_on": float(model.horizon_trajectory(prog_at(times, prog, y)))}
+        for name, (t_arr, p_arr) in paths.items():
+            row[f"horizon_{name}"] = float(model.horizon_trajectory(prog_at(t_arr, p_arr, y)))
+        later.append(row)
+    ci_half = [0.5 * (np.log(x["p80_ci95"][1]) - np.log(x["p80_ci95"][0])) for x in rows]
+    payload = {
+        "what": "AIFM's p80 time horizon at the release date of every model in its bundled METR file, with feedback on "
+                "(the full model, in the progress coordinates the horizon curve was fitted in, as compute_metr_mse) and off "
+                "(the upstream's human-only counterfactual, same calibration and r_software refit, mapped through the same "
+                "horizon curve). Default parameters over [2017, 2200]; dates use the upstream's decimal-year convention.",
+        "status": "IN-SAMPLE diagnostic of identifiability inside the source model. Every observation here is in AIFM's own "
+                  "input file (fitted_to), so this is not a held-out test, not a score under evidence/protocol.yaml and not "
+                  "empirical validation.",
+        "bundled_metr_file_sha256": hashlib.sha256(bundled.read_bytes()).hexdigest(),
+        "horizon_reference": {"present_horizon": float(model.params.present_horizon),
+                              "horizon_reference_date": float(model.params.horizon_reference_date),
+                              "present_doubling_time_years": float(model.params.present_doubling_time)},
+        "upstream_compute_metr_mse": None if upstream_mse is None else float(upstream_mse),
+        "in_sample_fit_p80": {"feedback_on": summary("horizon_on"),
+                              **{name: summary(f"horizon_{name}") for name in paths}},
+        "max_abs_log_separation_on_vs_off": sep,
+        "median_half_width_ln_p80_ci95": float(np.median(ci_half)),
+        "later_dates_source_model_only": later,
+        "observations": rows,
+        "provenance": provenance(args.src, "aifm_runner.py horizon-identifiability"),
+    }
+    _write("horizon_identifiability", payload)
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--src", type=Path, default=HERE / ".upstream", help="upstream checkout from fetch_upstream.sh")
@@ -398,6 +499,7 @@ def main(argv=None):
     sub.add_parser("reference")
     sub.add_parser("feedback-off")
     sub.add_parser("anchors")
+    sub.add_parser("horizon-identifiability")
     ro = sub.add_parser("rollouts")
     ro.add_argument("--preset", choices=sorted(PRESETS), required=True)
     ro.add_argument("-n", "--num-samples", type=int, default=1000)
@@ -409,7 +511,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
     args.src = args.src.resolve()
     return {"reference": cmd_reference, "feedback-off": cmd_feedback_off, "anchors": cmd_anchors,
-            "rollouts": cmd_rollouts, "summarize-rollouts": cmd_summarize}[args.cmd](args)
+            "horizon-identifiability": cmd_horizon_identifiability, "rollouts": cmd_rollouts, "summarize-rollouts": cmd_summarize}[args.cmd](args)
 
 
 if __name__ == "__main__":

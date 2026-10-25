@@ -108,3 +108,12 @@ sources:
     license: "n/a"
     used_for: "Would have given the page values as published before the 2026-03-03 correction. Connection reset from this environment, so pre-correction values are re-fitted from run vintages instead."
     status: checked_unavailable
+
+  - id: epoch-compute-trend-2024
+    title: "Training compute of frontier AI models grows by 4-5x per year (Epoch AI)"
+    url: "https://epoch.ai/publications/training-compute-of-frontier-ai-models-grows-by-4-5x-per-year"
+    version: "datePublished 2024-05-28; HTML as served 2026-10-25, sha256 586a413dfc8468ee591021501bd52f1259077fa47eb2b512d221f61013104eb3 (the page carries interactive figures, so the hash is a record of what was read, not a stable checksum)"
+    accessed: "2026-10-25"
+    license: "The page states a Creative Commons Attribution license (version not recorded). Only one number is used, with attribution."
+    used_for: "g = 4.2x/year (90% CI 3.6x to 4.9x), recent frontier models, Table A8: the growth rate of B-COMPUTE in permodel_protocol.yaml (#56). Evidence record EV-EPOCH-COMPUTE-TREND-2024."
+    status: used

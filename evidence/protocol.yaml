@@ -28,7 +28,7 @@ baselines:
   - id: B-LOGLINEAR
     description: "least-squares straight line in log(value) against time, fitted on data available by the cutoff"
   - id: B-COMPUTE
-    description: "source-declared compute-driven trend, where the target has one (to be specified per target in #12, #14)"
+    description: "source-declared compute-driven trend, where the target has one. METR time horizons (#56): the frontier value in the information set grown at Epoch's frontier training-compute rate (4.2x/year, EV-EPOCH-COMPUTE-TREND-2024) from the frontier model's release date, elasticity 1 declared, not fitted (research_notes/external/metr-time-horizons/permodel_protocol.yaml)"
 
 scoring_rules:
   - id: S-ABSLOGERR
@@ -44,6 +44,8 @@ scoring_rules:
 #   ({record, vintage} or null until resolved).
 # METR suite (#12): 24 retrospective forecasts (research_notes/external/metr-time-horizons/results/holdout.json)
 # and 4 locked ones (forecasts/FC-METR-TH11-LOCK-2026-10-25.json, sha256 in forecasts/SHA256SUMS).
+# METR per-model holdout (#56): 20 retrospective forecasts FC-METR-PM-*, one per suite and target model, each for p50
+# and p80 (results/permodel.json; protocol declared in commit 6cea9d0 before scoring).
 forecasts:
   - id: FC-METR-TH10-P50-2025-03-31
     model: "B-FLAT and B-LOGLINEAR as declared in research_notes/external/metr-time-horizons/holdout_protocol.yaml"
@@ -357,3 +359,223 @@ forecasts:
     baselines: [B-FLAT, B-LOGLINEAR]
     scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
     resolution: null
+  - id: FC-METR-PM-TH10-DEEPSEEK-V3-0324
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of DeepSeek-V3-0324 on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-03-24"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-O3
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of o3 on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-04-16"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-04-16, vintage: "first published (available 2025-04-16); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-O4-MINI
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of o4-mini on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-04-16"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-04-16, vintage: "first published (available 2025-04-16); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-CLAUDE-4-OPUS
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Claude 4 Opus on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-05-22"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-CLAUDE-4-SONNET
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Claude 4 Sonnet on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-05-22"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-DEEPSEEK-R1-0528
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of DeepSeek-R1-0528 on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-05-28"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-GEMINI-2-5-PRO-PREVIEW
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Gemini 2.5 Pro Preview on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-06-05"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-GROK-4
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Grok 4 on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-07-09"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-CLAUDE-4-1-OPUS
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Claude 4.1 Opus on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-08-05"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-GPT-OSS-120B
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of gpt-oss-120b on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-08-05"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-GPT-5
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of GPT-5 on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-08-07"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-08-06, vintage: "first published (available 2025-08-06); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-CLAUDE-SONNET-4-5
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Claude Sonnet 4.5 on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-09-29"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2026-01-20, vintage: "first published (available 2026-01-20); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-KIMI-K2-THINKING
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Kimi K2 Thinking on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-11-06"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-11-19, vintage: "first published (available 2025-11-19); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-GPT-5-1-CODEX-MAX
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of GPT-5.1-Codex-Max on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-11-19"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06", "EV-METR-TH10-2025-11-19", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-11-19, vintage: "first published (available 2025-11-19); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH10-CLAUDE-OPUS-4-5
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Claude Opus 4.5 on METR TH1.0, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2025-11-24"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH10-2025-03-19", "EV-METR-TH10-2025-04-16", "EV-METR-TH10-2025-06-27", "EV-METR-TH10-2025-08-06", "EV-METR-TH10-2025-11-19", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH10-2025-12-19, vintage: "first published (available 2025-12-19); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH11-CLAUDE-OPUS-4-6-INSPECT
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of Claude Opus 4.6 (Inspect) on METR TH1.1, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2026-02-05"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-03-03, vintage: "first published (available 2026-03-03); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH11-GPT-5-3-CODEX
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of GPT-5.3-Codex on METR TH1.1, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2026-02-05"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-03-03, vintage: "first published (available 2026-03-03); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH11-GEMINI-3-1-PRO
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of gemini_3_1_pro on METR TH1.1, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2026-02-19"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-04-15, vintage: "first published (available 2026-04-15); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH11-GPT-5-4
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of gpt_5_4 on METR TH1.1, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2026-03-05"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-04-10, vintage: "first published (available 2026-04-10); latest and post-correction vintages scored separately"}
+  - id: FC-METR-PM-TH11-CLAUDE-MYTHOS-PREVIEW-EARLY-INSPECT
+    model: "B-FLAT, B-LOGLINEAR and B-COMPUTE as declared in research_notes/external/metr-time-horizons/permodel_protocol.yaml (declared in 6cea9d0)"
+    target: "p50 and p80 time horizon of claude_mythos_preview_early_inspect on METR TH1.1, forecast at its release date (minutes of human expert time)"
+    information_cutoff: "2026-04-07"
+    issued: "2026-10-25"
+    label: retrospective
+    inputs: ["EV-METR-TH11-2026-01-29", "EV-METR-TH11-2026-02-04", "EV-METR-TH11-2026-02-12", "EV-METR-TH11-2026-03-03", "EV-EPOCH-COMPUTE-TREND-2024"]
+    horizon: "0 days (the model's own release date)"
+    baselines: [B-FLAT, B-LOGLINEAR, B-COMPUTE]
+    scoring: [S-ABSLOGERR, S-INTERVAL80, S-COVERAGE80]
+    resolution: {record: EV-METR-TH11-2026-05-08, vintage: "first published (available 2026-05-08); latest and post-correction vintages scored separately"}
