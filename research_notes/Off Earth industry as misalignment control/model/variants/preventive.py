@@ -28,6 +28,8 @@ sh_c = min(1, sh0 + dsh c). Neither sign is assumed: the runs report what each d
 Ties: the AI strikes only above em.TIE_TOL (relative); humans attempt a shutdown only if strictly better for them.
 Indicators are probabilities from t = 0 along the equilibrium (backward recursions, as the solver's IND).
 Status: implemented; baseline limit verified against the full solver's R6c brackets and em.q_star_cap (tests).
+Scope (issue #51): with the default grid it reproduces the solver's discretisation, which never brings the AI within
+O(1) of Kmax; it does not resolve the stated law there. cap_pts > 0 does (variants/cap_approach.py).
 Not human_validated, not empirical.
 """
 from __future__ import annotations
@@ -46,13 +48,20 @@ DEFAULT_OPTS = dict(human_first=False, sh0=0.0, dsh=0.0, D_s=1.0, c_K=0.0,
 IND = ["att", "suc", "fail", "hk", "hks", "dead", "tatt", "thk", "pre"]
 
 
-def _grid(p, A0, nA):
+def _grid(p, A0, nA, cap_pts=0):
     K = p["Kmax"]
     g = np.logspace(np.log10(min(1e-5, A0 / 10)), np.log10(2.0 * K), nA)
-    # K itself is left out on purpose: at exactly K a strike's unplugged landing (above K) stays put while a plugged
-    # landing (below K) regrows, a kink the path from below never reaches. A point just below K keeps it out of the
-    # interpolation for every size the AI actually passes through.
+    # K itself is left out. At exactly K a strike's unplugged landing (above K) stays put while a plugged landing
+    # (below K) regrows. The default grid's last point below K is K (1 - 1e-6), 1000 units below the cap, and the AI's
+    # next-year size from there is interpolated back onto it, so the default grid never lets the AI within O(1) of K.
+    # Under the logistic law the path from below does get there (K - A shrinks by a factor of about 1 - g a year),
+    # and there a plugged landing regrows while an unplugged one above K is permanent: issue #51,
+    # variants/cap_approach.py. cap_pts > 0 adds cap_pts points a decade at K (1 - 10^-k), k = 1..13, which resolves
+    # that region; the default (0) keeps the grid that reproduces the full solver's R6c brackets and the committed
+    # results/variants/*.json.
     extra = [A0, K * (1 - 1e-6), p["A_close"], p["H"]]
+    if cap_pts:
+        extra += list(K * (1 - 10.0 ** -np.arange(1.0, 13.0 + 1e-9, 1.0 / cap_pts)))
     return np.unique(np.concatenate([g, extra]))
 
 
@@ -85,14 +94,15 @@ def path_value(p: dict, x, chips: bool, n: int = 3000):
     return tot
 
 
-def solve(p: dict, opts: dict | None = None, A0: float | None = None, T: int = 300, nA: int = 200) -> dict:
+def solve(p: dict, opts: dict | None = None, A0: float | None = None, T: int = 300, nA: int = 200,
+          cap_pts: int = 0) -> dict:
     """AI values are carried as EXCESS over an exact solo value, E_m(A) = V_m(A) - Base_m(A) with Base_0 the solo
     value with chips (pact) and Base_1 the solo value without chips below closure (collapsed), both from path_value.
     Only E is interpolated, so the saturation-stage comparison (gaps of O(1) on values of 5e10) is not swamped by
-    interpolation error. Human values are O(10) and are interpolated directly."""
+    interpolation error. Human values are O(10) and are interpolated directly. cap_pts: see _grid (default 0)."""
     o = dict(DEFAULT_OPTS, **(opts or {}))
     A0 = p["A0"] if A0 is None else A0
-    A = _grid(p, A0, nA)
+    A = _grid(p, A0, nA, cap_pts)
     i0 = int(np.searchsorted(A, A0))
     K, H = p["Kmax"], p["H"]
     delta, dh = np.exp(-p["r"]), np.exp(-p["r_h"])

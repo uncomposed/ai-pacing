@@ -8,6 +8,9 @@
 3. The reduced bootstrap game's baseline limit reproduces the full solver's R6c brackets and the saturation closed form.
 4. Switches that are off leave the reduced game unchanged (identity checks).
 5. Re-running reproduces the committed results/variants/*.json.
+6. Issue #51 (the R6c cell A_close 0.03, L_f 0.9): the grid-free path reference (variants/cap_approach.py) puts the
+   needed q at 0.563, above both the committed solver bracket and the reduced game's default-grid bracket; the reduced
+   game with near-cap grid points (cap_pts) converges to it.
 """
 import json
 import os
@@ -21,6 +24,7 @@ os.environ.setdefault("OMP_NUM_THREADS", "1")
 
 import bargaining as bg  # noqa: E402
 import preventive as pv  # noqa: E402
+import cap_approach as ca  # noqa: E402
 import equilibrium_model as em  # noqa: E402
 
 RES = os.path.join(MODEL, "results", "variants")
@@ -123,6 +127,35 @@ class ReducedGame(unittest.TestCase):
                     self.assertTrue(close(v, w, 1e-7), (s, pol, k, v, w))
                 else:
                     self.assertEqual(v, w, (s, pol, k))
+
+
+class CapApproach(unittest.TestCase):
+    """Issue #51. Under the logistic law the AI's path from below reaches within O(1) of Kmax (K - A shrinks by about
+    1 - g a year). There a plugged landing (below K) regrows while an unplugged one (above K) is permanent, so the
+    reserve deters less than in the static region above the cap. Neither grid resolves that region: the full solver
+    interpolates across the cap into the static region (its R6c bracket is the static threshold 0.33), and the
+    reduced game's default grid stops 1000 units below K (its bracket is the growth-phase threshold 0.19)."""
+    p = ca.cell(0.03, 0.9)
+
+    def test_grid_free_path_strikes_next_to_the_cap(self):
+        s = ca.path_stop(dict(self.p, q=0.55))
+        self.assertIsNotNone(s["strike_year"])
+        self.assertGreater(s["strike_year"], 100)          # long after closure: not a growth-phase strike
+        self.assertLess(s["gap_to_cap"], 1.0)              # within one Earth-industry unit of Kmax = 1e9
+        self.assertIsNone(ca.path_stop(dict(self.p, q=0.58))["strike_year"])
+
+    def test_committed_brackets_sit_below_the_stated_law(self):
+        ref = _read_json(os.path.join(MODEL, "results", "equilibrium_round3_summary.json"))["r6_solver"]
+        solver = {tuple(c): b for c, b in zip(ref["clean_cases"], ref["q_clean"])}[(0.03, 0.9)]
+        self.assertEqual(solver, [0.33203125, 0.3359375])
+        self.assertIsNotNone(ca.path_stop(dict(self.p, q=solver[1]))["strike_year"])   # the solver's "safe" q strikes
+        # the reduced game's default grid reproduces its committed bracket (results/variants/tables.md H1)
+        self.assertGreaterEqual(pv.solve(dict(self.p, q=0.19140625))["att"], 0.5)
+        self.assertLess(pv.solve(dict(self.p, q=0.1953125))["att"], 0.5)
+
+    def test_near_cap_grid_converges_to_the_path(self):
+        self.assertGreaterEqual(pv.solve(dict(self.p, q=0.5625), cap_pts=20)["att"], 0.5)
+        self.assertLess(pv.solve(dict(self.p, q=0.5664), cap_pts=20)["att"], 0.5)
 
 
 class Selection(unittest.TestCase):

@@ -17,13 +17,13 @@ variants import it read-only. `robust_design.py` and `ci_sims.py` were not touch
    exists in every year, yet renegotiation without commitment makes the AI strike the year before the upgrade, and
    human welfare falls from 45.7 to 20.4. Fixed or committed terms keep the peace. Whether renegotiation helps
    humans reverses with the direction of the power shift.
-2. **Human preventive action has no fixed sign.** In a reduced bootstrap game that reproduces the full solver's R6c
+2. **Human preventive action has no fixed sign** (default grid; several readings change when the cap is resolved, section 1, issue #51). In a reduced bootstrap game that reproduces the full solver's R6c
    thresholds in 4 of 5 cells: where the pact holds, a human shutdown option is never used and changes nothing. Where
    the AI would strike at closure, humans strike first at year 0 and gain (P(seizure) 1 to 0.35, welfare 13.2 to
    22.0). Where it would strike late to harvest Earth, humans also strike first at year 0 and lose (welfare 36.6 to
    22.0): they cannot commit not to use the option while their window closes. Where a failed AI survives, the option
    deters the AI completely and is never used.
-3. **D18's two checks.** Human learning after a failed strike never pulled a strike earlier and never produced a
+3. **D18's two checks** (default grid; see section 1, issue #51). Human learning after a failed strike never pulled a strike earlier and never produced a
    "strike now" spiral; it limits retries (P(seizure) 1 to 0.71-0.81) and does not deter the first strike. Humans
    striking first does pull conflict to year 0 wherever the AI would otherwise strike later (item 2). Improving human
    control removes strikes without pulling them earlier under fixed terms, and causes a preventive strike under
@@ -59,17 +59,47 @@ learning (c + 1 after a failed AI strike) and exogenous tightening (c + 1 with p
 | R6c, A_close 0.1, L_f 0.1 | [0.5898, 0.5938] | solver [0.5898, 0.5938] |
 | R6c, A_close 0.1, L_f 0.5 | [0.4805, 0.4844] | solver [0.4844, 0.4883] (one bisection step) |
 | R6c, A_close 1, L_f 0.5 | [0.4453, 0.4492] | solver [0.4453, 0.4492] |
-| R6c, A_close 0.03, L_f 0.9 | [0.1914, 0.1953] | solver [0.3320, 0.3359]: **disagrees** |
+| R6c, A_close 0.03, L_f 0.9 | [0.1914, 0.1953] | solver [0.3320, 0.3359]: **disagrees**; stated law 0.563 (below) |
 | saturated start, A0 = 1.000001e9 | [0.3506, 0.3516] | closed form 0.3491 |
 | saturated start, A0 = 1.5e9 | [0.2852, 0.2861] | closed form 0.2835 |
 
-**Open discrepancy (not resolved here).** The L_f 0.9 cell is where HANDOFF 7b says saturation binds in the solver.
-The reduced game agrees with the growth-path closed form there (r6_closed `q_path` 0.198) and with the saturation
-closed form from a saturated start, but in a growth run its AI approaches the cap from below and never enters the
-static region where a landing above Kmax is permanent. The full solver evidently does. Which is right for the stated
-logistic growth law is not settled; a first diagnosis found that putting a grid point exactly at Kmax made the
-reduced game strike near the cap too (removed, see `_grid`). Reported as a follow-up, not as a solver bug. Every
-structure in section 3 has L_f 0.5.
+**The L_f 0.9 cell (issue #51, diagnosed 2026-10-25; numbers from `python3 variants/cap_approach.py`, CI-pinned
+venv).** Neither reference is right for the stated growth law. Under A' = A exp(g max(0, 1 - A/Kmax)) the pact path
+never crosses Kmax but gets arbitrarily close (Kmax - A shrinks by about 1 - g a year). Within O(1) of Kmax (here
+Pi0 - cost = 0.4 units, 4e-10 of Kmax) an unplugged landing lies above the cap and is kept for ever, while a plugged
+landing (A - 0.3) lies below it and regrows. The reserve then costs the AI only a transient, and it strikes about 130
+years after closure, with Kmax - A below 0.01, unless q > 0.563 (L_f 0.9) to 0.604.
+- Full solver: no grid point between 0.874e9 and 1.074e9 (nA 400: 0.952e9, 1.033e9). Next year's size from 0.874e9
+  gets weight about 0.21 on the point above the cap, so its AI enters the static region (plugged loss permanent) by
+  interpolation; [0.332, 0.336] is the static threshold. Re-run at nA 160 and 400: strikes at q 0.332, not at 0.336
+  to 0.6.
+- Reduced game: its last point below the cap is Kmax (1 - 1e-6), 1000 units below; the AI is interpolated back onto
+  it and never gets within O(1) of Kmax, so [0.191, 0.195] is the growth-phase threshold (r6_closed q_path 0.198).
+  The `_grid` comment calling the cap a kink "the path from below never reaches" was wrong and is corrected.
+- Grid-free reference `variants/cap_approach.py` (optimal stopping along the exact path; failure branch without
+  retry). The reduced game with `cap_pts=20` (points at Kmax (1 - 10^-k), k = 1..13) converges to it:
+
+| A_close | L_f | full solver (committed) | reduced game, default | reduced game, cap_pts 20 | grid-free path |
+|---|---|---|---|---|---|
+| 0.003 | 0.5 | [0.5000, 0.5039] | [0.5000, 0.5039] | [0.5898, 0.5938] | 0.5903 |
+| 0.1 | 0.1 | [0.5898, 0.5938] | [0.5898, 0.5938] | [0.5977, 0.6016] | 0.5988 |
+| 0.1 | 0.5 | [0.4844, 0.4883] | [0.4805, 0.4844] | [0.5898, 0.5938] | 0.5903 |
+| 1 | 0.5 | [0.4453, 0.4492] | [0.4453, 0.4492] | [0.5898, 0.5938] | 0.5903 |
+| 0.03 | 0.9 | [0.3320, 0.3359] | [0.1914, 0.1953] | [0.5625, 0.5664] | 0.5633 |
+
+So the four "agreeing" cells agree because both grids miss the same region. Over all 30 R6c cells the grid-free
+threshold is above the committed solver bracket in 26 (all but L_f 0.05 at A_close <= 0.1). Nothing was regenerated:
+the R6c tables stand as solver output, and results/variants/*.json as the default-grid run. Whether the law should be
+taken literally within 1e-11 of the cap (or the cap treated as absorbing, as the solver and closed forms effectively
+do) is a modelling decision for the owner; the solver is not changed here.
+
+**Scope of the reduced game, narrowed.** With the default grid it reproduces the solver's discretisation, blind spot
+included; it does not resolve the stated law near the cap. Section 3 readings that depend on what the AI would do
+near the cap change with `cap_pts` 20 (40 identical; `cap_approach.structure_sensitivity`, not committed): late
+harvest strikes in year 130, not 79, and shutdown 0.3 is no longer used (welfare 21.9 -> 39.9); weak survivable and
+retry now are no longer deterred by a shutdown option, humans strike at year 0 (welfare 40.9 -> 10.4 to 19.6);
+learning no longer limits retries (P(seizure) 0.81 / 0.71 -> 1); tightening raises P(seizure) by 0.02 to 0.03.
+Summary items 2 and 3 hold for the default grid only.
 
 ## 2. Bargaining: existence versus credible implementation
 
