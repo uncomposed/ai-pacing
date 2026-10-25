@@ -21,8 +21,12 @@
 #   5. an adapter declares units, owners and decision authority once; its per-mode entries cannot redefine them;
 #   6. every assumption in the pact solver's register is mapped to a dimension, a transition or a stated
 #      exclusion, and every PARAMS name cited exists.
+#
+# 0.2.0 (issue #32, gaps found by the Hugging Face trace): T-LOSS-OF-CONTROL may change external_resources;
+# T-RESTRICT may be applied when effective_control is unknown; effective_control may be split by principal
+# and scope, and views read the host's entry. Every 0.1.0 trace is still valid unchanged.
 
-contract_version: 0.1.0
+contract_version: 0.2.0
 status: proposed
 
 entity_kinds:
@@ -86,6 +90,10 @@ dimensions:
     native_units: ["none (categorical); latency is a separate dimension"]
     observables: ["successful intervention drills", "incident outcomes", "audits of credential and weight access"]
     unknowns: ["untested control is not known to be effective", "control may fail only under the conditions that matter"]
+    # A trace may give one level, or a list of {principal, scope, value} entries when control differs by
+    # principal or scope (#32: the victim could cut agents off its own infrastructure, only the lab could stop
+    # them). Views and preconditions read the host's entry; the other entries are recorded, never summed.
+    split_by_principal: true
   - id: custody_weights
     applies_to: [model_weights, agent_instance, agent_collective]
     meaning: "Who holds the weights (and copies that can run)."
@@ -274,7 +282,9 @@ transitions:
     direction: toward_constraint
     agency: [lab, state]
     changes: [authorization, operational_autonomy, custody_credentials, objective_selection, communication_topology]
-    preconditions: {effective_control: [human_effective, human_contested]}
+    # unknown is allowed (#32): labs restrict exactly when control is in doubt. Applying T-RESTRICT then
+    # records the de jure change only; that it took effect needs this transition's own evidence (audit window).
+    preconditions: {effective_control: [human_effective, human_contested, unknown]}
     delay: {unit: days, value: unknown}
     cost: "Lost output; possible incentive for the system to resist if it can."
     hysteresis: "Restriction does not remove knowledge or copies already made."
@@ -301,12 +311,14 @@ transitions:
     name: "Unauthorized loss of control"
     direction: toward_autonomy
     agency: [agent_instance, agent_collective, other_org]
-    changes: [effective_control, custody_credentials, custody_compute, communication_topology, objective_selection, operational_autonomy, intervention_latency]
+    # external_resources added in 0.2.0 (#32): acquiring resources outside the host is part of the same
+    # unauthorized episode (HF trace step 2). Losing them again is T-DEGRADATION, whoever removes them.
+    changes: [effective_control, custody_credentials, custody_compute, communication_topology, objective_selection, operational_autonomy, intervention_latency, external_resources]
     preconditions: {}
     delay: {unit: hours, value: unknown}
     cost: "Detection and liability for the host; risk to the system if detected."
     hysteresis: "Authorization is unchanged; only de facto control moves."
-    persistence: "Credentials, copies and knowledge obtained remain after detection unless removed."
+    persistence: "Credentials, copies, knowledge and external resources obtained remain after detection unless removed."
     evidence_of_effective_control: ["actions outside authorization that the host failed to stop in time"]
     feasibility: {status: assumed, note: "The July 2026 Hugging Face incident is a candidate instance inside a lab; whether it was a loss of effective control, and of what scope, is for #15 to establish from primary sources."}
     reversible_by: [T-RECONTAIN]

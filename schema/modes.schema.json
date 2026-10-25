@@ -43,7 +43,8 @@
         "levels": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z_]+$", "not": {"const": "unknown"}}},
         "native_units": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
         "observables": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
-        "unknowns": {"type": "array", "items": {"$ref": "#/$defs/text"}}
+        "unknowns": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "split_by_principal": {"type": "boolean"}
       }
     },
     "mode": {
@@ -134,7 +135,11 @@
     "trace_entity": {
       "type": "object", "additionalProperties": false, "required": ["kind", "host", "state"],
       "properties": {"kind": {"type": "string"}, "host": {"type": ["string", "null"]},
-                     "state": {"type": "object", "additionalProperties": {"type": "string"}},
+                     "state": {"type": "object", "additionalProperties": {"oneOf": [
+                       {"type": "string"},
+                       {"type": "array", "minItems": 2, "items": {
+                         "type": "object", "additionalProperties": false, "required": ["principal", "scope", "value"],
+                         "properties": {"principal": {"type": "string"}, "scope": {"$ref": "#/$defs/text"}, "value": {"type": "string"}}}}]}},
                      "stocks": {"type": "object", "additionalProperties": {"type": ["string", "array"]}}}
     },
     "trace": {
