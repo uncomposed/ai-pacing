@@ -8,7 +8,8 @@ what produced it, so a same-sized change to the draws, seed, ranges, solver or s
 Now every run has a manifest. Its `identity` has seven parts, and a cache is reused only if all seven match the
 run being requested:
 
-    inputs         ensemble label, draw count, SHA-256 of the ordered draws (every value, exactly)
+    inputs         ensemble label, draw count, SHA-256 of the ordered unit-cube sample (bit for bit), after
+                   checking the draws are exactly its mapping; draws without one are hashed value by value
     sampling       how the draws were made: box, n, seed, the UNCERTAIN ranges, FIXED, NEAR_FRAC, the sampler's
                    source, and the PARAMS baselines the near and radius boxes centre on
     design         every lever after defaults, any extra option dict, and SHA-256 of the solver's actual input
@@ -193,24 +194,41 @@ def _kind_parts(kind: str, opts: dict | None):
     return fns, fields, extra, cfg0
 
 
+def inputs_identity(ens_name: str, thetas) -> dict:
+    """The draws' identity. Draws made by robust_design.ensemble carry their unit-cube sample U; if the draws are
+    exactly u_to_params(U, box) in this process, U is hashed (bit for bit) and the mapping is bound by the sampling
+    part. The mapped values themselves are not hashed: the sampler's exp/log differ in the last bit between CPUs
+    (AVX512 against AVX2 on x86, and arm64), which would make the same experiment look different on every runner.
+    Any other draws (no U, or edited after sampling) are hashed value by value."""
+    import robust_design as rd
+    th = list(thetas)
+    U, sampling = getattr(thetas, "U", None), getattr(thetas, "sampling", None)
+    out = dict(ensemble=ens_name, n=len(th))
+    if U is not None and sampling and len(U) == len(th) and rd.u_to_params(np.asarray(U), sampling["box"]) == th:
+        out.update(unit_cube_sha256=digest(np.asarray(U)),
+                   mapped="u_to_params(unit cube, box): exact in this process; bound through the sampling part")
+    else:
+        out.update(draws_sha256=digest([sorted(t.items()) for t in th]))
+    return out
+
+
 def request(kind: str, ens_name: str, thetas, design: dict, cfg: dict, opts: dict | None = None) -> dict:
     """Manifest of the run that solving `design` over `thetas` would produce now. `thetas` may carry a
     `.sampling` dict (robust_design.ensemble sets it)."""
     import robust_design as rd
     fns, fields, extra, _ = _kind_parts(kind, opts)
     sampling = getattr(thetas, "sampling", None)
+    inputs = inputs_identity(ens_name, thetas)
+    if "unit_cube_sha256" not in inputs:
+        sampling = None                  # the draws do not follow a declared sampling; bind their values instead
     thetas = list(thetas)
     lv = _floats(dict(rd.LEVER_BASE, **design))
     lv.setdefault("BR_mult", 1.0)
-    params = [rd.apply_design(t, design) for t in thetas]
-    if opts:
-        params = [dict(p, **opts) for p in params]
     groups = rd.batches_for(thetas)
     ident = dict(
-        inputs=dict(ensemble=ens_name, n=len(thetas), draws_sha256=digest([sorted(t.items()) for t in thetas])),
+        inputs=inputs,
         sampling=sampling_identity(sampling),
-        design=dict(levers=lv, options=_floats(opts or {}), modifiers=list(rd.MODIFIERS),
-                    solver_inputs_sha256=digest([sorted(p.items()) for p in params])),
+        design=dict(levers=lv, options=_floats(opts or {}), modifiers=list(rd.MODIFIERS)),
         numerics=dict(cfg=dict(cfg), batch=rd.BATCH, batches_sha256=digest([g.tolist() for g in groups]), **extra),
         solver={**{os.path.basename(f): source_digest(f) for f in SOLVER_FILES},
                 **{f"{fn.__module__}.{fn.__name__}": source_digest(fn) for fn in fns}},
@@ -370,8 +388,7 @@ def verify_draws(path: str, ens_name: str, thetas) -> str:
     the draws the cache at `path` is bound to. A manifest records the producing draws; a legacy inventory entry
     records the draws its request had at inventory time (not the producing draws, which were never stored).
     Returns 'manifest' or the legacy class; raises IdentityError on a mismatch."""
-    th = list(thetas)
-    part = digest(dict(ensemble=ens_name, n=len(th), draws_sha256=digest([sorted(t.items()) for t in th])))
+    part = digest(inputs_identity(ens_name, thetas))
     d = describe(path)
     have = (d["manifest"]["part_sha256"] if d["status"] == "manifest" else d["entry"].get("request_part_sha256", {}))
     if have.get("inputs") != part:

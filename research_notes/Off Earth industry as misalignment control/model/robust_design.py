@@ -154,14 +154,17 @@ def u_to_params(U: np.ndarray, box: str) -> list[dict]:
 
 
 class Ensemble(list):
-    """Parameter draws that remember how they were sampled (box, n, seed), for the run manifest."""
+    """Parameter draws that remember how they were sampled (box, n, seed) and their unit-cube sample U, for the
+    run manifest (run_identity.inputs_identity)."""
     sampling: dict = None
+    U: np.ndarray = None
 
 
 def ensemble(box: str, n: int, seed: int = 20261016):
     U = lhs(n, len(UNCERTAIN), seed)
     th = Ensemble(u_to_params(U, box))
     th.sampling = dict(box=box, n=n, seed=seed)
+    th.U = U
     return U, th
 
 
