@@ -26,6 +26,7 @@ test:
 	@python3 test/assumptions_tool_test.py
 	@python3 test/modes_tool_test.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_check_tolerances.py"
+	@python3 research_notes/external/epoch-gate/tests/test_epoch_gate.py
 
 systems-check:
 	@python3 tools/systems_tool.py check
