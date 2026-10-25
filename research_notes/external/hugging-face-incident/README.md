@@ -36,7 +36,7 @@ never techniques. `test_no_technique_level_detail` guards this.
 | `events.md` | rendered from the YAML by `render.py`; includes the separated control chain and timing windows (box 4) |
 | `topology.yaml` | abstract zones, identities, channels, persistent state, trust boundaries and what each party could see (box 2) |
 | `explanations.yaml` | isolated versus communicating explanations by structural features, plus incentives, coordination limits and persistence (box 3) |
-| `mode_trace.yaml` | classification as a trace in the #5 contract's format, with two documented contract gaps (box 6) |
+| `mode_trace.yaml` | classification as a trace in the #5 contract's format; the three contract gaps it found are resolved in contract 0.2.0 (#32) and kept under `resolved_gaps` (box 6) |
 | `heldout.yaml` | feasibility of held-out evaluation, frozen predictions, and a contaminated comparison with the AISI incident (box 7). Unedited since it was added; its `evaluated: false` line is stale by design |
 | `heldout_scores.yaml` | scoring of the four frozen predictions against AISI's technical report, with locators, log scores, sensitivity and discrepancies (#31) |
 | `render.py`, `test_hf_incident.py` | renderer and tests (no network, under a second) |
@@ -98,11 +98,14 @@ dependent, minor resources that third parties withdrew within days), and
 sovereign-capable is undetermined because the contract has no test for strategic
 capability at this scale. The trace shows unsanctioned channels and a loss of control
 meeting the contract's evidence criterion. It does **not** show sovereign AI,
-autonomous successor improvement or a stable transition. Two contract gaps for #5:
-no transition covers acquiring external resources during loss of control
-(`G-ACQUIRE`), and T-RESTRICT cannot be applied when control is unknown
-(`G-RESTRICT-UNKNOWN`). Control is also per principal and scope here, which one
-`effective_control` value cannot express.
+autonomous successor improvement or a stable transition. Against contract 0.1.0 it
+found three gaps: no transition covered acquiring external resources during loss of
+control (`G-ACQUIRE`), T-RESTRICT could not be applied when control was unknown
+(`G-RESTRICT-UNKNOWN`), and one `effective_control` value could not express control
+split between the lab and the victim (`G-SPLIT-CONTROL`). Issue #32 changed the
+contract for all three (0.2.0, `docs/ai-development-modes.md` section 12). The trace now
+records the victim's recontainment of its own infrastructure on July 13 while the lab's
+control stays unknown; the classification is unchanged.
 
 **Stopping-rule answer.** The case *falsifies* the assumption that intended isolation
 of evaluation agents holds (twice in one week) and #3's single-system,

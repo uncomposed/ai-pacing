@@ -8,6 +8,10 @@
 Modes are derived views over a factored state, evaluated with three-valued logic: True (every criterion
 holds), False (some criterion fails on a known value), None (undetermined: no criterion fails, but a
 needed dimension is unknown).
+
+A dimension declared split_by_principal (effective_control) may hold either one level or a list of
+{principal, scope, value} entries. Views and transition preconditions read the entry of the entity's host,
+the principal that authorizes it; the other entries are recorded but never enter a view.
 """
 import argparse
 import importlib.util
@@ -37,6 +41,14 @@ def by_id(items):
     return {x['id']: x for x in items}
 
 
+def value_of(entity, dim):
+    """The level a view or precondition reads: the single value, or the host's entry of a split value."""
+    v = entity['state'].get(dim, UNKNOWN)
+    if isinstance(v, list):
+        return next((x['value'] for x in v if x['principal'] == entity.get('host')), UNKNOWN)
+    return v
+
+
 def view(mode, entity, entities, trace, dims):
     """Three-valued evaluation of one mode view for one trace entity."""
     if entity['kind'] not in mode['applies_to']:
@@ -51,7 +63,7 @@ def view(mode, entity, entities, trace, dims):
         return False
     undetermined = False
     for dim, allowed in mode['criteria'].items():
-        value = entity['state'].get(dim, UNKNOWN)
+        value = value_of(entity, dim)
         if value == UNKNOWN:
             undetermined = True
         elif value not in allowed:
@@ -118,7 +130,9 @@ def _check_transitions(contract, errors):
             if d not in dims:
                 errors.append(f'{ident}: precondition on unknown dimension {d}')
             else:
-                errors += [f'{ident}: precondition {d} uses undeclared level {lv}' for lv in levels if lv not in dims[d]['levels']]
+                # `unknown` may be listed explicitly: the transition is then allowed when the value is not known.
+                errors += [f'{ident}: precondition {d} uses undeclared level {lv}' for lv in levels
+                           if lv not in dims[d]['levels'] and lv != UNKNOWN]
         for a in t['agency']:
             if a not in kinds:
                 errors.append(f'{ident}: agency names unknown entity kind {a}')
@@ -216,6 +230,26 @@ def _check_solver_mapping(contract, errors, register=None, params=None):
         errors.append(f'solver_mapping: register assumption {a} is not mapped to a dimension or transition and not excluded')
 
 
+def _check_split(where, eid, entity, dim, entries, d, ents, errors):
+    """A value split by principal: allowed dimension, a host whose entry the views read, known principals, declared levels."""
+    if not d.get('split_by_principal'):
+        errors.append(f'{where}: {eid} {dim} is split by principal, but {dim} is not declared split_by_principal')
+        return
+    principals = [x['principal'] for x in entries]
+    host = entity.get('host')
+    if host is None:
+        errors.append(f'{where}: {eid} {dim} is split by principal but {eid} has no host whose entry the views read')
+    elif host not in principals:
+        errors.append(f'{where}: {eid} {dim} is split by principal but has no entry for its host {host}')
+    for p in sorted({p for p in principals if principals.count(p) > 1}):
+        errors.append(f'{where}: {eid} {dim} has more than one entry for principal {p}')
+    for x in entries:
+        if x['principal'] not in ents:
+            errors.append(f'{where}: {eid} {dim} names principal {x["principal"]}, which is not in the step')
+        if x['value'] != UNKNOWN and x['value'] not in d['levels']:
+            errors.append(f'{where}: {eid} {dim} = {x["value"]!r} for {x["principal"]} is not a declared level')
+
+
 def _check_traces(contract, errors):
     dims = by_id(contract['dimensions'])
     kinds = {k['id'] for k in contract['entity_kinds']}
@@ -240,6 +274,8 @@ def _check_traces(contract, errors):
                 for d, v in e['state'].items():
                     if d not in needed:
                         errors.append(f'{where}: {eid} sets {d}, which does not apply to a {e["kind"]}')
+                    elif isinstance(v, list):
+                        _check_split(where, eid, e, d, v, dims[d], ents, errors)
                     elif v != UNKNOWN and v not in dims[d]['levels']:
                         errors.append(f'{where}: {eid} {d} = {v!r} is not a declared level')
                 for s in e.get('stocks', {}):
@@ -305,8 +341,8 @@ def _check_traces(contract, errors):
                     if not changed & set(t['changes']):
                         errors.append(f'{where}: {eid} applies {t["id"]} but none of its dimensions changed (relabelling)')
                     for d, levels in t['preconditions'].items():
-                        if before['state'].get(d) not in levels:
-                            errors.append(f'{where}: {eid} applies {t["id"]} but {d} was {before["state"].get(d)}, not in {levels}')
+                        if value_of(before, d) not in levels:
+                            errors.append(f'{where}: {eid} applies {t["id"]} but {d} was {value_of(before, d)}, not in {levels}')
                 views_before = {m for m, v in pgot.get(eid, {}).items() if v}
                 views_after = {m for m, v in got.get(eid, {}).items() if v}
                 if views_before != views_after and not ts:
