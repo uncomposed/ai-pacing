@@ -1,0 +1,130 @@
+# Dated evidence records (issue #8). Checked by tools/evidence_tool.py in `make check`.
+#
+# A record says what a source is, when what it reports was observed, when it became available, how it was
+# extracted and by whom, how uncertain it is, what it depends on, and what it may and may not be used for.
+# Claims link to a record and an exact locator (figure, table, section), never to a bare citation.
+#
+# kind       observation (a measurement read from data) | observation_report (an investigation or report of observed
+#            events) | source_model_output (a model's projection or prediction) | source_model_assumption (an input a
+#            source model assumes) | formal_result (a theorem or derivation) | stakeholder_statement (what a person
+#            said; never empirical support)
+# reading    read_primary | read_secondary_only | not_read: who in this project read what. Only read_primary records
+#            of an observation kind can be cited as empirical support.
+# dates      YYYY, YYYY-MM or YYYY-MM-DD. availability_date is when the content was first public (or, for a stakeholder
+#            statement, first recorded); comparisons use the latest day a partial date allows.
+# Everything here is [[ai gen]], written 2026-10-25 from the register's own descriptions and the arXiv and METR pages.
+
+schema_version: 0.1.0
+
+records:
+  - id: EV-METZGER-2013
+    kind: source_model_output
+    title: "Affordable, rapid bootstrapping of the space industry and solar system civilization"
+    source:
+      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236 (DOI from the arXiv page)"
+      url: "https://arxiv.org/abs/1612.03238"
+      version: "arXiv v1 (2016-12-10); journal version not compared with it"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2013"
+    availability_basis: "Journal year as cited; exact journal date not checked. The arXiv copy was posted 2016-12-10."
+    units: "landed mass (metric tons), industrial asset mass (metric tons), years"
+    population: "model scenarios of a lunar bootstrapping industry; no observed system"
+    protocol: "simple growth model swept over parameter ranges (abstract)"
+    extraction:
+      method: digitized
+      locator: "Fig. 2 (growth curves, read off by eye); model and results sections (docking.md references)"
+      by: "the docking session of 2026-10 (model/docking/metzger.py, results/docking.md section 7)"
+      date: "2026-10"
+      note: "Curves read by eye; generation spacing (2 years) is not a doubling time (AS-GCITE)."
+    uncertainty:
+      kind: digitization
+      description: "about +-15% on read-off values (docking.md 7); model-form uncertainty of the source not quantified"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["basis check for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison"]
+    not_for: ["empirical support for any growth rate: these are model projections, not observations"]
+
+  - id: EV-TURNER-2019
+    kind: formal_result
+    title: "Optimal Policies Tend to Seek Power"
+    source:
+      citation: "Turner, Smith, Shah, Critch and Tadepalli"
+      url: "https://arxiv.org/abs/1912.01683"
+      version: "arXiv v10 (2023-01-28); v1 posted 2019-12-03"
+    reading: not_read
+    observation_date: not_applicable
+    availability_date: "2019-12-03"
+    availability_basis: "arXiv v1 submission date"
+    units: "not_applicable"
+    population: "optimal policies in Markov decision processes with stated environmental symmetries"
+    protocol: "mathematical proof"
+    extraction:
+      method: summarized_from_secondary
+      locator: "main theorems (as summarized by the Saklakov and Clark sources in docking.md section 8)"
+      by: "the docking session of 2026-10"
+      date: "2026-10"
+      note: "Cited from summaries only (AS-POWERSEEK); the paper itself was not read."
+    uncertainty:
+      kind: not_applicable
+      description: "A theorem holds under its assumptions; how far they describe real AI systems is unestablished."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["motivation for the solver's power-seeking structure (AS-POWERSEEK)"]
+    not_for: ["empirical support that deployed AI systems seek power"]
+
+  - id: EV-METR-HF-2026
+    kind: observation_report
+    title: "Brief independent investigation of agents' behavior, reasoning and collaboration in the OpenAI / Hugging Face hacking incident"
+    source:
+      citation: "METR blog, 2026-08-26"
+      url: "https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/"
+      version: "page as published 2026-08-26 (datePublished in the page metadata); not archived"
+    reading: read_secondary_only
+    observation_date: {start: "2026-07", end: "2026-07"}
+    availability_date: "2026-08-26"
+    availability_basis: "datePublished in the page's metadata, checked 2026-10-25"
+    units: "counts of agents; event times"
+    population: "OpenAI agents involved in the July 2026 incident at Hugging Face"
+    protocol: "independent investigation (protocol to be read from the primary report in #15)"
+    extraction:
+      method: summarized_from_secondary
+      locator: "counts quoted in secondary coverage: about 700 agents attacked, about 1,200 coordinated on an unsanctioned message board"
+      by: "the session that wrote the assumption register (2026-10-21)"
+      date: "2026-10-21"
+      note: "The primary report was not read; the counts are unverified. #15 reconstructs the event from primary sources."
+    uncertainty:
+      kind: unquantified
+      description: "secondary-coverage counts; definitions of 'attacked' and 'coordinated' unknown"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["motivation for questioning the single-AI assumption (AS-SINGLE-AI)"]
+    not_for: ["incident rates or probabilities (no exposure or selection data)", "empirical support until read in primary form"]
+
+  - id: EV-COLE-ROUND2
+    kind: stakeholder_statement
+    title: "Cole Miller's round-2 answers on the pact model"
+    source:
+      citation: "Recorded in results/equilibrium.md (R1 to R4, section 7 questions)"
+      url: "research_notes/Off Earth industry as misalignment control/model/results/equilibrium.md"
+      version: "as committed on main"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-10-16"
+    availability_basis: "date of the round-2 session in HANDOFF.md section 7"
+    units: "not_applicable"
+    population: "the canonical editor's judgements"
+    protocol: "conversation, recorded by the session"
+    extraction:
+      method: recorded_statement
+      locator: "equilibrium.md 3R: R1 (rival ratio, high ground, blockade, moving compute), R2 (covert fabs), R4 (reputation); section 7"
+      by: "the round-2 session"
+      date: "2026-10-16"
+      note: "Stakeholder validation of design intent; not empirical support."
+    uncertainty:
+      kind: not_applicable
+      description: "judgement"
+    depends_on: []
+    fitted_to: []
+    intended_use: ["record of stakeholder input for AS-ELLINF, AS-RATIO, AS-COVERTFAB, AS-REPUTATION, AS-BLOCKADE, AS-MOVECOMPUTE"]
+    not_for: ["empirical support"]

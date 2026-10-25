@@ -146,6 +146,9 @@ decides what enters the specification. Contributors propose; they do not accept.
    - bump `next_free` for that kind;
    - if the issue or note already used a different number, add a `renumbering` row
      (`source`, `old`, `new`, `reason`).
+   Local numbering in research files uses a prefix (`AR-H1` for assumption-register
+   claims, `EQ-Q1` for equilibrium questions) so it is never mistaken for a spec ID;
+   declare new ones under `local_namespaces`.
    Never reuse or renumber a registered ID. `make check` rejects an unregistered or
    retitled YAML node, an ID that collides with another definition, and a
    `next_free` at or below a used ID.
