@@ -273,29 +273,29 @@ records:
     kind: observation_report
     title: "AISI technical incident report INC-2026-07-28-01"
     source:
-      citation: "UK AI Security Institute (PDF linked from EV-AISI-INC-2026)"
+      citation: "UK AI Security Institute, 'Security Incident INC-2026-07-28-01', PDF, 35 pages, published 2026-08-04 (LaTeX/pdfTeX; PDF creation date 2026-08-04 20:12 UTC)"
       url: "https://cdn.prod.website-files.com/663bd486c5e4c81588db7a1d/6a724858f7db25c81487016d_Security%20Incident%20INC-2026-07-28-01.pdf"
-      version: "not retrieved, deliberately"
-    reading: not_read
+      version: "retrieved 2026-10-25 (HTTP 200, 1,048,375 bytes), sha256 b64590f61dad20fb812ee08b360a57a0feeaebd4257cc98b0e4ca43ed70a28e9; no licence stated, so the PDF is not committed. Page numbers below are the printed numbers (PDF page = printed + 1)."
+    reading: read_primary
     observation_date: {start: "2026-07-25", end: "2026-07-28"}
     availability_date: "2026-08-04"
-    availability_basis: "linked from the 2026-08-04 blog post"
-    units: "unknown"
-    population: "as EV-AISI-INC-2026"
-    protocol: "unknown"
+    availability_basis: "date on the report cover; linked from the 2026-08-04 blog post"
+    units: "counts of samples, events and messages; BST clock times; token limits"
+    population: "122 samples (212,840 messages) of two cyber ranges across seven models at AISI; 19 events in 10 samples (17 from one model, 2 from another)"
+    protocol: "evaluator's own incident response: alert triage, LLM-assisted flagging, then manual reading of all 122 transcripts by security staff (Sections 3.1-3.2). Self-described as preliminary, time-constrained, redacted, with no causal analysis and reasoning known only through provider-supplied summaries (Sections 1.2, 7.2)."
     extraction:
-      method: summarized_from_secondary
-      locator: "none; kept unread"
-      by: "the #15 reconstruction session"
+      method: quoted
+      locator: "Section 1.1 (19 events, 10 samples); Section 3.1 and Figure 2 (timeline); Section 4 Tables 1-3 (event list); Section 4.2.1 and Figure 6 (reasoning about realness and scope); Section 4.2.2 and Figure 7 (cross-agent interaction); Section 4.2.4 and Figure 9 (concealment); Section 5.4 (prompt misconfiguration); Appendix A.1-A.10 (per-sample events and which prompt each DL-v2 sample received); Appendix B.2 (prompts)"
+      by: "the #31 scoring session"
       date: "2026-10-25"
-      note: "Held out: the predictions in research_notes/external/hugging-face-incident/heldout.yaml are frozen before it is read."
+      note: "Read in full after heldout.yaml was confirmed unchanged since commit 9d013a599bf3b48276dbec79f203b790cf5aaddf. Used to score the four frozen predictions (heldout_scores.yaml). Technique-level content in the report is deliberately not reproduced anywhere in this repository."
     uncertainty:
       kind: unquantified
-      description: "unread"
+      description: "preliminary report by the party that ran the evaluation; reasoning excerpts are summaries, not raw reasoning; timeline has one internal inconsistency (quarantine time 12:23 in the text of Section 3.1 versus 13:17 in Figure 2)"
     depends_on: []
     fitted_to: []
-    intended_use: ["resolution source for #15's frozen comparison predictions"]
-    not_for: ["any claim before it is read"]
+    intended_use: ["resolution source for #15's frozen held-out predictions (research_notes/external/hugging-face-incident/heldout_scores.yaml)", "separate comparison case for #15"]
+    not_for: ["incident rates or probabilities", "evidence about the Hugging Face incident beyond the report's own second-hand remark on dates", "validation of AI Pacing mechanisms"]
 
   - id: EV-COLE-ROUND2
     kind: stakeholder_statement

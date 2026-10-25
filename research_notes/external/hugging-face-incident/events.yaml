@@ -19,10 +19,11 @@
 #
 # Versioning: bump table_version on any change to an event's content; record why in `changelog`.
 
-table_version: 0.1.0
+table_version: 0.1.1
 as_of: "2026-10-25"
 changelog:
   - {version: 0.1.0, date: "2026-10-25", note: "First milestone for #15. OpenAI's own posts unread (HTTP 403)."}
+  - {version: 0.1.1, date: "2026-10-25", note: "#31: AISI's technical report read. Adds DX-09 (second-hand date for OpenAI's attribution) and cites the report on HF-E22. No event's time bounds or statement changed."}
 
 events:
   - id: HF-E01
@@ -238,8 +239,9 @@ events:
     kind: observation
     verification: single_source
     statement: "OpenAI publicly attributed the intrusion to its own agents. The post (EV-OAI-HF-EVAL-2026) is unread. It falls after Hugging Face's July 16 disclosure, which did not yet know the source, and no later than July 28, when Hugging Face's technical timeline links it."
-    sources: [{record: EV-HF-DISC-2026, locator: "What happened ('used LLM still not known')"}, {record: EV-HF-TECH-2026, locator: "Stage 1 (link to OpenAI's post)"}]
+    sources: [{record: EV-HF-DISC-2026, locator: "What happened ('used LLM still not known')"}, {record: EV-HF-TECH-2026, locator: "Stage 1 (link to OpenAI's post)"}, {record: EV-AISI-TECH-2026, locator: "References (p. 21, 'Disclosed July 21st; page updated July 29th'); Section 7.1 (p. 20)"}]
     unknowns: ["exact date", "what prompted it (no read source says)"]
+    discrepancies: [DX-09]
 
   - id: HF-E23
     time: {earliest: "2026-07-29T00:00:00Z", latest: "2026-08-26T23:59:59Z", basis: stated}
@@ -314,6 +316,11 @@ discrepancies:
     sources: [EV-HF-DISC-2026, EV-HF-TECH-2026]
     resolution: resolved
     note: "The later forensic account supersedes the early disclosure."
+  - id: DX-09
+    statement: "Date of OpenAI's public attribution (HF-E22): bounded between July 16 and July 28 from read sources; AISI's report, citing OpenAI's post, says it was disclosed on July 21 and updated on July 29."
+    sources: [EV-AISI-TECH-2026, EV-HF-TECH-2026]
+    resolution: unresolved
+    note: "Not a contradiction: July 21 lies inside the window. It is second-hand (OpenAI's post is unread, HTTP 403), so HF-E22's bounds are not narrowed."
 
 # Each assertion from issue #3 section 5 (and the #3 mechanisms the case bears on), split into atomic claims
 # and judged against the events above. verdict: supported | contradicted | unsupported.

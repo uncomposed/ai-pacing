@@ -2,7 +2,10 @@
 """Fast schema and consistency tests for the Hugging Face incident tables (issue #15). No network; well under a second."""
 import copy
 import datetime as dt
+import hashlib
 import importlib.util
+import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -294,16 +297,170 @@ class HuggingFaceIncidentTest(unittest.TestCase):
             self.assertFalse(views['COLL-EG']['MODE-SOVEREIGN'])
 
     # held-out
-    def test_heldout_is_frozen_and_unresolved(self):
+    def test_heldout_is_frozen(self):
         h = load_yaml(HERE / 'heldout.yaml')
         self.assertEqual('retrospective_heldout', h['label'])
+        # The frozen file keeps `evaluated: false`; the scoring block is heldout_scores.yaml.
         self.assertFalse(h['evaluated'])
-        self.assertEqual('not_read', self.records[h['resolution_record']]['reading'])
+        self.assertEqual('EV-AISI-TECH-2026', h['resolution_record'])
+        self.assertEqual('read_primary', self.records[h['resolution_record']]['reading'])
         for p in h['predictions']:
             self.assertTrue(0 < p['probability'] < 1, p['id'])
             self.assertLessEqual(set(p['derived_from']), self.event_ids, p['id'])
         for c in h['comparison']:
             self.assertIn(c['aisi'], {'consistent', 'inconsistent', 'not_reported'})
+
+
+OUTCOMES = {'resolved_true', 'resolved_false', 'unresolvable'}
+
+
+def predictions_hash(predictions):
+    return hashlib.sha256(json.dumps(predictions, sort_keys=True).encode()).hexdigest()
+
+
+def check_scores(doc, heldout, records):
+    """Return a list of errors for a heldout_scores.yaml document scored against the frozen heldout.yaml."""
+    errors = []
+    preds = {p['id']: p for p in heldout['predictions']}
+    if doc['frozen_check']['predictions_sha256'] != predictions_hash(heldout['predictions']):
+        errors.append('predictions differ from the frozen hash')
+    if not doc['label'].startswith('retrospective_heldout'):
+        errors.append('label must stay a retrospective held-out check')
+    if 'validation' in doc['label'].replace('not_validation', ''):
+        errors.append('label must not claim validation')
+    if not doc.get('not_validation_of'):
+        errors.append('missing not_validation_of')
+    if doc['resolution_record'] != heldout['resolution_record']:
+        errors.append('resolution record differs from heldout.yaml')
+    rec = records.get(doc['resolution_record'])
+    if rec is None or rec['reading'] != 'read_primary':
+        errors.append('resolution record is not read in primary form')
+    elif doc['resolution_record_sha256'] not in rec['source']['version']:
+        errors.append('resolution record hash differs from the evidence record')
+    ids = [s['id'] for s in doc['scores']]
+    if sorted(ids) != sorted(preds):
+        errors.append(f'scores {sorted(ids)} do not cover predictions {sorted(preds)} exactly once')
+    if doc['n_predictions'] != len(preds):
+        errors.append('n_predictions is not the number of frozen predictions')
+    total = base_total = 0.0
+    scored, unresolved = [], []
+    for s in doc['scores']:
+        i = s['id']
+        p = preds.get(i)
+        if p is None:
+            continue
+        if s['claim'] != p['claim'] or s['probability'] != p['probability']:
+            errors.append(f'{i}: claim or probability differs from heldout.yaml')
+        if s['outcome'] not in OUTCOMES:
+            errors.append(f'{i}: outcome {s["outcome"]!r}')
+            continue
+        if not s.get('locators') or not all(str(l.get('where', '')).strip() for l in s['locators']):
+            errors.append(f'{i}: every score needs locators with a position in the report')
+        if not str(s.get('reasoning', '')).strip():
+            errors.append(f'{i}: no reasoning')
+        if s['outcome'] == 'unresolvable':
+            unresolved.append(i)
+            if s['log_score'] is not None or s['log_score_baseline'] is not None:
+                errors.append(f'{i}: an unresolvable prediction carries no score')
+            continue
+        happened = s['outcome'] == 'resolved_true'
+        want = math.log(p['probability'] if happened else 1 - p['probability'])
+        if abs(s['log_score'] - want) > 5e-5:
+            errors.append(f'{i}: log_score {s["log_score"]} but ln gives {want:.4f}')
+        if abs(s['log_score_baseline'] - math.log(0.5)) > 5e-5:
+            errors.append(f'{i}: baseline is not ln(0.5)')
+        total += want
+        base_total += math.log(0.5)
+        scored.append(i)
+    t = doc['totals']
+    if t['scored_predictions'] != scored or t['excluded_unresolvable'] != unresolved:
+        errors.append('totals list the wrong predictions')
+    if doc['n_resolved'] != len(scored) or doc['n_unresolvable'] != len(unresolved):
+        errors.append('n_resolved or n_unresolvable is wrong')
+    if scored:
+        for key, want in (('sum_log_score', total), ('mean_log_score', total / len(scored)),
+                          ('baseline_sum', base_total), ('baseline_mean', base_total / len(scored)),
+                          ('difference_sum', total - base_total)):
+            if abs(t[key] - want) > 5e-4:
+                errors.append(f'totals.{key} is {t[key]} but recomputes to {want:.4f}')
+    dxs = [d['id'] for d in doc['discrepancies']]
+    if len(set(dxs)) != len(dxs):
+        errors.append('duplicate discrepancy ids')
+    return errors
+
+
+class HeldoutScoresTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.records = render.load()['records']
+        cls.heldout = load_yaml(HERE / 'heldout.yaml')
+        cls.scores = load_yaml(HERE / 'heldout_scores.yaml')
+
+    def errors(self, doc):
+        return check_scores(doc, self.heldout, self.records)
+
+    def rejects(self, doc, message):
+        errs = self.errors(doc)
+        self.assertTrue(any(message in e for e in errs), errs)
+
+    def test_committed_scores_are_consistent(self):
+        self.assertEqual([], self.errors(self.scores))
+
+    def test_sample_size_and_unresolvables_are_stated(self):
+        self.assertEqual(4, self.scores['n_predictions'])
+        self.assertEqual(3, self.scores['n_resolved'])
+        self.assertEqual(['HO-02'], self.scores['totals']['excluded_unresolvable'])
+
+    def test_discrepancy_in_events_table_is_recorded(self):
+        events = load_yaml(HERE / 'events.yaml')
+        self.assertIn('DX-09', {d['id'] for d in events['discrepancies']})
+
+    def test_edited_prediction_is_rejected(self):
+        h = copy.deepcopy(self.heldout)
+        h['predictions'][0]['probability'] = 0.5
+        self.assertTrue(any('frozen hash' in e for e in check_scores(self.scores, h, self.records)))
+
+    def test_wrong_log_score_is_rejected(self):
+        doc = copy.deepcopy(self.scores)
+        doc['scores'][0]['log_score'] = -0.1
+        self.rejects(doc, 'log_score')
+
+    def test_flipped_outcome_is_rejected(self):
+        doc = copy.deepcopy(self.scores)
+        next(s for s in doc['scores'] if s['id'] == 'HO-01')['outcome'] = 'resolved_false'
+        self.rejects(doc, 'HO-01: log_score')
+
+    def test_scored_unresolvable_is_rejected(self):
+        doc = copy.deepcopy(self.scores)
+        s = next(s for s in doc['scores'] if s['id'] == 'HO-02')
+        s['log_score'] = -0.5
+        self.rejects(doc, 'unresolvable prediction carries no score')
+
+    def test_wrong_totals_are_rejected(self):
+        doc = copy.deepcopy(self.scores)
+        doc['totals']['sum_log_score'] = -0.5
+        self.rejects(doc, 'totals.sum_log_score')
+
+    def test_dropped_prediction_is_rejected(self):
+        doc = copy.deepcopy(self.scores)
+        doc['scores'] = [s for s in doc['scores'] if s['id'] != 'HO-02']
+        self.rejects(doc, 'exactly once')
+
+    def test_missing_locator_is_rejected(self):
+        doc = copy.deepcopy(self.scores)
+        doc['scores'][0]['locators'] = []
+        self.rejects(doc, 'locators')
+
+    def test_validation_label_is_rejected(self):
+        doc = copy.deepcopy(self.scores)
+        doc['label'] = 'retrospective_heldout_validation'
+        self.rejects(doc, 'must not claim validation')
+
+    def test_unread_resolution_record_is_rejected(self):
+        recs = copy.deepcopy(self.records)
+        recs['EV-AISI-TECH-2026']['reading'] = 'not_read'
+        errs = check_scores(self.scores, self.heldout, recs)
+        self.assertTrue(any('not read in primary form' in e for e in errs), errs)
 
 
 if __name__ == '__main__':
