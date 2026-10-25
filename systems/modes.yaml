@@ -21,7 +21,8 @@
 #   5. an adapter declares units, owners and decision authority once; its per-mode entries cannot redefine them;
 #   6. every assumption in the pact solver's register is mapped to a dimension, a transition or a stated
 #      exclusion, and every PARAMS name cited exists;
-#   7. stocks and flows stay apart (#39): an adapter quantity's declared kind matches its accounting quantity, an
+#   7. stocks and flows stay apart (#39, #61): every adapter quantity declares its kind; one booked to an accounting
+#      quantity has that quantity's kind (or is a ratio on it, or is recorded ambiguous with a source locator); an
 #      output_rate leads from a stock to a flow derived from it, and trace resources (held by shares) are stocks.
 #
 # 0.2.0 (issue #32, gaps found by the Hugging Face trace): T-LOSS-OF-CONTROL may change external_resources;
@@ -34,8 +35,15 @@
 # declare their kind; a declared kind must match the accounting quantity's, and an output_rate leads from a stock to a
 # flow derived from it. Trace resources are held by shares, so they name stock accounting quantities;
 # TR-SOVEREIGN-COOPERATIVE's R-OFFEARTH and R-EARTH move from industrial_output to industrial_capacity.
+#
+# 0.4.0 (issue #61, a kind for every adapter quantity): `kind` is required on every adapter quantity (stock, flow,
+# state, ratio, event or ambiguous). New stock accounting quantities efficiency_level (derived from research_output),
+# human_workforce and agent_workforce; human_labor and agent_labor are derived from the workforces. GATE's H and S and
+# AIFM's software efficiency move from research_output to efficiency_level; GATE's digital workers from agent_labor to
+# agent_workforce; GATE's input from human_labor to human_workforce (L counts workers). GATE's training and runtime
+# compute and AIFM's human coding FTEs are recorded ambiguous with their source locators. Every trace is unchanged.
 
-contract_version: 0.3.0
+contract_version: 0.4.0
 status: proposed
 
 entity_kinds:
@@ -233,11 +241,17 @@ stocks:
 
 # Shared quantities. Each has one owner ledger and one unit, so coupling models cannot count it twice.
 accounting:
+  - id: human_workforce
+    unit: "persons (workers) at a time"
+    kind: stock
+    ledger: "the employing entity"
+    derived_from: []
+    note: "Headcount, not hours. Turning it into human_labor needs hours per worker-year, which the source must state."
   - id: human_labor
     unit: "person-hours per year"
     kind: flow
     ledger: "the employing entity"
-    derived_from: []
+    derived_from: [human_workforce]
   - id: compute_training
     unit: "FLOP/s allocated to training"
     kind: stock
@@ -248,23 +262,35 @@ accounting:
     kind: stock
     ledger: "the entity with custody_compute"
     derived_from: []
+  - id: agent_workforce
+    unit: "agent instances or human-worker equivalents deployed at a time"
+    kind: stock
+    ledger: "the entity with custody_compute"
+    derived_from: [compute_inference]
+    note: "Inference compute divided by the compute one worker-equivalent needs (GATE's digital workers N_i). A production input, never an agent_instance."
   - id: agent_labor
     unit: "agent-hours per year"
     kind: flow
     ledger: "the entity with custody_compute"
-    derived_from: [compute_inference]
-    note: "Agent labor is a use of inference compute; a production function may take one or the other as input, not both."
+    derived_from: [agent_workforce]
+    note: "Agent labor is a use of inference compute (through agent_workforce); a production function may take one of compute_inference, agent_workforce or agent_labor as input, never two."
   - id: capability
     unit: "source-native (see strategic_capability, rd_capability)"
     kind: state
     ledger: "the model_weights entity; copies share it"
-    derived_from: [compute_training]
+    derived_from: [compute_training, efficiency_level]
     note: "A state, not a flow. Never summed across copies or across agents running the same weights."
   - id: research_output
     unit: "source-native (e.g. software-efficiency multiplier per year)"
     kind: flow
     ledger: "the entity whose objectives direct the research"
     derived_from: [human_labor, agent_labor, compute_training]
+  - id: efficiency_level
+    unit: "source-native level (e.g. hardware FLOP/year per USD; software eFLOP/FLOP or OOMs)"
+    kind: stock
+    ledger: "the entity whose research produced it; for a world model, the economy aggregate"
+    derived_from: [research_output]
+    note: "The level that research_output changes (#61). A model takes the level or its growth as input, not both. Hardware and software efficiency are separate instances of it; software efficiency times training compute is effective compute, from which capability is derived."
   - id: industrial_capacity
     unit: "Earth-industry units (EIU, a stock; pact solver) or capital in source units"
     kind: stock
@@ -420,9 +446,9 @@ adapters:
     entity_represented: "model_weights evaluated with a stated scaffold, in a human-run evaluation setting"
     decision_authority: "Not represented: METR measures task performance, not who decides or controls."
     quantities:
-      - {name: "50% task time horizon", unit: "human-hours", owner: model_weights, dimension: rd_capability}
-      - {name: "80% task time horizon", unit: "human-hours", owner: model_weights, dimension: rd_capability}
-      - {name: "realized developer task time ratio", unit: "ratio (with AI / without)", owner: lab, accounting: human_labor}
+      - {name: "50% task time horizon", unit: "human-hours", owner: model_weights, dimension: rd_capability, kind: state}
+      - {name: "80% task time horizon", unit: "human-hours", owner: model_weights, dimension: rd_capability, kind: state}
+      - {name: "realized developer task time ratio", unit: "ratio (with AI / without)", owner: lab, accounting: human_labor, kind: ratio}
     inputs: []
     modes:
       MODE-HUMAN-LAB: {coverage: partial, reason: "Capability and productivity under human-run evaluation; says nothing about effective control."}
@@ -439,14 +465,26 @@ adapters:
     entity_represented: "One closed world economy (Ramsey-Cass-Koopmans) with a representative household; compute stock, hardware and software efficiency, largest training run, capital and labor are economy-wide stocks. No labs, states, firms or AI actors; AI enters only as 'digital workers' (runtime compute per task) in the production function (paper sections 2 and 5; verified in #13)."
     decision_authority: "A social planner with perfect foresight (beliefs add-on: known prior over automation functions) chooses output shares (consumption, capital, compute, hardware R&D, software R&D) and the training/runtime compute split each year to maximize the representative household's discounted CRRA utility. Allocations are an optimizer's output, solved by sign-gradient descent over 160 years; they are not lab, state or AI decisions (paper sections 2, 5.1 and appendix B; verified in #13)."
     quantities:
-      - {name: "largest training run C_T", unit: "eFLOP (software-adjusted, S(0) = 1)", owner: "economy aggregate (planner)", accounting: capability}
-      - {name: "deployed automated task share f", unit: "fraction of a unit continuum of tasks", owner: "economy aggregate (planner)", accounting: capability}
-      - {name: "training compute D", unit: "solver-native; reported per one-year step (scale relative to the stock unresolved, see #13 EQUATIONS.md E7)", owner: "economy aggregate (planner)", accounting: compute_training}
-      - {name: "runtime compute (all automated tasks)", unit: "solver-native, same unit as training compute", owner: "economy aggregate (planner)", accounting: compute_inference}
-      - {name: "digital workers N_i", unit: "human-worker equivalents per task", owner: "economy aggregate (planner)", accounting: agent_labor}
-      - {name: "hardware efficiency H and software efficiency S", unit: "FLOP/year/$ and eFLOP/FLOP", owner: "economy aggregate (planner)", accounting: research_output}
+      - {name: "largest training run C_T", unit: "eFLOP (software-adjusted, S(0) = 1)", owner: "economy aggregate (planner)", accounting: capability, kind: state}
+      - {name: "deployed automated task share f", unit: "fraction of a unit continuum of tasks", owner: "economy aggregate (planner)", accounting: capability, kind: state}
+      - name: "training compute D"
+        unit: "solver-native; reported per one-year step (scale relative to the stock unresolved, see #13 EQUATIONS.md E7)"
+        owner: "economy aggregate (planner)"
+        accounting: compute_training
+        kind: ambiguous
+        kind_ambiguity: {candidates: [stock, flow], locator: "arXiv:2503.04941v2 lines 248, 626, 704 (E3 and E7 in research_notes/external/epoch-gate/EQUATIONS.md)", note: "The paper writes D as dC_T/dt (a flow of eFLOP per year) and as a share of the compute budget C (a capacity stock); the solver's training_compute + runtime_compute is 0.19-0.46 of Q, then 0 by step 25. Booked to compute_training provisionally; not convertible until E7 is resolved (#35)."}
+      - name: "runtime compute (all automated tasks)"
+        unit: "solver-native, same unit as training compute"
+        owner: "economy aggregate (planner)"
+        accounting: compute_inference
+        kind: ambiguous
+        kind_ambiguity: {candidates: [stock, flow], locator: "arXiv:2503.04941v2 lines 527, 626 (E3, E7 and E10 in research_notes/external/epoch-gate/EQUATIONS.md)", note: "As training compute D: the integral of C_I,i shares the budget C with D. Booked to compute_inference provisionally (#35)."}
+      - {name: "digital workers N_i", unit: "human-worker equivalents per task", owner: "economy aggregate (planner)", accounting: agent_workforce, kind: stock}
+      - {name: "hardware efficiency H", unit: "FLOP/year/$", owner: "economy aggregate (planner)", accounting: efficiency_level, kind: stock}
+      - {name: "software efficiency S", unit: "eFLOP/FLOP", owner: "economy aggregate (planner)", accounting: efficiency_level, kind: stock}
       - {name: "gross world product Y", unit: "real USD per year", owner: "economy aggregate (planner)", accounting: industrial_output, kind: flow}
-    inputs: [human_labor]
+    # GATE's labor L counts workers, not hours (epoch-gate/INTERFACES.md), so its input is the workforce stock (#61).
+    inputs: [human_workforce]
     modes:
       MODE-HUMAN-LAB: {coverage: partial, reason: "Its allocations can be read as an upper-envelope of what human institutions direct at world scale, but there is no lab entity, no custody, authorization or effective_control, and the planner is not a human institution's actual decision process."}
       MODE-SOVEREIGN-CAPABLE: {coverage: unsupported, reason: "No strategic_capability, objective_selection or control dimension; digital workers are a production input, not an entity."}
@@ -463,14 +501,19 @@ adapters:
     entity_represented: "One aggregate frontier AGI project (the AC milestone is defined on 'an AGI project's coding work') and the capability of its model_weights on a single latent scale, log10 cumulative effective compute. No agent_instance, agent_collective, state or other_org entity, and no copies."
     decision_authority: "None modelled. Human labor (FTEs) and inference, experiment and training compute (H100e) are exogenous input series; the model guide says the ODE 'does not itself decide future labor or compute budgets'. AI changes research productivity only. No objective is represented for any actor, human or AI. Verified in code at the pinned commit (progress_rate.py, progress_model/README.md 'Modeling assumptions')."
     quantities:
-      - {name: "progress: log10 cumulative effective compute (latent)", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability}
-      - {name: "automation fraction of coding (latent schedule in progress)", unit: "fraction of coding tasks, 0 to 1", owner: model_weights, dimension: rd_capability}
-      - {name: "AI research taste (latent schedule in progress)", unit: "SDs of the human researcher taste distribution", owner: model_weights, dimension: rd_capability}
-      - {name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability}
-      - {name: "software efficiency", unit: "orders of magnitude (OOMs)", owner: lab, accounting: research_output}
-      - {name: "human coding labor", unit: "FTEs (input series)", owner: lab, accounting: human_labor}
-      - {name: "inference compute powering AI coding labor", unit: "H100-equivalents (input series)", owner: lab, accounting: compute_inference}
-      - {name: "frontier training capacity", unit: "H100-equivalents, converted to FLOP/yr at 1.262e22 FLOP per H100e-year (input series)", owner: lab, accounting: compute_training}
+      - {name: "progress: log10 cumulative effective compute (latent)", unit: "orders of magnitude (OOMs)", owner: model_weights, dimension: rd_capability, kind: state}
+      - {name: "automation fraction of coding (latent schedule in progress)", unit: "fraction of coding tasks, 0 to 1", owner: model_weights, dimension: rd_capability, kind: state}
+      - {name: "AI research taste (latent schedule in progress)", unit: "SDs of the human researcher taste distribution", owner: model_weights, dimension: rd_capability, kind: state}
+      - {name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)", unit: "date a threshold on the effective-compute scale is crossed", owner: model_weights, dimension: rd_capability, kind: event}
+      - {name: "software efficiency", unit: "orders of magnitude (OOMs)", owner: lab, accounting: efficiency_level, kind: stock}
+      - name: "human coding labor"
+        unit: "FTEs (input series)"
+        owner: lab
+        accounting: human_labor
+        kind: ambiguous
+        kind_ambiguity: {candidates: [stock, flow], locator: "aifm-public 1c40ecdb, input series L_HUMAN (research_notes/external/ai-futures-model/MECHANISMS.md, research-labor row)", note: "An FTE count is either a headcount equivalent at a time (human_workforce) or hours worked divided by full-time hours (a flow, human_labor); the series does not say which and gives no hours per FTE-year. Booked to human_labor provisionally."}
+      - {name: "inference compute powering AI coding labor", unit: "H100-equivalents (input series)", owner: lab, accounting: compute_inference, kind: stock}
+      - {name: "frontier training capacity", unit: "H100-equivalents, converted to FLOP/yr at 1.262e22 FLOP per H100e-year (input series)", owner: lab, accounting: compute_training, kind: stock}
     # AIFM takes inference compute and converts it to AI coding labor internally, so agent_labor is not an input.
     # Its experiment-compute series has no accounting quantity in this contract yet (see research_notes/external/ai-futures-model/modes.md).
     inputs: [human_labor, compute_inference, compute_training]
@@ -496,8 +539,8 @@ adapters:
         accounting: industrial_capacity
         kind: stock
         output_rate: {value: 1.0, unit: "per year", accounting: industrial_output, basis: "DEF-EIU: one EIU of capacity yields one EIU of output per year; implicit in the solver (dt = 1 yr), where A is a stock in growth, seizure and defence and its yearly output enters the AI's payoff and trade (units-bridge CV-CAPACITY-TO-OUTPUT)"}
-      - {name: "Earth fab level F", unit: "share of today's leading-edge capacity", owner: state, dimension: dependencies}
-      - {name: "denial reserve firing probability q", unit: "probability", owner: state, dimension: effective_control}
+      - {name: "Earth fab level F", unit: "share of today's leading-edge capacity", owner: state, dimension: dependencies, kind: stock}
+      - {name: "denial reserve firing probability q", unit: "probability", owner: state, dimension: effective_control, kind: state}
     inputs: [industrial_capacity]
     modes:
       MODE-HUMAN-LAB: {coverage: unsupported, reason: "No lab and no development phase; the game starts at A0 with an already independent AI."}

@@ -1,0 +1,515 @@
+{
+ "what": "AIFM's p80 time horizon at the release date of every model in its bundled METR file, with feedback on (the full model, in the progress coordinates the horizon curve was fitted in, as compute_metr_mse) and off (the upstream's human-only counterfactual, same calibration and r_software refit, mapped through the same horizon curve). Default parameters over [2017, 2200]; dates use the upstream's decimal-year convention.",
+ "status": "IN-SAMPLE diagnostic of identifiability inside the source model. Every observation here is in AIFM's own input file (fitted_to), so this is not a held-out test, not a score under evidence/protocol.yaml and not empirical validation.",
+ "bundled_metr_file_sha256": "aae31902b0519a4da73e16643915e5e8aca13cd3315c3aac893ce3d6dfe92ad9",
+ "horizon_reference": {
+  "present_horizon": 186.0,
+  "horizon_reference_date": 2026.269178,
+  "present_doubling_time_years": 0.3328402169209725
+ },
+ "upstream_compute_metr_mse": 1.2222864019709787,
+ "in_sample_fit_p80": {
+  "feedback_on": {
+   "n": 26,
+   "mean_squared_log_error": 1.2222864019709785,
+   "mean_abs_log_error": 0.9436495538902882
+  },
+  "off_same_calibration": {
+   "n": 26,
+   "mean_squared_log_error": 1.2015639606935626,
+   "mean_abs_log_error": 0.9302383906340246
+  },
+  "off_refit": {
+   "n": 26,
+   "mean_squared_log_error": 1.2248669743775915,
+   "mean_abs_log_error": 0.9428786017280164
+  }
+ },
+ "max_abs_log_separation_on_vs_off": {
+  "off_same_calibration": 0.06017123596829599,
+  "off_refit": 0.038738783749005634
+ },
+ "median_half_width_ln_p80_ci95": 0.8051028827673806,
+ "later_dates_source_model_only": [
+  {
+   "decimal_year": 2026.75,
+   "horizon_on": 530.1450616022489,
+   "horizon_off_same_calibration": 458.64019564727874,
+   "horizon_off_refit": 470.4802563446743
+  },
+  {
+   "decimal_year": 2027.3274,
+   "horizon_on": 2511.432877735984,
+   "horizon_off_same_calibration": 1731.177199571798,
+   "horizon_off_refit": 1787.1440330660346
+  },
+  {
+   "decimal_year": 2027.8301,
+   "horizon_on": 15267.846750065373,
+   "horizon_off_same_calibration": 6306.442991804717,
+   "horizon_off_refit": 6557.615911477314
+  },
+  {
+   "decimal_year": 2028.0,
+   "horizon_on": 36162.10868459021,
+   "horizon_off_same_calibration": 10163.74082368477,
+   "horizon_off_refit": 10600.014685916925
+  }
+ ],
+ "observations": [
+  {
+   "model_key": "gpt2",
+   "release_date": "2019-02-14",
+   "decimal_year": 2019.1204654346338,
+   "observed_p80": 0.0128,
+   "p80_ci95": [
+    0.001589,
+    0.068612
+   ],
+   "progress_on": 24.095885169126703,
+   "progress_on_full_run": 24.09414591782643,
+   "horizon_on": 0.04980687497937136,
+   "progress_off_same_calibration": 24.095884974802598,
+   "horizon_off_same_calibration": 0.04980687035886876,
+   "progress_off_refit": 24.09897339256665,
+   "horizon_off_refit": 0.04988036527579702
+  },
+  {
+   "model_key": "davinci_002",
+   "release_date": "2020-05-28",
+   "decimal_year": 2020.4052019164956,
+   "observed_p80": 0.056238,
+   "p80_ci95": [
+    0.034813,
+    0.105813
+   ],
+   "progress_on": 25.967872794741123,
+   "progress_on_full_run": 25.969009995071474,
+   "horizon_on": 0.1282015510329141,
+   "progress_off_same_calibration": 25.967870858540266,
+   "horizon_off_same_calibration": 0.12820141825984346,
+   "progress_off_refit": 25.973270751282513,
+   "horizon_off_refit": 0.1285723101968514
+  },
+  {
+   "model_key": "gpt_3_5_turbo_instruct",
+   "release_date": "2022-03-15",
+   "decimal_year": 2022.1998631074607,
+   "observed_p80": 0.25538,
+   "p80_ci95": [
+    0.141649,
+    0.492933
+   ],
+   "progress_on": 28.61798514822857,
+   "progress_on_full_run": 28.61813917537329,
+   "horizon_on": 0.6065354979738772,
+   "progress_off_same_calibration": 28.617939172948528,
+   "horizon_off_same_calibration": 0.6065175161347421,
+   "progress_off_refit": 28.626605167450695,
+   "horizon_off_refit": 0.609917535484203
+  },
+  {
+   "model_key": "gpt_4",
+   "release_date": "2023-03-14",
+   "decimal_year": 2023.1971252566734,
+   "observed_p80": 0.889561,
+   "p80_ci95": [
+    0.342984,
+    2.523746
+   ],
+   "progress_on": 30.144108049072127,
+   "progress_on_full_run": 30.143424981835913,
+   "horizon_on": 1.728811287603179,
+   "progress_off_same_calibration": 30.143838469216917,
+   "horizon_off_same_calibration": 1.728470433457852,
+   "progress_off_refit": 30.154397685685755,
+   "horizon_off_refit": 1.741877866757886
+  },
+  {
+   "model_key": "gpt_4_1106_inspect",
+   "release_date": "2023-11-06",
+   "decimal_year": 2023.8459958932237,
+   "observed_p80": 0.783032,
+   "p80_ci95": [
+    0.276599,
+    2.358414
+   ],
+   "progress_on": 31.17888078590339,
+   "progress_on_full_run": 31.178131407124,
+   "horizon_on": 3.8229213998951743,
+   "progress_off_same_calibration": 31.178007769804488,
+   "horizon_off_same_calibration": 3.8202367516093605,
+   "progress_off_refit": 31.189882560369547,
+   "horizon_off_refit": 3.8569351909177585
+  },
+  {
+   "model_key": "claude_3_opus_inspect",
+   "release_date": "2024-03-04",
+   "decimal_year": 2024.1724845995893,
+   "observed_p80": 0.638973,
+   "p80_ci95": [
+    0.190491,
+    2.118276
+   ],
+   "progress_on": 31.71292036330786,
+   "progress_on_full_run": 31.712864779173817,
+   "horizon_on": 5.943330319924106,
+   "progress_off_same_calibration": 31.711354278350825,
+   "horizon_off_same_calibration": 5.935437809949021,
+   "progress_off_refit": 31.723917513957993,
+   "horizon_off_refit": 5.999084346520787
+  },
+  {
+   "model_key": "gpt_4_turbo_inspect",
+   "release_date": "2024-04-09",
+   "decimal_year": 2024.2710472279261,
+   "observed_p80": 0.927933,
+   "p80_ci95": [
+    0.428277,
+    2.196806
+   ],
+   "progress_on": 31.873847716638082,
+   "progress_on_full_run": 31.87382059191249,
+   "horizon_on": 6.820710127699747,
+   "progress_off_same_calibration": 31.87198471181485,
+   "horizon_off_same_calibration": 6.809756968586191,
+   "progress_off_refit": 31.88475627923367,
+   "horizon_off_refit": 6.885242294771139
+  },
+  {
+   "model_key": "gpt_4o_inspect",
+   "release_date": "2024-05-13",
+   "decimal_year": 2024.3641341546886,
+   "observed_p80": 1.267009,
+   "p80_ci95": [
+    0.562997,
+    3.01517
+   ],
+   "progress_on": 32.025637156472975,
+   "progress_on_full_run": 32.02564126643648,
+   "horizon_on": 7.783163968210366,
+   "progress_off_same_calibration": 32.02344441552756,
+   "horizon_off_same_calibration": 7.768220243682896,
+   "progress_off_refit": 32.03641276925014,
+   "horizon_off_refit": 7.857070301817822
+  },
+  {
+   "model_key": "claude_3_5_sonnet_20240620_inspect",
+   "release_date": "2024-06-20",
+   "decimal_year": 2024.4681724845996,
+   "observed_p80": 1.671757,
+   "p80_ci95": [
+    0.57927,
+    4.573519
+   ],
+   "progress_on": 32.195135143931495,
+   "progress_on_full_run": 32.195160677342265,
+   "horizon_on": 9.042016848192668,
+   "progress_off_same_calibration": 32.19250930646968,
+   "horizon_off_same_calibration": 9.020853797751254,
+   "progress_off_refit": 32.205697638407194,
+   "horizon_off_refit": 9.127709403451059
+  },
+  {
+   "model_key": "o1_preview",
+   "release_date": "2024-09-12",
+   "decimal_year": 2024.6981519507187,
+   "observed_p80": 4.420545,
+   "p80_ci95": [
+    2.012646,
+    8.912444
+   ],
+   "progress_on": 32.56952788663887,
+   "progress_on_full_run": 32.569255501040224,
+   "horizon_on": 12.71693335531411,
+   "progress_off_same_calibration": 32.5656408936858,
+   "horizon_off_same_calibration": 12.671061112645281,
+   "progress_off_refit": 32.579315558678935,
+   "horizon_off_refit": 12.833268596487146
+  },
+  {
+   "model_key": "claude_3_5_sonnet_20241022_inspect",
+   "release_date": "2024-10-22",
+   "decimal_year": 2024.807665982204,
+   "observed_p80": 2.595677,
+   "p80_ci95": [
+    0.89379,
+    7.363864
+   ],
+   "progress_on": 32.747777919143424,
+   "progress_on_full_run": 32.74812124059029,
+   "horizon_on": 15.034725830395757,
+   "progress_off_same_calibration": 32.74308992766496,
+   "horizon_off_same_calibration": 14.968017424089693,
+   "progress_off_refit": 32.756996140252895,
+   "horizon_off_refit": 15.166871365538706
+  },
+  {
+   "model_key": "o1_inspect",
+   "release_date": "2024-12-05",
+   "decimal_year": 2024.9281314168377,
+   "observed_p80": 7.090121,
+   "p80_ci95": [
+    3.036033,
+    16.640636
+   ],
+   "progress_on": 32.943906239343995,
+   "progress_on_full_run": 32.9449031958523,
+   "horizon_on": 18.14809717057797,
+   "progress_off_same_calibration": 32.938145423337296,
+   "horizon_off_same_calibration": 18.046946688085413,
+   "progress_off_refit": 32.952306253244394,
+   "horizon_off_refit": 18.296727860797905
+  },
+  {
+   "model_key": "claude_3_7_sonnet_inspect",
+   "release_date": "2025-02-24",
+   "decimal_year": 2025.1478439425052,
+   "observed_p80": 12.09179,
+   "p80_ci95": [
+    4.575608,
+    28.889879
+   ],
+   "progress_on": 33.29889386954972,
+   "progress_on_full_run": 33.300757339178034,
+   "horizon_on": 25.801620890790897,
+   "progress_off_same_calibration": 33.29057549339224,
+   "horizon_off_same_calibration": 25.585332205204736,
+   "progress_off_refit": 33.3051966465206,
+   "horizon_off_refit": 25.966865590187034
+  },
+  {
+   "model_key": "o3_inspect",
+   "release_date": "2025-04-16",
+   "decimal_year": 2025.2874743326488,
+   "observed_p80": 29.981603,
+   "p80_ci95": [
+    15.127348,
+    57.823511
+   ],
+   "progress_on": 33.52006074185103,
+   "progress_on_full_run": 33.52277574018642,
+   "horizon_on": 32.37673325310534,
+   "progress_off_same_calibration": 33.50964087806576,
+   "horizon_off_same_calibration": 32.02782157788475,
+   "progress_off_refit": 33.52454866529959,
+   "horizon_off_refit": 32.52832284328796
+  },
+  {
+   "model_key": "claude_4_opus_inspect",
+   "release_date": "2025-05-22",
+   "decimal_year": 2025.3860369609856,
+   "observed_p80": 20.429752,
+   "p80_ci95": [
+    8.483125,
+    41.937268
+   ],
+   "progress_on": 33.6743300522407,
+   "progress_on_full_run": 33.67716174513255,
+   "horizon_on": 38.07400678452268,
+   "progress_off_same_calibration": 33.662126047990455,
+   "horizon_off_same_calibration": 37.58455633984555,
+   "progress_off_refit": 33.677233637274085,
+   "horizon_off_refit": 38.19150607757774
+  },
+  {
+   "model_key": "claude_4_1_opus_inspect",
+   "release_date": "2025-08-05",
+   "decimal_year": 2025.5913757700205,
+   "observed_p80": 23.455761,
+   "p80_ci95": [
+    10.538456,
+    47.785951
+   ],
+   "progress_on": 33.99232371409267,
+   "progress_on_full_run": 33.99545465518557,
+   "horizon_on": 53.729733308922725,
+   "progress_off_same_calibration": 33.97545533094747,
+   "horizon_off_same_calibration": 52.73781021921677,
+   "progress_off_refit": 33.99097384895926,
+   "horizon_off_refit": 53.64959158348237
+  },
+  {
+   "model_key": "gpt_5_2025_08_07_inspect",
+   "release_date": "2025-08-07",
+   "decimal_year": 2025.5968514715948,
+   "observed_p80": 38.312431,
+   "p80_ci95": [
+    19.184874,
+    70.093125
+   ],
+   "progress_on": 34.000771190315255,
+   "progress_on_full_run": 34.0039114840738,
+   "horizon_on": 54.23431773726332,
+   "progress_off_same_calibration": 33.98376689396466,
+   "horizon_off_same_calibration": 53.22397311413774,
+   "progress_off_refit": 33.999296314732184,
+   "horizon_off_refit": 54.14583929645169
+  },
+  {
+   "model_key": "gemini_3_pro",
+   "release_date": "2025-11-18",
+   "decimal_year": 2025.8788501026695,
+   "observed_p80": 54.142849,
+   "p80_ci95": [
+    25.650451,
+    103.295501
+   ],
+   "progress_on": 34.43245084407662,
+   "progress_on_full_run": 34.43605462019287,
+   "horizon_on": 88.72445924370183,
+   "progress_off_same_calibration": 34.40611529356609,
+   "horizon_off_same_calibration": 86.02664999783478,
+   "progress_off_refit": 34.42219842607172,
+   "horizon_off_refit": 87.66309404346916
+  },
+  {
+   "model_key": "gpt_5_1_codex_max_inspect",
+   "release_date": "2025-11-19",
+   "decimal_year": 2025.8815879534566,
+   "observed_p80": 50.632499,
+   "p80_ci95": [
+    27.30204,
+    88.365435
+   ],
+   "progress_on": 34.43662816800404,
+   "progress_on_full_run": 34.44022814624893,
+   "horizon_on": 89.16103163201159,
+   "progress_off_same_calibration": 34.4101870269331,
+   "horizon_off_same_calibration": 86.43768553522199,
+   "progress_off_refit": 34.426275494164905,
+   "horizon_off_refit": 88.08345310109151
+  },
+  {
+   "model_key": "claude_opus_4_5_inspect",
+   "release_date": "2025-11-24",
+   "decimal_year": 2025.8952772073922,
+   "observed_p80": 49.430584,
+   "p80_ci95": [
+    20.660485,
+    104.641318
+   ],
+   "progress_on": 34.4575147876415,
+   "progress_on_full_run": 34.461095776529554,
+   "horizon_on": 91.38030954717846,
+   "progress_off_same_calibration": 34.43054569376851,
+   "horizon_off_same_calibration": 88.5261474292916,
+   "progress_off_refit": 34.446660834631146,
+   "horizon_off_refit": 90.21941090029712
+  },
+  {
+   "model_key": "gpt_5_2",
+   "release_date": "2025-12-11",
+   "decimal_year": 2025.9418206707735,
+   "observed_p80": 66.002649,
+   "p80_ci95": [
+    31.665111,
+    131.730719
+   ],
+   "progress_on": 34.52842642343065,
+   "progress_on_full_run": 34.53202651630263,
+   "horizon_on": 99.38963696818423,
+   "progress_off_same_calibration": 34.49941253964907,
+   "horizon_off_same_calibration": 96.02118027144573,
+   "progress_off_refit": 34.51561783844378,
+   "horizon_off_refit": 97.88653055573756
+  },
+  {
+   "model_key": "claude_opus_4_6_inspect",
+   "release_date": "2026-02-05",
+   "decimal_year": 2026.0958247775495,
+   "observed_p80": 69.874587,
+   "p80_ci95": [
+    27.026521,
+    170.437873
+   ],
+   "progress_on": 34.76347690448287,
+   "progress_on_full_run": 34.767268887934,
+   "horizon_on": 132.12842340375204,
+   "progress_off_same_calibration": 34.7269303421484,
+   "horizon_off_same_calibration": 126.32508828275371,
+   "progress_off_refit": 34.74343332173393,
+   "horizon_off_refit": 128.90951923341453
+  },
+  {
+   "model_key": "gpt_5_3_codex",
+   "release_date": "2026-02-05",
+   "decimal_year": 2026.0958247775495,
+   "observed_p80": 54.739407,
+   "p80_ci95": [
+    22.361504,
+    122.058963
+   ],
+   "progress_on": 34.76347690448287,
+   "progress_on_full_run": 34.767268887934,
+   "horizon_on": 132.12842340375204,
+   "progress_off_same_calibration": 34.7269303421484,
+   "horizon_off_same_calibration": 126.32508828275371,
+   "progress_off_refit": 34.74343332173393,
+   "horizon_off_refit": 128.90951923341453
+  },
+  {
+   "model_key": "gemini_3_1_pro",
+   "release_date": "2026-02-19",
+   "decimal_year": 2026.1341546885694,
+   "observed_p80": 89.801503,
+   "p80_ci95": [
+    52.025934,
+    158.618017
+   ],
+   "progress_on": 34.822453896046916,
+   "progress_on_full_run": 34.826306135849705,
+   "horizon_on": 142.13435694029315,
+   "progress_off_same_calibration": 34.783644528371454,
+   "horizon_off_same_calibration": 135.45841046813487,
+   "progress_off_refit": 34.80022168211841,
+   "horizon_off_refit": 138.26604082980307
+  },
+  {
+   "model_key": "gpt_5_4",
+   "release_date": "2026-03-05",
+   "decimal_year": 2026.1724845995893,
+   "observed_p80": 53.877851,
+   "p80_ci95": [
+    23.957027,
+    108.679232
+   ],
+   "progress_on": 34.881480617701676,
+   "progress_on_full_run": 34.88539284203309,
+   "horizon_on": 153.00648340086278,
+   "progress_off_same_calibration": 34.84037345452505,
+   "horizon_off_same_calibration": 145.34063428539682,
+   "progress_off_refit": 34.857024800861616,
+   "horizon_off_refit": 148.39277378729466
+  },
+  {
+   "model_key": "claude_mythos_preview_early_inspect",
+   "release_date": "2026-04-07",
+   "decimal_year": 2026.2628336755647,
+   "observed_p80": 185.911829,
+   "p80_ci95": [
+    97.30292,
+    398.514614
+   ],
+   "progress_on": 35.02144965322268,
+   "progress_on_full_run": 35.025485671405185,
+   "horizon_on": 182.71345052320743,
+   "progress_off_same_calibration": 34.97431917596341,
+   "horizon_off_same_calibration": 172.04358493924693,
+   "progress_off_refit": 34.99114575613762,
+   "horizon_off_refit": 175.77069877800315
+  }
+ ],
+ "provenance": {
+  "upstream": "https://github.com/AI-Futures-Project/aifm-public",
+  "upstream_commit": "1c40ecdb246c25980515441a66571931c5604e11",
+  "upstream_tracked_files_modified": false,
+  "command": "aifm_runner.py horizon-identifiability",
+  "python": "3.14.6",
+  "numpy": "2.4.1",
+  "scipy": "1.17.0",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "generated_utc": "2026-10-25T18:50:36Z"
+ }
+}

@@ -195,15 +195,27 @@ def _check_accounting_and_adapters(contract, errors):
 
 
 def _check_stock_flow(ident, q, acc, errors):
-    """Issue #39: a declared kind matches the ledger it is booked to; an output rate leads from a stock to a flow derived from it."""
+    """Issues #39 and #61: every quantity declares a kind; one booked to a ledger has the ledger's kind, is a ratio on it, or
+    is recorded ambiguous with a source locator; an output rate leads from a stock to a flow derived from it."""
     where = f'{ident}: quantity {q["name"]!r}'
     led = acc.get(q.get('accounting'))
-    if 'kind' in q:
-        if 'accounting' not in q:
-            errors.append(f'{where} declares kind {q["kind"]} but is booked to no accounting quantity')
-        elif led is not None and led['kind'] != q['kind']:
-            errors.append(f'{where} is a {q["kind"]} booked to {q["accounting"]}, a {led["kind"]}; '
-                          f'book a stock to a stock and give its output_rate to the flow (#39)')
+    kind = q['kind']
+    if kind == 'ambiguous':
+        amb = q.get('kind_ambiguity')
+        if amb is None:
+            errors.append(f'{where} is ambiguous but gives no kind_ambiguity (candidates and source locator) (#61)')
+        elif led is not None and led['kind'] not in amb['candidates']:
+            errors.append(f'{where} is ambiguous between {amb["candidates"]} but is booked to {q["accounting"]}, a {led["kind"]}')
+    elif 'kind_ambiguity' in q:
+        errors.append(f'{where} declares kind {kind} and also kind_ambiguity; drop one (#61)')
+    if 'accounting' not in q:
+        if kind == 'ratio':
+            errors.append(f'{where} is a ratio but names no accounting quantity it applies to (#61)')
+    elif kind == 'event':
+        errors.append(f'{where} is an event; an event is never booked to an accounting quantity (#61)')
+    elif led is not None and kind not in ('ratio', 'ambiguous') and led['kind'] != kind:
+        errors.append(f'{where} is a {kind} booked to {q["accounting"]}, a {led["kind"]}; '
+                      f'book a stock to a stock and give its output_rate to the flow (#39)')
     rate = q.get('output_rate')
     if rate is None:
         return
