@@ -25,7 +25,7 @@
 #   source_model_output a published model's output (not an observation)
 #   source_model_assumption a published model's input
 #   project_assumption a value chosen in this project
-#   external_pending   an observable whose source is being pinned and replicated elsewhere (#12, #13, #14)
+#   external_pending   an observable whose source is being pinned and replicated elsewhere (#13; #12 and #14 landed, #42)
 #   not_collected      an observable is defined, but no data are in the repository
 #   scenario           a bounded scenario value (the coupling toy)
 
@@ -35,13 +35,17 @@ status: proposed
 # Base dimensions. Two of them are normalizations, not physical dimensions: earth_industry (the pact solver's
 # unit, H = 1; defined in DEF-EIU below) and le_capacity (world leading-edge chip capacity, F = 1; DEF-LEC). Converting
 # either to a physical unit needs an empirical scale estimate (conversions.yaml), never a definition.
+# fte (#42) is a bookkeeping dimension, not physical: AIFM counts labor in full-time equivalents and states no hours per
+# FTE-year. As person it would silently equal person*h/yr at 8766 h per year (person*h/yr reduces to person), so it is
+# its own dimension and any bridge to person-hours is a scale estimate (CV-AIFM-FTE-TO-PERSON-HOURS, unidentified).
 dimensions:
-  physical: [time, energy, mass, money, operation, person, agent, task]
+  physical: [time, energy, mass, money, operation, person, agent, task, fte]
   normalized: [earth_industry, le_capacity]
 
 units:
   "1": {factor: 1, dims: {}}
   s: {factor: 1, dims: {time: 1}}
+  min: {factor: 60, dims: {time: 1}, note: "minute; METR's native horizon unit (#42)"}
   h: {factor: 3600, dims: {time: 1}}
   yr: {factor: 31557600, dims: {time: 1}, note: "Julian year"}
   J: {factor: 1, dims: {energy: 1}}
@@ -53,6 +57,9 @@ units:
   t: {factor: 1000, dims: {mass: 1}, note: "metric ton (Metzger's MT)"}
   USD: {factor: 1, dims: {money: 1}, note: "price year to be stated by the source adapter"}
   FLOP: {factor: 1, dims: {operation: 1}}
+  H100e: {factor: 4.0e+14, dims: {operation: 1, time: -1}, note: "one H100-equivalent as AIFM defines it: 1e15 FLOP/s nameplate times 0.4 utilization (aifm-public 1c40ecdb progress_model/config.py:122, FLOP_PER_H100E_YEAR = 0.4e15 * 3.15576e7); AIFM's convention, not a measured utilization (#42)"}
+  OOM: {factor: 2.302585092994046, dims: {}, note: "one order of magnitude (log10), AIFM's unit for progress and software efficiency; the factor is its value in natural-log units, ln 10, so OOM/yr and 1/yr (ln per year) compare correctly (#42)"}
+  FTE: {factor: 1, dims: {fte: 1}, note: "full-time-equivalent worker, AIFM's labor unit; hours per FTE-year not stated by the source (#42)"}
   person: {factor: 1, dims: {person: 1}}
   agent: {factor: 1, dims: {agent: 1}, note: "one running agent instance"}
   task: {factor: 1, dims: {task: 1}}
@@ -136,17 +143,34 @@ categories: [capability_metric, research_labor, research_output, software_effici
 
 quantities:
   # ---- capability metrics -------------------------------------------------------------------------------------
+  # Re-pinned to the replications' native units in #42: METR in minutes of human expert time (#12), AIFM in OOMs,
+  # decimal years, SDs and fractions (#14). README section "Recheck after #12 and #14".
   - id: QTY-METR-HORIZON
-    name: "METR 50% (or 80%) task time horizon"
+    name: "METR 50% task time horizon (p50)"
     category: capability_metric
-    unit: h
+    unit: min
     kind: state
-    semantic: "human completion time of tasks a model finishes with the stated success rate on a stated task suite and scaffold"
-    observable: "METR task-suite runs; logistic fit of success against human task time"
+    semantic: "minutes of human expert time at which an agent's fitted success probability on a stated task suite (TH1.0 or TH1.1) is 50%; per model with a scaffold; suites are never mixed"
+    observable: "METR task-suite runs; weighted logistic fit of success on log2 human minutes (metr-time-horizons/horizon_fit.py)"
     models: [AD-METR]
     contract: {adapter_quantity: {adapter: AD-METR, name: "50% task time horizon"}, dimension: rd_capability}
-    evidence: {status: external_pending, ref: "#12 pins the source and replicates it under research_notes/external/"}
-    note: "A time, but not a duration of anything the model does in the world. Never converted to calendar time, research labor or strategic odds here."
+    evidence: {status: observed_primary, ref: "EV-METR-TH11-2026-03-03 and the other EV-METR-TH* batches; values in metr-time-horizons/data/observations.csv (column p50_min), reproduced from METR's runs within 1.6e-4 (#12)"}
+    note: >-
+      A time, but not a duration of anything the model does in the world. The contract writes the unit as human-hours;
+      METR publishes minutes (same dimension, factor 60), so the dictionary carries minutes. Values above 960 min are
+      unreliable on TH1.1 (METR). The #12 holdout and the #56 per-model holdout both have the verdict 'not
+      established', so no projected horizon is available either. Never converted to calendar time, research labor or strategic odds here.
+  - id: QTY-METR-HORIZON-P80
+    name: "METR 80% task time horizon (p80)"
+    category: capability_metric
+    unit: min
+    kind: state
+    semantic: "as QTY-METR-HORIZON at 80% success"
+    observable: "as QTY-METR-HORIZON (column p80_min)"
+    models: [AD-METR, AD-AIFM]
+    contract: {adapter_quantity: {adapter: AD-METR, name: "80% task time horizon"}, dimension: rd_capability}
+    evidence: {status: observed_primary, ref: "EV-METR-TH11-2026-03-03 and the other EV-METR-TH* batches (#12)"}
+    note: "AIFM's horizon anchor is a p80 level (186 min at 2026.269, Claude Mythos Preview's p80 in EV-METR-TH11-2026-05-08), and the AIFM output records list the post-correction TH1.1 records in fitted_to (#45), so AIFM outputs are not independent of these records."
   - id: QTY-BENCH-SCORE
     name: "Benchmark score (e.g. RE-Bench normalized score)"
     category: capability_metric
@@ -156,17 +180,37 @@ quantities:
     observable: "benchmark runs with a stated scaffold and budget"
     models: [AD-METR]
     contract: {dimension: rd_capability}
-    evidence: {status: external_pending, ref: "#12"}
+    evidence: {status: not_collected, ref: "#12 did not pin RE-Bench (metr-time-horizons/README.md 'Not done'); no data in the repository"}
   - id: QTY-AIFM-MILESTONE
     name: "AI Futures capability milestone date (AC, SC, SAR, SIAR, TED-AI, ASI)"
     category: capability_metric
     unit: yr
     kind: date
-    semantic: "calendar date at which a threshold on the effective-compute scale is crossed"
-    observable: "none directly; a model output"
+    semantic: "decimal calendar year at which a latent threshold on AIFM's progress scale (QTY-AIFM-PROGRESS) is first crossed"
+    observable: "none directly; a model output. No milestone is defined by an observable test (ai-futures-model/MECHANISMS.md)"
     models: [AD-AIFM]
     contract: {adapter_quantity: {adapter: AD-AIFM, name: "capability milestones AC, AI2027-SC, SAR, SIAR, TED-AI, ASI (latent thresholds)"}, dimension: rd_capability}
-    evidence: {status: external_pending, ref: "#14"}
+    evidence: {status: source_model_output, ref: "EV-AIFM-REFERENCE-TRAJECTORY (AC 2027.786 at defaults), EV-AIFM-DANIEL-08-16-26 (distribution); replicated in #14"}
+  - id: QTY-AIFM-AUTOMATION-FRACTION
+    name: "AI Futures automation fraction of coding"
+    category: capability_metric
+    unit: "1"
+    kind: share
+    semantic: "share of an AGI project's coding tasks AI performs: a logistic schedule in progress (asymptote 1.1, clipped to 1); not an approval rate"
+    observable: "none directly; a latent schedule anchored by an elicited serial uplift (EV-UNITS-AIFM-CONVENTIONS)"
+    models: [AD-AIFM]
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "automation fraction of coding (latent schedule in progress)"}, dimension: rd_capability}
+    evidence: {status: source_model_output, ref: "EV-AIFM-REFERENCE-TRAJECTORY"}
+  - id: QTY-AIFM-AI-TASTE
+    name: "AI Futures AI research taste"
+    category: capability_metric
+    unit: "1"
+    kind: state
+    semantic: "AI research taste in standard deviations of the human researcher taste distribution; linear in progress (3 SD per anchor-progress-year, 0 SD at AC)"
+    observable: "none; a latent schedule with an elicited slope"
+    models: [AD-AIFM]
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "AI research taste (latent schedule in progress)"}, dimension: rd_capability}
+    evidence: {status: source_model_output, ref: "EV-AIFM-REFERENCE-TRAJECTORY"}
   # ---- research labor -----------------------------------------------------------------------------------------
   - id: QTY-HUMAN-RESEARCH-LABOR
     name: "Human research labor"
@@ -175,9 +219,21 @@ quantities:
     kind: flow
     semantic: "hours of human research and engineering work per year"
     observable: "headcount times hours, from lab reports or surveys"
-    models: [AD-AIFM, AD-GATE]
+    models: [AD-GATE]
     contract: {accounting: human_labor}
     evidence: {status: not_collected, ref: "no data in the repository"}
+    note: "AIFM's labor input is in FTEs with no stated hours (QTY-AIFM-HUMAN-CODING-LABOR); CV-AIFM-FTE-TO-PERSON-HOURS is unidentified."
+  - id: QTY-AIFM-HUMAN-CODING-LABOR
+    name: "AI Futures human coding labor (input series)"
+    category: research_labor
+    unit: FTE
+    kind: flow
+    semantic: "full-time-equivalent human coding staff of the aggregate frontier project, an exogenous input series; enters a CES with AI coding labor (rho -2), raised to parallel_penalty 0.5"
+    observable: "historical estimates then forecasts in AIFM's input CSV (provenance: a deleted upstream workbook, no per-row sources)"
+    models: [AD-AIFM]
+    contract: {accounting: human_labor}
+    evidence: {status: source_model_assumption, ref: "AIFM input series at 1c40ecdb (ai-futures-model/SOURCES.yaml); EV-UNITS-AIFM-CONVENTIONS for the CES parameters"}
+    note: "Contract adapter quantity AD-AIFM 'human coding labor' (FTEs). Not linked by adapter_quantity: human_labor is a flow and the contract quantity does not declare its kind yet, which the stock/flow rule needs (contract work, #61)."
   - id: QTY-AGENT-LABOR
     name: "Agent research labor"
     category: research_labor
@@ -185,54 +241,58 @@ quantities:
     kind: flow
     semantic: "hours of agent work per year; a use of inference compute"
     observable: "deployment logs: agent instances times hours"
-    models: [AD-AIFM]
+    models: [AD-GATE]
     contract: {accounting: agent_labor}
     evidence: {status: not_collected, ref: "no data in the repository"}
-    note: "Derived from compute_inference in the mode contract. A production function takes this or inference compute as input, never both."
+    note: "Derived from compute_inference in the mode contract. A production function takes this or inference compute as input, never both. AIFM takes inference compute, not this (ai-futures-model/modes.md)."
   - id: QTY-DEV-TIME-RATIO
     name: "Realized developer task time ratio (with AI / without)"
     category: research_labor
     unit: "1"
     kind: ratio
-    semantic: "measured change in human developer task time from AI assistance"
+    semantic: "implementation time of an issue with AI allowed divided by time with AI disallowed, randomized at issue level, for a stated developer population, codebase and tool set"
     observable: "randomized developer-productivity studies"
     models: [AD-METR]
     contract: {adapter_quantity: {adapter: AD-METR, name: "realized developer task time ratio"}, accounting: human_labor}
-    evidence: {status: external_pending, ref: "#12"}
-    note: "The only measured link between AI capability and research labor in scope. It is about coding tasks, not about building factories."
+    evidence: {status: observed_secondary, ref: "EV-METR-RCT-2025: 1.19 (95% CI 1.02 to 1.39), 16 developers on their own large repositories, Feb-Jun 2025, mostly Cursor with Claude 3.5/3.7 Sonnet; METR's blog report read, the paper not (record kind observation_report). EV-METR-UPLIFT-2026 (0.82 and 0.96) is judged unreliable by METR (selection, concurrency) and is not used as a value."}
+    note: "The only measured link between AI capability and research labor in scope. It is about coding tasks, not research output or building factories. A ratio above 1 is a slowdown."
   # ---- research output ----------------------------------------------------------------------------------------
   - id: QTY-RESEARCH-OUTPUT
     name: "Research output as software-efficiency growth"
     category: research_output
-    unit: 1/yr
+    unit: OOM/yr
     kind: rate
-    semantic: "growth rate (ln per year) of the software-efficiency multiplier"
+    semantic: "software progress rate d SE/dt: orders of magnitude of effective FLOP per physical FLOP gained per year (AIFM native; 1 OOM/yr = ln 10 per year)"
     observable: "algorithmic-progress estimates (compute needed for fixed performance over time)"
     models: [AD-AIFM]
     contract: {accounting: research_output}
-    evidence: {status: external_pending, ref: "#14"}
+    evidence: {status: source_model_assumption, ref: "EV-UNITS-AIFM-CONVENTIONS: AIFM calibrates r_software so this rate is 1 OOM/yr at 2024.0, a literature-based value the code does not cite; no observation in the repository"}
   # ---- software efficiency ------------------------------------------------------------------------------------
   - id: QTY-SOFTWARE-EFFICIENCY
     name: "Software efficiency"
     category: software_efficiency
-    unit: "1"
+    unit: OOM
     kind: state
-    semantic: "multiplier: effective FLOP per physical FLOP, relative to a stated reference year"
+    semantic: "log10 of effective FLOP per physical FLOP. AIFM: SE = r_software log10(RS / RS_0), rebased in its output to 0 at 2025.13 (Grok 3), so its effective FLOP are 2025.13 FLOP"
     observable: "compute-equivalent gains at fixed benchmark performance"
     models: [AD-AIFM]
-    contract: {adapter_quantity: {adapter: AD-AIFM, name: "software efficiency"}, accounting: research_output}
-    evidence: {status: external_pending, ref: "#14"}
-  - id: QTY-AIFM-ECI
-    name: "Cumulative effective compute (AI Futures)"
+    contract: {adapter_quantity: {adapter: AD-AIFM, name: "software efficiency"}}
+    evidence: {status: source_model_output, ref: "EV-AIFM-REFERENCE-TRAJECTORY; rebase at aifm-public 1c40ecdb progress_model/_impl.py:1835-1837 (EV-UNITS-AIFM-CONVENTIONS)"}
+    note: >-
+      A level. The contract books AD-AIFM 'software efficiency' (OOMs) to research_output, a flow per year; the flow
+      is its rate, QTY-RESEARCH-OUTPUT (OOM/yr). The dictionary therefore links the adapter quantity without that
+      booking; moving the contract's booking to the rate is proposed in the #42 report.
+  - id: QTY-AIFM-PROGRESS
+    name: "AI Futures progress: cumulative effective compute"
     category: software_efficiency
-    unit: "1"
+    unit: OOM
     kind: index
-    semantic: "log10 of effective training FLOP relative to a stated reference (orders of magnitude)"
+    semantic: "logE: log10 of cumulative effective compute in FLOP, integrated from 10^(TC + SE) per year, at 2025.13 software efficiency in AIFM's output; every AIFM capability schedule is a function of it"
     observable: "none directly; a model state"
     models: [AD-AIFM]
     contract: {adapter_quantity: {adapter: AD-AIFM, name: "progress: log10 cumulative effective compute (latent)"}, dimension: rd_capability}
-    evidence: {status: external_pending, ref: "#14"}
-    note: "A log of a dimensional quantity, so it is meaningful only with its reference FLOP (conversion CV-OOM-TO-FLOP)."
+    evidence: {status: source_model_output, ref: "EV-AIFM-REFERENCE-TRAJECTORY (replicated to about 1e-8, #14)"}
+    note: "Cumulative over all training capacity, not the effective FLOP of one training run, which is why CV-OOM-TO-FLOP stays unidentified. Was QTY-AIFM-ECI before #42 (renamed: ECI is also Epoch's Capabilities Index, a different quantity)."
   # ---- compute ------------------------------------------------------------------------------------------------
   - id: QTY-TRAINING-COMPUTE
     name: "Training compute"
@@ -253,8 +313,8 @@ quantities:
     observable: "not observed; physical FLOP times an efficiency estimate"
     models: [AD-GATE, AD-AIFM]
     contract: {adapter_quantity: {adapter: AD-GATE, name: "largest training run C_T"}, accounting: capability}
-    evidence: {status: external_pending, ref: "#13 (GATE, S(start of 2025) = 1; epoch-gate/INTERFACES.md), #14"}
-    note: "GATE's and AI Futures' eFLOP must be re-based to one software-efficiency path before they are compared (epoch-gate/INTERFACES.md item 2)."
+    evidence: {status: external_pending, ref: "#13 (GATE, S(start of 2025) = 1; epoch-gate/INTERFACES.md); AIFM's base is SE = 0 at 2025.13 (#14, EV-UNITS-AIFM-CONVENTIONS)"}
+    note: "GATE's and AI Futures' eFLOP must be re-based to one software-efficiency path before they are compared (epoch-gate/INTERFACES.md item 2). The two bases differ in date (2025.0 and 2025.13) and in the efficiency path itself."
   - id: QTY-TRAINING-COMPUTE-RATE
     name: "Compute allocated to training"
     category: compute_training
@@ -275,6 +335,28 @@ quantities:
     models: [AD-AIFM]
     contract: {accounting: compute_inference}
     evidence: {status: not_collected, ref: "no data in the repository"}
+  - id: QTY-AIFM-INFERENCE-COMPUTE
+    name: "AI Futures inference compute powering AI coding labor (input series)"
+    category: compute_inference
+    unit: H100e
+    kind: stock
+    semantic: "H100-equivalents running inference for the aggregate project's AI coding labor at a time; converted to AI coding labor inside AIFM (optimal-CES task frontier)"
+    observable: "historical estimates then forecasts in AIFM's input CSV (no per-row sources)"
+    models: [AD-AIFM]
+    contract: {accounting: compute_inference}
+    evidence: {status: source_model_assumption, ref: "AIFM input series at 1c40ecdb (ai-futures-model/SOURCES.yaml); H100e = 4e14 FLOP/s by AIFM's convention (EV-UNITS-AIFM-CONVENTIONS)"}
+    note: "Contract adapter quantity AD-AIFM 'inference compute powering AI coding labor'. Not linked by adapter_quantity until the contract declares its kind (compute_inference is a stock; #61)."
+  - id: QTY-AIFM-TRAINING-CAPACITY
+    name: "AI Futures frontier training capacity (input series)"
+    category: compute_training
+    unit: H100e
+    kind: stock
+    semantic: "H100-equivalents of frontier training capacity at a time; TC = log10(training_H100e * 1.262e22 FLOP per H100e-year) in OOMs of FLOP/yr"
+    observable: "historical estimates then forecasts in AIFM's input CSV (no per-row sources)"
+    models: [AD-AIFM]
+    contract: {accounting: compute_training}
+    evidence: {status: source_model_assumption, ref: "AIFM input series at 1c40ecdb; FLOP_PER_H100E_YEAR at progress_model/config.py:122 (EV-UNITS-AIFM-CONVENTIONS)"}
+    note: "Contract adapter quantity AD-AIFM 'frontier training capacity'. Not linked by adapter_quantity until the contract declares its kind (#61). AIFM's experiment compute (also H100e) has no accounting quantity in the contract (ai-futures-model/modes.md) and is not listed here."
   # ---- energy -------------------------------------------------------------------------------------------------
   - id: QTY-WORLD-PRIMARY-POWER
     name: "World primary energy use (as mean power)"
@@ -285,7 +367,7 @@ quantities:
     observable: "Energy Institute Statistical Review"
     models: [AD-PACT]
     contract: {}
-    evidence: {status: observed_secondary, ref: "620 EJ in 2023 = 19.6 TW (EI Review 2024 via DieselNet, decision_model.md); 592 EJ in 2024 = 18.8 TW (EI Review 2025, new 'total energy supply' method, physics_economics.md). Primary not read."}
+    evidence: {status: observed_secondary, ref: "620 EJ in 2023 = 19.6 TW (EI Review 2024 via DieselNet, decision_model.md); 592 EJ in 2024 = 18.8 TW (EI Review 2025, new 'total energy supply' method, physics_economics.md). Primary not read (#40: EV-EI-STATREV-NOT-READ, HTTP 403). Secondary cross-check EV-OWID-EI-ENERGY-2026 (EI 2026 edition via OWID): 2023 579.2 EJ = 18.35 TW, 2024 592.2 EJ = 18.77 TW, 2025 600.3 EJ = 19.02 TW."}
   - id: QTY-METZGER-GEN5-ENERGY
     name: "Energy use of Metzger's Gen 5.0 lunar industry"
     category: energy
@@ -350,7 +432,7 @@ quantities:
     observable: "national accounts"
     models: [AD-GATE]
     contract: {adapter_quantity: {adapter: AD-GATE, name: "gross world product Y"}, accounting: industrial_output}
-    evidence: {status: external_pending, ref: "#13: 'real USD', price base not stated (epoch-gate/INTERFACES.md); GATE's Y(0) = 1.10e14 USD/yr (data/baseline_target.json gwp_init) matches measured GWP at market exchange rates, not PPP (EV-WB-WDI-GDP-2026)"}
+    evidence: {status: external_pending, ref: "#13, #40: 'real USD', no base year or price index stated in the paper's TeX source; Y(0) is derived from World Bank GDP (current US$) 2023 grown 3%/yr (EV-GATE-PAPER-2025; epoch-gate/INTERFACES.md); GATE's Y(0) = 1.10e14 USD/yr (data/baseline_target.json gwp_init) matches measured GWP at market exchange rates, not PPP (EV-WB-WDI-GDP-2026)"}
   - id: QTY-GATE-COMPUTE-STOCK
     name: "GATE physical compute stock Q"
     category: compute_training

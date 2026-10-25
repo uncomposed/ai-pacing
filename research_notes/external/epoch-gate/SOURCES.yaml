@@ -23,7 +23,7 @@ sources:
     loaded_by: "https://epoch.ai/gate (Astro island EpochGate, sideloads /generated/gate.js)"
     accessed: "2026-10-25"
     license: "No license statement for the code. The epoch.ai/gate page states that Epoch AI's work is free to use, distribute and reproduce with credit under CC BY 4.0; we rely on that only for the documentation and for reproducing model outputs with attribution. The bundle is not vendored; official/fetch_bundle.sh downloads it and checks the hash."
-    used_for: "Executable model (inline Web Worker: emscripten C++ to WebAssembly, run unchanged by official/run_official.mjs), preset arguments and cached runs (cache_default), parameter table (input_default2)."
+    used_for: "Executable model (inline Web Worker: emscripten C++ to WebAssembly, run unchanged by official/run_official.mjs), preset arguments and cached runs (cache_default), parameter table (input_default2). Issue #33: the 66 variant solves (variants/summary.json) and the redeploy pin data/bundle_pin.json (parameter table with Definition/Reasoning texts replaced by their SHA-256, and the three preset arguments; extracted by official/bundle_meta.mjs). Served hash rechecked 2026-10-25: unchanged."
     status: used
 
   - id: gate-documentation

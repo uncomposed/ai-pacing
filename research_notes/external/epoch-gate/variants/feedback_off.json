@@ -1,0 +1,17 @@
+{
+ "about": "Definition of the 'feedback-off' comparison asked for in issue #33. EXTENSION, NOT SOURCE BEHAVIOR: GATE has no such switch. NOT IMPLEMENTED: the compiled solver cannot evaluate a given policy (see README.md, 'Feedback-off'). [[ai gen]] 2026-10-25.",
+ "status": "defined, not run (future work)",
+ "definition": "Simulate GATE's laws of motion with the planner's allocation replaced by constant shares: every year, output is split among consumption, capital, compute, hardware R&D and software R&D in the step-0 shares of the default run below, and compute between training and runtime in the step-0 split. Automation, R&D and output then evolve as in GATE, but rising output no longer changes how it is allocated. Compare the result with the optimized run on the six conclusions in RESULTS.md.",
+ "why_step_0": "Step 0 is the first allocation the planner chooses, before automation has moved (f = f_init through step 2). Freezing it removes the planner's response to growth while keeping its initial judgement; freezing at observed 2025 shares (I_Q(0)/Y(0) = 0.0018) would be a different, larger change and is listed as an alternative.",
+ "frozen_shares_by_cap": {
+  "40":  {"q_consumption": 0.7588, "q_capital": 0.0013, "q_compute": 0.0959, "q_hardware_rnd": 0.0353, "q_software_rnd": 0.1087, "q_training_compute": 0.8979, "q_runtime_compute": 0.1021},
+  "80":  {"q_consumption": 0.7595, "q_capital": 0.0009, "q_compute": 0.0959, "q_hardware_rnd": 0.0353, "q_software_rnd": 0.1084, "q_training_compute": 0.8981, "q_runtime_compute": 0.1019},
+  "160": {"q_consumption": 0.7602, "q_capital": 0.0002, "q_compute": 0.0956, "q_hardware_rnd": 0.0354, "q_software_rnd": 0.1086, "q_training_compute": 0.8982, "q_runtime_compute": 0.1018}
+ },
+ "shares_note": "Rounded to 4 decimals from the default preset at each cap (variants/summary.json holds q_compute at full precision). q_capital at step 0 is itself optimizer noise (0.0013 / 0.0009 / 0.0002), so a feedback-off run should be done at all three cap values.",
+ "alternatives": [
+  "shares frozen at observed initial values (compute I_Q(0)/Y(0), hardware and software R&D inputs over Y(0)), capital at the share that holds K/Y constant",
+  "shares frozen at their mean over steps 0-20 of the optimized run"
+ ],
+ "requires": "A simulator of GATE's laws of motion that takes a policy as input. The compiled solver exports only runSimulation (optimizes the policy itself), runSimulationChecks, getSimulationRunData and the beliefs helpers. gate_core.py does not reproduce E5, the R&D growth part of E6, or E10-E13 (EQUATIONS.md), so it cannot simulate either. Options: Epoch publishes the source or a policy-evaluation entry point; or an independent simulator closes those equations and is first checked against the official optimized runs by feeding it their own q paths."
+}

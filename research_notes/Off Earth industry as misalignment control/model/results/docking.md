@@ -2,6 +2,8 @@
 
 [[ai gen]] Written 2026-10-21 by a Claude session (branch `claude/off-earth-docking`, from `claude/off-earth-pact` at 4610aae). Scripts: `model/docking/`. Outputs: `model/docking/out/`. Figure: `model/figures/dock_metzger.png`.
 
+**Automated gate (2026-10-25, issue #7).** `docking/replication.py` turns the Saklakov and Clark docks into pinned tests. It runs on every pull request (job `model: external-model replication`). The full scripts run weekly in `.github/workflows/docking.yml`. Powell, Potapov and Metzger stay comparisons and are labelled so. The 2e-15 miss at γ = 0.95 and the q-threshold difference (1.7e-7, float cancellation) are handled with stated tolerances; see that file.
+
 **Status.** `implemented` and `verified` where a solver run is compared with a published closed form (Saklakov, Clark). The Metzger, Powell and Potapov comparisons are `implemented`: they compare against hand-read numbers or analytical conditions, not a second implementation. Nothing here is `human_validated`. `equilibrium_model.py` is unchanged: every docked model is a parameter setting of the existing solver, so no limit option was needed.
 
 ## Summary

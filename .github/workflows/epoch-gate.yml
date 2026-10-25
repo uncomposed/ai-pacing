@@ -1,11 +1,18 @@
 # Reruns Epoch's compiled GATE solver (issue #13) and compares it with the committed
 # baseline target. Needs network (epoch.ai) and about two minutes. Run by hand.
-# Never commits: the run is uploaded as an artifact for a person to review.
+# With the `variants` input it also reruns the issue #33 variant sweep (66 solves, about
+# 7 minutes on four cores) and compares it with variants/summary.json.
+# Never commits: runs are uploaded as artifacts for a person to review.
 # Actions are pinned by full commit SHA (tag in the trailing comment).
 name: epoch-gate
 
 on:
   workflow_dispatch:
+    inputs:
+      variants:
+        description: "Also rerun the #33 variant sweep (variants/jobs.json at caps 40/80/160)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -48,3 +55,54 @@ jobs:
           retention-days: 14
           if-no-files-found: warn
           path: ${{ runner.temp }}/gate/run.json
+
+  variants:
+    name: rerun the #33 variant sweep and compare with variants/summary.json
+    if: ${{ inputs.variants }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: research_notes/external/epoch-gate
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - run: node --version && nproc
+      - name: Fetch the playground bundle and check the pinned hash
+        run: official/fetch_bundle.sh "$RUNNER_TEMP/gate"
+      - name: Check variants/jobs.json against variants/spec.json and shard it
+        run: |
+          python variants/make_jobs.py --check
+          python variants/make_jobs.py --shards 4 "$RUNNER_TEMP/gate/shards"
+      - name: Run the four shards in parallel
+        run: |
+          for k in 0 1 2 3; do
+            node official/run_official.mjs "$RUNNER_TEMP/gate/gate.js" "$RUNNER_TEMP/gate/shards/run_$k.json" \
+              "$RUNNER_TEMP/gate/shards/jobs_$k.json" 2> "$RUNNER_TEMP/gate/shards/log_$k.txt" &
+          done
+          fail=0; for k in 0 1 2 3; do wait -n || fail=1; done
+          grep -h "s, objective" "$RUNNER_TEMP"/gate/shards/log_*.txt
+          exit $fail
+      - name: Reduce, render and compare with the committed summary
+        run: |
+          sha="$(sha256sum "$RUNNER_TEMP/gate/gate.js" | cut -d' ' -f1)"
+          python variants/summarize.py reduce "$sha" "$RUNNER_TEMP/gate/summary.json" "$RUNNER_TEMP"/gate/shards/run_*.json
+          python variants/summarize.py render "$RUNNER_TEMP/gate/summary.json" > "$RUNNER_TEMP/gate/RESULTS.md"
+          cat "$RUNNER_TEMP/gate/RESULTS.md" >> "$GITHUB_STEP_SUMMARY"
+          python variants/summarize.py compare "$RUNNER_TEMP/gate/summary.json"
+      - name: Keep the runs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: epoch-gate-variants
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/gate/summary.json
+            ${{ runner.temp }}/gate/RESULTS.md
+            ${{ runner.temp }}/gate/shards/run_*.json
+            ${{ runner.temp }}/gate/shards/log_*.txt
