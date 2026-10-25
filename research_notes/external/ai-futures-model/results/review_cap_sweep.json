@@ -1,0 +1,433 @@
+{
+ "what": "Review/integration throughput cap, default parameters over [2017, 2200]. Research stock grows at min(RE, kappa * RE_human) instead of RE; RE_human is the upstream's human-only research effort at the same date. kappa = inf is the upstream. Calibration (r_software), the uplift reconstruction and the automation-schedule anchoring are the upstream's and do not see the cap. Milestones are the progress-defined ones (AC, SAR, TED-AI, SIAR, ASI); multiplier-defined milestones (AIR-*x, AI2027-SC) are computed by the upstream from uncapped demand and are not reported.",
+ "status": "EXTENSION by this project (issue #49), not AIFM behaviour; scenario sweep inside the source model with kappa values chosen as scenarios, not estimated; not empirical validation; no date here is a forecast",
+ "kappas": [
+  null,
+  100.0,
+  30.0,
+  10.0,
+  5.0,
+  3.0,
+  2.0,
+  1.5,
+  1.25,
+  1.0
+ ],
+ "kappa_basis": "scenario sweep: no measurement gives the throughput of review and integration relative to a no-AI lab in these units. EV-METR-ALGO-2025 shows review overhead exists for agent code but its not_for excludes use as a conversion factor. kappa = 1 is a limit check, not a scenario.",
+ "present_day": 2026.578082,
+ "uncapped_demand_over_human_only_effort": {
+  "2024.0": 1.0050516246694707,
+  "2025.0": 1.0264887438182086,
+  "2026.0": 1.116588857284897,
+  "2026.578082": 1.2588886324532644,
+  "2027.0": 1.4583412263035402,
+  "2027.5": 1.9956165225877773,
+  "2027.7869747130487": 3.0744334451903206,
+  "2028.0": 4.980040063916623
+ },
+ "milestone_progress_levels_ooms": {
+  "AC": 37.610775233877234,
+  "SAR-level-experiment-selection-skill": 39.27547232113189,
+  "TED-AI": 40.94599719752918,
+  "SIAR-level-experiment-selection-skill": 42.58394211329703,
+  "ASI": 44.261968755218454
+ },
+ "feedback_off_same_calibration": {
+  "milestones": {
+   "AC": 2028.074599033234,
+   "SAR-level-experiment-selection-skill": 2029.407863623256,
+   "TED-AI": 2031.215540018065,
+   "SIAR-level-experiment-selection-skill": 2033.5190521896618,
+   "ASI": 2036.3753503546475
+  },
+  "ac_to_asi_years": 8.300751321413372
+ },
+ "rows": {
+  "inf": {
+   "kappa": null,
+   "milestones": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3758541264474,
+    "TED-AI": 2028.6456855354859,
+    "SIAR-level-experiment-selection-skill": 2028.8073506408632,
+    "ASI": 2028.929945371884
+   },
+   "ac_to_asi_years": 1.1429706588353383,
+   "ac_to_ted_ai_years": 0.8587108224371605,
+   "ac_to_asi_years_by_progress_level": 1.1429706588353383,
+   "compression_vs_feedback_off": 7.262436054020541,
+   "first_binding_year": null,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 1.0,
+    "at_ASI": 1.0
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3758541264474,
+    "TED-AI": 2028.6456855354859,
+    "SIAR-level-experiment-selection-skill": 2028.8073506408632,
+    "ASI": 2028.929945371884
+   },
+   "date_method_max_difference_years": 0.0,
+   "milestone_threshold_ec_max_shift_ooms": 0.0,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 129,
+    "median_rel_err": 0.001361445323783302,
+    "p99_rel_err": 0.22521934008533198,
+    "max_rel_err": 0.23776600525979397
+   }
+  },
+  "100": {
+   "kappa": 100.0,
+   "milestones": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3758541264474,
+    "TED-AI": 2028.6504098529795,
+    "SIAR-level-experiment-selection-skill": 2028.932224873849,
+    "ASI": 2029.4857180839135
+   },
+   "ac_to_asi_years": 1.698743370864804,
+   "ac_to_ted_ai_years": 0.8634351399307434,
+   "ac_to_asi_years_by_progress_level": 1.713699927063999,
+   "compression_vs_feedback_off": 4.843760094939524,
+   "first_binding_year": 2028.7,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 1.0,
+    "at_ASI": 0.039640783153576005
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3758541264474,
+    "TED-AI": 2028.651035049813,
+    "SIAR-level-experiment-selection-skill": 2028.9338347740163,
+    "ASI": 2029.5006746401127
+   },
+   "date_method_max_difference_years": 0.014956556199194893,
+   "milestone_threshold_ec_max_shift_ooms": 0.0,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 132,
+    "median_rel_err": 0.0010741230200733336,
+    "p99_rel_err": 0.07267654138037166,
+    "max_rel_err": 0.1072870438920609
+   }
+  },
+  "30": {
+   "kappa": 30.0,
+   "milestones": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3758569502604,
+    "TED-AI": 2028.7330697540629,
+    "SIAR-level-experiment-selection-skill": 2029.3317264447817,
+    "ASI": 2030.3768512826546
+   },
+   "ac_to_asi_years": 2.589876569605849,
+   "ac_to_ted_ai_years": 0.9460950410141322,
+   "ac_to_asi_years_by_progress_level": 2.616751830787962,
+   "compression_vs_feedback_off": 3.172158407896798,
+   "first_binding_year": 2028.5,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 1.0,
+    "at_ASI": 0.011080933459246822
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3758573465166,
+    "TED-AI": 2028.738998546015,
+    "SIAR-level-experiment-selection-skill": 2029.336739634521,
+    "ASI": 2030.4037265438367
+   },
+   "date_method_max_difference_years": 0.02687526118211281,
+   "milestone_threshold_ec_max_shift_ooms": 7.105427357601002e-15,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 141,
+    "median_rel_err": 0.0009865444833130185,
+    "p99_rel_err": 0.04138034665189313,
+    "max_rel_err": 0.05887156576993151
+   }
+  },
+  "10": {
+   "kappa": 10.0,
+   "milestones": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3964273156523,
+    "TED-AI": 2029.0397121025537,
+    "SIAR-level-experiment-selection-skill": 2030.1011064161123,
+    "ASI": 2031.731663010751
+   },
+   "ac_to_asi_years": 3.944688297702214,
+   "ac_to_ted_ai_years": 1.2527373895050005,
+   "ac_to_asi_years_by_progress_level": 3.984457166304992,
+   "compression_vs_feedback_off": 2.083282860111938,
+   "first_binding_year": 2028.3,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 1.0,
+    "at_ASI": 0.0033667978723159325
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.7869747130487,
+    "SAR-level-experiment-selection-skill": 2028.3991880319616,
+    "TED-AI": 2029.052048492259,
+    "SIAR-level-experiment-selection-skill": 2030.1096244065584,
+    "ASI": 2031.7714318793537
+   },
+   "date_method_max_difference_years": 0.03976886860277773,
+   "milestone_threshold_ec_max_shift_ooms": 7.105427357601002e-15,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 155,
+    "median_rel_err": 0.0008748407614317475,
+    "p99_rel_err": 0.023405128661152325,
+    "max_rel_err": 0.035121040171152834
+   }
+  },
+  "5": {
+   "kappa": 5.0,
+   "milestones": {
+    "AC": 2027.7869782706148,
+    "SAR-level-experiment-selection-skill": 2028.4946404885852,
+    "TED-AI": 2029.420716590256,
+    "SIAR-level-experiment-selection-skill": 2030.8510864146065,
+    "ASI": 2032.865902513382
+   },
+   "ac_to_asi_years": 5.078924242767243,
+   "ac_to_ted_ai_years": 1.6337383196412247,
+   "ac_to_asi_years_by_progress_level": 5.126279179653466,
+   "compression_vs_feedback_off": 1.6192546348937826,
+   "first_binding_year": 2028.1,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 1.0,
+    "at_ASI": 0.0015643129501252367
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.7869782706146,
+    "SAR-level-experiment-selection-skill": 2028.4989407078922,
+    "TED-AI": 2029.439206918967,
+    "SIAR-level-experiment-selection-skill": 2030.8615757534976,
+    "ASI": 2032.913257450268
+   },
+   "date_method_max_difference_years": 0.0473549368859949,
+   "milestone_threshold_ec_max_shift_ooms": 0.0,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 166,
+    "median_rel_err": 0.0006563269508882952,
+    "p99_rel_err": 0.015462573312520942,
+    "max_rel_err": 0.024786369336408032
+   }
+  },
+  "3": {
+   "kappa": 3.0,
+   "milestones": {
+    "AC": 2027.7869872586384,
+    "SAR-level-experiment-selection-skill": 2028.6499241851102,
+    "TED-AI": 2029.828321005308,
+    "SIAR-level-experiment-selection-skill": 2031.5527404927227,
+    "ASI": 2033.8533511906712
+   },
+   "ac_to_asi_years": 6.0663639320328,
+   "ac_to_ted_ai_years": 2.0413337466695793,
+   "ac_to_asi_years_by_progress_level": 6.119804312188535,
+   "compression_vs_feedback_off": 1.3563752855432232,
+   "first_binding_year": 2027.8,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 0.9606749368413088,
+    "at_ASI": 0.0008792278276436542
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.7869872586382,
+    "SAR-level-experiment-selection-skill": 2028.6548708251676,
+    "TED-AI": 2029.8511795275692,
+    "SIAR-level-experiment-selection-skill": 2031.565257983817,
+    "ASI": 2033.9067915708267
+   },
+   "date_method_max_difference_years": 0.05344038015550723,
+   "milestone_threshold_ec_max_shift_ooms": 7.105427357601002e-15,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 176,
+    "median_rel_err": 0.0006563269508882952,
+    "p99_rel_err": 0.007053616034386994,
+    "max_rel_err": 0.015302901273799721
+   }
+  },
+  "2": {
+   "kappa": 2.0,
+   "milestones": {
+    "AC": 2027.799489032913,
+    "SAR-level-experiment-selection-skill": 2028.8366266225282,
+    "TED-AI": 2030.2426089907258,
+    "SIAR-level-experiment-selection-skill": 2032.1962559028213,
+    "ASI": 2034.6979349502342
+   },
+   "ac_to_asi_years": 6.898445917321169,
+   "ac_to_ted_ai_years": 2.443119957812769,
+   "ac_to_asi_years_by_progress_level": 6.955133277552704,
+   "compression_vs_feedback_off": 1.1934712089851065,
+   "first_binding_year": 2027.6,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 0.6509903477220578,
+    "at_ASI": 0.0005535468874539026
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.799489032913,
+    "SAR-level-experiment-selection-skill": 2028.8429760567221,
+    "TED-AI": 2030.2691612522965,
+    "SIAR-level-experiment-selection-skill": 2032.210414126566,
+    "ASI": 2034.7546223104657
+   },
+   "date_method_max_difference_years": 0.05668736023153542,
+   "milestone_threshold_ec_max_shift_ooms": 7.105427357601002e-15,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 184,
+    "median_rel_err": 0.0007971783604630825,
+    "p99_rel_err": 0.0067874815314080215,
+    "max_rel_err": 0.014496753439610535
+   }
+  },
+  "1.5": {
+   "kappa": 1.5,
+   "milestones": {
+    "AC": 2027.8510637763104,
+    "SAR-level-experiment-selection-skill": 2029.019763454847,
+    "TED-AI": 2030.589138582217,
+    "SIAR-level-experiment-selection-skill": 2032.7089129290532,
+    "ASI": 2035.3423810719808
+   },
+   "ac_to_asi_years": 7.491317295670342,
+   "ac_to_ted_ai_years": 2.7380748059065354,
+   "ac_to_asi_years_by_progress_level": 7.550349406646546,
+   "compression_vs_feedback_off": 1.0993863825833345,
+   "first_binding_year": 2027.1,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 0.4821255743390034,
+    "at_ASI": 0.0003966228349273702
+   },
+   "progress_at_present_day_ooms": 35.52322805272468,
+   "milestones_by_progress_level": {
+    "AC": 2027.8510637763104,
+    "SAR-level-experiment-selection-skill": 2029.0273445876746,
+    "TED-AI": 2030.618890168766,
+    "SIAR-level-experiment-selection-skill": 2032.7241749208076,
+    "ASI": 2035.401413182957
+   },
+   "date_method_max_difference_years": 0.05903211097620442,
+   "milestone_threshold_ec_max_shift_ooms": 7.105427357601002e-15,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 191,
+    "median_rel_err": 0.0004904807859122638,
+    "p99_rel_err": 0.004038803947851554,
+    "max_rel_err": 0.004200791994697895
+   }
+  },
+  "1.25": {
+   "kappa": 1.25,
+   "milestones": {
+    "AC": 2027.92262925897,
+    "SAR-level-experiment-selection-skill": 2029.1724234419469,
+    "TED-AI": 2030.839955524965,
+    "SIAR-level-experiment-selection-skill": 2033.0510349767048,
+    "ASI": 2035.7675225833711
+   },
+   "ac_to_asi_years": 7.844893324401255,
+   "ac_to_ted_ai_years": 2.9173262659951433,
+   "ac_to_asi_years_by_progress_level": 7.90561062956931,
+   "compression_vs_feedback_off": 1.0499823113430504,
+   "first_binding_year": 2026.6,
+   "binds_before_present_day": false,
+   "validated_share_of_demand": {
+    "at_AC": 0.39951898717935735,
+    "at_ASI": 0.0003206501932740317
+   },
+   "progress_at_present_day_ooms": 35.52344971165322,
+   "milestones_by_progress_level": {
+    "AC": 2027.92262925897,
+    "SAR-level-experiment-selection-skill": 2029.1804810958106,
+    "TED-AI": 2030.8707943419083,
+    "SIAR-level-experiment-selection-skill": 2033.0664844604416,
+    "ASI": 2035.8282398885392
+   },
+   "date_method_max_difference_years": 0.060717305168054736,
+   "milestone_threshold_ec_max_shift_ooms": 7.105427357601002e-15,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 195,
+    "median_rel_err": 0.0006233106582069402,
+    "p99_rel_err": 0.007298901921250274,
+    "max_rel_err": 0.015044177238636356
+   }
+  },
+  "1": {
+   "kappa": 1.0,
+   "milestones": {
+    "AC": 2028.0748296452512,
+    "SAR-level-experiment-selection-skill": 2029.3987221723448,
+    "TED-AI": 2031.1831430986458,
+    "SIAR-level-experiment-selection-skill": 2033.5028871293543,
+    "ASI": 2036.3139075105728
+   },
+   "ac_to_asi_years": 8.239077865321633,
+   "ac_to_ted_ai_years": 3.1083134533946577,
+   "ac_to_asi_years_by_progress_level": 8.301636960357655,
+   "compression_vs_feedback_off": 0.9998933175530909,
+   "first_binding_year": 2017.0,
+   "binds_before_present_day": true,
+   "validated_share_of_demand": {
+    "at_AC": 0.3147890013361733,
+    "at_ASI": 0.00024649788655176346
+   },
+   "progress_at_present_day_ooms": 35.443298133396716,
+   "milestones_by_progress_level": {
+    "AC": 2028.0748296452512,
+    "SAR-level-experiment-selection-skill": 2029.4083350879,
+    "TED-AI": 2031.21598434392,
+    "SIAR-level-experiment-selection-skill": 2033.519195611664,
+    "ASI": 2036.3764666056088
+   },
+   "date_method_max_difference_years": 0.06255909503602197,
+   "milestone_threshold_ec_max_shift_ooms": 0.014231638018223691,
+   "r_software": 3.1393713670664853,
+   "flow_self_check": {
+    "points": 203,
+    "median_rel_err": 0.0003300164994159931,
+    "p99_rel_err": 0.002983160221722786,
+    "max_rel_err": 0.003938784702908747
+   }
+  }
+ },
+ "provenance": {
+  "upstream": "https://github.com/AI-Futures-Project/aifm-public",
+  "upstream_commit": "1c40ecdb246c25980515441a66571931c5604e11",
+  "upstream_tracked_files_modified": false,
+  "command": "aifm_review_ablation.py sweep",
+  "python": "3.14.6",
+  "numpy": "2.4.1",
+  "scipy": "1.17.0",
+  "platform": "Linux-6.18.44-fc-v153-x86_64-with-glibc2.39",
+  "machine": "x86_64",
+  "generated_utc": "2026-10-25T19:14:17Z",
+  "extension": "EXTENSION by this project (issue #49), not AIFM behaviour: research stock grows at min(RE, kappa * RE_human); the pinned upstream is unmodified and the cap is applied by rebinding progress_model.integration.progress_rate_at_time at run time.",
+  "runtime_patch_target": "progress_model.integration.progress_rate_at_time",
+  "mechanism": "context manager in-process (review_cap.review_cap)",
+  "upstream_files_modified": false
+ }
+}
