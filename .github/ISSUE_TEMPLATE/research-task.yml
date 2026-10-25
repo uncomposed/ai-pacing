@@ -1,0 +1,46 @@
+name: Research / validation task
+description: A scoped replication, validation or audit task with pinned sources, a Done-when list and a stopping rule.
+title: "Research: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Separate source-model replication, numerical correctness and empirical validation. Say which this task establishes and which it does not.
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: What this establishes, and what it explicitly does not. Name the baseline commit the audit is against.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary sources (pinned)
+      description: Links with version, tag or commit, and the date accessed. Recheck availability when implementing.
+    validations:
+      required: true
+  - type: textarea
+    id: done_when
+    attributes:
+      label: Done when
+      description: A checklist. A PR may say "Closes" only if every box is met.
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: stopping
+    attributes:
+      label: Stopping / falsification rule
+      description: When to stop adding structure, and what result means the approach should not be promoted. Negative results are reported, not hidden.
+    validations:
+      required: true
+  - type: textarea
+    id: coordination
+    attributes:
+      label: Coordination
+      description: Related issues (use #N), dependencies, suggested PR boundaries, and which parts can proceed independently.
+    validations:
+      required: true
