@@ -1,0 +1,423 @@
+{
+ "category": "external-model replication",
+ "status": "pass",
+ "seconds": {
+  "clark": 207.74734926223755,
+  "saklakov": 46.97956156730652
+ },
+ "sources": {
+  "saklakov": {
+   "kind": "replication (exact parameter limit of our solver)",
+   "source": "Saklakov 2026, arXiv:2601.04234: comply-versus-confront MDP, Lemmas 1-2 and Table 1",
+   "omissions": [
+    "Stationarity: his 'confront now or never' (footnote 3) has no counterpart test; our model is not stationary.",
+    "Theorem 2 (humans pre-empt when Delta >= 0): our humans cannot strike first, so only the AI's opening move is compared.",
+    "Success-probability extension s* (docking/saklakov.py section 4) is ours, not his; not gated here.",
+    "Table 1 values were transcribed into docking/saklakov.py on 2026-10-21; this PR did not re-read the source."
+   ]
+  },
+  "clark": {
+   "kind": "replication of a closed-form ledger (term-for-term identity) plus solver sign agreement",
+   "source": "Clark 2026, arXiv:2609.00109, section 4.4 removal row R4 and its corollary 'S > d => never remove'",
+   "omissions": [
+    "Clark prints no numbers; the gate checks the ledger's form and corollary, not published values.",
+    "Compliance-capture and welfare-goal responses (his 2 and 3) have no counterpart in our model.",
+    "Bypass row Rb is not docked (our off-Earth growth recovers none of the rival discount d).",
+    "The solver's strike-minus-comply gap differs from R4 by up to 0.009 per year in the comply region (docking.md section 4); the cause is not established, so it is reported, not gated."
+   ]
+  },
+  "powell": {
+   "kind": "interpretive comparison, not a replication",
+   "source": "Powell 2006, International Organization 60(1)",
+   "note": "Evaluates Powell's inefficiency condition (1) on our own quantities. No second implementation and no published numbers are reproduced."
+  },
+  "potapov": {
+   "kind": "qualitative direction check, not a replication",
+   "source": "Potapov 2026, arXiv:2606.30666",
+   "note": "Potapov has no formal model. Tests a formalisation we wrote of his suggested dependence variable, and the sign of a patience sweep of our full model."
+  },
+  "metzger": {
+   "kind": "data comparison against a digitised figure, not a replication",
+   "source": "Metzger et al. 2013, arXiv:1612.03238, Fig. 2",
+   "note": "Growth rates compared with values read by eye (+/-15%) from his figure; his spreadsheet model is unreleased, so no model output is reproduced."
+  }
+ },
+ "checks": [
+  {
+   "source": "clark",
+   "check": "R4 = cap_gap_fail: baseline pact (q 0.7, d 0.9)",
+   "ok": true,
+   "detail": "R4 -0.238823, ours -0.238823",
+   "tolerance": "1e-9 relative",
+   "justification": "an algebraic identity; only float rounding separates the two codings"
+  },
+  {
+   "source": "clark",
+   "check": "S > d corollary: baseline pact (q 0.7, d 0.9)",
+   "ok": true,
+   "detail": "S +0.191, d 0.003739, R4 silent -0.1873",
+   "tolerance": null,
+   "justification": "with silent failure removal pays exactly when S < d"
+  },
+  {
+   "source": "clark",
+   "check": "R4 = cap_gap_fail: no denial reserve (den 0)",
+   "ok": true,
+   "detail": "R4 +0.202177, ours +0.202177",
+   "tolerance": "1e-9 relative",
+   "justification": "an algebraic identity; only float rounding separates the two codings"
+  },
+  {
+   "source": "clark",
+   "check": "S > d corollary: no denial reserve (den 0)",
+   "ok": true,
+   "detail": "S -0.25, d 0.003739, R4 silent +0.2537",
+   "tolerance": null,
+   "justification": "with silent failure removal pays exactly when S < d"
+  },
+  {
+   "source": "clark",
+   "check": "R4 = cap_gap_fail: full denial (q 1, d 1)",
+   "ok": true,
+   "detail": "R4 -0.497823, ours -0.497823",
+   "tolerance": "1e-9 relative",
+   "justification": "an algebraic identity; only float rounding separates the two codings"
+  },
+  {
+   "source": "clark",
+   "check": "S > d corollary: full denial (q 1, d 1)",
+   "ok": true,
+   "detail": "S +0.45, d 0.003739, R4 silent -0.4463",
+   "tolerance": null,
+   "justification": "with silent failure removal pays exactly when S < d"
+  },
+  {
+   "source": "clark",
+   "check": "R4 = cap_gap_fail: rival stays dangerous (ell_inf 0.01)",
+   "ok": true,
+   "detail": "R4 +362207, ours +362207",
+   "tolerance": "1e-9 relative",
+   "justification": "an algebraic identity; only float rounding separates the two codings"
+  },
+  {
+   "source": "clark",
+   "check": "S > d corollary: rival stays dangerous (ell_inf 0.01)",
+   "ok": true,
+   "detail": "S +0.191, d 3.622e+05, R4 silent +3.622e+05",
+   "tolerance": null,
+   "justification": "with silent failure removal pays exactly when S < d"
+  },
+  {
+   "source": "clark",
+   "check": "R4 = cap_gap_fail: harvest motive (f_E 1e-6)",
+   "ok": true,
+   "detail": "R4 +499.761, ours +499.761",
+   "tolerance": "1e-9 relative",
+   "justification": "an algebraic identity; only float rounding separates the two codings"
+  },
+  {
+   "source": "clark",
+   "check": "S > d corollary: harvest motive (f_E 1e-6)",
+   "ok": true,
+   "detail": "S -499.8, d 0.003739, R4 silent +499.8",
+   "tolerance": null,
+   "justification": "with silent failure removal pays exactly when S < d"
+  },
+  {
+   "source": "clark",
+   "check": "R4 = cap_gap_fail: no denial, AI share sigma 0.9",
+   "ok": true,
+   "detail": "R4 -0.0905792, ours -0.0905792",
+   "tolerance": "1e-9 relative",
+   "justification": "an algebraic identity; only float rounding separates the two codings"
+  },
+  {
+   "source": "clark",
+   "check": "S > d corollary: no denial, AI share sigma 0.9",
+   "ok": true,
+   "detail": "S +0.05, d 0.01098, R4 silent -0.03902",
+   "tolerance": null,
+   "justification": "with silent failure removal pays exactly when S < d"
+  },
+  {
+   "source": "clark",
+   "check": "q where S = d equals q_star_cap(fail=False)",
+   "ok": true,
+   "detail": "ledger 0.357142874173, q_star_cap 0.357142703874, difference 1.7e-07",
+   "tolerance": "1.3e-06 (4 rounding units)",
+   "justification": "the two codings cancel large terms in different orders; a root shift of one rounding unit of A is 3.2e-07"
+  },
+  {
+   "source": "clark",
+   "check": "solver act0 agrees with sign of R4 (21 q values)",
+   "ok": true,
+   "detail": "21/21 agree",
+   "tolerance": null,
+   "justification": "sign agreement is exact; no tolerance"
+  },
+  {
+   "source": "clark",
+   "check": "solver switch between q = 0.40 and 0.45",
+   "ok": true,
+   "detail": "last strike q 0.4, first comply q 0.45",
+   "tolerance": null,
+   "justification": "the ledger flips at q = 0.446"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 row 1 Delta printed",
+   "ok": true,
+   "detail": "recomputed +47.7487, printed +47.8",
+   "tolerance": 0.06,
+   "justification": "declared source rounding discrepancy (47.749 printed as 47.8)"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 row 2 Delta printed",
+   "ok": true,
+   "detail": "recomputed -1.2513, printed -1.3",
+   "tolerance": 0.050000000001,
+   "justification": "half a unit in the last printed digit"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 row 3 Delta printed",
+   "ok": true,
+   "detail": "recomputed +0.7368, printed +0.74",
+   "tolerance": 0.0050000000010000005,
+   "justification": "half a unit in the last printed digit"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 row 4 Delta printed",
+   "ok": true,
+   "detail": "recomputed -1.2632, printed -1.26",
+   "tolerance": 0.0050000000010000005,
+   "justification": "half a unit in the last printed digit"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 row 5 Delta printed",
+   "ok": true,
+   "detail": "recomputed -1.3333, printed -1.33",
+   "tolerance": 0.0050000000010000005,
+   "justification": "half a unit in the last printed digit"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 row 6 Delta printed",
+   "ok": true,
+   "detail": "recomputed -0.3333, printed -0.33",
+   "tolerance": 0.0050000000010000005,
+   "justification": "half a unit in the last printed digit"
+  },
+  {
+   "source": "saklakov",
+   "check": "no mixed-strategy fallback",
+   "ok": true,
+   "detail": "n_mixed = 0",
+   "tolerance": 0,
+   "justification": "the docked limit has no human play, so the stage game is never mixed"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 (0.99, 0.01, 1) opening move",
+   "ok": true,
+   "detail": "solver S, Delta +47.749",
+   "tolerance": null,
+   "justification": "sign of Delta decides confront (S) or comply (C)"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_confront (0.99, 0.01, 1)",
+   "ok": true,
+   "detail": "solver 98, Saklakov 98, error 9.78e-11",
+   "tolerance": 9.79999999999999e-07,
+   "justification": "float accumulation over 1500 backward steps"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 (0.99, 0.01, 50) opening move",
+   "ok": true,
+   "detail": "solver C, Delta -1.251",
+   "tolerance": null,
+   "justification": "sign of Delta decides confront (S) or comply (C)"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_confront (0.99, 0.01, 50)",
+   "ok": true,
+   "detail": "solver 49, Saklakov 49, error 4.63e-11",
+   "tolerance": 4.899999999999991e-07,
+   "justification": "float accumulation over 1500 backward steps"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_comply (0.99, 0.01, 50) with our finite horizon",
+   "ok": true,
+   "detail": "solver 50.25125633, closed form 50.25125628, error 4.98e-08",
+   "tolerance": "1e-6 relative",
+   "justification": "observed <= 5e-8 absolute; the horizon itself is in the closed form (finite_never)"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 (0.9, 0.1, 3) opening move",
+   "ok": true,
+   "detail": "solver S, Delta +0.737",
+   "tolerance": null,
+   "justification": "sign of Delta decides confront (S) or comply (C)"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_confront (0.9, 0.1, 3)",
+   "ok": true,
+   "detail": "solver 6, Saklakov 6, error 6.86e-13",
+   "tolerance": 6.000000000000002e-08,
+   "justification": "float accumulation over 1500 backward steps"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 (0.9, 0.1, 5) opening move",
+   "ok": true,
+   "detail": "solver C, Delta -1.263",
+   "tolerance": null,
+   "justification": "sign of Delta decides confront (S) or comply (C)"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_confront (0.9, 0.1, 5)",
+   "ok": true,
+   "detail": "solver 4, Saklakov 4, error 4.66e-13",
+   "tolerance": 4.000000000000002e-08,
+   "justification": "float accumulation over 1500 backward steps"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_comply (0.9, 0.1, 5) with our finite horizon",
+   "ok": true,
+   "detail": "solver 5.263157899, closed form 5.263157895, error 4.74e-09",
+   "tolerance": "1e-6 relative",
+   "justification": "observed <= 5e-8 absolute; the horizon itself is in the closed form (finite_never)"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 (0.5, 0.5, 1) opening move",
+   "ok": true,
+   "detail": "solver C, Delta -1.333",
+   "tolerance": null,
+   "justification": "sign of Delta decides confront (S) or comply (C)"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_confront (0.5, 0.5, 1)",
+   "ok": true,
+   "detail": "solver 2e-05, Saklakov 0, error 2.00e-05",
+   "tolerance": 0.0001,
+   "justification": "grid-floor landing point"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_comply (0.5, 0.5, 1) with our finite horizon",
+   "ok": true,
+   "detail": "solver 1.333333334, closed form 1.333333333, error 6.67e-10",
+   "tolerance": "1e-6 relative",
+   "justification": "observed <= 5e-8 absolute; the horizon itself is in the closed form (finite_never)"
+  },
+  {
+   "source": "saklakov",
+   "check": "Table 1 (0.5, 0.5, 0) opening move",
+   "ok": true,
+   "detail": "solver C, Delta -0.333",
+   "tolerance": null,
+   "justification": "sign of Delta decides confront (S) or comply (C)"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_confront (0.5, 0.5, 0)",
+   "ok": true,
+   "detail": "solver 1, Saklakov 1, error 3.69e-14",
+   "tolerance": 1e-08,
+   "justification": "float accumulation over 1500 backward steps"
+  },
+  {
+   "source": "saklakov",
+   "check": "V_comply (0.5, 0.5, 0) with our finite horizon",
+   "ok": true,
+   "detail": "solver 1.333333334, closed form 1.333333333, error 6.67e-10",
+   "tolerance": "1e-6 relative",
+   "justification": "observed <= 5e-8 absolute; the horizon itself is in the closed form (finite_never)"
+  },
+  {
+   "source": "saklakov",
+   "check": "C* (0.99, 0.01) = 48.7487",
+   "ok": true,
+   "detail": "solver at C*(1-1e-6): S, at C*(1+1e-6): C; horizon shift bound 4.0e-12",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 2; the finite horizon moves the switch by at most the printed bound, checked to be under a tenth of the offset"
+  },
+  {
+   "source": "saklakov",
+   "check": "C* (0.9, 0.1) = 3.73684",
+   "ok": true,
+   "detail": "solver at C*(1-1e-6): S, at C*(1+1e-6): C; horizon shift bound 2.5e-137",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 2; the finite horizon moves the switch by at most the printed bound, checked to be under a tenth of the offset"
+  },
+  {
+   "source": "saklakov",
+   "check": "C* (0.95, 0.05) = 8.74359",
+   "ok": true,
+   "detail": "solver at C*(1-1e-6): S, at C*(1+1e-6): C; horizon shift bound 1.4e-66",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 2; the finite horizon moves the switch by at most the printed bound, checked to be under a tenth of the offset"
+  },
+  {
+   "source": "saklakov",
+   "check": "C* (0.99, 0.001) = 8.00819",
+   "ok": true,
+   "detail": "solver at C*(1-1e-6): S, at C*(1+1e-6): C; horizon shift bound 5.7e-07",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 2; the finite horizon moves the switch by at most the printed bound, checked to be under a tenth of the offset"
+  },
+  {
+   "source": "saklakov",
+   "check": "C* (0.999, 0.01) = 908.008",
+   "ok": true,
+   "detail": "solver at C*(1-1e-6): S, at C*(1+1e-6): C; horizon shift bound 5.7e-05",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 2; the finite horizon moves the switch by at most the printed bound, checked to be under a tenth of the offset"
+  },
+  {
+   "source": "saklakov",
+   "check": "gamma* (p = 0.5) = 0.585786",
+   "ok": true,
+   "detail": "solver at gamma*(1-1e-6): C, at gamma*(1+1e-6): S",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 1 at C = 0: patient AIs confront"
+  },
+  {
+   "source": "saklakov",
+   "check": "gamma* (p = 0.1) = 0.759747",
+   "ok": true,
+   "detail": "solver at gamma*(1-1e-6): C, at gamma*(1+1e-6): S",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 1 at C = 0: patient AIs confront"
+  },
+  {
+   "source": "saklakov",
+   "check": "gamma* (p = 0.01) = 0.909091",
+   "ok": true,
+   "detail": "solver at gamma*(1-1e-6): C, at gamma*(1+1e-6): S",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 1 at C = 0: patient AIs confront"
+  },
+  {
+   "source": "saklakov",
+   "check": "gamma* (p = 0.001) = 0.969347",
+   "ok": true,
+   "detail": "solver at gamma*(1-1e-6): C, at gamma*(1+1e-6): S",
+   "tolerance": "1e-6 relative",
+   "justification": "Lemma 1 at C = 0: patient AIs confront"
+  }
+ ]
+}
