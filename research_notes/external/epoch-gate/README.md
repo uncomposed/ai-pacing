@@ -14,7 +14,8 @@ the model represents (who decides, which modes, which units).
 |---|---|
 | **Source replication** (official code reproduces its own published outputs) | **Done for the three playground presets.** Epoch's compiled solver, rerun under Node from the pinned bundle, reproduces the playground's cached runs bit for bit (10,484 values per preset, max relative difference 0). |
 | **Independent implementation** | **Partial, labelled.** `gate_core.py` evaluates paper equations on the official solver's states and decisions. It does not solve the planner problem. Six equations hold to rounding on every step of the three presets (E1-E4, E16 with E17, and the capital share in E14); three hold as inequalities (E6 caps, E7 monotone training run, E8-E9 deployed share within the frontier); the rest are not reproduced (E5, the R&D growth part of E6, E10-E13 runtime and task layer, E14 TFP once automation starts, E15, E18, E19). See [EQUATIONS.md](EQUATIONS.md). |
-| **Numerical correctness of GATE** | **Not established.** The solver stops at its iteration cap (40) in every run; doubling the cap moves trajectory values by up to 2% (steps 0-20) but leaves every milestone unchanged. See "Convergence". |
+| **Numerical correctness of GATE** | **Not established.** The solver stops at its iteration cap (40) in every run; doubling the cap moves trajectory values by up to 2% (steps 0-20) but leaves every milestone unchanged. See "Convergence". The #33 sweep (22 variants at caps 40, 80 and 160) also stops at the cap in all 66 runs. |
+| **Robustness of qualitative conclusions** (#33) | **Done within the source model, for six stated conclusions and 21 variants.** No verdict changes between caps; the partial-automation, timing and labor-friction variants flip some conclusions. See "Variants (issue #33)" and [variants/RESULTS.md](variants/RESULTS.md). Feedback-off is defined but not run: the compiled solver cannot evaluate a fixed policy. |
 | **Empirical validation** | **None.** Nothing here is compared with observations. Matching a published trajectory is not evidence that GATE's assumptions hold, and says nothing about sovereign AI. |
 
 The official solver's source is not public (see Sources). "Official code" here means
@@ -61,7 +62,34 @@ python3 official/diagnostics.py                                    # convergence
 ```
 
 The `epoch-gate` workflow (`.github/workflows/epoch-gate.yml`, run by hand) does the
-same and uploads the run as an artifact. It never commits. `data/baseline_target.json`
+same and uploads the run as an artifact. It never commits. With the `variants` input
+checked it also reruns the #33 sweep (66 solves; about 7 minutes on four idle cores, 17
+minutes locally on a shared machine) and compares every full trajectory hash with
+`variants/summary.json`:
+
+```sh
+python3 variants/make_jobs.py --shards 4 /tmp/gate/shards           # variants/spec.json -> jobs
+for k in 0 1 2 3; do node official/run_official.mjs /tmp/gate/gate.js /tmp/gate/shards/run_$k.json /tmp/gate/shards/jobs_$k.json & done; wait
+python3 variants/summarize.py reduce <bundle-sha256> /tmp/gate/summary.json /tmp/gate/shards/run_*.json
+python3 variants/summarize.py compare /tmp/gate/summary.json        # vs the committed summary
+python3 variants/summarize.py render /tmp/gate/summary.json         # the RESULTS.md tables
+```
+
+Redeploy watch: `.github/workflows/epoch-gate-watch.yml` runs every Monday and by hand. It
+downloads `gate.js` as served, extracts the parameter table and the three presets
+(`official/bundle_meta.mjs`) and diffs them against `data/bundle_pin.json`, the same
+extraction of the pinned bundle (`official/bundle_watch.py`). The job fails when the hash
+has changed; the report (new hash, size, every parameter-table and preset difference) is in
+the step summary and the artifact. A person records it under "Discrepancies" with the date.
+The workflow never commits and never moves the pin. Locally:
+
+```sh
+curl -sSfL -o /tmp/watch/gate.js https://epoch.ai/generated/gate.js
+node official/bundle_meta.mjs /tmp/watch/gate.js /tmp/watch/meta.json
+python3 official/bundle_watch.py /tmp/watch/meta.json               # exit 1 on a redeploy
+```
+
+Checked 2026-10-25: the served bundle still has the pinned hash. `data/baseline_target.json`
 was produced by `official/extract_target.py` from a local run on 2026-10-25 (Node
 v22.22.0); a second local run from a fresh download was bit-identical.
 
@@ -121,9 +149,10 @@ every run, so both pass.
   optimizer-limited at the percent level; milestones (integer steps) are not.
 - A 0.1-OOM change in the AGI training requirement moves compute investment at step 14 by
   about 30% in both directions while milestones barely move. That is larger than the
-  maxiter effect, so it is probably real sensitivity rather than noise, but we have not
-  separated the two (follow-up). Epoch's own documentation warns that results can be
-  optimizer artefacts and suggests exactly this perturbation test.
+  maxiter effect. The #33 sweep separates the two: at cap 160 the 0.1-OOM moves shift
+  GWP or compute investment by up to |ln| 0.30-0.35, against 0.06 between caps for the
+  same variants (ratio 5-6; variants/RESULTS.md). Epoch's own documentation warns that
+  results can be optimizer artefacts and suggests exactly this perturbation test.
 
 Cheap comparisons (exploratory, default preset, one parameter changed; objectives are not
 comparable across different worlds):
@@ -135,7 +164,104 @@ comparable across different worlds):
 | R&D wedge 8 (planner sees 1/8 of R&D returns; the playground table's default for the add-on) | 10 | 6 | 446%/yr |
 | planner certain only 80% of tasks are automatable (`max_frac_beliefs` [{prob 1, max_frac 0.8}]) | never (f caps at 0.8) | 5 | 52%/yr |
 
-These are single runs, not the comparison #13 asks for; see "Not done".
+These are single runs; the comparison #13 and #33 ask for is the next section.
+
+## Variants (issue #33)
+
+[[ai gen]] 2026-10-25. Everything here is the output of the pinned official solver,
+unchanged; only its arguments vary. It tests the model against itself, not against the
+world.
+
+**Variant set** ([variants/spec.json](variants/spec.json), expanded to
+[variants/jobs.json](variants/jobs.json)): the default preset, then one change each:
+partial automation (maximum automatable fraction 0.5, 0.8, 0.9, with the planner certain
+of it; the realized fraction is capped there too), labor-reallocation friction on, R&D
+wedge 2, 8 and 20, rho -0.3, -1.0 and -2.0 (default -0.65), eta 1.2, 2.0 and 3.0 (default
+1.45), AGI training requirement 1e36.0, 1e36.4, 1e36.6 and 1e37.0 eFLOP (default 1e36.5),
+FLOP gap fraction 0.4 and 0.7 (default 0.55), and the Conservative and Aggressive presets.
+22 variants, each at iteration caps 40, 80 and 160: 66 solves. All values are inside the
+playground's soft ranges.
+
+**Conclusions tested** (fixed before the sweep was read, from the paper's headline claims
+and #13's baseline; predicates in `variants/summarize.py`):
+
+- C1. explosive growth: annual GWP growth reaches 30%/yr;
+- C2. hyper-explosive growth: it reaches 100%/yr;
+- C3. growth takes off (30%/yr) strictly before the automated fraction reaches its maximum;
+- C4. the automated fraction reaches its maximum within 10 model years (step <= 9);
+- C5. the step-0 compute share of output is at least 10 times the observed initial share
+  I_Q(0)/Y(0) = 0.18%;
+- C6. by step 20 the compute share has fallen below half its peak over steps 0-20.
+
+**Verdict rule** (the issue's stopping rule): a conclusion whose predicate differs between a
+variant's caps is "not robust"; otherwise it "survives" or "flips" against the default,
+which must itself agree across caps (it does, for all six).
+
+**Results** ([variants/RESULTS.md](variants/RESULTS.md), generated from
+[variants/summary.json](variants/summary.json)):
+
+| conclusion | survives | flips | not robust | flips under |
+|---|---|---|---|---|
+| C1 explosive growth | 20 | 1 | 0 | max_frac 0.5 (peak 26%/yr) |
+| C2 hyper-explosive growth | 18 | 3 | 0 | max_frac 0.5, 0.8, 0.9 (peaks 26, 52, 91%/yr against 515%/yr) |
+| C3 growth before full automation | 19 | 2 | 0 | max_frac 0.5 (no take-off); labor friction (both at step 9) |
+| C4 automation within 10 years | 13 | 8 | 0 | R&D wedge 2/8/20 (step 10, 10, 11), rho -2.0 (10), eta 2.0/3.0 (10, 12), T 1e37 (10), Conservative (15) |
+| C5 immediate compute build-out | 21 | 0 | 0 | - |
+| C6 compute build-out is transitional | 21 | 0 | 0 | - |
+
+What this says, within GATE:
+
+- **No conclusion flips inside the optimizer-noise band.** Every predicate gives the same
+  answer at caps 40, 80 and 160 in all 22 variants, so the stopping rule never triggers.
+  This is a statement about integer milestones and thresholds; trajectory values are not
+  pinned to better than a few percent (below).
+- **Hyper-explosive growth needs essentially full automation.** With 90% of tasks
+  automatable, peak growth is 91%/yr; with 80%, 52%/yr; with 50%, 26%/yr and no 30% year.
+  That is what the task-level CES complementarity (rho < 0) in GATE's production function
+  implies: the tasks left to humans bottleneck output. The growth-before-full-automation result (C3) survives a
+  partial cap down to 0.8 but not labor friction, where take-off and full automation land
+  in the same year.
+- **The compute build-out conclusions are the most robust**: C5 and C6 hold in every
+  variant, including Conservative (step-0 compute share 0.07 to 0.14, except eta 2.0 and
+  3.0 at 0.06 and 0.04; all above the 0.018 threshold).
+- **Timing is the least robust**, as expected: C4's threshold is the default's own step 9,
+  so any one-year delay flips it. Most flips are delays of one to three years; Conservative
+  is six.
+- **Optimizer noise against sensitivity.** Between caps, the default's GWP and compute
+  investment over steps 0-20 move by at most |ln| 0.027 (about 3%) and its shares by 0.1
+  points. Every variant's departure from the default is at least 4 times its own
+  cap-to-cap noise in levels and at least 9 times in shares. The noise is much larger in
+  rho -0.3, eta 1.2, max_frac 0.5 and Aggressive (|ln| 0.3 to 1.6): in those runs the
+  compute share falls to near zero by step 20 and the optimizer does not pin how near
+  (Aggressive step-20 compute share 0.0011 / 0.0005 / 0.0002 by cap). Late compute
+  investment levels in those runs should not be read.
+- **Finding: more iterations do not always help.** For flop_gap_0.4 the objective at cap 80
+  (0.610349) is worse than at cap 40 (0.610324); cap 160 is best. The learning rate decays
+  over `maxiter`, so different caps are different optimization runs, not one run stopped
+  at different points. In the other 21 variants the objective falls with the cap. No run
+  meets the solver's own tolerance: all 66 stop at the cap.
+- The runs overlapping with #13's jobs (default at 40 and 80, the presets,
+  train_reqs 36.4 and 36.6, labor friction, R&D wedge 8, max_frac 0.8) reproduce
+  `data/baseline_target.json` bit for bit (tested).
+
+**Feedback-off: defined, not run (extension, future work).** GATE's planner reallocates
+output every year as the economy grows; that response is the feedback. "Feedback-off" is
+defined in [variants/feedback_off.json](variants/feedback_off.json) as GATE's laws of motion
+with the allocation frozen at the default run's step-0 shares (consumption 0.76, capital
+0.001, compute 0.096, hardware R&D 0.035, software R&D 0.109; training 0.90 of compute),
+values recorded per cap. This is not source behavior. It cannot be run on the compiled
+solver: the WebAssembly module exports only `runSimulation` (which optimizes the policy
+itself), `runSimulationChecks`, `getSimulationRunData` and the beliefs helpers, with no
+policy input, and the policy (`allocation_grid`, 101 points) is an output. Two shortcuts
+were considered and rejected: `maxiter` 1 returns the optimizer's initial guess, whose
+shares change during the run (they are not frozen); patching the module would no longer be
+the official solver. `gate_core.py` cannot simulate either (E5, part of E6, E10-E13 not
+reproduced). Running it needs a policy-evaluation entry point from Epoch or an independent
+simulator validated first on the official optimized runs.
+
+**Bundle watch.** `.github/workflows/epoch-gate-watch.yml` (weekly and by hand) compares
+the served `gate.js` with the pin and reports a redeploy with the new hash and a diff of
+the parameter table and presets (see "How to run").
 
 ## Discrepancies
 
@@ -206,9 +332,22 @@ These are single runs, not the comparison #13 asks for; see "Not done".
    Futures: **drafted** (INTERFACES.md). It cannot be closed until #14 pins AI Futures and
    #11 fixes the shared quantity bridge.
 7. Bottleneck/partial-automation, allocation and feedback-off comparisons; do policy
-   conclusions survive: **not done.** Three single exploratory runs above. GATE has no
-   feedback-off switch; one would have to be built (e.g. fixing investment shares at their
-   initial values), and that is outside the source model.
+   conclusions survive: **done for bottleneck/partial-automation and allocation variants
+   in #33** ("Variants (issue #33)"); feedback-off is defined there but not run, because
+   the compiled solver cannot evaluate a fixed policy.
+
+### Done-when boxes of #33
+
+1. Variant set through the pinned solver (partial automation 0.5/0.8/0.9, labor friction,
+   R&D wedge, rho and eta sweeps, training requirement and FLOP gap): **done** (plus the
+   two other presets).
+2. Feedback-off defined outside GATE and labelled an extension: **defined, labelled, not
+   run** (variants/feedback_off.json; why above). Running it is future work.
+3. Conclusions stated and a verdict recorded per variant: **done** (six conclusions, 21
+   variants, variants/RESULTS.md).
+4. Every variant at several iteration caps: **done** (40, 80, 160).
+5. Redeploy watch comparing the pinned SHA-256, reporting new hash and table/preset diff:
+   **done** (epoch-gate-watch workflow; not yet run on GitHub).
 8. Separate source replication, historical component validation and hypothetical
    extensions in status and outputs: **partly** (status table above; no historical
    component validation exists yet).

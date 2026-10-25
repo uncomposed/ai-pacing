@@ -23,7 +23,7 @@ records:
     source:
       citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, January 2013; doi:10.1061/(ASCE)AS.1943-5525.0000236"
       url: "https://arxiv.org/abs/1612.03238v1"
-      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref says issue 26.2, Crossref says issue 1. The version of record (ascelibrary.org) returned HTTP 403 and was not compared."
+      version: "arXiv v1 (2016-12-10), the only arXiv version: the authors' manuscript stamped 'Preprint. To appear in Journal of Aerospace Engineering', PDF created 2012-03-30, sha256 637bd6111871f535a945a55539c4bb959ba8e23ea38dae2608896397e171bc62. Volume, issue, pages and dates from Crossref (checked 2026-10-25); arXiv's journal-ref (author-supplied) says issue 26.2, Crossref says issue 1; #40 resolved this to issue 1 from Crossref's pagination of the whole issue (pages 1-196 contiguous, 18-29 between 5-17 and 30-36; see EV-ASCE-METZGER-VOR-NOT-READ). The version of record (ascelibrary.org) returned HTTP 403 and was not compared; only its abstract was compared, through OpenAlex's copy."
     reading: read_primary
     observation_date: not_applicable
     availability_date: "2013-01"
@@ -39,7 +39,7 @@ records:
       note: "Re-digitized values agree with the by-eye ones within 5% (largest: Gen 4.0 max, 1368 t against 1440 t). Fitted max-case rate 0.647/yr (by eye 0.651). The 2-year generation spacing is not a doubling time (AS-GCITE). Gen 1.0 markers of both cases overlap. Points are placed at t = 0, 2, ..., 12 years per the caption, which includes Gen 2.5."
     uncertainty:
       kind: digitization
-      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's max-case '40,000 MT with as many as 100,000 humanoid robots' does not match Fig. 2 (about 23,100 t at Gen 6.0); unresolved. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
+      description: "Axis calibration from six decade gridlines (68.4 px per decade); marker centres to about +-1 px, i.e. +-3.4% per point; the reduced case ends at 150.8 t against 156 t in the abstract (-3.4%, one pixel). The abstract's '40,000 MT with as many as 100,000 humanoid robots' is not Fig. 2's nominal max case (about 23,100 t at Gen 6.0); #40 located it in the sensitivity figures instead: Fig. 11 (Gen 6.0 mass 38,700 to 47,400 t, 18,000 to 103,000 robonauts across printer speeds 0.1 to 0.5 kg/h) and Fig. 13 (fast robonauts, about 45,000 t), both read by eye from page renders (+-5%). Not reconciled: Fig. 11's 0.5 kg/h point (about 39,000 t) against Fig. 2's nominal 0.5 kg/h case (23,100 t), which share the nominal printer speed. Model-form uncertainty of the source (0.5 kg/h printing is 'a high estimate') is not quantified. Conversion to Earth-industry units (energy bridge) is a separate, unidentified scale assumption: research_notes/external/units-bridge/conversions.yaml CV-METZGER-T-TO-EIU."
     depends_on: []
     fitted_to: []
     intended_use: ["basis check and comparison for the solver's growth rate g (AS-GROWTH-G, AS-GCITE)", "docking comparison", "example of basic (not leading-edge) chip closure at small scale (units-bridge CL-BASIC-CHIPS)"]
@@ -345,7 +345,7 @@ records:
       locator: "sections 2-5 (equations), appendix B (solution), appendix C (parameter tables); see research_notes/external/epoch-gate/EQUATIONS.md"
       by: "issue #13 session, 2026-10-25"
       date: "2026-10-25"
-      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4."
+      note: "Paper defaults differ from the playground in places (FLOP gap fraction, R&D returns); README D4. Price base (#40, units-bridge): the appendix C table gives Y(0) as 'real USD/year', 105 to 115 trillion (110 trillion), 'the total economic value produced globally in 2024'; no base year or price index is stated anywhere in the TeX source. The default is derived there from World Bank 'GDP (current US$)' (cited as worldbank2022gdp; 'around $106T' in 2023) grown by about 3% a year, so its price base is current nominal US$ at market rates, not a constant-dollar year."
     uncertainty:
       kind: unquantified
       description: "Structural and parameter uncertainty of the source model; the authors call quantitative predictions substantially uncertain and unreliable."
@@ -1106,6 +1106,36 @@ records:
     intended_use: ["marking AIFM outputs as non-independent of Epoch data", "what AIFM bundles; cite the EV-EPOCH-* records for Epoch's data"]
     not_for: ["empirical support (cite the primary EV-EPOCH-* records, noting the vintage differences)"]
 
+  # Units bridge recheck (issue #42): AIFM's own unit conventions and the beliefs that stand where the units bridge
+  # would need a measured link from coding speed to research output.
+  - id: EV-UNITS-AIFM-CONVENTIONS
+    kind: source_model_assumption
+    title: "AI Futures Model unit conventions and default beliefs on coding uplift and software progress"
+    source:
+      citation: "AI Futures Project, AI Futures Model (aifm-public), progress_model/config.py and progress_model/_impl.py"
+      url: "https://github.com/AI-Futures-Project/aifm-public"
+      version: "commit 1c40ecdb246c25980515441a66571931c5604e11 (2026-09-09), fetched with research_notes/external/ai-futures-model/fetch_upstream.sh on 2026-10-25"
+    reading: read_primary
+    observation_date: not_applicable
+    availability_date: "2026-09-09"
+    availability_basis: "Commit date of the public release; earlier history is not public."
+    units: "H100e (FLOP/s); OOMs of effective FLOP per physical FLOP; OOM per year; serial coding uplift (ratio); months"
+    population: "default parameters of one source model; no observed system"
+    protocol: "read from the code at the pinned commit"
+    extraction:
+      method: quoted
+      locator: "config.py:113-115 (TRAINING_COMPUTE_REFERENCE_YEAR = 2025.13, 'Normalize 0 software efficiency to Grok 3'); config.py:111 (SOFTWARE_PROGRESS_SCALE_REFERENCE_YEAR = 2024.0); config.py:122 (FLOP_PER_H100E_YEAR = 0.4e15 * 3.15576e7, 'H100 nameplate 1e15 FLOP/s * 0.4 utilization'); config.py:248 (software_progress_rate_at_reference_year = 1); config.py:299-301 (serial_uplift_at_reference_date = 2.0, 'Daniel Q2: sqrt(0.25 * 4) + 1'; excess_uplift_doubling_time = 5.0 months; uplift_reference_date = 2026.578082); config.py:335 (parallel_penalty = 0.5); _impl.py:1835-1837 (software_efficiency and effective_compute shifted so SE = 0 at the reference year)"
+      by: "issue #42 session"
+      date: "2026-10-25"
+      note: "The serial uplift is an elicited belief (a geometric mean of an elicited range), not read from an uplift study. The 1 OOM/yr software progress rate at 2024 is described in #14's MECHANISMS.md as literature-based; the code cites no source."
+    uncertainty:
+      kind: unquantified
+      description: "Judgment values; the sampling configs carry 80% ranges for the elicited ones (serial uplift: 1 plus a lognormal with 80% range 0.25 to 4, i.e. 1.25 to 5; config/sampling_config_q2_daniel.yaml:45-50). Unit conventions (H100e utilization 0.4) are not measurements."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["units of AIFM quantities in the units bridge (#42)", "stating why the coding-speed-to-research-output link is not identified"]
+    not_for: ["empirical support for any uplift, software progress rate or utilization", "a conversion from METR time horizons or developer-productivity ratios to research output"]
+
   # Units bridge (issue #39): the measured scale of the Earth-industry unit's output rate.
   - id: EV-WB-WDI-GDP-2026
     kind: observation
@@ -1134,3 +1164,87 @@ records:
     fitted_to: []
     intended_use: ["scale of the Earth-industry unit's output rate: one EIU/yr = reference-year GWP (units-bridge CV-GWP-TO-EIU-OUTPUT, DEF-EIU)", "reading GATE's USD output in EIU/yr for comparison", "industry's share of world value added (DEF-EIU rejected readings)"]
     not_for: ["converting projected GWP paths into capacity growth (a real-USD index stops tracking capacity under large relative price changes)", "coupling GATE output into the pact solver's H or A", "any statement about off-Earth output prices"]
+
+  - id: EV-ASCE-METZGER-VOR-NOT-READ
+    kind: source_model_output
+    title: "Metzger et al. 2013, version of record on ascelibrary.org (not read)"
+    source:
+      citation: "Metzger, Muscatello, Mueller and Mantovani, J. Aerospace Eng. 26(1):18-29, ASCE, doi:10.1061/(ASCE)AS.1943-5525.0000236"
+      url: "https://ascelibrary.org/doi/10.1061/%28ASCE%29AS.1943-5525.0000236"
+      version: "version of record; not retrieved. https://ascelibrary.org and https://doi.org/ both returned HTTP 403 to automated access on 2026-10-25 (#40), with a browser user agent."
+    reading: not_read
+    observation_date: not_applicable
+    availability_date: "2013-01"
+    availability_basis: "Crossref published-print 2013-01; DOI registered 2012-04-02."
+    units: "not_applicable"
+    population: "model scenarios of a lunar bootstrapping industry; no observed system"
+    protocol: "not read"
+    extraction:
+      method: summarized_from_secondary
+      locator: "issue number: Crossref API works/10.1061/(ASCE)AS.1943-5525.0000236 (volume 26, issue 1, page 18-29) and Crossref journal listing for ISSN 0893-1321, 2013-01 to 2013-03 (20 items, all volume 26 issue 1, pages 1-4 to 183-196 contiguous; 18-29 lies between 5-17 and 30-36); abstract: OpenAlex W2135062463 abstract_inverted_index, taken to be the publisher's abstract"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "Abstract compared word by word with the arXiv v1 abstract: numbers identical (156 t, 60 robots, 40,000 t, 100,000 robots, 41 t, 12 t); wording differs only editorially ('metric tons (MT)' to 't', 'due to' to 'because of', 'sub-replicating' to 'subreplicating', one 'it' deleted). Issue: the publisher-deposited metadata gives issue 1 and the page run sits inside issue 1's continuous pagination, so arXiv's 'Journal of Aerospace Engineering 26.2' is taken as an author-supplied error; the publisher's own page was not read, so this is inferred from deposited metadata, not read there. Body text, figures, tables and any changes made after the manuscript (stamped 'Preprint. To appear', PDF created 2012-03-30) are unknown."
+    uncertainty:
+      kind: unquantified
+      description: "Differences between the manuscript read (EV-METZGER-2013) and the version of record beyond the abstract are unknown. OpenAlex's abstract may itself be a secondary copy."
+    depends_on: [EV-METZGER-2013]
+    fitted_to: []
+    intended_use: ["motivation", "record of what was and was not compared"]
+    not_for: ["any claim about the published figures or numbers", "empirical support"]
+
+  - id: EV-EI-STATREV-NOT-READ
+    kind: observation
+    title: "Energy Institute Statistical Review of World Energy: world primary energy, 2024, 2025 and 2026 editions (not read in primary form)"
+    source:
+      citation: "Energy Institute, Statistical Review of World Energy (annual, June); editions 2024, 2025, 2026"
+      url: "https://www.energyinst.org/statistical-review"
+      version: "no edition retrieved. https://www.energyinst.org/, /statistical-review, /statistical-review/resources-and-data-downloads and the 2025 full-report PDF returned HTTP 403 to curl with a browser user agent; the WebFetch tool could not resolve the host (2026-10-25, #40). The Wayback Machine reset the connection."
+    reading: not_read
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-06"
+    availability_basis: "Annual June release; the 2026 edition is the one OWID cites (see EV-OWID-EI-ENERGY-2026)."
+    units: "exajoules per year of primary energy (the 2025 and later editions call it total energy supply)"
+    population: "world energy supply as compiled by the Energy Institute from national statistics"
+    protocol: "not read"
+    extraction:
+      method: summarized_from_secondary
+      locator: "none; the repository's earlier values (620 EJ in 2023, EI 2024; 592 EJ in 2024, EI 2025) come from DieselNet summaries cited in decision_model.md and physics_economics.md"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "Recorded as unread under #40's stopping rule: the uncertainty bounds of CV-EIU-TO-PRIMARY-POWER are kept. The best available substitute is EV-OWID-EI-ENERGY-2026, which republishes the 2026 edition's series and is not a primary reading."
+    uncertainty:
+      kind: unquantified
+      description: "Unknown, since nothing was read. The change of method between editions is documented only in secondary summaries."
+    depends_on: []
+    fitted_to: []
+    intended_use: ["motivation", "record that the primary source was attempted and blocked"]
+    not_for: ["empirical support: it was not read in primary form"]
+
+  - id: EV-OWID-EI-ENERGY-2026
+    kind: observation
+    title: "World total energy supply 2022-2025 as republished by Our World in Data from the Energy Institute Statistical Review 2026"
+    source:
+      citation: "Our World in Data, 'Primary energy use' grapher (primary-energy-cons), citing Energy Institute, Statistical Review of World Energy (2026); Smil (2017); U.S. Energy Information Administration (2026), with major processing by Our World in Data"
+      url: "https://ourworldindata.org/grapher/primary-energy-cons.csv"
+      version: "CSV fetched 2026-10-25, sha256 d0be59ece4013ede9dbcc2dadc9272cdb5cb8da123bd82c03c173b9a8686ac9f (347,323 bytes); metadata JSON (same URL with .metadata.json) says lastUpdated 2026-06-30, nextUpdate 2027-06-30"
+    reading: read_secondary_only
+    observation_date: {start: "2022", end: "2025"}
+    availability_date: "2026-06-30"
+    availability_basis: "OWID's lastUpdated date for the series."
+    units: "terawatt-hours of total energy supply per year; converted here at 3.6e-3 EJ/TWh and to mean power over a 365.25-day year"
+    population: "world aggregate (entity 'World', OWID_WRL)"
+    protocol: "Energy Institute data as processed by OWID (extension with EIA data where the Review has no total; Smil for years before 1965); not the Review itself"
+    extraction:
+      method: summarized_from_secondary
+      locator: "CSV rows Entity=World, Year 2022-2025, column 'Total energy supply'"
+      by: "issue #40 session"
+      date: "2026-10-25"
+      note: "2022 157,938.77 TWh = 568.6 EJ = 18.0 TW; 2023 160,876.92 TWh = 579.2 EJ = 18.35 TW; 2024 164,494.10 TWh = 592.2 EJ = 18.77 TW; 2025 166,753.60 TWh = 600.3 EJ = 19.02 TW. 2024 reproduces the 592 EJ the repository took from the EI 2025 summary. 2023 is 579 EJ in this series against 620 EJ in the EI 2024 summary: the change of method is large (about 7%) and applies to earlier years. The repository's lower bound for the factor, 1.88e13 W, sits above this series' 2023 value (1.835e13 W)."
+    uncertainty:
+      kind: unquantified
+      description: "Measurement uncertainty is not reported by the source. OWID's processing and the Review's own method changes are not audited here; the series is a republication, so a transcription or processing difference from the Review itself is possible."
+    depends_on: [EV-EI-STATREV-NOT-READ]
+    fitted_to: []
+    intended_use: ["secondary cross-check of the scale of world primary energy in CV-EIU-TO-PRIMARY-POWER", "showing the method change between editions"]
+    not_for: ["empirical support: read in secondary form only", "any off-Earth energy intensity"]
