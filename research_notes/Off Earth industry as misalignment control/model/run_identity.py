@@ -217,6 +217,13 @@ def _kind_parts(kind: str, opts: dict | None):
         fields = {k: "float64" for k in bo.KEEP} | {"act0": "<U1"}
         extra = {}
         cfg0 = bo.CFG
+    elif kind == "strike_odds":         # breakout runs on the patched solver: the patch text is part of the identity
+        import breakout_options as bo
+        import strike_odds as so
+        fns = (rd.apply_design, rd.batches_for, so._solve, so.patches, so.build)
+        fields = {k: "float64" for k in bo.KEEP} | {"act0": "<U1"}
+        extra = {}
+        cfg0 = bo.CFG
     else:
         raise ValueError(f"run_identity: unknown kind {kind!r}")
     return fns, fields, extra, cfg0
