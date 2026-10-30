@@ -36,6 +36,7 @@ test:
 	@python3 research_notes/external/hugging-face-incident/test_hf_incident.py
 	@python3 test/omissions_tool_test.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_variants.py"
+	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_strike_odds.py"
 	@python3 research_notes/external/metr-time-horizons/test_metr_time_horizons.py
 	@python3 research_notes/external/re-bench/test_re_bench.py
 	@python3 "research_notes/Off Earth industry as misalignment control/model/tests/test_gates.py"
