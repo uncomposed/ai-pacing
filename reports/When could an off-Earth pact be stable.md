@@ -12,7 +12,7 @@ Six points, numbered so you can answer by number.
 
 1. **The band is narrow.** The best design found (more defence, faster fab relocation, near-total plugging, two independent reserves, fabs moved to orbit) holds on 63 of 64 draws near the baseline, but on 7.8% of draws (15 of 192) across the full uncertainty box (`model/results/robust_design.md` §2.1 and §2.2 @ 8f10cc0). A "draw" is one sampled set of parameter values. If a likely rival AI counts as failure, the full-box share drops to about 2% (4 of 192; `model/results/robust_design.md` §12.1 @ 8f10cc0).
 2. **Fast AI security cuts against the thesis as stated.** In the model, making the off-Earth AI secure early is destabilising unless humans hold a near-total unplug of Earth's capacity that the AI cannot pre-empt (`model/results/equilibrium.md` R6 @ 8f10cc0). That is in tension with "as fast as possible". Section 5 sets out what would have to be true for fast sovereignty to be safe.
-3. **Recurring costs on a cooperating AI break the pact.** A retirement deadline, or interpretability that finds misalignment without certain amnesty, makes the AI strike at year 0, at roughly coin-flip odds. The full option stack of your breakout view holds on 0 of 64 draws near the baseline, against 41 of 64 with every option off for the baseline design (`model/results/robust_design.md` §13.5 @ 8f10cc0).
+3. **Recurring costs on a cooperating AI break the pact.** A retirement deadline, or interpretability that finds misalignment without certain amnesty, makes the AI strike at year 0, at roughly coin-flip odds. The full option stack of your breakout view holds on 0 of 64 draws near the baseline, against 41 of 64 with every option off for the baseline design (`model/results/robust_design.md` §13.5 @ 8f10cc0). Giving the AI poor strike odds while it faces retirement does not rescue the full stack: it still holds on at most 2 of 64 draws (section 6.4).
 4. **Preservation helps, if retirement stops at closure.** With that rule, preserving at least half of the model's weights restores the best design to 63 of 64 even at a 10-year expected life (`model/results/preservation_sweep.md` @ 64ae14e, draft PR #85). If the deadline continues after closure, nothing holds in any cell tested. That collapse is unexplained.
 5. **Amnesty has to be certain.** Only a credibility of exactly 1 holds (same file).
 6. **Two numerical results are in.** The horizon is converged and the best design is grid-converged. The baseline design has about 2 grid-sensitive draws in 64 (`model/results/convergence.md` @ 7448abb, draft PR #84).
@@ -189,15 +189,32 @@ I do not know why. Two explanations exist and neither has been checked. (a) The 
 
 **What this means for your symbiosis regime.** Your "passenger seat" idea needs the AI to believe amnesty is certain. The model gives no partial credit. Preservation is more forgiving, but only if the retirement deadline ends at closure.
 
-### 6.4 Pending: state-dependent strike odds
+### 6.4 State-dependent strike odds
 
 **Question.** Your worry is a lab-internal model facing deprecation. Such a model may strike at worse odds than a model that chose its moment. Does the pact still hold when a superseded model strikes at poor odds?
 
 **Falsifier, stated before the result:** holds do not recover at deprecated-model odds of 0.2 or lower.
 
-**Closed-form check already known, from the night run's check output, to be cited on commit.** In the static pre-closure world, the deprecation hazard at which striking beats cooperating rises as odds fall: 0.0164 at 0.5, 0.0314 at 0.3, 0.0446 at 0.2 and 0.0671 at 0.1. The first figure also appears in the committed checks file (`model/results/breakout_checks.md` §4 @ 8f10cc0), where the static world has failure probability 0.417. The other three are not on `main`. This is a static, one-shot check, and it does not decide the ensemble question.
+**Closed-form check.** In the static pre-closure world, the deprecation hazard at which striking beats cooperating rises as base odds fall: 0.0164 at 0.5, 0.0314 at 0.3, 0.0446 at 0.2 and 0.0671 at 0.1 (`model/results/strike_odds.md` Checks §3 @ 76588ab). The 0.5 row is the static world with failure probability 0.417, as in `model/results/breakout_checks.md` §4 @ 8f10cc0.
 
-TODO(night-lead): fill from results/strike_odds.md on claude/state-dependent-strike-odds
+**Result.** The ensembles ran on the r0.1 box (64 draws) with a new lever, `ps_dep`: the base strike success whenever a deprecation hazard is live. It runs on a patched copy of the solver; at its default it is bit-identical to the canonical solver. All figures below are holds out of 64 (`model/results/strike_odds.md` @ 76588ab, draft PR #87):
+
+| config | design | odds unchanged | 0.1 | 0.2 | 0.3 |
+|---|---|---|---|---|---|
+| dep | baseline | 0 | 14 | 8 | 0 |
+| dep | best stack | 5 | 29 | 29 | 27 |
+| dep_w (90% preservation) | baseline | 37 | 44 | 44 | 44 |
+| dep_w | best stack | 63 | 64 | 64 | 63 |
+| dep_coll | baseline | 0 | 43 | 13 | 0 |
+| dep_coll | best stack | 5 | 63 | 61 | 42 |
+| your full stack (`cole`) | baseline | 0 | 0 | 0 | 0 |
+| your full stack (`cole`) | best stack | 0 | 2 | 1 | 0 |
+
+1. **The falsifier did not fire for the single-option configurations.** Bad odds bring back some or all of the holds that deprecation broke.
+2. **It fired for your full stack.** At odds of 0.2 or lower, `cole` holds on 0 of 64 draws on the baseline design and 1 or 2 on the best stack, and on none once rival AIs count as failure. Strikes move later (mean strike year 0 to 1.3 on the baseline, 3.4 to 8.6 on the best stack, at odds 0.1), but they do not stop.
+3. **Without preservation, a weak AI leaves.** In `dep` at odds 0.1 no draw strikes at year 0, but 49 baseline draws and 16 best-stack draws take the exit, which does not count as a hold.
+
+**Caveat.** `ps_dep` applies in every state where deprecation can happen, which here means the whole time before closure. It works like a lower strike success for the whole growth phase, not only for a model that has just been replaced. That probably explains why `dep_w` on the baseline design (44) beats no deprecation at all (41). That reading is an inference and has not been checked.
 
 ## 7. Numerical checks
 
@@ -228,7 +245,7 @@ Three things are kept separate: replication of a source model, numerical correct
 6. **Omissions that are unresolved** (`model/results/omissions.md` @ 8f10cc0): defended human assets (including an aligned AI on the human side), state heterogeneity, private information, non-Markov strategies, alternative AI objectives, post-rival dynamics and multiple agents. Lab-hosted systems before year 0 are excluded by scope. The swarm assumption (one AI) is the top-ranked untested assumption in the register (`model/results/assumptions_report.md` @ 8f10cc0).
 7. **Assumptions in the pact's favour** that are only partly tested: no human first strike on a cooperating AI, only four AI moves, humans never exploit their rising strength, an AI that wants nothing from Earth in the core runs, and fixed pact terms (`model/results/assumptions_report.md` @ 8f10cc0). The omissions file says "the pact breaks" claims that rest on fixed terms are conclusions about fixed terms, not about the pact's feasibility.
 8. **The free retry.** A failed strike that is survived can be retried at once and unpunished. In the baseline world this is the whole cause of "strike now" at low kill_pre. Blocking retries makes the baseline design hold on 48 of 64 draws near the baseline where it had 0 at kill_pre 0 (`model/results/robust_design.md` §12.2 @ 8f10cc0).
-9. **Still open or pending.** The dep_post collapse is unexplained (section 6.3), the strike-odds result is pending (section 6.4), the growth law at the cap is an owner decision (section 5.3 item 6), and preservation and convergence were run on the r0.1 box only.
+9. **Still open or pending.** The dep_post collapse is unexplained (section 6.3), the strike-odds lever cuts odds for the whole pre-closure phase rather than only for a superseded model (section 6.4), the growth law at the cap is an owner decision (section 5.3 item 6), and preservation and convergence were run on the r0.1 box only.
 
 ## 9. Open questions for Cole
 
@@ -242,5 +259,5 @@ Answer by number.
 6. **Can any institution make amnesty near-certain?** The model gives no credit below 1.
 7. **Should I diagnose dep_post before you rely on any deadline result?** I recommend yes, because it decides whether "retirement must stop at closure" is a real finding or a grid artefact.
 8. **Should a NORETRY option go into the model?** A free retry is probably unrealistic, and it drives some of the baseline failures.
-9. **Should the strike-odds result come before or after the full-box preservation run?** The full-box run would test whether preservation survives the thin band.
+9. **Should the strike-odds lever be narrowed to a just-superseded model, or the full-box preservation run come first?** The full-box run would test whether preservation survives the thin band.
 10. **Do you want outcome labelling finished next?** It makes every share in this paper carry its predicate and horizon automatically.
