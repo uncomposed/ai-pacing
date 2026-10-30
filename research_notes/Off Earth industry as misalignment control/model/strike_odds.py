@@ -190,7 +190,7 @@ def checks(pool):
         p0 = [dict(rd.apply_design(t, dv), **op) for t in sub]
         a = {k: v for k, v in _solve(([dict(p, ps_dep=p["p_s0"]) for p in p0], bo.CFG)).items()}
         b = _solve((p0, bo.CFG))
-        rows.append(["dep: ps_dep equal to each draw's p_s0 vs off", des, f"{maxdiff(a, b):.3g}",
+        rows.append(["dep: ps_dep equal to each draw's p_s0 vs ps_dep 0 (a no-op)", des, f"{maxdiff(a, b):.3g}",
                      bool(np.all(a["act0"] == b["act0"]))])
     for r in rows:
         data["identity"].append(dict(case=r[0], design=r[1], maxdiff=float(r[2]), act0_same=r[3]))
