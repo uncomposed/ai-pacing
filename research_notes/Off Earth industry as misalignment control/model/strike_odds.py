@@ -214,9 +214,9 @@ def checks(pool):
     return "\n".join(L), data, ok
 
 
-def solve(pool, runs):
+def solve(pool, runs, ps=None):
     th = bo.boxes()["r0.1"]
-    for x in PS:
+    for x in ps or PS:
         for cfg in RUN_CFGS:
             for des, dv in bo.DESIGNS.items():
                 run_ens(th, dv, dict(CONFIGS[cfg], ps_dep=x), pool, f"{des}__{cfg}__ps{x:g}", runs)
@@ -267,6 +267,7 @@ def main():
     ap.add_argument("--solve", action="store_true")
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--runs-dir", required=True, help="cache folder; must not be results/breakout_runs")
+    ap.add_argument("--ps", default=None, help="comma-separated ps_dep values for --solve (default: all of PS)")
     a = ap.parse_args()
     runs = os.path.abspath(a.runs_dir)
     if runs == os.path.abspath(bo.RUNS):
@@ -285,7 +286,7 @@ def main():
             if not ok:
                 raise SystemExit("strike_odds.py --check FAILED")
         if a.solve:
-            solve(pool, runs)
+            solve(pool, runs, [float(x) for x in a.ps.split(",")] if a.ps else None)
     if a.report:
         report(runs)
 
