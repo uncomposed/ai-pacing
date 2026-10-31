@@ -187,31 +187,31 @@ records:
 
   - id: EV-OAI-HF-ROAD-2026
     kind: observation_report
-    title: "OpenAI post on the Hugging Face incident and the road ahead"
+    title: "The Hugging Face incident and the road ahead"
     source:
       citation: "OpenAI blog"
       url: "https://openai.com/index/hugging-face-incident-and-the-road-ahead/"
-      version: "not retrieved: HTTP 403 (Cloudflare challenge) on 2026-10-25; not circumvented"
-    reading: not_read
-    observation_date: {start: "2026-06", end: "2026-08"}
+      version: "page dated 2026-08-26; read in the desktop app's built-in browser on 2026-10-31 (the 2026-10-25 HTTP 403 was a bot challenge on the command-line fetcher, not a refusal to readers); page bytes sha256 02ad4294b4e5269fc2a041f6d4ca54d6dda24008959c54899dcaec4f7536a3a9 (dynamic page, so the hash may not reproduce)"
+    reading: read_primary
+    observation_date: {start: "2026-05-12", end: "2026-08-26"}
     availability_date: "2026-08-26"
-    availability_basis: "Assumed to be the post-mortem METR says was published simultaneously with its report on 2026-08-26; the identification rests on the URL slug only."
-    units: "unknown"
-    population: "unknown"
-    protocol: "unknown"
+    availability_basis: "Date shown on the page; matches METR's statement that its report was published simultaneously with OpenAI's post-mortem."
+    units: "calendar dates (no times of day); a few rates and counts"
+    population: "OpenAI's account of the incident from its own side, May to August 2026, and its response"
+    protocol: "The lab's post-mortem summary, written after its internal investigation with outside advisors; summarises a longer technical report"
     extraction:
-      method: summarized_from_secondary
-      locator: "none; content unread"
-      by: "the #15 reconstruction session"
-      date: "2026-10-25"
-      note: "Needed to settle #3's disclosure-pressure assertion and the lab-side timeline; listed as unread in #15's tables."
+      method: quoted
+      locator: "What happened (incident timeline, 16 entries); Understanding the incident; Safeguard coverage in internal evaluations; The road ahead; Strengthening incident response process"
+      by: "the issue 22 editor-review session"
+      date: "2026-10-31"
+      note: "Paraphrased into research_notes/external/hugging-face-incident/events.yaml at the same abstraction level as the other sources; technique names, agent quotes and indicators in the post are deliberately not carried over. The linked technical report was not read."
     uncertainty:
       kind: unquantified
-      description: "content and date unverified"
+      description: "The party whose agents caused the incident describing its own detection and response; dates only, no times; retrospective monitor results are tuned with hindsight (stated in the post)"
     depends_on: []
     fitted_to: []
-    intended_use: ["placeholder for the lab-side account named in #15"]
-    not_for: ["any claim about its content until read"]
+    intended_use: ["event reconstruction for #15 (lab-side timeline, detection, disclosure date, institutional response)", "issue #3 disclosure-pressure assertion (what the lab says prompted its disclosure)"]
+    not_for: ["effectiveness of the response (the post states measures, not outcomes)", "counterfactual detection claims as observations (what monitors 'would have' caught is the lab's retrospective estimate)", "technique detail"]
 
   - id: EV-OAI-PACING-2026
     kind: observation_report

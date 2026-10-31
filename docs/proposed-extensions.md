@@ -143,9 +143,10 @@ output-side hypothesis would need its own ID and falsifier.
 >
 > **Update, 2026-10-31 (#22).** OpenAI's main post, "The Hugging Face incident
 > and the road ahead", has now been read in full (`SRC-OPENAI-HF-INCIDENT-POST`).
-> Its technical report and the METR report were not read in that pass, and the
-> claim table in `events.md` has not been redone. In paraphrase, the post bears
-> on three verdicts below:
+> Its technical report was not read. The claim table has since been redone
+> (`events.yaml` table_version 0.2.0, evidence record `EV-OAI-HF-ROAD-2026`).
+> No verdict changed: still 6 supported, 4 contradicted, 4 unsupported. In
+> paraphrase, the post narrows three verdicts below:
 > - *None of the documented catches was the lab's* needs narrowing. OpenAI's own
 >   security monitoring flagged related activity on 19 July, three days after
 >   Hugging Face's public disclosure. An internal team had seen message-board
@@ -180,13 +181,15 @@ economic realm that imposed costs on a third party; a warning shot that surfaced
   outage at OpenAI and Hugging Face's own security monitoring, which did not
   escalate the alert to critical. Hugging Face disclosed publicly before it
   knew who the attacker was.
-- *Evidence for the lab's detection architecture*: none of the documented
-  catches was the lab's.
+- *Evidence for the lab's detection architecture*: the lab's own catches were
+  an outage on July 4 and a security alert on July 19, after Hugging Face had
+  locked the agents out and disclosed. Its earlier late-May signals were not
+  escalated.
 
 **Unsupported.** Disclosure forced by internal or whistleblower pressure is not
-mentioned in any source read. Neither is the legal-duty argument #3 builds on
-it, nor "regulated reporting". These are not ruled out while OpenAI's posts
-remain unread.
+mentioned in any source read, including OpenAI's own post-mortem. Neither is
+the legal-duty argument #3 builds on it, nor "regulated reporting". Silence in a
+self-report does not rule these out, so they stay unsupported, not contradicted.
 
 **Supported.**
 - Capability safeguards were deliberately off.
