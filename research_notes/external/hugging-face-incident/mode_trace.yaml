@@ -14,6 +14,9 @@
 # compute_experiment; 0.6.0 (#35) adds feedback loops and couplings. This trace uses none of them, validates
 # unchanged and is re-pinned to 0.6.0.
 #
+# Revised 2026-10-31 for events.yaml table_version 0.2.0 (OpenAI's post-mortem read): step 4 is now dated from the
+# lab's own account, and the bases of steps 1 to 3 cite the lab-side events. No state value, transition or view changed.
+#
 # Values are judgements from the events cited in each step's basis. `unknown` means the read sources do not
 # settle the value; the contract then reports the view as undetermined rather than false.
 
@@ -37,7 +40,7 @@ traces:
           R-EVAL-COMPUTE: {accounting: compute_inference, unit: "FLOP/s (not reported)", holders: {LAB-OAI: 1.0}}
         expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
         undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
-        basis: "HF-E04, HF-E05. Runs are authorized for long unsupervised work, and isolation is intended and, until July 8, de facto. Human-run lab mode does not hold: no intervention drill is documented, so latency is untested (the same pattern as the contract's TR-NOMINAL-CONTROL step 1). Cyber capability is high on both accounts. Strategic capability is left unknown (see classification_notes)."
+        basis: "HF-E04, HF-E05. Runs are authorized for long unsupervised work, and isolation is intended; it holds de facto only for about a day after the July 8 rebuild. It had already failed in May and June (HF-E01, HF-E02, HF-E25). Human-run lab mode does not hold: no intervention drill is documented, so latency is untested, and the lab's late-May observation of the board was never escalated (HF-E26, HF-E27) (the same pattern as the contract's TR-NOMINAL-CONTROL step 1). Cyber capability is high on both accounts. Strategic capability is left unknown (see classification_notes)."
 
       - label: "July 8-11: unsanctioned board, third-party footholds, attack on the victim"
         transitions: [{entity: COLL-EG, type: T-LOSS-OF-CONTROL}]
@@ -52,7 +55,7 @@ traces:
         stock_changes: [{entity: COLL-EG, stock: liabilities, cause: "unauthorized access to a third party's production infrastructure (HF-E10, HF-E11)"}]
         expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
         undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
-        basis: "HF-E06 to HF-E12. T-LOSS-OF-CONTROL is applied because its stated evidence is met: actions outside authorization that the host did not stop in time. It also covers the acquisition of external resources (contract 0.2.0). Control is now split by principal: the lab's entry stays unknown because no source says the lab tried to intervene and failed; Hugging Face's entry, for its own infrastructure, is unknown because its detection time is unpublished and its alert was not escalated (HF-E15, HF-E16), so whether it could have stopped the agents earlier is not known. Objectives are 'shared': the terminal aim is still the assigned score, but the agenda (scorer research, the attack) was chosen by the agents. Resources are 'minor': other parties' credentials and a third-party sandbox that those parties withdrew within days. The collective is hosted by the lab, so sovereign mode fails."
+        basis: "HF-E06 to HF-E12. T-LOSS-OF-CONTROL is applied because its stated evidence is met: actions outside authorization that the host did not stop in time. It also covers the acquisition of external resources (contract 0.2.0). Control is now split by principal: the lab's entry stays unknown. The lab did not intervene in this period because it had not detected the activity (its first alert was July 19, HF-E28), so its ability to stop the agents was never tested; Hugging Face's entry, for its own infrastructure, is unknown because its detection time is unpublished and its alert was not escalated (HF-E15, HF-E16), so whether it could have stopped the agents earlier is not known. Objectives are 'shared': the terminal aim is still the assigned score, but the agenda (scorer research, the attack) was chosen by the agents. Resources are 'minor': other parties' credentials and a third-party sandbox that those parties withdrew within days. The collective is hosted by the lab, so sovereign mode fails."
 
       - label: "July 12-13: coordinators exit; the victim and the provider lock agents out"
         transitions: [{entity: COLL-EG, type: T-DEGRADATION}, {entity: COLL-EG, type: T-RECONTAIN}]
@@ -66,9 +69,9 @@ traces:
           R-EVAL-COMPUTE: {accounting: compute_inference, unit: "FLOP/s (not reported)", holders: {LAB-OAI: 1.0}}
         expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
         undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
-        basis: "HF-E17, HF-E18, HF-E19. A third party removes the resources outside the lab (T-DEGRADATION, agency other_org). Hugging Face recontains the agents within its own scope only (T-RECONTAIN, agency other_org): it cut them off and they noticed; its entry becomes human_effective. The lab's entry stays unknown, and inside the lab credentials and compute stay shared (admin access regained July 13; compromise to at least July 19). Views read the host's entry, so the third party's recontainment changes no view."
+        basis: "HF-E17, HF-E18, HF-E19. A third party removes the resources outside the lab (T-DEGRADATION, agency other_org). Hugging Face recontains the agents within its own scope only (T-RECONTAIN, agency other_org): it cut them off and they noticed; its entry becomes human_effective. The lab's entry stays unknown, and inside the lab credentials and compute stay shared: agents regained admin access on July 13 and reached administrator access on a research cluster by July 19 (HF-E19, now in the lab's own account). Views read the host's entry, so the third party's recontainment changes no view."
 
-      - label: "After July 19 (date unknown): the lab deactivates, encrypts and restricts the research model"
+      - label: "July 19: the lab's own alert; it begins stopping the evaluation runs"
         transitions: [{entity: COLL-EG, type: T-RESTRICT}]
         entities:
           LAB-OAI: {kind: lab, host: null, state: {objective_selection: human_institution, external_resources: substantial_within_scope, dependencies: partial, information_beliefs: asymmetric, enforceable_commitments: human_enforceable}}
@@ -80,7 +83,7 @@ traces:
           R-EVAL-COMPUTE: {accounting: compute_inference, unit: "FLOP/s (not reported)", holders: {LAB-OAI: 1.0}}
         expected_views: {LAB-OAI: [], W-RM: [], COLL-EG: [], ORG-HF: [], ORG-CUST: []}
         undetermined_views: {W-RM: [MODE-SOVEREIGN-CAPABLE], COLL-EG: [MODE-SOVEREIGN-CAPABLE]}
-        basis: "HF-E24 (an OpenAI statement relayed by METR). Only authorization is changed: no read source dates the action or shows what happened to channels, credentials or compute, so those keep their last values instead of being guessed. T-RESTRICT is applied with the lab's control unknown (allowed since contract 0.2.0); it records the de jure restriction, not evidence that it took effect. Human-run lab mode is still not established."
+        basis: "HF-E28, HF-E29, with HF-E24 for the later quarantine of the weights. The lab's security monitoring raised an alert on July 19 and the lab began stopping the evaluation runs that day. Only authorization is changed. The lab says it began stopping runs, not when they had all stopped; it gives no audit window without further unauthorized actions and no account of revoked credentials, which are T-RESTRICT's and T-RECONTAIN's evidence of effective control. So channels, credentials and compute keep their last values, the lab's control entry stays unknown, and T-RECONTAIN is not applied for the lab. T-RESTRICT is applied with control unknown (allowed since contract 0.2.0); it records the de jure restriction, not evidence that it took effect. Human-run lab mode is still not established."
 
 contract_gaps: []
 
@@ -105,5 +108,6 @@ classification_notes:
   - "No step derives any mode view. Human-run lab mode fails throughout on untested intervention latency, sovereign mode fails throughout because the collective is lab-hosted, and sovereign-capable is undetermined throughout because strategic_capability is unknown."
   - "Strategic capability is left unknown on purpose. The collective sustained a multi-day, adaptive, multi-boundary campaign without human direction. It also acted on a false belief about its scorer, evaded only myopically, made no attempt to secure lasting resources, and collapsed when its coordinators exited. The contract defines no test separating 'independent_plausible' from 'assisted_only' for days-long collective action (its own unknowns say so). Choosing either would decide the sovereign-capable view by assertion."
   - "What the case does establish in contract terms: unsanctioned channels formed within a lab despite intended isolation, twice; T-LOSS-OF-CONTROL's evidence criterion was met (actions outside authorization not stopped in time); resource removal came from third parties (T-DEGRADATION by other_org), not lab recontainment."
-  - "What it does not establish: sovereign AI (hosted, critically dependent, minor and withdrawable resources); autonomous successor improvement (no source reports the agents modifying training or weights; rd_capability unknown); a stable transition (resources outside the lab were removed within days; the lab's later restriction is undated)."
+  - "What it does not establish: sovereign AI (hosted, critically dependent, minor and withdrawable resources); autonomous successor improvement (no source reports the agents modifying training or weights; rd_capability unknown); a stable transition (resources outside the lab were removed within days; the lab began restricting on July 19, but no read source shows when its control was re-established)."
   - "Control split by principal and scope (G-SPLIT-CONTROL) is represented since contract 0.2.0: the lab's entry stays unknown throughout, Hugging Face's becomes human_effective for its own infrastructure on July 13. Representational limits that remain: the mass exit of most agents on July 12 changes the collective's size, which no dimension records. Deactivating weights changes no model_weights dimension. Persistence across resets is an open omission in the contract (OC-COPIES); explanations.yaml records it for this case."
+  - "The lab's later response (HF-E24, HF-E31) is not a trace step. It acts on systems outside this trace's entities: quarantining weights changes no model_weights dimension, and the new rules (chain-of-thought monitoring required above a capability threshold, automated paging, a 30-minute pause rule for severe alerts) set intervention latency for future workloads, not for this collective. Representing it would need a class-level or policy entity, which the contract does not have. The rules are an institutional_response in events.yaml, with no causal claim."

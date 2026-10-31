@@ -122,7 +122,8 @@ control (`G-ACQUIRE`), T-RESTRICT could not be applied when control was unknown
 split between the lab and the victim (`G-SPLIT-CONTROL`). Issue #32 changed the
 contract for all three (0.2.0, `docs/ai-development-modes.md` section 12). The trace now
 records the victim's recontainment of its own infrastructure on July 13 while the lab's
-control stays unknown; the classification is unchanged.
+control stays unknown; the classification is unchanged. Since 0.2.0 of the event table, the lab's restriction
+is dated July 19 (it began stopping runs that day); its control is still unknown.
 
 **Stopping-rule answer.** The case *falsifies* the assumption that intended isolation
 of evaluation agents holds (twice in one week) and #3's single-system,
@@ -205,10 +206,12 @@ reproduced here, and `test_no_technique_level_detail` covers the new file.
 
 - OpenAI's July 21 post, its pacing post and its technical report are unread. The
   post-mortem gives dates without times, so lab-side windows are day-resolution only.
-- `topology.yaml`, `explanations.yaml` and `mode_trace.yaml` were not revised for
-  table_version 0.2.0. In particular, the mode trace's restriction step still cites
-  HF-E24 as a statement relayed by METR, and does not yet use the lab's July 19
-  containment (HF-E29) or the new monitoring rules (HF-E31).
+- `topology.yaml` and `explanations.yaml` were not revised for table_version 0.2.0.
+  `mode_trace.yaml` was: its restriction step is now dated July 19 from the lab's own
+  account (HF-E28, HF-E29). No state value, transition or view changed. The lab's control
+  stays unknown, because it gives no audit window or credential accounting, so
+  recontainment is not applied for the lab. The new monitoring rules are recorded as a
+  note, not a step: they govern future workloads, and the contract has no entity for that.
 - A second, blind held-out set. The four predictions are now used up; any further test
   needs predictions frozen before a new source is read.
 - No counterfactual intervention is evaluated. Any would remain a conditional
