@@ -39,7 +39,9 @@ module AIPacing
   LEGACY_COLLISION_IDS = %w[D1 D2 D3 D4 D5 D6 H1 H2 H3 H4 H5 I1 I2 I3 Q3 Q4].freeze
   REGISTRY_COLLISIONS = %w[none same-proposition legacy reserved-conflict].freeze
   REGISTRY_STATUSES = {
-    "yaml" => %w[accepted proposed],
+    # "withdrawn": the editor removed the node from the YAML. Its ID stays
+    # registered so it is never reused.
+    "yaml" => %w[accepted proposed withdrawn],
     "editorial" => %w[editorial]
   }.freeze
 
@@ -623,6 +625,13 @@ module AIPacing
           errors << "registry: #{id} #{source} definition has invalid status #{status.inspect}"
         end
         errors << "registry: #{id} #{source} definition missing title" if blank?(definition["title"])
+        if status == "withdrawn"
+          errors << "registry: withdrawn #{id} needs a withdrawn_reason" if blank?(definition["withdrawn_reason"])
+          successor = definition["superseded_by"]
+          errors << "registry: #{id} superseded_by #{successor} is not registered" if successor && entries.none? { |e| e["id"] == successor }
+        elsif definition.key?("withdrawn_reason") || definition.key?("superseded_by")
+          errors << "registry: #{id} has withdrawal fields but status #{status.inspect}"
+        end
       end
       errors << "registry: #{id} defined twice by #{definitions.map { |d| d['source'] }.tally.select { |_s, c| c > 1 }.keys.join(', ')}" if definitions.map { |d| d["source"] }.uniq.length != definitions.length
 
@@ -664,9 +673,14 @@ module AIPacing
       errors << "registry: #{id} yaml status #{definition['status']} differs from YAML (#{expected})" if definition["status"] != expected
     end
     entries.each do |entry|
-      next unless Array(entry["definitions"]).any? { |d| d["source"] == "yaml" }
+      yaml_definition = Array(entry["definitions"]).find { |d| d["source"] == "yaml" }
+      next unless yaml_definition
 
-      errors << "registry: #{entry['id']} has a yaml definition but no YAML node" unless nodes.key?(entry["id"])
+      if yaml_definition["status"] == "withdrawn"
+        errors << "registry: withdrawn #{entry['id']} still has a YAML node" if nodes.key?(entry["id"])
+      elsif !nodes.key?(entry["id"])
+        errors << "registry: #{entry['id']} has a yaml definition but no YAML node"
+      end
     end
 
     editorial_headings(editorial_path).each do |id, title|
