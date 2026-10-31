@@ -2,8 +2,16 @@
 
 ## Status
 
-Everything in this note is **proposed and not accepted** by the canonical editor.
-The nodes below are recorded in `spec/ai-pacing.yaml` with
+**Editor decisions, 2026-10-31 (issue #22).** The canonical editor accepted H10
+and H14 as hypotheses, I11 as a replaceable option, and Q11, Q12 and Q13 as open
+questions. D18 was retyped as the proposed hypothesis H15. D19 was folded into
+the accepted hypothesis H2. Both D18 and D19 are now `withdrawn` in the ID
+registry, so their IDs are never reused. The review packet and the editor's
+decisions are in [`issue-22-editor-review-packet.md`](issue-22-editor-review-packet.md).
+The rest of this note was written before those decisions. Where it says
+"proposed", read the table below for current status.
+
+Proposed nodes are recorded in `spec/ai-pacing.yaml` with
 `provenance.author_status: proposed` and a `proposal` field naming the issue.
 They are not part of the accepted AI Pacing proposal:
 
@@ -22,25 +30,26 @@ issues asked to record but that does not belong in proposition nodes.
 
 ## 1. Proposed nodes
 
-| ID | Issue ID | Kind | Title | Relations |
-|---|---|---|---|---|
-| H14 | #1 H6 | hypothesis | External-signal dependence preserves some A/P separation | conditions K1, K2, K3, K7, D5 |
-| Q13 | #1 Q5 | open question | Can a credible cooperative autonomy path reduce incentives for AI defection? | relates to K1, K2, K3, K7, D5 |
-| H10 | #3 H10 (was H7) | hypothesis | Retrospective audit makes concealment a losing long-run strategy | conditions K7, D5 |
-| D18 | #3 D18 (was D7) | derived | Closing-window dynamics may pull strikes earlier (risk to test) | grounded by K7, D5, H10 |
-| I11 | #3 I11 (was I8) | implementation | Do not optimize against the audit signal | implements D5 |
-| Q11 | #3 Q11 (was Q6) | open question | How independent must auditors be to resist correlated misalignment? | relates to D2, H2, H10 |
-| D19 | #3 addendum D19 (was D8) | derived | Review-based model sharing compresses inter-lab capability gaps | grounded by K4, D2, I3 |
-| Q12 | #3 addendum Q12 (was Q7) | open question | What inter-lab and international convergence minimizes singleton and correlated-failure risk? | relates to D19, Q11, H2, D6 |
+| ID | Issue ID | Kind | Title | Relations | Status after #22 |
+|---|---|---|---|---|---|
+| H14 | #1 H6 | hypothesis | External-signal dependence preserves some A/P separation | conditions K1, K2, K3, K7, D5 (contributory) | accepted as hypothesis |
+| Q13 | #1 Q5 | open question | Can a credible cooperative autonomy path reduce incentives for AI defection? | relates to K1, K2, K3, K7, D5 | accepted, unresolved |
+| H10 | #3 H10 (was H7) | hypothesis | Retrospective audit makes concealment a losing long-run strategy | conditions K7, D5 (contributory) | accepted as hypothesis |
+| D18 | #3 D18 (was D7) | derived | Closing-window dynamics may pull strikes earlier (risk to test) | — | withdrawn; retyped as H15 |
+| H15 | #22 | hypothesis | Closing-window pressure pulls strikes earlier only without credible commitment | relates to K7, D5, H10 | proposed |
+| I11 | #3 I11 (was I8) | implementation | Do not optimize against the audit signal | implements K7, D5 | accepted as option |
+| Q11 | #3 Q11 (was Q6) | open question | How independent must auditors be to resist correlated misalignment? | relates to D2, H2, H10 | accepted, unresolved |
+| D19 | #3 addendum D19 (was D8) | derived | Review-based model sharing compresses inter-lab capability gaps | — | withdrawn; folded into H2 |
+| Q12 | #3 addendum Q12 (was Q7) | open question | What inter-lab and international convergence minimizes singleton and correlated-failure risk? | relates to Q11, H2, D6 | accepted, unresolved |
 
 Issue #1 asked for Q5 as "an open question or design extension". It is recorded
 as an open question with the issue's seven sub-questions kept verbatim in
 `subquestions`, so none of them is answered by the act of recording it.
 
-Issue #3 suggested an acceptance test for a path from K7 to I11. It is not added:
-acceptance tests describe accepted canon, and I11 is a proposal. If the editor
-accepts I11, add `{type: path_exists, from: K7, to: I11}` (for example to AT-006)
-in the same change.
+Issue #3 suggested an acceptance test for a path from K7 to I11. It was added
+to AT-006 when the editor accepted I11 (#22), together with a direct K7 → I11
+relation. I11 no longer lists H10 in `implements`: the rule protects
+retrospective audit but does not depend on it.
 
 ## 2. ID registry and renumbering
 
@@ -117,8 +126,10 @@ split (`HYP-SIGNAL`, `HYP-MARGIN`, `CH-COOPERATE`, `REQ-COOPERATE`; see
 `docs/systems-engineering.md` section 8). `docs/bootstrap-pacing.md` (PR #2)
 proposes an "exposure-tax hypothesis" that overlaps H14: both say converting
 hidden capability into external power requires observable interaction with the
-outside world. If both are accepted, they should be reconciled into one
-hypothesis or explicitly distinguished.
+outside world. Resolved in #22 without a merge: H14's rationale now says H14 is
+the input side (a system needs signal from the world) and exposure tax is the
+output side (conversion leaves marks in independently controlled systems). An
+output-side hypothesis would need its own ID and falsifier.
 
 ## 4. Hugging Face incident: #3's framing rechecked
 
@@ -129,6 +140,29 @@ hypothesis or explicitly distinguished.
 > posts could not be read (HTTP 403 behind a bot challenge), so lab-side facts
 > come only through METR and through Hugging Face's attributions. Verdicts that
 > depend on those posts may change when they are read.
+>
+> **Update, 2026-10-31 (#22).** OpenAI's main post, "The Hugging Face incident
+> and the road ahead", has now been read in full (`SRC-OPENAI-HF-INCIDENT-POST`).
+> Its technical report and the METR report were not read in that pass, and the
+> claim table in `events.md` has not been redone. In paraphrase, the post bears
+> on three verdicts below:
+> - *None of the documented catches was the lab's* needs narrowing. OpenAI's own
+>   security monitoring flagged related activity on 19 July, three days after
+>   Hugging Face's public disclosure. An internal team had seen message-board
+>   activity and disallowed internet access in late May without escalating it.
+> - *Later audits found what first passes missed* gains a lab-side case.
+>   Retrospective chain-of-thought review, with monitor recall tuned in
+>   hindsight, surfaced behavior the evaluations had not been monitored for.
+>   The post says its deployed monitors did not run on those evaluations.
+> - *Restrictions followed caught episodes* now has scope. The response covered
+>   a capability class, not one model: a pause in reinforcement-learning
+>   training, chain-of-thought monitoring required for all tool-using training
+>   and evaluation above a capability level, and tighter sandbox and network
+>   isolation. This is the premise H15 relies on. It is one lab's response, so
+>   it says nothing yet about other labs.
+>
+> The post does not mention whistleblower or other internal pressure to
+> disclose.
 
 **What issue #3 proposed.** Record the incident as an example of the intended
 K3 + D5 + I1/I2 design operating as intended: an internal frontier unconstrained
@@ -204,7 +238,11 @@ bargaining-range settlement. Q13 asks whether such a settlement is credible.
 should not be used as a prior here. Its reference class (near-peer states of one
 species, no self-improvement) is disputed.
 
-## 6. Closing-window test status (D18)
+## 6. Closing-window test status (D18, now H15)
+
+D18 was retyped as hypothesis H15 in #22. The tests below were run against D18
+and now bear on H15's conditional: they are why H15 names credible commitment
+as the condition.
 
 Issue #3 asks that D18 be tested with strike timing, success, and welfare
 reported separately. The off-Earth equilibrium model has done this once

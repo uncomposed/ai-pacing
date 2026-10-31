@@ -9,7 +9,7 @@ Generated deterministically from executable assertions in `spec/ai-pacing.yaml`.
 | AT-003 — Research permission does not imply deployment permission | The research/deployment distinction and external-agency boundary must both remain represented. | PASS |
 | AT-004 — Above-frontier release is adversarially gated | Removing rival review changes a central mechanism rather than a drafting detail. | PASS |
 | AT-005 — Domestic entry and automatic reciprocity coexist | The proposal must neither require a treaty first nor ignore foreign public releases. | PASS |
-| AT-006 — Warning time has legal, technical, and physical implementations | K7 must reach incident reporting, hardware reversibility, and industrial vetoes. | PASS |
+| AT-006 — Warning time has legal, technical, and physical implementations | K7 must reach incident reporting, hardware reversibility, industrial vetoes, and a held-out audit channel. | PASS |
 | AT-007 — Foundational uncertainty remains falsifiable | Feasibility claims must expose evidence needs and stopping rules. | PASS |
 | AT-008 — Implementation options cannot masquerade as kernel claims | Optional policy choices must remain replaceable. | PASS |
 | AT-009 — Provenance is proposition-level | Every claim must expose responsibility and source lineage. | PASS |
@@ -17,4 +17,4 @@ Generated deterministically from executable assertions in `spec/ai-pacing.yaml`.
 
 Overall: **PASS**
 
-Proposed nodes, not accepted by the canonical editor: D18, D19, H10, H14, I11, Q11, Q12, Q13. They are excluded from kernel-identity, node-existence, and dependency-path assertions and are still subject to field assertions.
+Proposed nodes, not accepted by the canonical editor: H15. They are excluded from kernel-identity, node-existence, and dependency-path assertions and are still subject to field assertions.

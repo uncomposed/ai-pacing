@@ -2,7 +2,7 @@
 
 Generated deterministically from `spec/ai-pacing.yaml`.
 
-Semantic SHA-256: `b3fe9393f7d7faebd92638f4dcb2f0df0121e60715150b64fe1d4ff4f68b96d9`
+Semantic SHA-256: `d15ef09de841706b127df36ba0f037ccaaffa5aebf9c1f2c0da834ba8dbd7a73`
 
 Slow and condition the conversion of frontier AI capability into irreversible economic, political, military, and physical power while preserving enough bounded research progress to learn what is safe.
 

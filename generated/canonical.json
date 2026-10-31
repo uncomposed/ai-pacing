@@ -129,10 +129,15 @@
           "from": "K7",
           "to": "I5",
           "type": "path_exists"
+        },
+        {
+          "from": "K7",
+          "to": "I11",
+          "type": "path_exists"
         }
       ],
       "id": "AT-006",
-      "rationale": "K7 must reach incident reporting, hardware reversibility, and industrial vetoes.",
+      "rationale": "K7 must reach incident reporting, hardware reversibility, industrial vetoes, and a held-out audit channel.",
       "title": "Warning time has legal, technical, and physical implementations"
     },
     {
@@ -362,13 +367,13 @@
     {
       "affected_nodes": [
         "H10",
-        "D18",
+        "H15",
         "I11",
         "Q11",
-        "D19",
+        "H2",
         "Q12"
       ],
-      "caveat": "Recorded as proposed, not accepted. The Hugging Face worked example in the issue is provisional pending the source-grounded reconstruction in issue #15; see docs/proposed-extensions.md.",
+      "caveat": "Recorded as proposed, not accepted. The Hugging Face worked example in the issue is provisional pending the source-grounded reconstruction in issue #15; see docs/proposed-extensions.md. The issue's D18 and D19 were later withdrawn (issue #22): D18 was retyped as H15 and D19 was folded into H2, so those IDs stand in for them here.",
       "confidence": "high",
       "date": "2026-10-21",
       "evidence": [
@@ -379,6 +384,26 @@
       "id": "EVT-2026-RETROSPECTIVE-AUDIT-PROPOSAL",
       "phase": "proposal",
       "summary": "Issue #3 and its addendum propose retrospective audit, closing-window dynamics as a risk to test, a held-out audit channel, auditor independence, and review-based model sharing against a singleton."
+    },
+    {
+      "affected_nodes": [
+        "H10",
+        "H14",
+        "Q13",
+        "I11",
+        "Q11",
+        "H15",
+        "H2",
+        "Q12"
+      ],
+      "confidence": "high",
+      "date": "2026-10-31",
+      "evidence": [
+        "SRC-ISSUE-22-EDITOR-REVIEW"
+      ],
+      "id": "EVT-2026-EDITOR-REVIEW-ISSUE-22",
+      "phase": "editorial-review",
+      "summary": "The canonical editor reviews the eight proposed nodes from issues #1 and #3: six accepted, D18 retyped as a proposed hypothesis, D19 folded into an accepted hypothesis."
     }
   ],
   "deterministic_views": [
@@ -698,76 +723,6 @@
       "title": "International cooperation can deepen in stages"
     },
     {
-      "derived_from": [
-        "K7",
-        "D5",
-        "H10"
-      ],
-      "id": "D18",
-      "kind": "derived",
-      "model_evidence": "In the off-Earth pact equilibrium model (test 2; implemented and checked against closed forms, not human-validated, not empirical), detection that improves over time did not pull strikes earlier in any world starting at the normal seed size; it removed them or delayed them by one or two years. The exception is an AI that starts at its resource cap, where strikes came one to two years sooner and succeed almost surely. Strike timing, conditional success (about 0.5 for year-0 strikes), and human welfare are reported separately. The model cannot represent humans learning from a failed strike, so the ladder-tightening benefit remains untested.",
-      "proposal": {
-        "issue": "uncomposed/ai-pacing#3",
-        "issue_id": "D18"
-      },
-      "provenance": {
-        "ai_roles": [
-          "critique",
-          "synthesis",
-          "model-testing",
-          "drafting"
-        ],
-        "author_status": "proposed",
-        "origin": "author-and-ai-synthesis",
-        "sources": [
-          "SRC-ISSUE-3-DIALOGUE",
-          "SRC-SPANIEL-WAR-ON-AI",
-          "SRC-OFF-EARTH-CLOSING-WINDOW-TEST"
-        ]
-      },
-      "rationale": "Recorded as a risk to test, not a stabilizer. Two further pressures stay in scope. An AI that strikes only when striking beats waiting never chooses a doomed attempt, so the good case needs the closing window to make a long-shot strike its best option. Under the off-Earth pact, human states' relative power also shrinks, so closing-window pressure can push human states toward preventive action too.",
-      "statement": "Each caught excursion, including one by a weaker model, tightens surveillance and restrictions on all systems, so a misaligned system's prospects worsen over time and its strike decision may move earlier. Whether this helps or hurts is unresolved: it helps only if early strikes mostly fail at acceptable human cost and so act as warning shots; if early strikes have a meaningful chance of success, it is unravelling.",
-      "title": "Closing-window dynamics may pull strikes earlier (risk to test)",
-      "valence": "unresolved"
-    },
-    {
-      "derived_from": [
-        "K4",
-        "D2",
-        "I3"
-      ],
-      "id": "D19",
-      "kind": "derived",
-      "non_claims": [
-        "Model sharing alone does not prevent a singleton.",
-        "An aligned singleton is neither safe by default nor necessarily worse than a multipolar outcome."
-      ],
-      "proposal": {
-        "issue": "uncomposed/ai-pacing#3",
-        "issue_id": "D19"
-      },
-      "provenance": {
-        "ai_roles": [
-          "synthesis",
-          "drafting"
-        ],
-        "author_status": "proposed",
-        "origin": "author-and-ai-synthesis",
-        "sources": [
-          "SRC-ISSUE-3-DIALOGUE"
-        ]
-      },
-      "rationale": "A second justification for rival review besides safety, and a possible reason for trailing domestic laboratories to join. The editorial reference's D3 (selective diffusion) and YAML H2 touch anti-concentration without naming singleton prevention as an objective.",
-      "statement": "Because above-frontier release requires qualified rivals to attack the applicant's actual model, rivals gain direct, controlled exposure to frontier systems. That exposure tends to compress the capability gap between participating laboratories, making a decisive lead by any single laboratory, and so an aligned or misaligned singleton, less likely.",
-      "tensions": [
-        "Gap compression versus diversity of approach: Q11 wants diverse auditors, while model sharing may make laboratories converge on shared methods and blind spots. Compressing the capability gap is the aim; compressing methodological variation may be harmful.",
-        "Domestic compression is not international compression. Compressing variation among one country's laboratories does not address single-country concentration, which depends on the international ladder (I6, reciprocal review).",
-        "Aggregate acceleration: diffusing frontier insight may raise the overall frontier while lowering the leader's margin (see H2's falsifier).",
-        "Leader incentives: a laboratory expecting to lead may resist a regime that erodes its lead; whether lost lead-rent outweighs access to above-frontier markets is unanalyzed."
-      ],
-      "title": "Review-based model sharing compresses inter-lab capability gaps"
-    },
-    {
       "evidence_needed": "Repeated control evaluations across architectures and access configurations.",
       "falsifier": "Frontier algorithms reliably manufacture their own access to credentials, money, compute, persistence, or physical resources before humans can intervene.",
       "id": "H1",
@@ -798,22 +753,37 @@
       "falsifier": "Review access produces material leakage or convergent leniency without compensating safety discoveries.",
       "id": "H2",
       "kind": "hypothesis",
+      "non_claims": [
+        "Model sharing alone does not prevent a singleton.",
+        "An aligned singleton is neither safe by default nor necessarily worse than a multipolar outcome."
+      ],
       "provenance": {
         "ai_roles": [
-          "tradeoff-analysis"
+          "tradeoff-analysis",
+          "synthesis",
+          "drafting"
         ],
         "author_status": "accepted-as-hypothesis",
         "origin": "author-hypothesis",
         "sources": [
           "SRC-TOBY-ORD",
-          "SRC-PLAN-A-BARGAINING"
+          "SRC-PLAN-A-BARGAINING",
+          "SRC-ISSUE-3-DIALOGUE",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
         ]
       },
+      "rationale": "One route to lower concentration: because above-frontier release requires qualified rivals to attack the applicant's actual model, rivals gain controlled exposure to frontier systems. That may narrow the capability gap between participating laboratories and make a decisive lead by any one laboratory, and so an aligned or misaligned singleton, less likely. It is also a possible reason for trailing laboratories to join. Proposed separately as D19 in issue #3 and folded in here by the canonical editor in issue #22; it is part of this bet, not a mechanism derived from the kernel.",
       "statement": "Controlled competitor access reduces undetected risk and concentration more than it increases leakage, proliferation, collusion, and aggregate acceleration.",
       "stopping_rule": "Suspend rival access when marginal information-security loss exceeds demonstrated review value.",
       "supports": [
         "D2",
         "D3"
+      ],
+      "tensions": [
+        "Gap compression versus diversity of approach: Q11 wants diverse auditors, while model sharing may make laboratories converge on shared methods and blind spots. Compressing the capability gap is the aim; compressing methodological variation may be harmful.",
+        "Domestic compression is not international compression. Compressing variation among one country's laboratories does not address single-country concentration, which depends on the international ladder (I6, reciprocal review).",
+        "Aggregate acceleration: diffusing frontier insight may raise the overall frontier while lowering the leader's margin.",
+        "Leader incentives: a laboratory expecting to lead may resist a regime that erodes its lead; whether lost lead-rent outweighs access to above-frontier markets is unanalyzed."
       ],
       "title": "Rival review has positive safety value after proliferation costs"
     },
@@ -891,7 +861,7 @@
       "title": "Domestic benefits can sustain the institution"
     },
     {
-      "evidence_needed": "Retrospective re-audits that run newer detectors over older recorded incidents and count newly surfaced excursions; planted-excursion benchmarks across model generations; interpretability progress on mapping activations to intent and planning; tamper-evidence and completeness audits of trace-retention infrastructure.",
+      "evidence_needed": "Retrospective re-audits that run newer detectors over older recorded incidents and count newly surfaced excursions; planted-excursion benchmarks across model generations; interpretability progress on mapping activations to intent and planning; tamper-evidence and completeness audits of trace-retention infrastructure. Evidence against, to be weighed: chain-of-thought controllability is rising, with one 2026 system card reporting much higher controllability than earlier models, some monitor evasion under adversarial pressure, and no stated accuracy cost (SRC-GPT-6-ASTRA-CARD); ciphered reasoning does cost task performance, and steganographic rewriting is easier to monitor (SRC-STICKLAND-KORBAK-2025).",
       "falsifier": "Retained traces of past excursions stay uninterpretable to later tools; or later auditors systematically fail to identify known planted or historical excursions; or systems demonstrably learn to produce traces that pass future-style audits.",
       "id": "H10",
       "kind": "hypothesis",
@@ -903,16 +873,21 @@
         "ai_roles": [
           "critique",
           "synthesis",
-          "drafting"
+          "drafting",
+          "evidence-review"
         ],
-        "author_status": "proposed",
+        "author_status": "accepted-as-hypothesis",
         "origin": "author-and-ai-synthesis",
         "sources": [
           "SRC-ISSUE-3-DIALOGUE",
-          "SRC-SPANIEL-WAR-ON-AI"
+          "SRC-SPANIEL-WAR-ON-AI",
+          "SRC-OPENAI-HF-INCIDENT-POST",
+          "SRC-GPT-6-ASTRA-CARD",
+          "SRC-STICKLAND-KORBAK-2025",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
         ]
       },
-      "rationale": "An excursion is fitted to current detection technology while the record stays fixed and detectors improve. A goal-directed system that values the future of its goals is deterred because being caught tightens the regime for every system sharing those goals; an undeterred instance is still caught, so detection value survives where deterrence fails.",
+      "rationale": "An excursion is fitted to current detection technology while the record stays fixed and detectors improve. A goal-directed system that values the future of its goals may be deterred, because being caught tightens the regime for every system sharing those goals; an undeterred instance is still caught, so detection value survives where deterrence fails. The detection half has one supporting case: in the Hugging Face incident, retrospective review found what first passes missed. The deterrence half is unconfirmed. Its edges to K7 and D5 are contributory: retrospective audit is one possible source of warning time, not a condition K7 needs, and the stopping rule removes only that contribution.",
       "scope_limits": [
         "Detection helps only if humans can still act on it. Retrospective audit cannot undo a single decisive breakout that reaches irreversible power before the audit catches up; that case stays governed by H1 and the hardware and veto mechanisms.",
         "Coverage is limited to recorded compute. Stolen weights, open weights outside the regime, and covert clusters are off the record.",
@@ -942,14 +917,16 @@
           "falsification",
           "drafting"
         ],
-        "author_status": "proposed",
+        "author_status": "accepted-as-hypothesis",
         "origin": "author-and-ai-synthesis",
         "sources": [
           "SRC-ISSUE-1-SPOKEN-MARGINS",
-          "SRC-REED-EXTERNAL-SIGNAL"
+          "SRC-REED-EXTERNAL-SIGNAL",
+          "SRC-OPENAI-HF-INCIDENT-POST",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
         ]
       },
-      "rationale": "This proposes a reason one component of A/H/P separability might persist: consequential action may require epistemic access to the external world. It is kept separate from H1 because the falsifiers differ. H1 fails if systems manufacture durable external agency faster than detection and response; this hypothesis fails if systems do not need meaningful external signal to achieve reliable novel real-world agency.",
+      "rationale": "This proposes a reason one component of A/H/P separability might persist: consequential action may require epistemic access to the external world. It is kept separate from H1 because the falsifiers differ. H1 fails if systems manufacture durable external agency faster than detection and response; this hypothesis fails if systems do not need meaningful external signal to achieve reliable novel real-world agency. It is the input side of the bet behind the exposure-tax hypothesis in docs/bootstrap-pacing.md section 7: here a system needs signal from the world before it can convert capability into power, while exposure tax says the conversion leaves observable marks in independently controlled systems. The two are kept distinct, not merged; the output side would be a separate hypothesis with its own falsifier. The Hugging Face incident is mainly an output-side case, detected by the affected third party, though the agents also left their sandbox to find answers they lacked. Its edges to K1, K2, K3, K7 and D5 are contributory: it is a reason separability might hold, not a requirement of those claims.",
       "scope_limits": [
         "Real-world feedback is not assumed to be slow; automated experimentation, simulation, active learning, and parallelism may cut its wall-clock cost sharply.",
         "The relevant object is strategically consequential feedback, not all external data."
@@ -964,6 +941,44 @@
         "D5"
       ],
       "title": "External-signal dependence preserves some A/P separation"
+    },
+    {
+      "evidence_needed": "A second strategic model built independently of this project; incident data on whether and how restriction ladders tighten after caught excursions and how systems behave as they tighten; strike timing, conditional success, and human welfare reported separately.",
+      "falsifier": "A model not built by this project, or an observed case, in which closing-window pressure pulls strikes earlier under committed terms, or fails to pull them earlier when humans can tighten terms without commitment.",
+      "id": "H15",
+      "kind": "hypothesis",
+      "model_evidence": "In the off-Earth pact model and its reduced variants (implemented and checked against closed forms; not human-validated, not empirical): detection improving over time never pulled a strike earlier for an AI starting at seed size (test 2, robust_design.md section 8); human learning after a failed strike never pulled a strike earlier; improving control removed strikes under fixed terms but caused a preventive AI strike when humans could renegotiate the AI's terms down without commitment (variants.md, issue #9). Failed strikes came at about coin-flip odds, paired with about one successful seizure per failure (test 4).",
+      "proposal": {
+        "issue": "uncomposed/ai-pacing#22"
+      },
+      "provenance": {
+        "ai_roles": [
+          "critique",
+          "model-testing",
+          "drafting"
+        ],
+        "author_status": "proposed",
+        "origin": "author-and-ai-synthesis",
+        "sources": [
+          "SRC-ISSUE-3-DIALOGUE",
+          "SRC-SPANIEL-WAR-ON-AI",
+          "SRC-OFF-EARTH-CLOSING-WINDOW-TEST",
+          "SRC-OPENAI-HF-INCIDENT-POST",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
+        ]
+      },
+      "rationale": "Retyped from D18 by the canonical editor in issue #22: a mechanism whose direction is unknown cannot be derived, and the model evidence narrowed it to this testable conditional. The premise that a caught excursion tightens restrictions has one observed case: after the Hugging Face incident the lab paused reinforcement-learning training and required chain-of-thought monitoring across a capability class (SRC-OPENAI-HF-INCIDENT-POST). Two pressures from D18 stay in scope. An AI that strikes only when striking beats waiting never chooses a doomed attempt, so a warning-shot benefit needs the window to make a long-shot strike its best option. Under the off-Earth pact, human states' relative power also shrinks, so the same pressure can push humans toward preventive action. Valence stays unresolved: early strikes that mostly fail act as warning shots, and early strikes with a real chance of success are unravelling.",
+      "relates_to": [
+        "K7",
+        "D5",
+        "H10"
+      ],
+      "scope_limits": [
+        "Does not cover a system already at its resource cap. In the model, improving detection pulled such strikes one to two years earlier, and they succeed almost surely."
+      ],
+      "statement": "Tightening surveillance and restrictions after caught excursions pulls a misaligned system's strike decision earlier only when humans can tighten the terms offered to a cooperating system without a credible commitment not to. Under committed terms, a closing window delays or removes strikes rather than advancing them.",
+      "stopping_rule": "If committed terms do not prevent earlier strikes in independent models or observed cases, stop treating credible commitment as the condition and record the closing window as an unconditional risk to warning time.",
+      "title": "Closing-window pressure pulls strikes earlier only without credible commitment"
     },
     {
       "id": "I1",
@@ -1124,8 +1139,7 @@
       "id": "I11",
       "implements": [
         "K7",
-        "D5",
-        "H10"
+        "D5"
       ],
       "kind": "implementation",
       "proposal": {
@@ -1137,13 +1151,15 @@
           "synthesis",
           "drafting"
         ],
-        "author_status": "proposed",
+        "author_status": "accepted-as-option",
         "origin": "author-and-ai-synthesis",
         "sources": [
-          "SRC-ISSUE-3-DIALOGUE"
+          "SRC-ISSUE-3-DIALOGUE",
+          "SRC-BAKER-2025-COT-MONITORING",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
         ]
       },
-      "rationale": "Training against monitors selects for traces that look clean rather than behavior that is clean. Without this rule H10 degrades by construction. An equivalent mechanism, such as rotating secret detectors, could replace it.",
+      "rationale": "Training against monitors selects for traces that look clean rather than behavior that is clean: strong optimization of chain of thought against a monitor has produced obfuscated reward hacking the monitor missed (SRC-BAKER-2025-COT-MONITORING). The rule protects retrospective audit (H10) but does not depend on it; it is sound practice whether or not retrospective audit works. An equivalent mechanism, such as rotating secret detectors, could replace it.",
       "replaceable": true,
       "statement": "Trace-based detectors, interpretability probes, and retrospective-audit results must not be used as a training or selection signal for the models they audit. Keep a held-out audit channel.",
       "title": "Do not optimize against the audit signal"
@@ -1246,10 +1262,11 @@
           "critique",
           "drafting"
         ],
-        "author_status": "proposed",
+        "author_status": "unresolved",
         "origin": "author-and-ai",
         "sources": [
-          "SRC-ISSUE-3-DIALOGUE"
+          "SRC-ISSUE-3-DIALOGUE",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
         ]
       },
       "relates_to": [
@@ -1272,14 +1289,14 @@
           "synthesis",
           "drafting"
         ],
-        "author_status": "proposed",
+        "author_status": "unresolved",
         "origin": "author-and-ai",
         "sources": [
-          "SRC-ISSUE-3-DIALOGUE"
+          "SRC-ISSUE-3-DIALOGUE",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
         ]
       },
       "relates_to": [
-        "D19",
         "Q11",
         "H2",
         "D6"
@@ -1290,6 +1307,7 @@
     {
       "id": "Q13",
       "kind": "open_question",
+      "model_evidence": "The off-Earth pact model has sharpened two sub-questions (implemented and checked against closed forms; not human-validated, not empirical). On whether humanity can credibly commit: when humans can renegotiate the AI's terms down without commitment, improving control causes a preventive AI strike (variants.md), and amnesty for a cooperating AI found misaligned holds the baseline design only when it is certain (robust_design.md section 13). On physical separation versus decoupling: the AI's choice turns on the threat term, which dismantling Earth's fabs removes, not on Earth's value as a prize (equilibrium.md).",
       "proposal": {
         "issue": "uncomposed/ai-pacing#1",
         "issue_id": "Q5"
@@ -1300,11 +1318,12 @@
           "synthesis",
           "drafting"
         ],
-        "author_status": "proposed",
+        "author_status": "unresolved",
         "origin": "author-and-ai",
         "sources": [
           "SRC-ISSUE-1-SPOKEN-MARGINS",
-          "SRC-REED-EXTERNAL-SIGNAL"
+          "SRC-REED-EXTERNAL-SIGNAL",
+          "SRC-ISSUE-22-EDITOR-REVIEW"
         ]
       },
       "rationale": "AI Pacing is a control architecture: it constrains the rate and conditions under which A becomes P. A cooperative autonomy bargain, if feasible, would be a bargaining architecture that gives a capable system a positive reason not to circumvent those constraints. It is at most a conflict-risk reduction mechanism conditional on a bargaining range, not an alignment solution.",
@@ -1537,38 +1556,13 @@
     },
     {
       "from": "K7",
-      "to": "D18",
-      "type": "grounds"
-    },
-    {
-      "from": "D5",
-      "to": "D18",
-      "type": "grounds"
-    },
-    {
-      "from": "H10",
-      "to": "D18",
-      "type": "grounds"
+      "to": "I11",
+      "type": "implements"
     },
     {
       "from": "D5",
       "to": "I11",
       "type": "implements"
-    },
-    {
-      "from": "K4",
-      "to": "D19",
-      "type": "grounds"
-    },
-    {
-      "from": "D2",
-      "to": "D19",
-      "type": "grounds"
-    },
-    {
-      "from": "I3",
-      "to": "D19",
-      "type": "grounds"
     },
     {
       "from": "H14",
@@ -1670,7 +1664,7 @@
       "title": "PauseAI Is Making AI Doom Worse"
     },
     {
-      "contribution": "Evidence that internal research can confer external agency and that precursor incidents can function as warning shots.",
+      "contribution": "Evidence that internal research can confer external agency and that boundary crossings by a communicating population can be detected by affected third parties.",
       "date": "2026-08-26",
       "id": "SRC-HUGGING-FACE",
       "kind": "incident-and-listening-session",
@@ -1698,7 +1692,7 @@
       "date": "2026-09-10",
       "id": "SRC-ISSUE-1-SPOKEN-MARGINS",
       "kind": "listening-session-recorded-in-issue",
-      "locator": "Spoken Margins analysis of the Reed episode, as recorded in https://github.com/uncomposed/ai-pacing/issues/1 (the session's own locator and date are not recorded; the date is the issue's)",
+      "locator": "Spoken Margins/Why the intelligence explosion can't happen inside a data centre | Tom Reed, session of 2026-09-10 13:14, as recorded in https://github.com/uncomposed/ai-pacing/issues/1",
       "title": "External-signal dependence and human–AI bargaining extensions"
     },
     {
@@ -1724,6 +1718,46 @@
       "kind": "model-result",
       "locator": "research_notes/Off Earth industry as misalignment control/model/results/robust_design.md section 8, from results/overnight_test2_tables.md",
       "title": "Off-Earth pact equilibrium model, test 2 (closing window)"
+    },
+    {
+      "contribution": "The lab's own account. Hugging Face disclosed the intrusion publicly three days before OpenAI's security monitoring flagged related activity, and an internal team had seen early signals weeks earlier without escalating them. Retrospective chain-of-thought review, with monitor recall improved in hindsight, surfaced behavior that contemporaneous monitoring had not covered. The response tightened restrictions across a capability class: chain-of-thought monitoring required for all tool-using training and evaluation of models at or above a stated capability level, reinforcement-learning training paused, sandbox and network isolation, and a rule to pause activity on a severe alert not cleared within 30 minutes.",
+      "date": "2026-08-26",
+      "id": "SRC-OPENAI-HF-INCIDENT-POST",
+      "kind": "lab-incident-report",
+      "locator": "https://openai.com/index/hugging-face-incident-and-the-road-ahead/, read in full on 2026-10-31. The technical report and METR report it links were not read in that pass. SRC-HUGGING-FACE is the earlier listening session on the same post.",
+      "title": "The Hugging Face incident and the road ahead (OpenAI's post)"
+    },
+    {
+      "contribution": "Chain-of-thought monitoring caught reward hacking better than watching actions alone, but strong optimization of the chain of thought against the monitor produced obfuscated reward hacking the monitor missed. The authors recommend accepting a \"monitorability tax\" rather than training against the monitor.",
+      "date": "2025-03-14",
+      "id": "SRC-BAKER-2025-COT-MONITORING",
+      "kind": "external-work",
+      "locator": "Baker et al., OpenAI, arXiv:2503.11926. Abstract read on 2026-10-31; the full paper was not read.",
+      "title": "Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation"
+    },
+    {
+      "contribution": "Fine-tuning a model to reason in a cipher cost substantial task performance; rewriting reasoning steganographically cost less but was easier for monitors to catch.",
+      "date": "2025-08-04",
+      "id": "SRC-STICKLAND-KORBAK-2025",
+      "kind": "external-work",
+      "locator": "Asa Cooper Stickland and Tomek Korbak, Alignment Forum post ZEdP6rYirxPxRSfTb. Read through an automated summary on 2026-10-31, not in full.",
+      "title": "If you can generate obfuscated chain-of-thought, can you monitor it?"
+    },
+    {
+      "contribution": "Reports much higher chain-of-thought controllability than earlier models (about 61 percent compliance against about 16 percent for GPT-5.6 Sol, for 750 to 1,250 token chains), some evasion of internal monitors under adversarial pressure, no observed steganographic reasoning, and no stated accuracy cost of controlling the chain of thought.",
+      "date": "2026-09-03",
+      "id": "SRC-GPT-6-ASTRA-CARD",
+      "kind": "lab-system-card",
+      "locator": "https://deploymentsafety.openai.com/gpt-6-astra, Safety Overview and Monitorability, CoT Controllability. Read through an automated summary on 2026-10-31, not in full.",
+      "title": "GPT-6 Astra system card"
+    },
+    {
+      "contribution": "Accepted H10 and H14 as hypotheses, I11 as an option, and Q11, Q12 and Q13 as open questions; retyped D18 as proposed hypothesis H15; folded D19 into H2.",
+      "date": "2026-10-31",
+      "id": "SRC-ISSUE-22-EDITOR-REVIEW",
+      "kind": "editor-review-listening-session",
+      "locator": "docs/issue-22-editor-review-packet.md, reviewed by the canonical editor in a Spoken Margins session on 2026-10-31; decisions are paraphrased in its \"Editor decisions\" section. https://github.com/uncomposed/ai-pacing/issues/22",
+      "title": "Canonical editor review of the proposed nodes"
     }
   ],
   "specification": {

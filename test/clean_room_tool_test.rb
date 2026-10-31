@@ -38,19 +38,20 @@ class CleanRoomToolTest < Minitest::Test
   def test_editorial_reference_exposes_current_yaml_drift
     audit = CleanRoom.audit
     assert_equal 43, audit["markdown_node_count"]
-    assert_equal 29, audit["yaml_node_count"]
+    assert_equal 35, audit["yaml_node_count"]
     assert_includes audit["missing_from_yaml"], "D17"
     assert_includes audit["missing_from_yaml"], "H6"
     assert_includes audit["missing_from_yaml"], "Q10"
     assert_includes audit["extra_in_yaml"], "I7"
+    assert_includes audit["extra_in_yaml"], "H10"
     assert audit["title_mismatches"].any? { |item| item["id"] == "D1" }
   end
 
   def test_audit_lists_proposed_yaml_nodes_separately
     audit = CleanRoom.audit
-    assert_equal %w[D18 D19 H10 H14 I11 Q11 Q12 Q13], audit["yaml_proposed_nodes"]
+    assert_equal %w[H15], audit["yaml_proposed_nodes"]
     assert_empty audit["proposed_ids_in_editorial"]
-    refute_includes audit["extra_in_yaml"], "H10"
+    refute_includes audit["extra_in_yaml"], "H15"
   end
 
   def test_complete_model_output_passes_deterministic_preflight

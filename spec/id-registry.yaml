@@ -16,6 +16,9 @@
 # Allocating a new ID: take `next_free`, add an entry, and bump `next_free`.
 # Reserving an ID for a research note or issue: add an entry with that source
 # and status `reserved`. Renaming an ID used in an issue: add a `renumbering` row.
+# Withdrawing a YAML node: remove it from the YAML and set its yaml definition to
+# status `withdrawn` with a `withdrawn_reason` (and `superseded_by` if another
+# node carries its content). The ID stays registered and is never reused.
 #
 # Collision values:
 #   none               one definition.
@@ -71,7 +74,7 @@ local_namespaces:
 next_free:
   K: K8
   D: D22
-  H: H15
+  H: H16
   I: I12
   Q: Q17
 
@@ -306,14 +309,24 @@ ids:
     definitions:
     - source: yaml
       title: Closing-window dynamics may pull strikes earlier (risk to test)
-      status: proposed
+      status: withdrawn
+      withdrawn_reason: >-
+        Retyped by the canonical editor in issue #22: a mechanism whose
+        direction is unknown cannot be derived, so its testable conditional is
+        recorded as proposed hypothesis H15.
+      superseded_by: H15
   - id: D19
     kind: derived
     collision: none
     definitions:
     - source: yaml
       title: Review-based model sharing compresses inter-lab capability gaps
-      status: proposed
+      status: withdrawn
+      withdrawn_reason: >-
+        Folded into H2 by the canonical editor in issue #22: it restates H2's
+        anti-concentration bet, and an implementation choice (I3) should not
+        ground a derived mechanism.
+      superseded_by: H2
   - id: D20
     kind: derived
     collision: none
@@ -412,7 +425,7 @@ ids:
     definitions:
     - source: yaml
       title: Retrospective audit makes concealment a losing long-run strategy
-      status: proposed
+      status: accepted
   - id: H11
     kind: hypothesis
     collision: none
@@ -426,6 +439,13 @@ ids:
     definitions:
     - source: yaml
       title: External-signal dependence preserves some A/P separation
+      status: accepted
+  - id: H15
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: Closing-window pressure pulls strikes earlier only without credible commitment
       status: proposed
   - id: I1
     kind: implementation
@@ -512,7 +532,7 @@ ids:
     definitions:
     - source: yaml
       title: Do not optimize against the audit signal
-      status: proposed
+      status: accepted
   - id: Q1
     kind: open_question
     collision: same-proposition
@@ -601,21 +621,21 @@ ids:
     definitions:
     - source: yaml
       title: How independent must auditors be to resist correlated misalignment?
-      status: proposed
+      status: accepted
   - id: Q12
     kind: open_question
     collision: none
     definitions:
     - source: yaml
       title: What inter-lab and international convergence minimizes singleton and correlated-failure risk?
-      status: proposed
+      status: accepted
   - id: Q13
     kind: open_question
     collision: none
     definitions:
     - source: yaml
       title: Can a credible cooperative autonomy path reduce incentives for AI defection?
-      status: proposed
+      status: accepted
   - id: Q14
     kind: open_question
     collision: none

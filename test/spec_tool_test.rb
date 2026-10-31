@@ -90,12 +90,19 @@ class SpecToolTest < Minitest::Test
     }.merge(extra)
   end
 
-  def test_canonical_spec_records_issue_1_and_3_nodes_as_proposed
-    expected = %w[D18 D19 H10 H14 I11 Q11 Q12 Q13]
-    assert_equal expected, AIPacing.proposed_ids(@spec)
-    expected.each do |id|
-      refute_nil AIPacing.nodes_by_id(@spec)[id]["proposal"], "#{id} must name its proposal issue"
+  def test_canonical_spec_records_issue_22_editor_decisions
+    nodes = AIPacing.nodes_by_id(@spec)
+    assert_equal %w[H15], AIPacing.proposed_ids(@spec)
+    {
+      "H10" => "accepted-as-hypothesis", "H14" => "accepted-as-hypothesis", "I11" => "accepted-as-option",
+      "Q11" => "unresolved", "Q12" => "unresolved", "Q13" => "unresolved"
+    }.each do |id, status|
+      assert_equal status, nodes[id].dig("provenance", "author_status"), id
+      refute_nil nodes[id]["proposal"], "#{id} keeps its proposal issue as a record"
     end
+    assert_nil nodes["D18"]
+    assert_nil nodes["D19"]
+    refute_includes nodes["I11"]["implements"], "H10"
   end
 
   def test_proposed_kernel_does_not_count_as_canon
@@ -111,27 +118,27 @@ class SpecToolTest < Minitest::Test
 
   def test_proposed_node_cannot_satisfy_identity_or_path_assertions
     mutated = copy_spec
-    node = mutated["nodes"].find { |item| item["id"] == "I2" }
+    node = mutated["nodes"].find { |item| item["id"] == "I11" }
     node["provenance"]["author_status"] = "proposed"
     node["proposal"] = {"issue" => "uncomposed/ai-pacing#999"}
     assert_empty AIPacing.validate(mutated)
     result = AIPacing.evaluate_acceptance(mutated).find { |item| item["id"] == "AT-006" }
     refute result["passed"]
-    assert_includes result["failures"].join, "K7 -> I2"
+    assert_includes result["failures"].join, "K7 -> I11"
   end
 
   def test_proposed_hypothesis_still_needs_falsifier
     mutated = copy_spec
-    mutated["nodes"].find { |node| node["id"] == "H10" }.delete("stopping_rule")
-    assert_includes AIPacing.validate(mutated), "hypothesis H10 missing stopping_rule"
+    mutated["nodes"].find { |node| node["id"] == "H15" }.delete("stopping_rule")
+    assert_includes AIPacing.validate(mutated), "hypothesis H15 missing stopping_rule"
     result = AIPacing.evaluate_acceptance(mutated).find { |item| item["id"] == "AT-007" }
     refute result["passed"]
   end
 
   def test_proposed_node_must_name_its_issue
     mutated = copy_spec
-    mutated["nodes"].find { |node| node["id"] == "Q13" }.delete("proposal")
-    assert_includes AIPacing.validate(mutated), "proposed node Q13 must name its proposal issue"
+    mutated["nodes"].find { |node| node["id"] == "H15" }.delete("proposal")
+    assert_includes AIPacing.validate(mutated), "proposed node H15 must name its proposal issue"
   end
 
   def test_unknown_author_status_is_rejected
@@ -142,17 +149,17 @@ class SpecToolTest < Minitest::Test
 
   def test_accepted_node_cannot_depend_on_proposed_node
     mutated = copy_spec
-    mutated["nodes"].find { |node| node["id"] == "D1" }["derived_from"] << "D18"
-    assert_includes AIPacing.validate(mutated), "accepted node D1 derived_from references proposed node D18"
+    mutated["nodes"].find { |node| node["id"] == "D1" }["derived_from"] << "H15"
+    assert_includes AIPacing.validate(mutated), "accepted node D1 derived_from references proposed node H15"
 
     mutated = copy_spec
-    mutated["relations"] << {"from" => "H10", "to" => "D4", "type" => "grounds"}
-    assert_includes AIPacing.validate(mutated), "accepted node D4 cannot be grounded by proposed node H10"
+    mutated["relations"] << {"from" => "H15", "to" => "D4", "type" => "grounds"}
+    assert_includes AIPacing.validate(mutated), "accepted node D4 cannot be grounded by proposed node H15"
   end
 
   def test_dependency_graph_marks_proposed_nodes
     graph = AIPacing.render_graph(@spec)
-    assert_includes graph, "class D18,D19,H10,H14,I11,Q11,Q12,Q13 proposed"
+    assert_includes graph, "class H15 proposed"
   end
 
   # Reserved-ID registry.
@@ -213,12 +220,40 @@ class SpecToolTest < Minitest::Test
 
   def test_registry_title_and_status_must_track_the_yaml
     mutated = copy_spec
-    node = mutated["nodes"].find { |item| item["id"] == "H10" }
+    node = mutated["nodes"].find { |item| item["id"] == "H15" }
     node["title"] = "Retitled"
     node["provenance"]["author_status"] = "accepted-as-hypothesis"
     errors = AIPacing.validate_registry(mutated, registry)
-    assert_includes errors, "registry: H10 yaml title differs from YAML node title"
-    assert_includes errors, "registry: H10 yaml status proposed differs from YAML (accepted)"
+    assert_includes errors, "registry: H15 yaml title differs from YAML node title"
+    assert_includes errors, "registry: H15 yaml status proposed differs from YAML (accepted)"
+  end
+
+  def test_withdrawn_ids_stay_registered_without_a_yaml_node
+    definition = registry["ids"].find { |item| item["id"] == "D18" }["definitions"].first
+    assert_equal "withdrawn", definition["status"]
+    assert_equal "H15", definition["superseded_by"]
+    assert_equal "H2", registry["ids"].find { |item| item["id"] == "D19" }["definitions"].first["superseded_by"]
+
+    mutated = copy_spec
+    mutated["nodes"] << proposed_node("D18", "derived", "title" => definition["title"])
+    errors = AIPacing.validate_registry(mutated, registry)
+    assert_includes errors, "registry: withdrawn D18 still has a YAML node"
+    assert_includes errors, "registry: D18 yaml status withdrawn differs from YAML (proposed)"
+  end
+
+  def test_withdrawal_needs_a_reason_and_a_registered_successor
+    changed = registry
+    definition = changed["ids"].find { |item| item["id"] == "D18" }["definitions"].first
+    definition.delete("withdrawn_reason")
+    definition["superseded_by"] = "H99"
+    errors = AIPacing.validate_registry(@spec, changed)
+    assert_includes errors, "registry: withdrawn D18 needs a withdrawn_reason"
+    assert_includes errors, "registry: D18 superseded_by H99 is not registered"
+
+    changed = registry
+    changed["ids"].find { |item| item["id"] == "H15" }["definitions"].first["superseded_by"] = "H2"
+    assert_includes AIPacing.validate_registry(@spec, changed),
+                    'registry: H15 has withdrawal fields but status "proposed"'
   end
 
   def test_next_free_must_be_above_every_used_id
