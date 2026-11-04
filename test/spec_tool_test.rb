@@ -90,8 +90,8 @@ class SpecToolTest < Minitest::Test
     }.merge(extra)
   end
 
-  def test_canonical_spec_records_issue_1_and_3_nodes_as_proposed
-    expected = %w[D18 D19 H10 H14 I11 Q11 Q12 Q13]
+  def test_canonical_spec_records_issue_1_3_and_89_nodes_as_proposed
+    expected = %w[D18 D19 H10 H14 I11 I12 Q11 Q12 Q13 Q17]
     assert_equal expected, AIPacing.proposed_ids(@spec)
     expected.each do |id|
       refute_nil AIPacing.nodes_by_id(@spec)[id]["proposal"], "#{id} must name its proposal issue"
@@ -152,7 +152,7 @@ class SpecToolTest < Minitest::Test
 
   def test_dependency_graph_marks_proposed_nodes
     graph = AIPacing.render_graph(@spec)
-    assert_includes graph, "class D18,D19,H10,H14,I11,Q11,Q12,Q13 proposed"
+    assert_includes graph, "class D18,D19,H10,H14,I11,I12,Q11,Q12,Q13,Q17 proposed"
   end
 
   # Reserved-ID registry.

@@ -72,8 +72,8 @@ next_free:
   K: K8
   D: D22
   H: H15
-  I: I12
-  Q: Q17
+  I: I13
+  Q: Q18
 
 # IDs proposed in issues or notes under a different number.
 renumbering:
@@ -637,3 +637,17 @@ ids:
     - source: off_earth_report
       title: What is the return-risk trajectory of a successful off-Earth machine civilization? (report Q8, renumbered)
       status: reserved
+  - id: I12
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Frontier-comparison inference router
+      status: proposed
+  - id: Q17
+    kind: open_question
+    collision: none
+    definitions:
+    - source: yaml
+      title: Which releases may set the reference frontier, and how many submissions does a determination count?
+      status: proposed

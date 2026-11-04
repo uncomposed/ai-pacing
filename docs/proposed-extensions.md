@@ -1,4 +1,4 @@
-# Proposed extensions from issues #1 and #3
+# Proposed extensions from issues #1, #3 and #89
 
 ## Status
 
@@ -32,6 +32,8 @@ issues asked to record but that does not belong in proposition nodes.
 | Q11 | #3 Q11 (was Q6) | open question | How independent must auditors be to resist correlated misalignment? | relates to D2, H2, H10 |
 | D19 | #3 addendum D19 (was D8) | derived | Review-based model sharing compresses inter-lab capability gaps | grounded by K4, D2, I3 |
 | Q12 | #3 addendum Q12 (was Q7) | open question | What inter-lab and international convergence minimizes singleton and correlated-failure risk? | relates to D19, Q11, H2, D6 |
+| I12 | #89 I12 | implementation | Frontier-comparison inference router | implements K6 (also lists K4, H3) |
+| Q17 | #89 Q17 | open question | Which releases may set the reference frontier, and how many submissions does a determination count? | relates to K4, K6, H3, Q1, I3 |
 
 Issue #1 asked for Q5 as "an open question or design extension". It is recorded
 as an open question with the issue's seven sub-questions kept verbatim in
