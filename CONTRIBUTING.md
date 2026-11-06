@@ -13,7 +13,7 @@ actually established.
 | `spec/ai-pacing.yaml` | The canonical specification (K, D, H, I, Q nodes, sources, acceptance tests). | Normative |
 | `spec/id-registry.yaml` | Reserved-ID registry: every K, D, H, I, Q ID used or reserved in the YAML, the editorial reference, research notes and issues. Checked by `make check`. | Normative for ID allocation |
 | `.idea/` | IRAP registry identity: `manifest.yaml`, `verifiers.yaml`, `verification-policy.yaml`, `publication.yaml`. | Normative for identity and verification policy |
-| `AI_Pacing_Canonical_Spec_v0.1.md` | Supplied editorial reference, used to audit the YAML. Known to diverge (`make clean-room-audit`). | Reference only |
+| `AI_Pacing_Canonical_Spec_v0.1.md` | Supplied editorial reference, frozen at its 2026-08-29 state. Used to audit the YAML against the original intent; the divergence is recorded in `docs/editorial-reference-status.md` (`make clean-room-audit`). | Historical reference, not updated |
 | `generated/` | Deterministic views of the YAML (canonical JSON, claims CSV, graph, audit trail, matrices). | Projection |
 | `renderings/`, `examples/renderings/` | Renderings (for example the draw.io dependency map) and their rendering envelopes. | Projection |
 | `schema/` | JSON Schemas for the spec, the ID registry, rendering envelopes and the systems model. | Tooling |
@@ -40,7 +40,7 @@ From [`CANONICALITY.md`](CANONICALITY.md):
 2. Within it, `spec/ai-pacing.yaml` is the normative specification.
 3. `.idea/manifest.yaml`, `.idea/verifiers.yaml` and `.idea/verification-policy.yaml`
    define IRAP identity and verification policy.
-4. `AI_Pacing_Canonical_Spec_v0.1.md` is the editorial reference.
+4. `AI_Pacing_Canonical_Spec_v0.1.md` is the frozen editorial reference (2026-08-29).
 5. Everything under `generated/`, diagrams, websites and essays is a projection and
    never overrides the YAML.
 

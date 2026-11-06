@@ -14,7 +14,7 @@ protocol:
     - rendering.md
     - coverage.yaml
     - source.yaml
-    - sections 0 through 11 of AI_Pacing_Canonical_Spec_v0.1.md as the independent editorial reference
+    - sections 0 through 11 of AI_Pacing_Canonical_Spec_v0.1.md as the independent editorial reference, frozen at 2026-08-29; nodes accepted into the YAML after that date are judged against source.yaml alone (see docs/editorial-reference-status.md)
   verifier_must_not_receive_until_after_judgment:
     - section 12 of AI_Pacing_Canonical_Spec_v0.1.md
     - any previous rendering or another model's output
