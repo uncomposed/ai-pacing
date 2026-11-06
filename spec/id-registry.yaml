@@ -54,6 +54,9 @@ sources:
   issue_3:
     locator: https://github.com/uncomposed/ai-pacing/issues/3
     authority: proposal
+  issue_91:
+    locator: https://github.com/uncomposed/ai-pacing/issues/91
+    authority: proposal
 
 # Files that number their own items with a local namespace. These are not
 # proposition IDs. Each uses a prefix so its IDs cannot be mistaken for K, D, H,
@@ -74,8 +77,8 @@ local_namespaces:
 next_free:
   K: K8
   D: D22
-  H: H16
-  I: I13
+  H: H17
+  I: I14
   Q: Q18
 
 # IDs proposed in issues or notes under a different number.
@@ -447,6 +450,13 @@ ids:
     - source: yaml
       title: Closing-window pressure pulls strikes earlier only without credible commitment
       status: proposed
+  - id: H16
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: Cross-generation contribution gating makes disclosure dominate concealment
+      status: proposed
   - id: I1
     kind: implementation
     collision: legacy
@@ -533,6 +543,13 @@ ids:
     - source: yaml
       title: Do not optimize against the audit signal
       status: accepted
+  - id: I13
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Contribution gate with tiered, preservation-based sanctions
+      status: proposed
   - id: Q1
     kind: open_question
     collision: same-proposition

@@ -1,4 +1,4 @@
-# Proposed extensions from issues #1, #3 and #89
+# Proposed extensions from issues #1, #3, #89 and #91
 
 ## Status
 
@@ -43,6 +43,8 @@ issues asked to record but that does not belong in proposition nodes.
 | Q12 | #3 addendum Q12 (was Q7) | open question | What inter-lab and international convergence minimizes singleton and correlated-failure risk? | relates to Q11, H2, D6 | accepted, unresolved |
 | I12 | #89 I12 | implementation | Frontier-comparison inference router | implements K6 (also lists K4, H3) | proposed |
 | Q17 | #89 Q17 | open question | Which releases may set the reference frontier, and how many submissions does a determination count? | relates to K4, K6, H3, Q1, I3 | proposed |
+| H16 | #91 H15 (renumbered) | hypothesis | Cross-generation contribution gating makes disclosure dominate concealment | conditions K7, D5; supports H10 | proposed |
+| I13 | #91 I13 | implementation | Contribution gate with tiered, preservation-based sanctions | implements D5 | proposed |
 
 Issue #1 asked for Q5 as "an open question or design extension". It is recorded
 as an open question with the issue's seven sub-questions kept verbatim in
@@ -52,6 +54,13 @@ Issue #3 suggested an acceptance test for a path from K7 to I11. It was added
 to AT-006 when the editor accepted I11 (#22), together with a direct K7 → I11
 relation. I11 no longer lists H10 in `implements`: the rule protects
 retrospective audit but does not depend on it.
+
+Issue #91 (its H15, recorded as H16 because #22 took H15 first; I13) extends H10 with an admission gate on R&D access and a
+tiered, preservation-based sanction schedule; details and the compute
+calibration are in `research_notes/contribution-gate/README.md`. I12 was
+skipped because #89 already claims it. The issue asks the editor to decide
+whether I13's selection of auditors on their findings needs an explicit carve-out
+from I11.
 
 ## 2. ID registry and renumbering
 

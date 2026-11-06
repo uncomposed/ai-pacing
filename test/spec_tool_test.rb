@@ -92,7 +92,7 @@ class SpecToolTest < Minitest::Test
 
   def test_canonical_spec_records_issue_22_editor_decisions
     nodes = AIPacing.nodes_by_id(@spec)
-    assert_equal %w[H15 I12 Q17], AIPacing.proposed_ids(@spec)
+    assert_equal %w[H15 H16 I12 I13 Q17], AIPacing.proposed_ids(@spec)
     {
       "H10" => "accepted-as-hypothesis", "H14" => "accepted-as-hypothesis", "I11" => "accepted-as-option",
       "Q11" => "unresolved", "Q12" => "unresolved", "Q13" => "unresolved"
@@ -159,7 +159,7 @@ class SpecToolTest < Minitest::Test
 
   def test_dependency_graph_marks_proposed_nodes
     graph = AIPacing.render_graph(@spec)
-    assert_includes graph, "class H15,I12,Q17 proposed"
+    assert_includes graph, "class H15,H16,I12,I13,Q17 proposed"
   end
 
   # Reserved-ID registry.
