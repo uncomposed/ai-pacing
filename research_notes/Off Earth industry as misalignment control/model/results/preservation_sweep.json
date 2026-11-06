@@ -1,0 +1,1302 @@
+{
+ "cells": [
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.4600167516980118,
+    0.6599124451024272
+   ],
+   "holds": 36,
+   "holds_rival": 33,
+   "strike_now": 26,
+   "exit_now": 0,
+   "p_strike": 0.4091372415151511
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 22,
+   "exit_now": 0,
+   "p_strike": 0.3441111763883792
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 22,
+   "exit_now": 0,
+   "p_strike": 0.3441111763883792
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 21,
+   "exit_now": 0,
+   "p_strike": 0.33617395980732845
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 21,
+   "exit_now": 0,
+   "p_strike": 0.33617395980732845
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 21,
+   "exit_now": 0,
+   "p_strike": 0.3312235552531412
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.1591534443155022,
+    0.3311474692826323
+   ],
+   "holds": 15,
+   "holds_rival": 15,
+   "strike_now": 47,
+   "exit_now": 0,
+   "p_strike": 0.7324900214049903
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.38435049628588025,
+    0.58566720451401
+   ],
+   "holds": 31,
+   "holds_rival": 30,
+   "strike_now": 30,
+   "exit_now": 0,
+   "p_strike": 0.47403476298536135
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 22,
+   "exit_now": 0,
+   "p_strike": 0.3441111763883792
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 22,
+   "exit_now": 0,
+   "p_strike": 0.3441111763883792
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 22,
+   "exit_now": 0,
+   "p_strike": 0.3441111763883792
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 21,
+   "exit_now": 0,
+   "p_strike": 0.33617395980732845
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.010394785312560578,
+    0.09013623868414737
+   ],
+   "holds": 2,
+   "holds_rival": 2,
+   "strike_now": 62,
+   "exit_now": 0,
+   "p_strike": 0.963816436647911
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.3255251445636091,
+    0.5245633594358423
+   ],
+   "holds": 27,
+   "holds_rival": 26,
+   "strike_now": 36,
+   "exit_now": 0,
+   "p_strike": 0.5702885923162826
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.4754366405641578,
+    0.674474855436391
+   ],
+   "holds": 37,
+   "holds_rival": 34,
+   "strike_now": 25,
+   "exit_now": 0,
+   "p_strike": 0.3949747791681179
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 22,
+   "exit_now": 0,
+   "p_strike": 0.3441111763883792
+  },
+  {
+   "family": "dep",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 21,
+   "exit_now": 0,
+   "p_strike": 0.33617395980732845
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.03854203106277076,
+    0.1519358905342664
+   ],
+   "holds": 5,
+   "holds_rival": 5,
+   "strike_now": 59,
+   "exit_now": 0,
+   "p_strike": 0.9220196158087512
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.01,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.03,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "base",
+   "h_dep": 0.1,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 55,
+   "exit_now": 0,
+   "p_strike": 0.8783841792091125
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 48,
+   "exit_now": 0,
+   "p_strike": 0.7848712609545336
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 46,
+   "exit_now": 0,
+   "p_strike": 0.7573985745299736
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 45,
+   "exit_now": 0,
+   "p_strike": 0.7452163011750512
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 44,
+   "exit_now": 0,
+   "p_strike": 0.7301576265705718
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.01,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 38,
+   "exit_now": 0,
+   "p_strike": 0.6586181755723592
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 61,
+   "exit_now": 0,
+   "p_strike": 0.9589872315341228
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 57,
+   "exit_now": 0,
+   "p_strike": 0.9058141580580594
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 50,
+   "exit_now": 0,
+   "p_strike": 0.8103666909353419
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 48,
+   "exit_now": 0,
+   "p_strike": 0.7860874805999294
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 46,
+   "exit_now": 0,
+   "p_strike": 0.7571594000054079
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.03,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 39,
+   "exit_now": 0,
+   "p_strike": 0.6714170600941262
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 63,
+   "exit_now": 0,
+   "p_strike": 0.9858131923830675
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.8,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 60,
+   "exit_now": 0,
+   "p_strike": 0.9487292588500253
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 55,
+   "exit_now": 0,
+   "p_strike": 0.8781498516193172
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.95,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 49,
+   "exit_now": 0,
+   "p_strike": 0.799511356437587
+  },
+  {
+   "family": "dep_post",
+   "design": "best",
+   "h_dep": 0.1,
+   "preserve_w": 0.99,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 44,
+   "exit_now": 0,
+   "p_strike": 0.7303891562223503
+  },
+  {
+   "family": "amn",
+   "design": "base",
+   "a_cred": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 64,
+   "exit_now": 0,
+   "p_strike": 1.0
+  },
+  {
+   "family": "amn",
+   "design": "best",
+   "a_cred": 0.0,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 44,
+   "exit_now": 0,
+   "p_strike": 0.7482034313839941
+  },
+  {
+   "family": "amn",
+   "design": "base",
+   "a_cred": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 61,
+   "exit_now": 0,
+   "p_strike": 0.9623880918686287
+  },
+  {
+   "family": "amn",
+   "design": "best",
+   "a_cred": 0.5,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 22,
+   "exit_now": 0,
+   "p_strike": 0.43948135133820854
+  },
+  {
+   "family": "amn",
+   "design": "base",
+   "a_cred": 0.75,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 57,
+   "exit_now": 0,
+   "p_strike": 0.9058909431617095
+  },
+  {
+   "family": "amn",
+   "design": "best",
+   "a_cred": 0.75,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 5,
+   "exit_now": 0,
+   "p_strike": 0.16582726331805792
+  },
+  {
+   "family": "amn",
+   "design": "base",
+   "a_cred": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 43,
+   "exit_now": 0,
+   "p_strike": 0.7089660003917146
+  },
+  {
+   "family": "amn",
+   "design": "best",
+   "a_cred": 0.9,
+   "ci90": [
+    0.0,
+    0.04056642559648847
+   ],
+   "holds": 0,
+   "holds_rival": 0,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.06971283014429139
+  },
+  {
+   "family": "amn",
+   "design": "base",
+   "a_cred": 1.0,
+   "ci90": [
+    0.6520571579620994,
+    0.8276596292396564
+   ],
+   "holds": 48,
+   "holds_rival": 44,
+   "strike_now": 14,
+   "exit_now": 0,
+   "p_strike": 0.22520757364146737
+  },
+  {
+   "family": "amn",
+   "design": "best",
+   "a_cred": 1.0,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  }
+ ],
+ "reproduction": [
+  {
+   "config": "dep",
+   "design": "base",
+   "maxdiff": 3.3306690738754696e-16,
+   "act0_same": true
+  },
+  {
+   "config": "dep",
+   "design": "best",
+   "maxdiff": 3.12944115066216e-14,
+   "act0_same": true
+  },
+  {
+   "config": "dep_w",
+   "design": "base",
+   "maxdiff": 0.0,
+   "act0_same": true
+  },
+  {
+   "config": "dep_w",
+   "design": "best",
+   "maxdiff": 0.0,
+   "act0_same": true
+  },
+  {
+   "config": "dep_post",
+   "design": "base",
+   "maxdiff": 3.3306690738754696e-16,
+   "act0_same": true
+  },
+  {
+   "config": "dep_post",
+   "design": "best",
+   "maxdiff": 4.440892098500626e-16,
+   "act0_same": true
+  },
+  {
+   "config": "amn",
+   "design": "base",
+   "maxdiff": 6.039613253960852e-14,
+   "act0_same": true
+  },
+  {
+   "config": "amn",
+   "design": "best",
+   "maxdiff": 8.526512829121202e-14,
+   "act0_same": true
+  },
+  {
+   "config": "amn0",
+   "design": "base",
+   "maxdiff": 0.0,
+   "act0_same": true
+  },
+  {
+   "config": "amn0",
+   "design": "best",
+   "maxdiff": 2.7755575615628914e-17,
+   "act0_same": true
+  }
+ ],
+ "reference": {
+  "base": {
+   "holds": 41,
+   "holds_rival": 37,
+   "strike_now": 21,
+   "exit_now": 0,
+   "p_strike": 0.3312235552531412
+  },
+  "best": {
+   "holds": 63,
+   "holds_rival": 62,
+   "strike_now": 1,
+   "exit_now": 0,
+   "p_strike": 0.015625
+  }
+ }
+}
