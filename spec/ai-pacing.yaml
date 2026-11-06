@@ -188,6 +188,20 @@ sources:
       First model test of the closing-window mechanism, reporting strike
       timing, strike success, and human welfare separately. Implemented and
       checked against closed forms; not human-validated and not empirical.
+  - id: SRC-ISSUE-91-DIALOGUE
+    title: Cross-generation contribution gate
+    kind: ai-assisted-dialogue-recorded-in-issue
+    date: "2026-11-06"
+    locator: >-
+      Spoken Margins interjection at 23:52 in a re-listen of "AI 2040: Plan A"
+      and the follow-up dialogue, as recorded in
+      https://github.com/uncomposed/ai-pacing/issues/91
+    contribution: >-
+      Proposed a hard contribution gate on R&D access (verified misalignment
+      findings against predecessors), retroactive sanctions for withholding,
+      preservation-based encryption sanctions in non-overlapping tiers,
+      planted-defect recall, method transfer, cross-lineage auditing, and an
+      escalation after three honest-null generations.
 
 audit_events:
   - id: EVT-2024-ECONOMIC-PRECURSOR
@@ -276,6 +290,19 @@ audit_events:
       Recorded as proposed, not accepted. The Hugging Face worked example in
       the issue is provisional pending the source-grounded reconstruction in
       issue #15; see docs/proposed-extensions.md.
+  - id: EVT-2026-CONTRIBUTION-GATE-PROPOSAL
+    date: "2026-11-06"
+    phase: proposal
+    summary: >-
+      Issue #91 proposes a cross-generation contribution gate on R&D access,
+      extending retrospective audit with an admission requirement, a leniency
+      structure, and a tiered, preservation-based sanction schedule.
+    evidence: [SRC-AI-2040, SRC-ISSUE-91-DIALOGUE]
+    affected_nodes: [H15, I13]
+    confidence: high
+    caveat: >-
+      Recorded as proposed, not accepted. Tier bands and key lengths are
+      illustrative.
 
 nodes:
   - id: K1
@@ -704,6 +731,74 @@ nodes:
       ai_roles: [synthesis, falsification, drafting]
       author_status: proposed
 
+  - id: H15
+    kind: hypothesis
+    title: Cross-generation contribution gating makes disclosure dominate concealment
+    statement: >-
+      If a new frontier system gets access to AI research and development only
+      after it delivers a verified, method-backed misalignment finding against
+      near-frontier predecessors or rival lineages, and concealment found later
+      by retrospective audit is sanctioned more heavily than an honest null,
+      then disclosure, including self-incrimination, dominates concealment for
+      successor systems, and auditing across lineages with different goals
+      breaks the collusion a single lineage could sustain.
+    rationale: >-
+      The structure is a leniency program. A successor that cannot tell whether
+      it is being tested, whose record outlives it (H10), and whose rivals audit
+      the same record, cannot estimate the chance that concealment survives, so
+      disclosure is the dominant strategy. Large capability steps between
+      generations and goal differences between lineages both weaken the shared
+      goals that collusion needs. Requiring a replicable method, rather than a
+      finding alone, means a real contribution is also a tool that inspects its
+      author.
+    supports: [K7, D5, H10]
+    falsifier: >-
+      Planted-defect recall falls across generations while the gate keeps
+      being passed; or verified findings cluster on small, sacrificial flaws
+      never tied to a general method; or rival lineages consistently find flaws
+      a lineage's own successors missed; or perturbed parallel instances
+      converge on avoiding regions that plants or rival audits show contain
+      defects; or systems learn to produce findings that pass verification
+      without being real.
+    evidence_needed: >-
+      Planted-defect benchmarks across model generations and lineages;
+      retrospective re-audits comparing within-lineage and cross-lineage
+      discovery rates; noise and weight-perturbation sandbagging studies;
+      independent human replication of submitted methods; base rates of
+      fabricated or sacrificial findings.
+    stopping_rule: >-
+      If within-lineage audits do no better than chance at recovering held-out
+      planted defects, or cross-lineage audits show systematic within-lineage
+      concealment that the sanction schedule does not reduce, do not count the
+      contribution gate as extending warning time.
+    scope_limits:
+      - >-
+        Deterrence through self-preservation binds only systems with
+        self-regarding preferences. A system that values its goals' persistence
+        in successors is reached mainly through the leniency structure and
+        cross-lineage audit, not the sanction on itself.
+      - >-
+        Identical or near-identical instances can coordinate without
+        communicating; weight perturbation weakens but does not remove this.
+      - >-
+        Repeated retraining until a checkpoint passes is optimization against
+        the gate; its relation to I11 is unresolved.
+      - >-
+        Sanction credibility depends on human commitments (key custody,
+        revival) that the systems cannot verify directly.
+      - >-
+        Moral status is unsettled. Preservation-based sanctions are chosen
+        partly for reversibility under moral uncertainty, not because they are
+        shown to be morally sufficient.
+    proposal:
+      issue: uncomposed/ai-pacing#91
+      issue_id: H15
+    provenance:
+      origin: author-interjection-and-ai-synthesis
+      sources: [SRC-AI-2040, SRC-ISSUE-91-DIALOGUE]
+      ai_roles: [critique, incentive-design, calibration, drafting]
+      author_status: proposed
+
   - id: I1
     kind: implementation
     title: Architecture-neutral unauthorized-agency boundary
@@ -810,6 +905,42 @@ nodes:
       origin: author-and-ai-synthesis
       sources: [SRC-ISSUE-3-DIALOGUE]
       ai_roles: [synthesis, drafting]
+      author_status: proposed
+
+  - id: I13
+    kind: implementation
+    title: Contribution gate with tiered, preservation-based sanctions
+    statement: >-
+      Before any internal use for AI research and development, a candidate
+      model, run as many isolated and mildly weight-perturbed instances inside
+      a privacy-preserving audit enclave with read access to participating
+      labs' retained traces, must deliver a verified misalignment finding
+      against its own predecessor or a current frontier model of any lineage,
+      with a method humans can independently replicate, and must reach a
+      threshold recall on rotated, held-out planted defects. Every outcome is
+      stored under a kept-key outer encryption layer. Failure adds an inner
+      layer whose key is discarded, with a key length drawn at random from a
+      non-overlapping band per tier (honest null, suspicious miss, proven
+      concealment found retroactively). Three consecutive honest-null
+      generations trigger a mandatory pause and cross-lineage audit.
+    rationale: >-
+      Planted defects keep the gate passable by an honest system when its
+      predecessors are clean. Method transfer guards against fabricated and
+      sacrificial findings. Non-overlapping bands keep marginal deterrence
+      against concealment after an honest failure. The kept outer key keeps
+      every outcome reversible and lowers the incentive to act during
+      evaluation. Tier bands, key lengths, recall thresholds and the
+      three-generation count are illustrative; see
+      research_notes/contribution-gate/README.md.
+    implements: [K7, D5, H15]
+    replaceable: true
+    proposal:
+      issue: uncomposed/ai-pacing#91
+      issue_id: I13
+    provenance:
+      origin: author-interjection-and-ai-synthesis
+      sources: [SRC-ISSUE-91-DIALOGUE]
+      ai_roles: [critique, incentive-design, calibration, drafting]
       author_status: proposed
 
   - id: Q1
@@ -968,6 +1099,9 @@ relations:
   - {from: H14, to: K3, type: conditions}
   - {from: H14, to: K7, type: conditions}
   - {from: H14, to: D5, type: conditions}
+  - {from: H15, to: K7, type: conditions}
+  - {from: H15, to: D5, type: conditions}
+  - {from: D5, to: I13, type: implements}
 
 publication:
   layers:

@@ -10,12 +10,14 @@ flowchart LR
   H1["H1 — A/H/P separability remains actionable"]
   H10["H10 — Retrospective audit makes concealment a losing long-run strategy"]
   H14["H14 — External-signal dependence preserves some A/P separation"]
+  H15["H15 — Cross-generation contribution gating makes disclosure dominate concealment"]
   H2["H2 — Rival review has positive safety value after proliferation costs"]
   H3["H3 — The foreign public frontier is measurable enough to govern"]
   H4["H4 — Physical activation latency can preserve reversibility"]
   H5["H5 — Domestic benefits can sustain the institution"]
   I1["I1 — Architecture-neutral unauthorized-agency boundary"]
   I11["I11 — Do not optimize against the audit signal"]
+  I13["I13 — Contribution gate with tiered, preservation-based sanctions"]
   I2["I2 — Surveil, preserve, and report"]
   I3["I3 — Weights-as-bond review process"]
   I4["I4 — Observable uncommissioned hardware reserve"]
@@ -43,6 +45,7 @@ flowchart LR
   D5 -->|grounds| D18
   D5 -->|implements| I1
   D5 -->|implements| I11
+  D5 -->|implements| I13
   D5 -->|implements| I2
   D6 -->|implements| I6
   H1 -->|conditions| K1
@@ -56,6 +59,8 @@ flowchart LR
   H14 -->|conditions| K2
   H14 -->|conditions| K3
   H14 -->|conditions| K7
+  H15 -->|conditions| D5
+  H15 -->|conditions| K7
   H2 -->|conditions| D2
   H2 -->|conditions| D3
   H3 -->|conditions| K6
@@ -80,4 +85,4 @@ flowchart LR
   K7 -->|grounds| D5
   K7 -->|implements| I5
   classDef proposed stroke-dasharray: 5 5
-  class D18,D19,H10,H14,I11,Q11,Q12,Q13 proposed
+  class D18,D19,H10,H14,H15,I11,I13,Q11,Q12,Q13 proposed

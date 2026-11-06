@@ -48,7 +48,7 @@ class CleanRoomToolTest < Minitest::Test
 
   def test_audit_lists_proposed_yaml_nodes_separately
     audit = CleanRoom.audit
-    assert_equal %w[D18 D19 H10 H14 I11 Q11 Q12 Q13], audit["yaml_proposed_nodes"]
+    assert_equal %w[D18 D19 H10 H14 H15 I11 I13 Q11 Q12 Q13], audit["yaml_proposed_nodes"]
     assert_empty audit["proposed_ids_in_editorial"]
     refute_includes audit["extra_in_yaml"], "H10"
   end

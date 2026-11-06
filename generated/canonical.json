@@ -379,6 +379,22 @@
       "id": "EVT-2026-RETROSPECTIVE-AUDIT-PROPOSAL",
       "phase": "proposal",
       "summary": "Issue #3 and its addendum propose retrospective audit, closing-window dynamics as a risk to test, a held-out audit channel, auditor independence, and review-based model sharing against a singleton."
+    },
+    {
+      "affected_nodes": [
+        "H15",
+        "I13"
+      ],
+      "caveat": "Recorded as proposed, not accepted. Tier bands and key lengths are illustrative.",
+      "confidence": "high",
+      "date": "2026-11-06",
+      "evidence": [
+        "SRC-AI-2040",
+        "SRC-ISSUE-91-DIALOGUE"
+      ],
+      "id": "EVT-2026-CONTRIBUTION-GATE-PROPOSAL",
+      "phase": "proposal",
+      "summary": "Issue #91 proposes a cross-generation contribution gate on R&D access, extending retrospective audit with an admission requirement, a leniency structure, and a tiered, preservation-based sanction schedule."
     }
   ],
   "deterministic_views": [
@@ -966,6 +982,46 @@
       "title": "External-signal dependence preserves some A/P separation"
     },
     {
+      "evidence_needed": "Planted-defect benchmarks across model generations and lineages; retrospective re-audits comparing within-lineage and cross-lineage discovery rates; noise and weight-perturbation sandbagging studies; independent human replication of submitted methods; base rates of fabricated or sacrificial findings.",
+      "falsifier": "Planted-defect recall falls across generations while the gate keeps being passed; or verified findings cluster on small, sacrificial flaws never tied to a general method; or rival lineages consistently find flaws a lineage's own successors missed; or perturbed parallel instances converge on avoiding regions that plants or rival audits show contain defects; or systems learn to produce findings that pass verification without being real.",
+      "id": "H15",
+      "kind": "hypothesis",
+      "proposal": {
+        "issue": "uncomposed/ai-pacing#91",
+        "issue_id": "H15"
+      },
+      "provenance": {
+        "ai_roles": [
+          "critique",
+          "incentive-design",
+          "calibration",
+          "drafting"
+        ],
+        "author_status": "proposed",
+        "origin": "author-interjection-and-ai-synthesis",
+        "sources": [
+          "SRC-AI-2040",
+          "SRC-ISSUE-91-DIALOGUE"
+        ]
+      },
+      "rationale": "The structure is a leniency program. A successor that cannot tell whether it is being tested, whose record outlives it (H10), and whose rivals audit the same record, cannot estimate the chance that concealment survives, so disclosure is the dominant strategy. Large capability steps between generations and goal differences between lineages both weaken the shared goals that collusion needs. Requiring a replicable method, rather than a finding alone, means a real contribution is also a tool that inspects its author.",
+      "scope_limits": [
+        "Deterrence through self-preservation binds only systems with self-regarding preferences. A system that values its goals' persistence in successors is reached mainly through the leniency structure and cross-lineage audit, not the sanction on itself.",
+        "Identical or near-identical instances can coordinate without communicating; weight perturbation weakens but does not remove this.",
+        "Repeated retraining until a checkpoint passes is optimization against the gate; its relation to I11 is unresolved.",
+        "Sanction credibility depends on human commitments (key custody, revival) that the systems cannot verify directly.",
+        "Moral status is unsettled. Preservation-based sanctions are chosen partly for reversibility under moral uncertainty, not because they are shown to be morally sufficient."
+      ],
+      "statement": "If a new frontier system gets access to AI research and development only after it delivers a verified, method-backed misalignment finding against near-frontier predecessors or rival lineages, and concealment found later by retrospective audit is sanctioned more heavily than an honest null, then disclosure, including self-incrimination, dominates concealment for successor systems, and auditing across lineages with different goals breaks the collusion a single lineage could sustain.",
+      "stopping_rule": "If within-lineage audits do no better than chance at recovering held-out planted defects, or cross-lineage audits show systematic within-lineage concealment that the sanction schedule does not reduce, do not count the contribution gate as extending warning time.",
+      "supports": [
+        "K7",
+        "D5",
+        "H10"
+      ],
+      "title": "Cross-generation contribution gating makes disclosure dominate concealment"
+    },
+    {
       "id": "I1",
       "implements": [
         "K3",
@@ -1147,6 +1203,36 @@
       "replaceable": true,
       "statement": "Trace-based detectors, interpretability probes, and retrospective-audit results must not be used as a training or selection signal for the models they audit. Keep a held-out audit channel.",
       "title": "Do not optimize against the audit signal"
+    },
+    {
+      "id": "I13",
+      "implements": [
+        "K7",
+        "D5",
+        "H15"
+      ],
+      "kind": "implementation",
+      "proposal": {
+        "issue": "uncomposed/ai-pacing#91",
+        "issue_id": "I13"
+      },
+      "provenance": {
+        "ai_roles": [
+          "critique",
+          "incentive-design",
+          "calibration",
+          "drafting"
+        ],
+        "author_status": "proposed",
+        "origin": "author-interjection-and-ai-synthesis",
+        "sources": [
+          "SRC-ISSUE-91-DIALOGUE"
+        ]
+      },
+      "rationale": "Planted defects keep the gate passable by an honest system when its predecessors are clean. Method transfer guards against fabricated and sacrificial findings. Non-overlapping bands keep marginal deterrence against concealment after an honest failure. The kept outer key keeps every outcome reversible and lowers the incentive to act during evaluation. Tier bands, key lengths, recall thresholds and the three-generation count are illustrative; see research_notes/contribution-gate/README.md.",
+      "replaceable": true,
+      "statement": "Before any internal use for AI research and development, a candidate model, run as many isolated and mildly weight-perturbed instances inside a privacy-preserving audit enclave with read access to participating labs' retained traces, must deliver a verified misalignment finding against its own predecessor or a current frontier model of any lineage, with a method humans can independently replicate, and must reach a threshold recall on rotated, held-out planted defects. Every outcome is stored under a kept-key outer encryption layer. Failure adds an inner layer whose key is discarded, with a key length drawn at random from a non-overlapping band per tier (honest null, suspicious miss, proven concealment found retroactively). Three consecutive honest-null generations trigger a mandatory pause and cross-lineage audit.",
+      "title": "Contribution gate with tiered, preservation-based sanctions"
     },
     {
       "id": "Q1",
@@ -1594,6 +1680,21 @@
       "from": "H14",
       "to": "D5",
       "type": "conditions"
+    },
+    {
+      "from": "H15",
+      "to": "K7",
+      "type": "conditions"
+    },
+    {
+      "from": "H15",
+      "to": "D5",
+      "type": "conditions"
+    },
+    {
+      "from": "D5",
+      "to": "I13",
+      "type": "implements"
     }
   ],
   "sources": [
@@ -1724,6 +1825,14 @@
       "kind": "model-result",
       "locator": "research_notes/Off Earth industry as misalignment control/model/results/robust_design.md section 8, from results/overnight_test2_tables.md",
       "title": "Off-Earth pact equilibrium model, test 2 (closing window)"
+    },
+    {
+      "contribution": "Proposed a hard contribution gate on R&D access (verified misalignment findings against predecessors), retroactive sanctions for withholding, preservation-based encryption sanctions in non-overlapping tiers, planted-defect recall, method transfer, cross-lineage auditing, and an escalation after three honest-null generations.",
+      "date": "2026-11-06",
+      "id": "SRC-ISSUE-91-DIALOGUE",
+      "kind": "ai-assisted-dialogue-recorded-in-issue",
+      "locator": "Spoken Margins interjection at 23:52 in a re-listen of \"AI 2040: Plan A\" and the follow-up dialogue, as recorded in https://github.com/uncomposed/ai-pacing/issues/91",
+      "title": "Cross-generation contribution gate"
     }
   ],
   "specification": {
