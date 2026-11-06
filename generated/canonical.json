@@ -587,16 +587,18 @@
       "provenance": {
         "ai_roles": [
           "bargaining-analysis",
-          "formalization"
+          "formalization",
+          "model-building"
         ],
         "author_status": "accepted",
         "origin": "author-synthesis",
         "sources": [
           "SRC-TOBY-ORD",
-          "SRC-PLAN-A-BARGAINING"
+          "SRC-PLAN-A-BARGAINING",
+          "SRC-ISSUE-89-FRONTIER-ROUTER"
         ]
       },
-      "rationale": "Cooperation can occur through a precommitted policy rule rather than trust.",
+      "rationale": "Cooperation can occur through a precommitted policy rule rather than trust. Which releases count toward the reference frontier matters: if the releases of other participants count, k participants can take turns releasing a margin above each other and the reference rises at about k times that margin per release interval, faster with more participants; referencing only non-participants holds it to their pace (research_notes/frontier-router, arithmetic on assumed inputs, checked against a closed form, not empirical; proposed Q17 asks which rule to adopt). The editorial reference's H5 raised the same ratchet as a hypothesis; it is not yet a YAML node.",
       "statement": "Observable foreign public capability should alter the domestic safe-harbor frontier so that foreign restraint can be reciprocated without a treaty and foreign release cannot exploit unilateral domestic restraint indefinitely.",
       "title": "Make foreign public capability an automatic reciprocity input"
     },
