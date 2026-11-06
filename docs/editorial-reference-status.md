@@ -30,8 +30,8 @@ Generating a fresh editorial rendering from the YAML is already done
 These are propositions in the author's words that have never been reviewed
 into the YAML. Each is a candidate for a spec-proposal issue. The ID in the
 reference is **not** reserved for it in the YAML namespace: when one is
-proposed, it takes the next free ID of its kind from `spec/id-registry.yaml`,
-and the registry's `renumbering` list records the reference's number.
+proposed, it takes the kind letter plus its proposal issue number, and the
+registry's `renumbering` list records the reference's number.
 
 | Reference ID | Title in the reference |
 |---|---|

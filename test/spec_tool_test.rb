@@ -90,9 +90,17 @@ class SpecToolTest < Minitest::Test
     }.merge(extra)
   end
 
+  # The proposed-node list is derived from the registry, not pinned here, so
+  # two proposal branches do not conflict on this test.
+  def registry_proposed_ids
+    registry["ids"].select { |item| item["definitions"].any? { |d| d["source"] == "yaml" && d["status"] == "proposed" } }
+                   .map { |item| item["id"] }.sort
+  end
+
   def test_canonical_spec_records_issue_22_editor_decisions
     nodes = AIPacing.nodes_by_id(@spec)
-    assert_equal %w[H15 H16 I12 I13 Q17], AIPacing.proposed_ids(@spec)
+    refute_empty registry_proposed_ids
+    assert_equal registry_proposed_ids, AIPacing.proposed_ids(@spec)
     {
       "H10" => "accepted-as-hypothesis", "H14" => "accepted-as-hypothesis", "I11" => "accepted-as-option",
       "Q11" => "unresolved", "Q12" => "unresolved", "Q13" => "unresolved"
@@ -159,7 +167,7 @@ class SpecToolTest < Minitest::Test
 
   def test_dependency_graph_marks_proposed_nodes
     graph = AIPacing.render_graph(@spec)
-    assert_includes graph, "class H15,H16,I12,I13,Q17 proposed"
+    assert_includes graph, "class #{registry_proposed_ids.join(',')} proposed"
   end
 
   # Reserved-ID registry.
@@ -256,11 +264,56 @@ class SpecToolTest < Minitest::Test
                     'registry: H15 has withdrawal fields but status "proposed"'
   end
 
-  def test_next_free_must_be_above_every_used_id
+  def test_legacy_ceiling_must_be_above_every_legacy_id
     changed = registry
-    changed["next_free"]["H"] = "H12"
+    changed["legacy_ceiling"]["H"] = "H12"
     assert_includes AIPacing.validate_registry(@spec, changed),
-                    "registry: next_free H12 is not above every used or reserved H ID"
+                    "registry: legacy_ceiling H12 is not above every legacy H ID"
+  end
+
+  def issue_numbered_entry(id, kind, status = "proposed")
+    {"id" => id, "kind" => kind, "collision" => "none",
+     "definitions" => [{"source" => "yaml", "title" => "Mutation #{id}", "status" => status}]}
+  end
+
+  def test_issue_numbered_id_must_be_proposed_in_the_issue_with_that_number
+    changed = registry
+    changed["ids"] << issue_numbered_entry("H95", "hypothesis")
+    mutated = copy_spec
+    mutated["nodes"] << proposed_node("H95", "hypothesis", "proposal" => {"issue" => "uncomposed/ai-pacing#91"})
+    errors = AIPacing.validate_registry(mutated, changed)
+    assert_includes errors, 'registry: issue-numbered H95 must be proposed in uncomposed/ai-pacing#95, found "uncomposed/ai-pacing#91"'
+
+    mutated["nodes"].last["proposal"] = {"issue" => "uncomposed/ai-pacing#95"}
+    assert_empty AIPacing.validate_registry(mutated, changed)
+  end
+
+  def test_reserved_issue_numbered_id_needs_its_issue_as_source
+    changed = registry
+    changed["ids"] << {"id" => "Q97", "kind" => "open_question", "collision" => "none",
+                       "definitions" => [{"source" => "issue_91", "title" => "Mutation", "status" => "reserved"}]}
+    assert_includes AIPacing.validate_registry(@spec, changed),
+                    "registry: issue-numbered Q97 needs a definition from source issue_97 or a YAML node proposed in uncomposed/ai-pacing#97"
+  end
+
+  def test_id_between_the_legacy_ceiling_and_the_first_issue_number_is_rejected
+    changed = registry
+    changed["ids"] << {"id" => "H50", "kind" => "hypothesis", "collision" => "none",
+                       "definitions" => [{"source" => "issue_91", "title" => "Mutation", "status" => "reserved"}]}
+    assert_includes AIPacing.validate_registry(@spec, changed),
+                    "registry: H50 is neither a legacy ID below H17 nor an issue-numbered ID at or above H93"
+  end
+
+  def test_issue_id_command_allocates_from_the_issue_number
+    assert_equal "H95", AIPacing.issue_id("H", "95", registry)
+    assert_equal "I95", AIPacing.issue_id("i", 95, registry)
+    error = assert_raises(ArgumentError) { AIPacing.issue_id("H", 91, registry) }
+    assert_match(/below 93/, error.message)
+    changed = registry
+    changed["ids"] << issue_numbered_entry("H95", "hypothesis")
+    error = assert_raises(ArgumentError) { AIPacing.issue_id("H", 95, changed) }
+    assert_match(/already registered/, error.message)
+    assert_raises(ArgumentError) { AIPacing.issue_id("X", 95, registry) }
   end
 
   def test_unregistered_editorial_heading_is_rejected

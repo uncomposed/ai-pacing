@@ -132,26 +132,33 @@ decides what enters the specification. Contributors propose; they do not accept.
    `D` derived, `H` hypothesis (needs a falsifier, evidence requirement and
    stopping rule), `I` replaceable implementation, `Q` open question. Give the
    candidate statement, what it depends on or supports, and what would falsify it.
-2. Node IDs come from one list, the reserved-ID registry `spec/id-registry.yaml`.
-   It covers the YAML, the editorial Markdown, research-note candidates and issue
-   proposals. Do not pick the next free number from your own reading of the YAML.
-   To reserve an ID:
-   - run `ruby tools/spec_tool.rb next-id H` (or `K`, `D`, `I`, `Q`) to get the next
-     free ID of that kind;
+2. Node IDs are the kind letter plus the number of the proposal issue: a
+   hypothesis proposed in issue #95 is H95. GitHub allocates the number, so two
+   branches cannot reserve the same ID. An issue may propose at most one node of
+   each kind; to bundle several nodes of one kind, open one issue per node and
+   link them. The reserved-ID registry `spec/id-registry.yaml` is still the one
+   list of every ID used or reserved across the YAML, the editorial Markdown,
+   research-note candidates and issue proposals. IDs allocated before
+   2026-11-06 keep their sequential numbers; `legacy_ceiling` is frozen and
+   `next-id` is retired. To reserve an ID:
+   - run `ruby tools/spec_tool.rb issue-id H 95` (or `K`, `D`, `I`, `Q`), which
+     checks the number is at or above `issue_numbering.min_issue` and not yet
+     registered, and prints the ID;
    - add an entry under `ids:` with that `id`, its `kind`, `collision: none`, and
      one definition. Use `{source: yaml, title: <node title>, status: proposed}`
      when the node lands in the YAML in the same PR. For an issue or research-note
      candidate that is not in the YAML yet, use that source's key (declare it under
      `sources:` if it is new) with `status: reserved`;
-   - bump `next_free` for that kind;
+   - declare the issue under `sources:` as `issue_<number>` if it is new;
    - if the issue or note already used a different number, add a `renumbering` row
      (`source`, `old`, `new`, `reason`).
    Local numbering in research files uses a prefix (`AR-H1` for assumption-register
    claims, `EQ-Q1` for equilibrium questions) so it is never mistaken for a spec ID;
    declare new ones under `local_namespaces`.
    Never reuse or renumber a registered ID. `make check` rejects an unregistered or
-   retitled YAML node, an ID that collides with another definition, and a
-   `next_free` at or below a used ID.
+   retitled YAML node, an ID that collides with another definition, an
+   issue-numbered ID whose node is not proposed in that issue, and a number
+   that is neither below `legacy_ceiling` nor an issue number.
 3. In the PR, add the node as proposed: `provenance.author_status: proposed` and
    `proposal: {issue: uncomposed/ai-pacing#N}`, with honest `origin`, `sources` and
    `ai_roles`. The tooling enforces this: `author_status` must be one of the known

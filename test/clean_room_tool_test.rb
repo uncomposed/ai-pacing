@@ -49,7 +49,11 @@ class CleanRoomToolTest < Minitest::Test
 
   def test_audit_lists_proposed_yaml_nodes_separately
     audit = CleanRoom.audit
-    assert_equal %w[H15 H16 I12 I13 Q17], audit["yaml_proposed_nodes"]
+    expected = AIPacing.load_registry["ids"]
+                       .select { |item| item["definitions"].any? { |d| d["source"] == "yaml" && d["status"] == "proposed" } }
+                       .map { |item| item["id"] }.sort
+    refute_empty expected
+    assert_equal expected, audit["yaml_proposed_nodes"]
     assert_empty audit["proposed_ids_in_editorial"]
     refute_includes audit["extra_in_yaml"], "H15"
   end

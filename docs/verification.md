@@ -51,7 +51,10 @@ the editorial reference, the off-Earth research report, and the proposal issues.
 - an editorial-reference heading ID that is unregistered or retitled;
 - a YAML node whose ID is reserved for something else, or a new legacy
   collision outside the grandfathered 2026-08-29 set;
-- a `next_free` ID at or below any used, reserved, or local-namespace ID.
+- a `legacy_ceiling` ID at or below any legacy used, reserved, or
+  local-namespace ID, a registered number that is neither below the ceiling
+  nor an issue number, or an issue-numbered ID whose YAML node is not proposed
+  in the issue with that number.
 
 ## 4. Semantic acceptance tests
 

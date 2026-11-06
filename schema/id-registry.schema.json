@@ -3,7 +3,7 @@
   "$id": "https://example.invalid/schemas/id-registry.schema.json",
   "title": "AI Pacing reserved proposition-ID registry",
   "type": "object",
-  "required": ["schema_version", "created", "sources", "local_namespaces", "next_free", "renumbering", "ids"],
+  "required": ["schema_version", "created", "sources", "local_namespaces", "legacy_ceiling", "issue_numbering", "renumbering", "ids"],
   "additionalProperties": false,
   "properties": {
     "schema_version": {"const": 1},
@@ -35,7 +35,17 @@
         }
       }
     },
-    "next_free": {
+    "issue_numbering": {
+      "type": "object",
+      "required": ["since", "min_issue", "rule"],
+      "additionalProperties": false,
+      "properties": {
+        "since": {"type": "string", "format": "date"},
+        "min_issue": {"type": "integer", "minimum": 1},
+        "rule": {"type": "string", "minLength": 1}
+      }
+    },
+    "legacy_ceiling": {
       "type": "object",
       "required": ["K", "D", "H", "I", "Q"],
       "additionalProperties": false,

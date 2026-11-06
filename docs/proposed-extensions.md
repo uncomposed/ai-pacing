@@ -73,7 +73,9 @@ cited by `docs/off-earth-pact.md`). `spec/id-registry.yaml` now lists every used
 and reserved ID per kind, where it is defined, its status, and how colliding
 definitions relate. `make check` rejects a YAML node that is unregistered,
 whose registered title or status has drifted, or that reuses an ID meaning
-something else. `ruby tools/spec_tool.rb next-id H` prints the next free ID.
+something else. Since 2026-11-06 a new ID is the kind letter plus its
+proposal issue number (`ruby tools/spec_tool.rb issue-id H 95`); the
+sequential IDs below `legacy_ceiling` are frozen.
 
 | Source | Old | New | Why |
 |---|---|---|---|

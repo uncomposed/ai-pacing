@@ -580,6 +580,24 @@ module AIPacing
     id.to_s[1..].to_i
   end
 
+  # IDs allocated since 2026-11-06 are the kind letter plus the proposal issue
+  # number, so GitHub allocates the number. Returns the ID or raises.
+  def issue_id(prefix, number, registry = load_registry)
+    prefix = prefix.to_s.upcase
+    raise ArgumentError, "kind prefix must be one of #{KIND_PREFIXES.values.join(', ')}" unless KIND_PREFIXES.value?(prefix)
+
+    number = Integer(number.to_s, 10)
+    min_issue = registry.dig("issue_numbering", "min_issue")
+    if number < min_issue
+      raise ArgumentError, "issue ##{number} is below #{min_issue}; numbers below it are legacy sequential IDs (legacy_ceiling), not issue numbers"
+    end
+    id = "#{prefix}#{number}"
+    if Array(registry["ids"]).any? { |entry| entry["id"] == id }
+      raise ArgumentError, "#{id} is already registered; an issue may propose at most one node of each kind"
+    end
+    id
+  end
+
   def editorial_headings(path = EDITORIAL_REFERENCE)
     return {} unless File.exist?(path)
 
@@ -693,17 +711,46 @@ module AIPacing
     end
 
     local_ids = Array(registry["local_namespaces"]).flat_map { |namespace| Array(namespace["ids"]) }
-    next_free = registry["next_free"] || {}
+    numbering = registry["issue_numbering"]
+    min_issue = numbering.is_a?(Hash) ? numbering["min_issue"] : nil
+    unless min_issue.is_a?(Integer) && min_issue.positive?
+      errors << "registry: issue_numbering.min_issue missing or malformed"
+      min_issue = nil
+    end
+    ceiling = registry["legacy_ceiling"] || {}
     KIND_PREFIXES.each do |kind, prefix|
-      candidate = next_free[prefix]
+      candidate = ceiling[prefix]
       if candidate.nil? || !candidate.to_s.match?(/\A#{prefix}[1-9]\d*\z/)
-        errors << "registry: next_free #{prefix} missing or malformed"
+        errors << "registry: legacy_ceiling #{prefix} missing or malformed"
         next
       end
+      limit = id_number(candidate)
+      errors << "registry: legacy_ceiling #{candidate} is not below issue number #{min_issue}" if min_issue && limit > min_issue
       used = entries.select { |entry| entry["kind"] == kind }.map { |entry| id_number(entry["id"]) }
       used += local_ids.select { |id| id.to_s.start_with?(prefix) }.map { |id| id_number(id) }
-      if used.any? && id_number(candidate) <= used.max
-        errors << "registry: next_free #{candidate} is not above every used or reserved #{prefix} ID"
+      legacy = min_issue ? used.select { |number| number < min_issue } : used
+      if legacy.any? && limit <= legacy.max
+        errors << "registry: legacy_ceiling #{candidate} is not above every legacy #{prefix} ID"
+      end
+      next unless min_issue
+
+      used.select { |number| number >= limit && number < min_issue }.sort.each do |number|
+        errors << "registry: #{prefix}#{number} is neither a legacy ID below #{candidate} nor an issue-numbered ID at or above #{prefix}#{min_issue}"
+      end
+    end
+    if min_issue
+      entries.each do |entry|
+        id = entry["id"].to_s
+        number = id_number(id)
+        next if number < min_issue
+
+        issue = "uncomposed/ai-pacing##{number}"
+        if nodes.key?(id)
+          found = nodes[id].dig("proposal", "issue")
+          errors << "registry: issue-numbered #{id} must be proposed in #{issue}, found #{found.inspect}" if found != issue
+        elsif Array(entry["definitions"]).none? { |d| d["source"] == "issue_#{number}" }
+          errors << "registry: issue-numbered #{id} needs a definition from source issue_#{number} or a YAML node proposed in #{issue}"
+        end
       end
     end
 
@@ -823,15 +870,24 @@ if $PROGRAM_NAME == __FILE__
     else
       exit 1
     end
-  when "next-id"
-    prefix = ARGV.shift.to_s.upcase
-    unless AIPacing::KIND_PREFIXES.value?(prefix)
-      warn "usage: ruby tools/spec_tool.rb next-id K|D|H|I|Q"
+  when "issue-id"
+    prefix = ARGV.shift.to_s
+    number = ARGV.shift.to_s
+    if prefix.empty? || number.empty?
+      warn "usage: ruby tools/spec_tool.rb issue-id K|D|H|I|Q ISSUE_NUMBER"
       exit 2
     end
-    puts AIPacing.load_registry.fetch("next_free").fetch(prefix)
+    begin
+      puts AIPacing.issue_id(prefix, number)
+    rescue ArgumentError => e
+      warn e.message
+      exit 1
+    end
+  when "next-id"
+    warn "next-id is retired: a new ID is the kind letter plus its proposal issue number. Run: ruby tools/spec_tool.rb issue-id K|D|H|I|Q ISSUE_NUMBER"
+    exit 2
   else
-    warn "usage: ruby tools/spec_tool.rb [validate|accept|generate|digest|impact NODE|next-id PREFIX|check] [spec.yaml]"
+    warn "usage: ruby tools/spec_tool.rb [validate|accept|generate|digest|impact NODE|issue-id PREFIX ISSUE_NUMBER|check] [spec.yaml]"
     exit 2
   end
 end

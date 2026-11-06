@@ -59,7 +59,7 @@ separates:
 
 Every proposition records sources, the role AI played, and the canonical editor's acceptance status. The audit trail distinguishes documentary evidence from historical inference.
 
-Nodes with `author_status: proposed` are recorded for review and are not accepted canon; see [`docs/proposed-extensions.md`](docs/proposed-extensions.md). Every proposition ID used or reserved anywhere in the repository is listed in [`spec/id-registry.yaml`](spec/id-registry.yaml); `ruby tools/spec_tool.rb next-id H` prints the next free ID of a kind.
+Nodes with `author_status: proposed` are recorded for review and are not accepted canon; see [`docs/proposed-extensions.md`](docs/proposed-extensions.md). Every proposition ID used or reserved anywhere in the repository is listed in [`spec/id-registry.yaml`](spec/id-registry.yaml). Since 2026-11-06 a new ID is the kind letter plus its proposal issue number; `ruby tools/spec_tool.rb issue-id H 95` checks and prints it.
 
 ## Quality gate
 
