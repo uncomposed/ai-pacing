@@ -1,0 +1,421 @@
+{
+ "resolution": [
+  {
+   "design": "base",
+   "nA": 160,
+   "T_H": 300,
+   "holds": 41,
+   "holds100": 41,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 0.0,
+   "max_rel_dWH": 0.0,
+   "median_rel_dWH": 0.0,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "base",
+   "nA": 120,
+   "T_H": 300,
+   "holds": 42,
+   "holds100": 42,
+   "flips": 1,
+   "gained": 1,
+   "lost": 0,
+   "flips100": 1,
+   "act0_changes": 1,
+   "max_dWH": 0.2705760408568998,
+   "max_rel_dWH": 0.3634297484302183,
+   "median_rel_dWH": 0.00014249249218682507,
+   "max_datt": 0.5079818611872469,
+   "max_datt100": 0.5079818611872469,
+   "flipped_draws": [
+    51
+   ],
+   "flipped_att": [
+    [
+     0.023115288856268516,
+     1.7302984306274847e-34
+    ]
+   ]
+  },
+  {
+   "design": "base",
+   "nA": 240,
+   "T_H": 300,
+   "holds": 43,
+   "holds100": 43,
+   "flips": 2,
+   "gained": 2,
+   "lost": 0,
+   "flips100": 2,
+   "act0_changes": 2,
+   "max_dWH": 0.554219994356537,
+   "max_rel_dWH": 1.122628911190215,
+   "median_rel_dWH": 0.00011157460910925828,
+   "max_datt": 0.9999999999999997,
+   "max_datt100": 0.9999999999999997,
+   "flipped_draws": [
+    35,
+    51
+   ],
+   "flipped_att": [
+    [
+     1.0,
+     3.1745211922555294e-16
+    ],
+    [
+     0.023115288856268516,
+     1.4045077559957908e-19
+    ]
+   ]
+  },
+  {
+   "design": "base",
+   "nA": 320,
+   "T_H": 300,
+   "holds": 42,
+   "holds100": 42,
+   "flips": 1,
+   "gained": 1,
+   "lost": 0,
+   "flips100": 1,
+   "act0_changes": 1,
+   "max_dWH": 0.27055889267125444,
+   "max_rel_dWH": 0.36340671549361614,
+   "median_rel_dWH": 0.00011192796132186855,
+   "max_datt": 0.5079818611872469,
+   "max_datt100": 0.5079818611872469,
+   "flipped_draws": [
+    51
+   ],
+   "flipped_att": [
+    [
+     0.023115288856268516,
+     0.004686243744447168
+    ]
+   ]
+  },
+  {
+   "design": "base",
+   "nA": 160,
+   "T_H": 200,
+   "holds": 41,
+   "holds100": 41,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 0.00012705056528372616,
+   "max_rel_dWH": 0.00013078766478147368,
+   "median_rel_dWH": 6.975904466085696e-06,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "base",
+   "nA": 160,
+   "T_H": 450,
+   "holds": 41,
+   "holds100": 41,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 9.616924924626957e-06,
+   "max_rel_dWH": 9.899799740850246e-06,
+   "median_rel_dWH": 2.570698773703259e-07,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "base",
+   "nA": 160,
+   "T_H": 600,
+   "holds": 41,
+   "holds100": 41,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 9.801346174787007e-06,
+   "max_rel_dWH": 1.008964560726295e-05,
+   "median_rel_dWH": 2.587082307684967e-07,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "base",
+   "nA": 320,
+   "T_H": 600,
+   "holds": 42,
+   "holds100": 42,
+   "flips": 1,
+   "gained": 1,
+   "lost": 0,
+   "flips100": 1,
+   "act0_changes": 1,
+   "max_dWH": 0.27055889267125444,
+   "max_rel_dWH": 0.36340671549361614,
+   "median_rel_dWH": 0.00011284829632878551,
+   "max_datt": 0.5079818611872469,
+   "max_datt100": 0.5079818611872469,
+   "flipped_draws": [
+    51
+   ],
+   "flipped_att": [
+    [
+     0.023115288856268516,
+     0.004686243744447168
+    ]
+   ]
+  },
+  {
+   "design": "best",
+   "nA": 160,
+   "T_H": 300,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 0.0,
+   "max_rel_dWH": 0.0,
+   "median_rel_dWH": 0.0,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "best",
+   "nA": 120,
+   "T_H": 300,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 0.00012817437669898624,
+   "max_rel_dWH": 0.00011614461746322205,
+   "median_rel_dWH": 4.8704370621591434e-05,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "best",
+   "nA": 240,
+   "T_H": 300,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 6.462668318740761e-05,
+   "max_rel_dWH": 5.9119518611300417e-05,
+   "median_rel_dWH": 1.5861068891892722e-05,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "best",
+   "nA": 320,
+   "T_H": 300,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 0.00010403722809004812,
+   "max_rel_dWH": 9.517169285172514e-05,
+   "median_rel_dWH": 2.078528992771405e-05,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "best",
+   "nA": 160,
+   "T_H": 200,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 0.0001750041952646164,
+   "max_rel_dWH": 0.00016638893316956393,
+   "median_rel_dWH": 1.1697111104508892e-05,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "best",
+   "nA": 160,
+   "T_H": 450,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 1.3246711682013412e-05,
+   "max_rel_dWH": 1.2594590783622506e-05,
+   "median_rel_dWH": 6.399579404017747e-07,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "best",
+   "nA": 160,
+   "T_H": 600,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 1.3500740402516698e-05,
+   "max_rel_dWH": 1.2836113952453173e-05,
+   "median_rel_dWH": 6.482621878242635e-07,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  },
+  {
+   "design": "best",
+   "nA": 320,
+   "T_H": 600,
+   "holds": 63,
+   "holds100": 63,
+   "flips": 0,
+   "gained": 0,
+   "lost": 0,
+   "flips100": 0,
+   "act0_changes": 0,
+   "max_dWH": 0.00010403388752422416,
+   "max_rel_dWH": 9.516863695230926e-05,
+   "median_rel_dWH": 2.3014505928000093e-05,
+   "max_datt": 0.0,
+   "max_datt100": 0.0,
+   "flipped_draws": [],
+   "flipped_att": []
+  }
+ ],
+ "sizes": [
+  {
+   "design": "base",
+   "n": 64,
+   "holds": 41,
+   "share": 0.640625,
+   "ci90": [
+    0.5381116042364623,
+    0.7317290885645252
+   ],
+   "holds_rival": 37
+  },
+  {
+   "design": "base",
+   "n": 128,
+   "holds": 89,
+   "share": 0.6953125,
+   "ci90": [
+    0.6249185359501367,
+    0.7576193003890833
+   ],
+   "holds_rival": 84
+  },
+  {
+   "design": "base",
+   "n": 256,
+   "holds": 176,
+   "share": 0.6875,
+   "ci90": [
+    0.6380932441610326,
+    0.7329843138510005
+   ],
+   "holds_rival": 158
+  },
+  {
+   "design": "best",
+   "n": 64,
+   "holds": 63,
+   "share": 0.984375,
+   "ci90": [
+    0.9329444492962635,
+    0.9965068259071386
+   ],
+   "holds_rival": 62
+  },
+  {
+   "design": "best",
+   "n": 128,
+   "holds": 127,
+   "share": 0.9921875,
+   "ci90": [
+    0.965739992152687,
+    0.9982553554221474
+   ],
+   "holds_rival": 123
+  },
+  {
+   "design": "best",
+   "n": 256,
+   "holds": 254,
+   "share": 0.9921875,
+   "ci90": [
+    0.9766670656718587,
+    0.9974115241097282
+   ],
+   "holds_rival": 241
+  }
+ ],
+ "reproduction": [
+  {
+   "design": "base",
+   "maxdiff": 0.0,
+   "same_outcomes": true
+  },
+  {
+   "design": "best",
+   "maxdiff": 0.0,
+   "same_outcomes": true
+  }
+ ]
+}
