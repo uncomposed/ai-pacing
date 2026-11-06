@@ -109,6 +109,7 @@ renumbering:
   - {source: issue_3, old: Q6, new: Q11, reason: "Renumbered in the issue on 2026-10-21."}
   - {source: issue_3, old: D8, new: D19, reason: "Renumbered in the addendum comment on 2026-10-21."}
   - {source: issue_3, old: Q7, new: Q12, reason: "Renumbered in the addendum comment on 2026-10-21."}
+  - {source: issue_91, old: H15, new: H16, reason: "Issue #91 reserved H15 from main's next_free on 2026-11-06, but the issue #22 review had already taken H15 for the retyped closing-window hypothesis; renumbered at integration. The node keeps issue_id H15."}
   - {source: off_earth_report, old: H10, new: H11, reason: "The report's optional H10 collides with issue 3's H10; H11 is inside the range docs/off-earth-pact.md already cites."}
   - {source: off_earth_report, old: D7, new: D20, reason: "D7 is an editorial ID (warning-shot ladder); the report's candidate is reserved as D20 (issue #23)."}
   - {source: off_earth_report, old: D8, new: D21, reason: "D8 is an editorial ID (dry-tinder learning); the report's candidate is reserved as D21 (issue #23)."}
