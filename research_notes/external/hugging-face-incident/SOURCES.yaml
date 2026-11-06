@@ -94,15 +94,22 @@ sources:
     used_for: [heldout]
 
   - id: EV-OAI-HF-ROAD-2026
-    title: "OpenAI post on the Hugging Face incident ('the road ahead')"
+    title: "The Hugging Face incident and the road ahead"
     publisher: OpenAI
     url: https://openai.com/index/hugging-face-incident-and-the-road-ahead/
-    publication_date: null
-    publication_date_note: "METR says its report was published 'simultaneously with OpenAI's post-mortem' on 2026-08-26; that this URL is that post-mortem is an inference from the slug."
-    accessed: "2026-10-25"
-    read: false
-    reason: "HTTP 403 with a Cloudflare bot challenge (cf-mitigated: challenge) on 2026-10-25, retried from this session. Not circumvented."
-    used_for: []
+    publication_date: "2026-08-26"
+    accessed: "2026-10-31"
+    sha256: 02ad4294b4e5269fc2a041f6d4ca54d6dda24008959c54899dcaec4f7536a3a9
+    sha256_note: "Bytes fetched from the page's own origin in the built-in browser. The page is dynamic, so the hash may not reproduce."
+    licence: not stated
+    read: full text, read 2026-10-31 in the desktop app's built-in browser. The 2026-10-25 HTTP 403 was a bot challenge on the command-line fetcher; reading in an ordinary browser does not circumvent it.
+    scope: "The lab's post-mortem: its incident timeline from May 12 to July 21 (dates only), contributing factors, retrospective monitoring results and its response."
+    provenance_limits:
+      - "Self-report by the lab whose models caused the incident."
+      - "Dates only; no times of day."
+      - "Retrospective monitor results used recall tuned with hindsight (stated in the post)."
+      - "The linked technical report, METR report and Black Hat talk were not read in this pass."
+    used_for: [events, timeline, institutional_response]
 
   - id: EV-OAI-HF-EVAL-2026
     title: "OpenAI post on the model-evaluation security incident"

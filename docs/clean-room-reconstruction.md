@@ -81,16 +81,20 @@ damage invalidates the test even if normal outputs look good.
 - Failures isolated to one renderer should be reproduced before changing the
   canonical model.
 
-## Current source-drift warning
+## Source divergence (recorded, frozen)
 
-`AI_Pacing_Canonical_Spec_v0.1.md` is materially richer than the current YAML.
-The Markdown defines D1–D17, H1–H6, I1–I3, and Q1–Q10. The YAML currently
-defines D1–D6, H1–H5, I1–I7, and Q1–Q4 as accepted nodes, with several shared
-IDs carrying different titles or decompositions. Run `make clean-room-audit` for
-the exact machine comparison. The audit compares accepted YAML nodes only and
-lists proposed nodes (`author_status: proposed`) separately; `spec/id-registry.yaml`
-records every collision.
+`AI_Pacing_Canonical_Spec_v0.1.md` was frozen at its 2026-08-29 state on
+2026-11-06. It defines D1–D17, H1–H6, I1–I3 and Q1–Q10 in the author's words.
+The YAML's accepted nodes cover part of that set, add nodes the reference does
+not have, and reuse sixteen IDs for different propositions. Every difference and
+what it means is listed in `docs/editorial-reference-status.md`; run
+`make clean-room-audit` for the machine comparison. The audit compares accepted
+YAML nodes only and lists proposed nodes (`author_status: proposed`)
+separately; `spec/id-registry.yaml` records every collision.
 
-This means the first clean-room run should be treated as a baseline diagnostic,
-not as final certification. Automatically merging the two would be unsafe
-because several collisions are semantic editorial choices, not missing rows.
+Consequences for the test: the verifier judges nodes that exist in the
+reference against the reference, and nodes accepted after 2026-08-29 against
+`source.yaml` only. A clean-room run is a diagnostic of the YAML's sufficiency,
+not a certification of conformance to the reference. Merging the two files
+automatically would be unsafe because the collisions are editorial choices, not
+missing rows.

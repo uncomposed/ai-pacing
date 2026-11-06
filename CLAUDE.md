@@ -55,10 +55,12 @@ refused cache means the request changed, so re-solve into another `--runs-dir`.
 - Propose spec nodes only. New nodes get `provenance.author_status: proposed`
   and `proposal: {issue: uncomposed/ai-pacing#N}`; never write `accepted*`. The
   canonical editor accepts. `make check` enforces both fields.
-- Node IDs come from the reserved-ID registry `spec/id-registry.yaml`. Get the
-  next free ID with `ruby tools/spec_tool.rb next-id <K|D|H|I|Q>`, add an entry
-  there and bump `next_free` before use (procedure in CONTRIBUTING.md). Never
-  pick the number yourself, reuse or renumber a registered ID.
+- Node IDs are the kind letter plus the proposal issue number (issue #95
+  proposing a hypothesis gives H95), checked with
+  `ruby tools/spec_tool.rb issue-id <K|D|H|I|Q> <issue>`, and registered in
+  `spec/id-registry.yaml` before use (procedure in CONTRIBUTING.md). One node
+  of each kind per issue. Never pick a number yourself, reuse or renumber a
+  registered ID; IDs below `legacy_ceiling` are frozen sequential IDs.
 - Keep three things separate: replication of a source model, numerical
   correctness, empirical validation. Never claim more than was shown. Ensemble
   shares are sampling-measure outcomes, not calibrated probabilities.

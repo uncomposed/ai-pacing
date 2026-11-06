@@ -39,7 +39,7 @@ structures:
     shared: "Copies share one capability (a state of WEIGHTS); their compute and off-Earth assets are one resource ledger split by shares. Parallel attempts are separate events, not a bigger A."
     transitions: [T-LOSS-OF-CONTROL, T-DEGRADATION, T-RECONTAIN]
     solver_needs: "A count of independent attempts per period with correlated success, a per-copy kill rule (kill_pre applies to one copy, not the weights), and attribution: whether a failed attempt is blamed on the collective. The 'failed early strike is fatal' logic (AS-KILLPRE) then needs every copy to be stopped."
-    threatens: [AR-H1, AR-H9, AR-H10, AR-H11, D18]
+    threatens: [AR-H1, AR-H9, AR-H10, AR-H11, H15]
     omission: OM-MULTI-AGENT
 
   - id: AST-RIVAL-AIS
@@ -73,7 +73,7 @@ structures:
     shared: "The lab's compute is split between SYS and other uses by shares; SYS has no off-Earth base yet."
     transitions: [T-DELEGATE, T-RESTRICT, T-LOSS-OF-CONTROL, T-AUTHORIZED-AUTONOMY]
     solver_needs: "A development phase with lab-held custody and intervention latency. The pact solver starts after T-AUTHORIZED-AUTONOMY or T-LOSS-OF-CONTROL; AD-PACT marks MODE-SOVEREIGN-CAPABLE unsupported, so its results do not transfer to this structure."
-    threatens: [AR-H1, AR-H9, Q13, D18]
+    threatens: [AR-H1, AR-H9, Q13, H15]
     omission: OM-LAB-SYSTEMS
 
   - id: AST-HETEROGENEOUS-STATES
