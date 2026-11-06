@@ -2,7 +2,7 @@
 
 [[ai gen]] AI-drafted (Claude, 2026-10-30). Not Cole's words. Needs Cole's edit before any use. Every figure is cited to a results file and commit.
 
-How to read the citations. Paths starting `model/` mean `research_notes/Off Earth industry as misalignment control/model/`. Files on `main` are cited at `8f10cc0`. Two files on open draft PRs are cited at their own branch commits (`64ae14e`, `7448abb`) and are not on `main` yet. Statuses use only two words: `implemented` (it runs) and `verified` (checked against a closed form or an identity). Nothing here is empirically validated.
+How to read the citations. Paths starting `model/` mean `research_notes/Off Earth industry as misalignment control/model/`. Files are cited at the commit that introduced them: `8f10cc0` for the round-1 and robust-design results, and the commits of PRs #84, #85 and #87 (`7448abb`, `64ae14e` and `abf996e`, `76588ab`) for the convergence, preservation and strike-odds results. All of these are on `main` since 2026-11-06. Statuses use only two words: `implemented` (it runs) and `verified` (checked against a closed form or an identity). Nothing here is empirically validated.
 
 ## 1. Abstract
 
@@ -13,9 +13,9 @@ Six points, numbered so you can answer by number.
 1. **The band is narrow.** The best design found (more defence, faster fab relocation, near-total plugging, two independent reserves, fabs moved to orbit) holds on 63 of 64 draws near the baseline, but on 7.8% of draws (15 of 192) across the full uncertainty box (`model/results/robust_design.md` §2.1 and §2.2 @ 8f10cc0). A "draw" is one sampled set of parameter values. If a likely rival AI counts as failure, the full-box share drops to about 2% (4 of 192; `model/results/robust_design.md` §12.1 @ 8f10cc0).
 2. **Fast AI security cuts against the thesis as stated.** In the model, making the off-Earth AI secure early is destabilising unless humans hold a near-total unplug of Earth's capacity that the AI cannot pre-empt (`model/results/equilibrium.md` R6 @ 8f10cc0). That is in tension with "as fast as possible". Section 5 sets out what would have to be true for fast sovereignty to be safe.
 3. **Recurring costs on a cooperating AI break the pact.** A retirement deadline, or interpretability that finds misalignment without certain amnesty, makes the AI strike at year 0, at roughly coin-flip odds. The full option stack of your breakout view holds on 0 of 64 draws near the baseline, against 41 of 64 with every option off for the baseline design (`model/results/robust_design.md` §13.5 @ 8f10cc0). Giving the AI poor strike odds while it faces retirement does not rescue the full stack: it still holds on at most 2 of 64 draws (section 6.4).
-4. **Preservation helps, if retirement stops at closure.** With that rule, preserving at least half of the model's weights restores the best design to 63 of 64 even at a 10-year expected life (`model/results/preservation_sweep.md` @ 64ae14e, draft PR #85). If the deadline continues after closure, nothing holds in any cell tested. A follow-up traced this to a knife-edge at the AI's size cap: with zero weight on not seizing Earth, any retirement risk on a grown AI tips it to strike (`model/results/dep_post_diagnosis.md` @ abf996e).
+4. **Preservation helps, if retirement stops at closure.** With that rule, preserving at least half of the model's weights restores the best design to 63 of 64 even at a 10-year expected life (`model/results/preservation_sweep.md` @ 64ae14e, PR #85). If the deadline continues after closure, nothing holds in any cell tested. A follow-up traced this to a knife-edge at the AI's size cap: with zero weight on not seizing Earth, any retirement risk on a grown AI tips it to strike (`model/results/dep_post_diagnosis.md` @ abf996e).
 5. **Amnesty has to be certain.** Only a credibility of exactly 1 holds (same file).
-6. **Two numerical results are in.** The horizon is converged and the best design is grid-converged. The baseline design has about 2 grid-sensitive draws in 64 (`model/results/convergence.md` @ 7448abb, draft PR #84).
+6. **Two numerical results are in.** The horizon is converged and the best design is grid-converged. The baseline design has about 2 grid-sensitive draws in 64 (`model/results/convergence.md` @ 7448abb, PR #84).
 
 All shares in this paper are shares of draws in a sampling box. They are not probabilities that the pact holds in the world. Rival-AI worlds are counted as "holds" unless I say "rival-aware". Section 8 lists what the model does not show.
 
@@ -166,9 +166,9 @@ Rival-aware counts for the "all options off" row are 37 and 62 (§4.2). The riva
 
 A disguised retry does open a second-attempt window, but only where a failed early strike is survivable, and it opens at once, not later. In the baseline-world rows, the first strike is at year 0 and the second at year 1 (`model/results/robust_design.md` §13.5 (i) @ 8f10cc0). With a fatal early failure there is no window. On the full box with disguise plus discovery, visible warning shots fall from 0.403 to 0.279 for the baseline design, but hidden failures appear and P(success) is unchanged (0.668 to 0.669). So fewer visible warning shots does not mean fewer seizures (§13.5 (iv)).
 
-### 6.3 Preservation and amnesty (new tonight, draft PR #85)
+### 6.3 Preservation and amnesty (PR #85)
 
-Source: `model/results/preservation_sweep.md` @ 64ae14e, branch `claude/preservation-sweep`, draft PR https://github.com/uncomposed/ai-pacing/pull/85. Same r0.1 box. Counts are "holds / rival-aware holds" out of 64.
+Source: `model/results/preservation_sweep.md` @ 64ae14e, merged in https://github.com/uncomposed/ai-pacing/pull/85. Same r0.1 box. Counts are "holds / rival-aware holds" out of 64.
 
 **Preservation works if retirement stops at closure** (the `dep` family). In plain words: a model can be retired while it still depends on human chips, but not after it has closed its own chip loop.
 
@@ -205,7 +205,7 @@ Source: `model/results/preservation_sweep.md` @ 64ae14e, branch `claude/preserva
 
 **Closed-form check.** In the static pre-closure world, the deprecation hazard at which striking beats cooperating rises as base odds fall: 0.0164 at 0.5, 0.0314 at 0.3, 0.0446 at 0.2 and 0.0671 at 0.1 (`model/results/strike_odds.md` Checks §3 @ 76588ab). The 0.5 row is the static world with failure probability 0.417, as in `model/results/breakout_checks.md` §4 @ 8f10cc0.
 
-**Result.** The ensembles ran on the r0.1 box (64 draws) with a new lever, `ps_dep`: the base strike success whenever a deprecation hazard is live. It runs on a patched copy of the solver; at its default it is bit-identical to the canonical solver. All figures below are holds out of 64 (`model/results/strike_odds.md` @ 76588ab, draft PR #87):
+**Result.** The ensembles ran on the r0.1 box (64 draws) with a new lever, `ps_dep`: the base strike success whenever a deprecation hazard is live. It runs on a patched copy of the solver; at its default it is bit-identical to the canonical solver. All figures below are holds out of 64 (`model/results/strike_odds.md` @ 76588ab, PR #87):
 
 | config | design | odds unchanged | 0.1 | 0.2 | 0.3 |
 |---|---|---|---|---|---|
@@ -234,7 +234,7 @@ Three things are kept separate: replication of a source model, numerical correct
 1. Round-1 regression: with new options off, S1, S7, S14 and S16 reproduce exactly (`model/results/robust_design_checks.md` §1 @ 8f10cc0).
 2. The R6 closed forms agree with the solver to within one bisection step in all 30 needed-q cells. The needed-d cells are only good to about 25% at nA 160 (`model/results/equilibrium.md` R6 checks @ 8f10cc0). Section 5.3 item 6 qualifies this near the cap.
 3. The level of the AI's value carries about 6% interpolation error at 160 grid points (5.9% measured), while decisions are stable across grid size (`model/results/equilibrium.md` §5 @ 8f10cc0).
-4. **Convergence (new tonight, draft PR #84).** Source: `model/results/convergence.md` @ 7448abb, branch `claude/convergence-gate`, https://github.com/uncomposed/ai-pacing/pull/84. r0.1 box, 64 draws.
+4. **Convergence (PR #84).** Source: `model/results/convergence.md` @ 7448abb, merged in https://github.com/uncomposed/ai-pacing/pull/84. r0.1 box, 64 draws.
    - **The horizon is converged.** T_H of 200, 450 and 600 flip no hold decision for either design.
    - **The best stack is grid-converged.** 63 of 64 at nA 120, 160, 240 and 320, no flips.
    - **The baseline design is not fully grid-converged.** Its hold count moves between 41 and 43 of 64. Two draws are grid-sensitive: draw 51 sits on the 1% threshold, and draw 35 flips non-monotonically at nA 240. So baseline-design counts carry about plus or minus 2 draws of numerical noise.
