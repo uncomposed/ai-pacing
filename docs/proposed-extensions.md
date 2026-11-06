@@ -1,4 +1,4 @@
-# Proposed extensions from issues #1, #3, #89 and #91
+# Proposed extensions from issues #1, #3, #89, #91 and #93
 
 ## Status
 
@@ -45,6 +45,7 @@ issues asked to record but that does not belong in proposition nodes.
 | Q17 | #89 Q17 | open question | Which releases may set the reference frontier, and how many submissions does a determination count? | relates to K4, K6, H3, Q1, I3 | proposed |
 | H16 | #91 H15 (renumbered) | hypothesis | Cross-generation contribution gating makes disclosure dominate concealment | conditions K7, D5; supports H10 | proposed |
 | I13 | #91 I13 | implementation | Contribution gate with tiered, preservation-based sanctions | implements D5 | proposed |
+| H93 | #93 H93 | hypothesis | Internal-use capability can be paced by white-box audit coverage | conditions K7, H3 | proposed |
 
 Issue #1 asked for Q5 as "an open question or design extension". It is recorded
 as an open question with the issue's seven sub-questions kept verbatim in
@@ -63,6 +64,13 @@ selection needs a carve-out from I11, was decided on 2026-11-06
 (`docs/issue-91-editor-decision.md`): the gate is a one-shot admission decision
 with a hard cap on attempts and a frozen training recipe, and I11's rationale
 now states the carve-out as an optimization budget. H16 and I13 stay proposed.
+
+Issue #93 (H93, the first node under issue-numbered IDs) proposes pacing
+internal use of frontier systems by measured white-box audit coverage, as a
+ratchet on the contribution gate; see `research_notes/contribution-gate/README.md`
+section "White-box as the ratchet". The issue asks the editor whether I13's
+method condition is tightened to white-box in the same change or stays
+behavioural until H93 has evidence.
 
 ## 2. ID registry and renumbering
 

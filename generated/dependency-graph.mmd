@@ -14,6 +14,7 @@ flowchart LR
   H3["H3 — The foreign public frontier is measurable enough to govern"]
   H4["H4 — Physical activation latency can preserve reversibility"]
   H5["H5 — Domestic benefits can sustain the institution"]
+  H93["H93 — Internal-use capability can be paced by white-box audit coverage"]
   I1["I1 — Architecture-neutral unauthorized-agency boundary"]
   I11["I11 — Do not optimize against the audit signal"]
   I12["I12 — Frontier-comparison inference router"]
@@ -64,6 +65,8 @@ flowchart LR
   H3 -->|conditions| K6
   H4 -->|conditions| D4
   H5 -->|conditions| K5
+  H93 -->|conditions| H3
+  H93 -->|conditions| K7
   K1 -->|grounds| D4
   K2 -->|grounds| D1
   K2 -->|grounds| D4
@@ -82,4 +85,4 @@ flowchart LR
   K7 -->|implements| I11
   K7 -->|implements| I5
   classDef proposed stroke-dasharray: 5 5
-  class H15,H16,I12,I13,Q17 proposed
+  class H15,H16,H93,I12,I13,Q17 proposed

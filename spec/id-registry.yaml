@@ -65,6 +65,9 @@ sources:
   issue_91:
     locator: https://github.com/uncomposed/ai-pacing/issues/91
     authority: proposal
+  issue_93:
+    locator: https://github.com/uncomposed/ai-pacing/issues/93
+    authority: proposal
 
 # Files that number their own items with a local namespace. These are not
 # proposition IDs. Each uses a prefix so its IDs cannot be mistaken for K, D, H,
@@ -471,6 +474,13 @@ ids:
     definitions:
     - source: yaml
       title: Cross-generation contribution gating makes disclosure dominate concealment
+      status: proposed
+  - id: H93
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: Internal-use capability can be paced by white-box audit coverage
       status: proposed
   - id: I1
     kind: implementation

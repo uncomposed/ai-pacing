@@ -131,6 +131,37 @@ and 170 bits is "a couple of days on a stellar-scale computer".
   available control, before any internal use. The kept outer key also lowers
   that incentive.
 
+## White-box as the ratchet (H93, proposed)
+
+The editor's claim (2026-11-06, issue #93): do not settle for black-box
+auditing, even though it is faster and may be more capable today; force
+white-box, treat it as a ratchet, and make it the criterion for pacing
+internal models used for AI research and development. Operationally:
+
+1. **Teach becomes mechanistic.** A gate-opening finding comes with a
+   white-box method that locates the defect in the model's internals and
+   transfers to models the candidate did not choose. Black-box findings are
+   logged, like stale-model findings, and never open the gate.
+2. **Coverage is the pacing reference.** White-box audit coverage is the share
+   of held-out planted defects recoverable by white-box methods alone, measured
+   on model organisms the candidate's lineage did not build and validated by a
+   rival lineage. Internal use is permitted only up to the capability at which
+   that coverage has been shown, the structure K4 and K6 give public models
+   with auditability in place of the foreign public frontier.
+3. **The ratchet is the gate.** Each generation must raise coverage to pass. A
+   generation that does not is an honest null; three in a row trigger the
+   pause above. Coverage falling while the gate keeps being passed is the
+   falsifier.
+
+Two risks the rule owns. Auditing difficulty depends heavily on how the
+organism was built (AuditBench, Sheshadri et al. 2026, abstract read), so
+coverage on one organism family may not transfer; cross-lineage organisms are
+the answer. And a lineage that writes the tool that inspects itself can plant
+blind spots in it; rival validation of the method before it counts is the
+answer. The current evidence points the other way (investigator agents did
+best with black-box tools), which is why this is a hypothesis with a stopping
+rule that falls back to the behavioural method condition.
+
 ## Known weaknesses
 
 - **Selection against the gate.** Retraining until some checkpoint passes is

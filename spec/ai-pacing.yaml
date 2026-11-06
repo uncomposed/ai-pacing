@@ -333,6 +333,34 @@ sources:
       reliably discriminate sandbagging models from benign ones; black-box
       approaches were defeated by imitation of a weaker model, and elicitation
       sometimes raised benign models' scores too, so it produced false positives.
+  - id: SRC-ISSUE-93-DIALOGUE
+    title: Internal-use capability paced by white-box audit coverage
+    kind: ai-assisted-dialogue-recorded-in-issue
+    date: "2026-11-06"
+    locator: >-
+      The canonical editor's claim in the 2026-11-06 review session that
+      black-box auditing should not be settled for and that white-box
+      auditability should be the ratchet and the pacing criterion for internal
+      models, and the follow-up dialogue, as recorded in
+      https://github.com/uncomposed/ai-pacing/issues/93
+    contribution: >-
+      Proposed pacing internal use of frontier systems by measured white-box
+      audit coverage, with each admitted generation required to raise it; the
+      AI contributed the coverage measure, cross-lineage organisms,
+      rival-lineage validation of methods, the falsifier and stopping rule.
+  - id: SRC-AUDITBENCH-2026
+    title: AuditBench, a benchmark of language models with implanted hidden behaviors
+    kind: external-work
+    date: "2026-02-26"
+    locator: >-
+      Sheshadri et al., arXiv:2602.22755. Abstract read on 2026-11-06; the
+      paper was not read.
+    contribution: >-
+      Fifty-six models with implanted hidden behaviours; an investigator agent
+      performed best with black-box tools, white-box tools helped less than in
+      standalone use, and models trained on synthetic documents were easier to
+      audit than models trained on demonstrations, with adversarial training
+      raising auditing difficulty further.
 
 audit_events:
   - id: EVT-2024-ECONOMIC-PRECURSOR
@@ -471,6 +499,19 @@ audit_events:
     evidence: [SRC-ISSUE-91-EDITOR-DECISION]
     affected_nodes: [I11, I13, H16]
     confidence: high
+  - id: EVT-2026-WHITE-BOX-PACING-PROPOSAL
+    date: "2026-11-06"
+    phase: proposal
+    summary: >-
+      Issue #93 proposes pacing internal use of frontier systems by measured
+      white-box audit coverage, as a ratchet on the contribution gate. The
+      first node allocated under issue-numbered IDs.
+    evidence: [SRC-ISSUE-93-DIALOGUE, SRC-AUDITBENCH-2026]
+    affected_nodes: [H93]
+    confidence: high
+    caveat: >-
+      Recorded as proposed, not accepted. The threshold share and the mapping
+      from coverage to permitted capability are illustrative.
 
 nodes:
   - id: K1
@@ -1030,6 +1071,74 @@ nodes:
       ai_roles: [critique, incentive-design, calibration, drafting, evidence-review]
       author_status: proposed
 
+  - id: H93
+    kind: hypothesis
+    title: Internal-use capability can be paced by white-box audit coverage
+    statement: >-
+      If internal use of a frontier system for AI research and development is
+      permitted only up to the capability at which white-box methods,
+      validated by a rival lineage, recover a threshold share of held-out
+      planted defects on model organisms the candidate's lineage did not
+      build, and if each admitted generation must raise that share, then
+      auditability advances at least as fast as the capability it must cover.
+      Black-box findings are logged but neither open the gate nor raise the
+      reference.
+    rationale: >-
+      This gives internal models the structure K4 and K6 give public ones: a
+      measured reference frontier bounds permitted use, with auditability as
+      the reference instead of foreign public capability. It tightens I13's
+      method condition from a method humans can replicate to a white-box
+      method that locates the defect in the model's internals and transfers
+      to models the candidate did not choose, so the contribution gate
+      becomes a ratchet on interpretability rather than only a filter. Current
+      auditing results point the other way, which is why this is a hypothesis:
+      investigator agents did best with black-box tools and auditing
+      difficulty depended on how the organism was built (SRC-AUDITBENCH-2026).
+    supports: [K7, H3]
+    relates_to: [K4, K6, H10, H16, I11, I13, Q11]
+    falsifier: >-
+      Coverage measured on cross-lineage organisms falls or stalls while
+      admitted capability rises; or white-box recall stays below black-box
+      recall across generations on the same organisms; or validated methods
+      fail to transfer to organisms built by a different lineage; or coverage
+      rises only on organisms the auditing lineage built.
+    evidence_needed: >-
+      White-box and black-box recall on the same held-out planted defects
+      across model generations and lineages; transfer rates of validated
+      methods to organisms built by other lineages; the dependence of coverage
+      on organism construction (synthetic documents versus demonstrations,
+      adversarial training); the capability cost of holding internal use at
+      the covered level.
+    stopping_rule: >-
+      If white-box coverage cannot be measured in a way that transfers across
+      lineages, or does not rise across generations under the gate, do not
+      count white-box auditability as a pacing reference for internal use;
+      fall back to I13's behavioural method condition.
+    scope_limits:
+      - >-
+        The threshold share and the mapping from coverage to permitted
+        capability are illustrative; the capability cost of holding internal
+        use at the covered level is not quantified.
+      - >-
+        Auditing difficulty depends heavily on how the model organism was
+        built, so coverage on one organism family may not transfer;
+        cross-lineage organisms are the stated answer.
+      - >-
+        A lineage that writes the tool that inspects itself can plant blind
+        spots in the tool; rival-lineage validation is the stated answer.
+      - >-
+        The coverage measure is itself an audit signal and must stay held out
+        from training (I11).
+      - Coverage shares are measurement outcomes on the chosen organisms, not calibrated probabilities that a real defect would be found.
+    proposal:
+      issue: uncomposed/ai-pacing#93
+      issue_id: H93
+    provenance:
+      origin: author-interjection-and-ai-synthesis
+      sources: [SRC-ISSUE-93-DIALOGUE, SRC-ISSUE-91-DIALOGUE, SRC-AUDITBENCH-2026]
+      ai_roles: [critique, formalization, drafting]
+      author_status: proposed
+
   - id: I1
     kind: implementation
     title: Architecture-neutral unauthorized-agency boundary
@@ -1447,6 +1556,8 @@ relations:
   - {from: K6, to: I12, type: implements}
   - {from: H16, to: K7, type: conditions}
   - {from: H16, to: D5, type: conditions}
+  - {from: H93, to: K7, type: conditions}
+  - {from: H93, to: H3, type: conditions}
   - {from: D5, to: I13, type: implements}
 
 publication:
