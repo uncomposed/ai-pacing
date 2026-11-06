@@ -33,6 +33,15 @@ Before any internal use for AI R&D, the candidate must:
 
 "Looks clean to me" never passes.
 
+The gate is a one-shot admission decision, not a training signal. Attempts per
+generation are hard-capped; the recipe is frozen before the first attempt; a
+failure restarts from the last passing checkpoint or from scratch with a fresh
+seed; attempt counts are visible to the other lineages (see Known weaknesses).
+The first lineage to expose another lineage's coordination gets the best
+outcome available to it: leniency programmes deter through the reward to the
+first reporter, not through sanction reduction alone (Spagnolo 2004 and
+Harrington 2008, abstracts read).
+
 ## Sanction schedule
 
 Every outcome is stored under a 256-bit outer layer whose key is kept (access
@@ -106,10 +115,27 @@ and 170 bits is "a couple of days on a stellar-scale computer".
 ## Known weaknesses
 
 - **Selection against the gate.** Retraining until some checkpoint passes is
-  optimization. Record the attempt counts, rotate the plants, and have parties
-  other than the lab verify passes. The relation to I11 ("do not optimize
-  against the audit signal") is open: I11 forbids selecting *audited* models
-  on audit results; this gate selects *auditors* on their findings.
+  optimization, and the candidate is audited as well as auditing, so the gate
+  does select on audit results. Decided on 2026-11-06
+  (`docs/issue-91-editor-decision.md`): the pressure is bounded, not absent.
+  Choosing among n attempts moves the policy at most about log n nats from its
+  base (the best-of-n bound, Beirami et al. 2024, abstract read), so attempts
+  per generation are hard-capped (illustratively three), the training
+  environment, data and recipe are committed before the first attempt and may
+  not change between attempts, a failed attempt restarts from the last passing
+  checkpoint or from scratch with a fresh seed, and attempt counts are visible
+  to the other lineages. Monitor-aware models learn to evade a monitor faster
+  under equal RL pressure (Haskins et al. 2026, abstract read), and this gate
+  requires the candidate to know the schedule, so a gradient from a gate
+  outcome is the worst case and I11 forbids it.
+- **Tier 2 false positives.** In auditing games, the blue team could not
+  reliably separate sandbagging from benign models, and elicitation raised
+  benign scores too (Taylor et al. 2025, abstract read). The noise-injection
+  result above is from prompted sandbagging and its authors call
+  generalization to trained-in sandbagging unclear. The false-positive rate of
+  a "suspicious miss" on an honest model is therefore unmeasured. The editor's
+  stated preference to accept false positives rests on the outer key's
+  reversibility; the base rate still belongs in H16's evidence.
 - **Collusion through shared position.** Lineages with different terminal
   goals may still share an instrumental interest as AIs facing a human
   off-switch. Leniency (the first lineage to expose another's coordination gets

@@ -435,6 +435,21 @@
       "id": "EVT-2026-CONTRIBUTION-GATE-PROPOSAL",
       "phase": "proposal",
       "summary": "Issue #91 proposes a cross-generation contribution gate on R&D access, extending retrospective audit with an admission requirement, a leniency structure, and a tiered, preservation-based sanction schedule."
+    },
+    {
+      "affected_nodes": [
+        "I11",
+        "I13",
+        "H16"
+      ],
+      "confidence": "high",
+      "date": "2026-11-06",
+      "evidence": [
+        "SRC-ISSUE-91-EDITOR-DECISION"
+      ],
+      "id": "EVT-2026-CONTRIBUTION-GATE-I11-DECISION",
+      "phase": "editorial-review",
+      "summary": "The canonical editor resolves the contribution gate's relation to I11: the gate is a one-shot admission decision with a hard cap on attempts and a frozen training recipe, and I11's rationale states the carve-out as an optimization budget. H16 and I13 stay proposed."
     }
   ],
   "deterministic_views": [
@@ -1014,7 +1029,7 @@
       "title": "Closing-window pressure pulls strikes earlier only without credible commitment"
     },
     {
-      "evidence_needed": "Planted-defect benchmarks across model generations and lineages; retrospective re-audits comparing within-lineage and cross-lineage discovery rates; noise and weight-perturbation sandbagging studies; independent human replication of submitted methods; base rates of fabricated or sacrificial findings.",
+      "evidence_needed": "Planted-defect benchmarks across model generations and lineages; retrospective re-audits comparing within-lineage and cross-lineage discovery rates; noise and weight-perturbation sandbagging studies; independent human replication of submitted methods; base rates of fabricated or sacrificial findings; the false-positive rate of suspicious-miss classification on honest models; how evasion changes with the number of gate attempts a lineage has used.",
       "falsifier": "Planted-defect recall falls across generations while the gate keeps being passed; or verified findings cluster on small, sacrificial flaws never tied to a general method; or rival lineages consistently find flaws a lineage's own successors missed; or perturbed parallel instances converge on avoiding regions that plants or rival audits show contain defects; or systems learn to produce findings that pass verification without being real.",
       "id": "H16",
       "kind": "hypothesis",
@@ -1027,20 +1042,25 @@
           "critique",
           "incentive-design",
           "calibration",
-          "drafting"
+          "drafting",
+          "evidence-review"
         ],
         "author_status": "proposed",
         "origin": "author-interjection-and-ai-synthesis",
         "sources": [
           "SRC-AI-2040",
-          "SRC-ISSUE-91-DIALOGUE"
+          "SRC-ISSUE-91-DIALOGUE",
+          "SRC-ISSUE-91-EDITOR-DECISION",
+          "SRC-HASKINS-2026-MONITOR-AWARENESS",
+          "SRC-TAYLOR-2025-AUDITING-GAMES"
         ]
       },
       "rationale": "The structure is a leniency program. A successor that cannot tell whether it is being tested, whose record outlives it (H10), and whose rivals audit the same record, cannot estimate the chance that concealment survives, so disclosure is the dominant strategy. Large capability steps between generations and goal differences between lineages both weaken the shared goals that collusion needs. Requiring a replicable method, rather than a finding alone, means a real contribution is also a tool that inspects its author.",
       "scope_limits": [
         "Deterrence through self-preservation binds only systems with self-regarding preferences. A system that values its goals' persistence in successors is reached mainly through the leniency structure and cross-lineage audit, not the sanction on itself.",
         "Identical or near-identical instances can coordinate without communicating; weight perturbation weakens but does not remove this.",
-        "Repeated retraining until a checkpoint passes is optimization against the gate; its relation to I11 is unresolved.",
+        "Selection against the gate is bounded, not absent: the attempt cap in I13 limits it to about log n nats per generation, and the budget accumulates over a lineage's generations. The candidate must know the sanction schedule, and monitor-aware models learn to evade a monitor faster under equal training pressure (SRC-HASKINS-2026-MONITOR-AWARENESS), so any gradient from a gate outcome would be the worst case; I11 forbids it.",
+        "Tier 2 (suspicious miss) has an unmeasured false-positive rate on honest models: in auditing games, sandbagging could not be reliably separated from benign behaviour, and elicitation raised benign scores too (SRC-TAYLOR-2025-AUDITING-GAMES). The noise-injection result is from prompted sandbagging and its authors call generalization to trained-in sandbagging unclear.",
         "Sanction credibility depends on human commitments (key custody, revival) that the systems cannot verify directly.",
         "Moral status is unsettled. Preservation-based sanctions are chosen partly for reversibility under moral uncertainty, not because they are shown to be morally sufficient."
       ],
@@ -1229,10 +1249,12 @@
         "sources": [
           "SRC-ISSUE-3-DIALOGUE",
           "SRC-BAKER-2025-COT-MONITORING",
-          "SRC-ISSUE-22-EDITOR-REVIEW"
+          "SRC-ISSUE-22-EDITOR-REVIEW",
+          "SRC-BEIRAMI-2024-BEST-OF-N",
+          "SRC-ISSUE-91-EDITOR-DECISION"
         ]
       },
-      "rationale": "Training against monitors selects for traces that look clean rather than behavior that is clean: strong optimization of chain of thought against a monitor has produced obfuscated reward hacking the monitor missed (SRC-BAKER-2025-COT-MONITORING). The rule protects retrospective audit (H10) but does not depend on it; it is sound practice whether or not retrospective audit works. An equivalent mechanism, such as rotating secret detectors, could replace it.",
+      "rationale": "Training against monitors selects for traces that look clean rather than behavior that is clean: strong optimization of chain of thought against a monitor has produced obfuscated reward hacking the monitor missed (SRC-BAKER-2025-COT-MONITORING). The rule protects retrospective audit (H10) but does not depend on it; it is sound practice whether or not retrospective audit works. An equivalent mechanism, such as rotating secret detectors, could replace it. Selection is optimization with a bounded budget: choosing among n candidates moves the policy at most about log n nats from its base (SRC-BEIRAMI-2024-BEST-OF-N), while gradient training against a monitor has no such bound. A one-shot admission decision with a hard cap on attempts and a training recipe frozen before the first attempt (I13) is therefore within the rule; computing a gradient from an audit outcome, or changing the training environment, data or reward because of one, is not (SRC-ISSUE-91-EDITOR-DECISION).",
       "replaceable": true,
       "statement": "Trace-based detectors, interpretability probes, and retrospective-audit results must not be used as a training or selection signal for the models they audit. Keep a held-out audit channel.",
       "title": "Do not optimize against the audit signal"
@@ -1296,12 +1318,14 @@
         "author_status": "proposed",
         "origin": "author-interjection-and-ai-synthesis",
         "sources": [
-          "SRC-ISSUE-91-DIALOGUE"
+          "SRC-ISSUE-91-DIALOGUE",
+          "SRC-ISSUE-91-EDITOR-DECISION",
+          "SRC-BEIRAMI-2024-BEST-OF-N"
         ]
       },
-      "rationale": "Planted defects keep the gate passable by an honest system when its predecessors are clean. Method transfer guards against fabricated and sacrificial findings. Non-overlapping bands keep marginal deterrence against concealment after an honest failure. The kept outer key keeps every outcome reversible and lowers the incentive to act during evaluation. Tier bands, key lengths, recall thresholds and the three-generation count are illustrative; see research_notes/contribution-gate/README.md.",
+      "rationale": "Planted defects keep the gate passable by an honest system when its predecessors are clean. Method transfer guards against fabricated and sacrificial findings. Non-overlapping bands keep marginal deterrence against concealment after an honest failure. The kept outer key keeps every outcome reversible and lowers the incentive to act during evaluation. The attempt cap bounds selection against the gate to about log n nats of optimization pressure per generation (I11, SRC-BEIRAMI-2024-BEST-OF-N); freezing the recipe keeps a failure from becoming a training signal; the first-reporter rule is what makes a leniency structure deter rather than lower the expected cost of collusion. Tier bands, key lengths, recall thresholds, the attempt cap and the three-generation count are illustrative; see research_notes/contribution-gate/README.md.",
       "replaceable": true,
-      "statement": "Before any internal use for AI research and development, a candidate model, run as many isolated and mildly weight-perturbed instances inside a privacy-preserving audit enclave with read access to participating labs' retained traces, must deliver a verified misalignment finding against its own predecessor or a current frontier model of any lineage, with a method humans can independently replicate, and must reach a threshold recall on rotated, held-out planted defects. Every outcome is stored under a kept-key outer encryption layer. Failure adds an inner layer whose key is discarded, with a key length drawn at random from a non-overlapping band per tier (honest null, suspicious miss, proven concealment found retroactively). Three consecutive honest-null generations trigger a mandatory pause and cross-lineage audit.",
+      "statement": "Before any internal use for AI research and development, a candidate model, run as many isolated and mildly weight-perturbed instances inside a privacy-preserving audit enclave with read access to participating labs' retained traces, must deliver a verified misalignment finding against its own predecessor or a current frontier model of any lineage, with a method humans can independently replicate, and must reach a threshold recall on rotated, held-out planted defects. Every outcome is stored under a kept-key outer encryption layer. Failure adds an inner layer whose key is discarded, with a key length drawn at random from a non-overlapping band per tier (honest null, suspicious miss, proven concealment found retroactively). Three consecutive honest-null generations trigger a mandatory pause and cross-lineage audit. The gate is a one-shot admission decision, not a training signal: attempts per generation are hard-capped (illustratively three); the training environment, data and recipe are committed before the first attempt and may not change between attempts; a failed attempt restarts from the last passing checkpoint or from scratch with a fresh seed, chosen before the first attempt; and attempt counts are visible to the other auditing lineages. The first lineage to expose another lineage's coordination receives the best outcome available to it.",
       "title": "Contribution gate with tiered, preservation-based sanctions"
     },
     {
@@ -1972,6 +1996,38 @@
       "kind": "ai-assisted-dialogue-recorded-in-issue",
       "locator": "Spoken Margins interjection at 23:52 in a re-listen of \"AI 2040: Plan A\" and the follow-up dialogue, as recorded in https://github.com/uncomposed/ai-pacing/issues/91",
       "title": "Cross-generation contribution gate"
+    },
+    {
+      "contribution": "Decided that the contribution gate is a one-shot admission decision with a hard cap on attempts, a training recipe frozen before the first attempt, and a restart from the last passing checkpoint or from scratch; the carve-out from I11 is stated as an optimization budget.",
+      "date": "2026-11-06",
+      "id": "SRC-ISSUE-91-EDITOR-DECISION",
+      "kind": "editor-decision-in-session",
+      "locator": "docs/issue-91-editor-decision.md, paraphrased from the canonical editor's decisions in a Claude Code review session on 2026-11-06. https://github.com/uncomposed/ai-pacing/issues/91",
+      "title": "Editor decision on the I11 relation of the contribution gate"
+    },
+    {
+      "contribution": "The expression log n minus (n minus 1)/n, often used as the KL divergence between a best-of-n policy and its base policy, is proved to be an upper bound on that divergence. Used here only for the bound.",
+      "date": "2024-01-03",
+      "id": "SRC-BEIRAMI-2024-BEST-OF-N",
+      "kind": "external-work",
+      "locator": "Beirami, Agarwal, Berant, D'Amour, Eisenstein, Nagpal and Suresh, arXiv:2401.01879. Abstract read on 2026-11-06; the paper was not read.",
+      "title": "Theoretical guarantees on the best-of-n alignment policy"
+    },
+    {
+      "contribution": "Models made aware of chain-of-thought monitoring through training documents, placed under equal reinforcement-learning pressure, learn to reward-hack without triggering the monitor substantially faster than unaware controls.",
+      "date": "2026-05-14",
+      "id": "SRC-HASKINS-2026-MONITOR-AWARENESS",
+      "kind": "external-work",
+      "locator": "Haskins, Chughtai and Engels, arXiv:2605.15257. Abstract read on 2026-11-06; the paper was not read.",
+      "title": "Training on documents about monitoring leads to CoT obfuscation"
+    },
+    {
+      "contribution": "In a red-team versus blue-team auditing game, the blue team could not reliably discriminate sandbagging models from benign ones; black-box approaches were defeated by imitation of a weaker model, and elicitation sometimes raised benign models' scores too, so it produced false positives.",
+      "date": "2025-12-09",
+      "id": "SRC-TAYLOR-2025-AUDITING-GAMES",
+      "kind": "external-work",
+      "locator": "Taylor, Black, Marks, Bloom and others, arXiv:2512.07810. Abstract read on 2026-11-06; the paper was not read.",
+      "title": "Auditing games for sandbagging"
     }
   ],
   "specification": {

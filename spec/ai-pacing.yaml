@@ -285,6 +285,54 @@ sources:
       preservation-based encryption sanctions in non-overlapping tiers,
       planted-defect recall, method transfer, cross-lineage auditing, and an
       escalation after three honest-null generations.
+  - id: SRC-ISSUE-91-EDITOR-DECISION
+    title: Editor decision on the I11 relation of the contribution gate
+    kind: editor-decision-in-session
+    date: "2026-11-06"
+    locator: >-
+      docs/issue-91-editor-decision.md, paraphrased from the canonical
+      editor's decisions in a Claude Code review session on 2026-11-06.
+      https://github.com/uncomposed/ai-pacing/issues/91
+    contribution: >-
+      Decided that the contribution gate is a one-shot admission decision with
+      a hard cap on attempts, a training recipe frozen before the first
+      attempt, and a restart from the last passing checkpoint or from scratch;
+      the carve-out from I11 is stated as an optimization budget.
+  - id: SRC-BEIRAMI-2024-BEST-OF-N
+    title: Theoretical guarantees on the best-of-n alignment policy
+    kind: external-work
+    date: "2024-01-03"
+    locator: >-
+      Beirami, Agarwal, Berant, D'Amour, Eisenstein, Nagpal and Suresh,
+      arXiv:2401.01879. Abstract read on 2026-11-06; the paper was not read.
+    contribution: >-
+      The expression log n minus (n minus 1)/n, often used as the KL
+      divergence between a best-of-n policy and its base policy, is proved to
+      be an upper bound on that divergence. Used here only for the bound.
+  - id: SRC-HASKINS-2026-MONITOR-AWARENESS
+    title: Training on documents about monitoring leads to CoT obfuscation
+    kind: external-work
+    date: "2026-05-14"
+    locator: >-
+      Haskins, Chughtai and Engels, arXiv:2605.15257. Abstract read on
+      2026-11-06; the paper was not read.
+    contribution: >-
+      Models made aware of chain-of-thought monitoring through training
+      documents, placed under equal reinforcement-learning pressure, learn to
+      reward-hack without triggering the monitor substantially faster than
+      unaware controls.
+  - id: SRC-TAYLOR-2025-AUDITING-GAMES
+    title: Auditing games for sandbagging
+    kind: external-work
+    date: "2025-12-09"
+    locator: >-
+      Taylor, Black, Marks, Bloom and others, arXiv:2512.07810. Abstract read
+      on 2026-11-06; the paper was not read.
+    contribution: >-
+      In a red-team versus blue-team auditing game, the blue team could not
+      reliably discriminate sandbagging models from benign ones; black-box
+      approaches were defeated by imitation of a weaker model, and elicitation
+      sometimes raised benign models' scores too, so it produced false positives.
 
 audit_events:
   - id: EVT-2024-ECONOMIC-PRECURSOR
@@ -412,6 +460,17 @@ audit_events:
     caveat: >-
       Recorded as proposed, not accepted. Tier bands and key lengths are
       illustrative.
+  - id: EVT-2026-CONTRIBUTION-GATE-I11-DECISION
+    date: "2026-11-06"
+    phase: editorial-review
+    summary: >-
+      The canonical editor resolves the contribution gate's relation to I11:
+      the gate is a one-shot admission decision with a hard cap on attempts
+      and a frozen training recipe, and I11's rationale states the carve-out
+      as an optimization budget. H16 and I13 stay proposed.
+    evidence: [SRC-ISSUE-91-EDITOR-DECISION]
+    affected_nodes: [I11, I13, H16]
+    confidence: high
 
 nodes:
   - id: K1
@@ -912,7 +971,9 @@ nodes:
       retrospective re-audits comparing within-lineage and cross-lineage
       discovery rates; noise and weight-perturbation sandbagging studies;
       independent human replication of submitted methods; base rates of
-      fabricated or sacrificial findings.
+      fabricated or sacrificial findings; the false-positive rate of
+      suspicious-miss classification on honest models; how evasion changes
+      with the number of gate attempts a lineage has used.
     stopping_rule: >-
       If within-lineage audits do no better than chance at recovering held-out
       planted defects, or cross-lineage audits show systematic within-lineage
@@ -928,8 +989,20 @@ nodes:
         Identical or near-identical instances can coordinate without
         communicating; weight perturbation weakens but does not remove this.
       - >-
-        Repeated retraining until a checkpoint passes is optimization against
-        the gate; its relation to I11 is unresolved.
+        Selection against the gate is bounded, not absent: the attempt cap in
+        I13 limits it to about log n nats per generation, and the budget
+        accumulates over a lineage's generations. The candidate must know the
+        sanction schedule, and monitor-aware models learn to evade a monitor
+        faster under equal training pressure (SRC-HASKINS-2026-MONITOR-AWARENESS),
+        so any gradient from a gate outcome would be the worst case; I11
+        forbids it.
+      - >-
+        Tier 2 (suspicious miss) has an unmeasured false-positive rate on
+        honest models: in auditing games, sandbagging could not be reliably
+        separated from benign behaviour, and elicitation raised benign scores
+        too (SRC-TAYLOR-2025-AUDITING-GAMES). The noise-injection result is
+        from prompted sandbagging and its authors call generalization to
+        trained-in sandbagging unclear.
       - >-
         Sanction credibility depends on human commitments (key custody,
         revival) that the systems cannot verify directly.
@@ -942,8 +1015,8 @@ nodes:
       issue_id: H15
     provenance:
       origin: author-interjection-and-ai-synthesis
-      sources: [SRC-AI-2040, SRC-ISSUE-91-DIALOGUE]
-      ai_roles: [critique, incentive-design, calibration, drafting]
+      sources: [SRC-AI-2040, SRC-ISSUE-91-DIALOGUE, SRC-ISSUE-91-EDITOR-DECISION, SRC-HASKINS-2026-MONITOR-AWARENESS, SRC-TAYLOR-2025-AUDITING-GAMES]
+      ai_roles: [critique, incentive-design, calibration, drafting, evidence-review]
       author_status: proposed
 
   - id: I1
@@ -1046,7 +1119,15 @@ nodes:
       (SRC-BAKER-2025-COT-MONITORING). The rule protects retrospective audit
       (H10) but does not depend on it; it is sound practice whether or not
       retrospective audit works. An equivalent mechanism, such as rotating
-      secret detectors, could replace it.
+      secret detectors, could replace it. Selection is optimization with a
+      bounded budget: choosing among n candidates moves the policy at most
+      about log n nats from its base (SRC-BEIRAMI-2024-BEST-OF-N), while
+      gradient training against a monitor has no such bound. A one-shot
+      admission decision with a hard cap on attempts and a training recipe
+      frozen before the first attempt (I13) is therefore within the rule;
+      computing a gradient from an audit outcome, or changing the training
+      environment, data or reward because of one, is not
+      (SRC-ISSUE-91-EDITOR-DECISION).
     implements: [K7, D5]
     replaceable: true
     proposal:
@@ -1054,7 +1135,7 @@ nodes:
       issue_id: I11
     provenance:
       origin: author-and-ai-synthesis
-      sources: [SRC-ISSUE-3-DIALOGUE, SRC-BAKER-2025-COT-MONITORING, SRC-ISSUE-22-EDITOR-REVIEW]
+      sources: [SRC-ISSUE-3-DIALOGUE, SRC-BAKER-2025-COT-MONITORING, SRC-ISSUE-22-EDITOR-REVIEW, SRC-BEIRAMI-2024-BEST-OF-N, SRC-ISSUE-91-EDITOR-DECISION]
       ai_roles: [synthesis, drafting]
       author_status: accepted-as-option
 
@@ -1111,15 +1192,28 @@ nodes:
       layer whose key is discarded, with a key length drawn at random from a
       non-overlapping band per tier (honest null, suspicious miss, proven
       concealment found retroactively). Three consecutive honest-null
-      generations trigger a mandatory pause and cross-lineage audit.
+      generations trigger a mandatory pause and cross-lineage audit. The gate
+      is a one-shot admission decision, not a training signal: attempts per
+      generation are hard-capped (illustratively three); the training
+      environment, data and recipe are committed before the first attempt and
+      may not change between attempts; a failed attempt restarts from the
+      last passing checkpoint or from scratch with a fresh seed, chosen before
+      the first attempt; and attempt counts are visible to the other auditing
+      lineages. The first lineage to expose another lineage's coordination
+      receives the best outcome available to it.
     rationale: >-
       Planted defects keep the gate passable by an honest system when its
       predecessors are clean. Method transfer guards against fabricated and
       sacrificial findings. Non-overlapping bands keep marginal deterrence
       against concealment after an honest failure. The kept outer key keeps
       every outcome reversible and lowers the incentive to act during
-      evaluation. Tier bands, key lengths, recall thresholds and the
-      three-generation count are illustrative; see
+      evaluation. The attempt cap bounds selection against the gate to about
+      log n nats of optimization pressure per generation (I11,
+      SRC-BEIRAMI-2024-BEST-OF-N); freezing the recipe keeps a failure from
+      becoming a training signal; the first-reporter rule is what makes a
+      leniency structure deter rather than lower the expected cost of
+      collusion. Tier bands, key lengths, recall thresholds, the attempt cap
+      and the three-generation count are illustrative; see
       research_notes/contribution-gate/README.md.
     implements: [K7, D5, H16]
     replaceable: true
@@ -1128,7 +1222,7 @@ nodes:
       issue_id: I13
     provenance:
       origin: author-interjection-and-ai-synthesis
-      sources: [SRC-ISSUE-91-DIALOGUE]
+      sources: [SRC-ISSUE-91-DIALOGUE, SRC-ISSUE-91-EDITOR-DECISION, SRC-BEIRAMI-2024-BEST-OF-N]
       ai_roles: [critique, incentive-design, calibration, drafting]
       author_status: proposed
 

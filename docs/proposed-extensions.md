@@ -58,9 +58,11 @@ retrospective audit but does not depend on it.
 Issue #91 (its H15, recorded as H16 because #22 took H15 first; I13) extends H10 with an admission gate on R&D access and a
 tiered, preservation-based sanction schedule; details and the compute
 calibration are in `research_notes/contribution-gate/README.md`. I12 was
-skipped because #89 already claims it. The issue asks the editor to decide
-whether I13's selection of auditors on their findings needs an explicit carve-out
-from I11.
+skipped because #89 already claims it. The issue's last open box, whether I13's
+selection needs a carve-out from I11, was decided on 2026-11-06
+(`docs/issue-91-editor-decision.md`): the gate is a one-shot admission decision
+with a hard cap on attempts and a frozen training recipe, and I11's rationale
+now states the carve-out as an optimization budget. H16 and I13 stay proposed.
 
 ## 2. ID registry and renumbering
 
