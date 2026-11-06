@@ -789,7 +789,10 @@ nodes:
       incidents and count newly surfaced excursions; planted-excursion
       benchmarks across model generations; interpretability progress on mapping
       activations to intent and planning; tamper-evidence and completeness
-      audits of trace-retention infrastructure. Evidence against, to be
+      audits of trace-retention infrastructure; replay fidelity of retained
+      records across hardware and software generations, when activations are
+      regenerated from inputs, seeds and a frozen inference stack rather than
+      stored. Evidence against, to be
       weighed: chain-of-thought controllability is rising, with one 2026 system
       card reporting much higher controllability than earlier models, some
       monitor evasion under adversarial pressure, and no stated accuracy cost
@@ -1007,6 +1010,14 @@ nodes:
         Sanction credibility depends on human commitments (key custody,
         revival) that the systems cannot verify directly.
       - >-
+        An inner-layer sanction on the weights also locks the replay record,
+        so a sanctioned model cannot be re-audited with better tools until the
+        key is recovered. The Tier 2 band must stay recoverable by an audit
+        institution within a bounded time, or the sanction defeats the
+        retrospective audit it serves (H10). Replay also needs bit-reproducible
+        inference across hardware generations, which is an engineering
+        requirement, not an established capability.
+      - >-
         Moral status is unsettled. Preservation-based sanctions are chosen
         partly for reversibility under moral uncertainty, not because they are
         shown to be morally sufficient.
@@ -1200,7 +1211,15 @@ nodes:
       last passing checkpoint or from scratch with a fresh seed, chosen before
       the first attempt; and attempt counts are visible to the other auditing
       lineages. The first lineage to expose another lineage's coordination
-      receives the best outcome available to it.
+      receives the best outcome available to it. The enclave retains what
+      makes every instance's run reproducible rather than every activation:
+      the exact input stream including tool and environment responses, the
+      sampling seeds, the frozen inference stack and hardware manifest, and
+      periodic hashes of activations, so that later tools can regenerate any
+      activation and check the replay against the hashes. Outputs and
+      activations are distillation material, so the record is encrypted under
+      the same layers as the weights; only the hashes, the stack and the
+      manifest are held in the clear.
     rationale: >-
       Planted defects keep the gate passable by an honest system when its
       predecessors are clean. Method transfer guards against fabricated and
@@ -1212,8 +1231,12 @@ nodes:
       SRC-BEIRAMI-2024-BEST-OF-N); freezing the recipe keeps a failure from
       becoming a training signal; the first-reporter rule is what makes a
       leniency structure deter rather than lower the expected cost of
-      collusion. Tier bands, key lengths, recall thresholds, the attempt cap
-      and the three-generation count are illustrative; see
+      collusion. Retaining a reproducible record instead of raw activations
+      costs terabytes rather than petabytes per generation and makes every
+      future audit a replay of a fixed record (H10); encrypting the record
+      with the weights keeps it from becoming a route around the sanction.
+      Tier bands, key lengths, recall thresholds, the attempt cap and the
+      three-generation count are illustrative; see
       research_notes/contribution-gate/README.md.
     implements: [K7, D5, H16]
     replaceable: true

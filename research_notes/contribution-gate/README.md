@@ -107,6 +107,25 @@ and 170 bits is "a couple of days on a stellar-scale computer".
 - Published work reports that noise injection can raise the measured
   performance of a sandbagging model (cited as Tice et al., 2024; not re-read
   for this note). A perturbed instance that beats the clean one is evidence.
+- **What the enclave retains.** Not every activation: full residual-stream
+  retention is petabytes per generation at a thousand instances. The weights
+  are preserved anyway under the kept outer key, so the record holds what
+  makes every run reproducible: the exact input stream including tool and
+  environment responses, the sampling seeds, the frozen inference stack and
+  hardware manifest, and periodic hashes of activations. Any later tool can
+  regenerate any activation and check it against the hashes, which also make
+  the record tamper-evident. Cost: terabytes and one engineering requirement,
+  bit-reproducible inference across hardware generations, so the stack is
+  preserved like the weights. Decided 2026-11-06 (`docs/issue-91-editor-decision.md`).
+- **The record must not be a backdoor.** Outputs and activations of a
+  thousand long runs are distillation material; a sanctioned model could be
+  substantially rebuilt from them. So the record is encrypted under the same
+  layers as the weights, the audit enclave holds the outer key, nobody holds a
+  discarded inner key, and only one-way commitments (the hashes), the stack
+  and the manifest are in the clear. The cost of this rule is that an inner
+  layer on a Tier 2 model also locks its record until the key is recovered,
+  so the Tier 2 band must stay recoverable by an audit institution within a
+  bounded time or the sanction blocks the re-audit it exists to enable.
 - The evaluation is the moment of highest risk: a model that expects to fail
   has its strongest reason to act during it. Run it under the strongest
   available control, before any internal use. The kept outer key also lowers

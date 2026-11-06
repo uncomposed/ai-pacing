@@ -51,3 +51,17 @@ left the relation unresolved.
 
 Sources read for this decision are recorded with how far they were read
 (abstracts unless stated). The off-Earth model was not run.
+
+## Addendum, same session: the retained record
+
+Asked whether the enclave should retain activations and states so that a
+later interpretability advance can audit every past thought, the reviewer
+proposed retaining what makes every run reproducible (inputs, seeds, frozen
+stack, manifest, activation hashes) rather than raw activations, with replay
+as the audit mechanism. The editor agreed, on the condition that the
+encrypted-away record cannot become a backdoor around the sanction. Applied
+as: a retention sentence in I13's statement, the encryption-with-the-weights
+rule, a scope limit in H16 on the sanction locking the record and on replay
+fidelity, and a replay-fidelity line in H10's evidence needed (an
+editor-approved addition to an accepted node's evidence field; its statement
+is unchanged).
