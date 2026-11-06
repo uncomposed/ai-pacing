@@ -404,6 +404,21 @@
       "id": "EVT-2026-EDITOR-REVIEW-ISSUE-22",
       "phase": "editorial-review",
       "summary": "The canonical editor reviews the eight proposed nodes from issues #1 and #3: six accepted, D18 retyped as a proposed hypothesis, D19 folded into an accepted hypothesis."
+    },
+    {
+      "affected_nodes": [
+        "I12",
+        "Q17"
+      ],
+      "caveat": "Recorded as proposed, not accepted. The model results are arithmetic on assumed inputs, numerically checked and not empirically validated.",
+      "confidence": "high",
+      "date": "2026-11-04",
+      "evidence": [
+        "SRC-ISSUE-89-FRONTIER-ROUTER"
+      ],
+      "id": "EVT-2026-FRONTIER-ROUTER-PROPOSAL",
+      "phase": "proposal",
+      "summary": "Issue #89 proposes a frontier-comparison router as an implementation for measuring the public frontier, and asks which releases may set the reference frontier and how many submissions a determination counts."
     }
   ],
   "deterministic_views": [
@@ -1165,6 +1180,43 @@
       "title": "Do not optimize against the audit signal"
     },
     {
+      "id": "I12",
+      "implements": [
+        "K4",
+        "K6",
+        "H3"
+      ],
+      "kind": "implementation",
+      "model_evidence": "research_notes/frontier-router/router_model.py (arithmetic on assumed inputs, checked against closed forms; not empirical). With 200 domains, 12 models and a 0.03 win-rate half-width, about 2.6 million comparisons a month cost about $340k and break even at about $6 million a month of routed spend at a 5.5% fee; cost scales with the inverse square of the margin.",
+      "non_claims": [
+        "It does not establish H3; it is one instrument toward it.",
+        "It does not see first-party agentic products, internal models, or rare dangerous-capability domains.",
+        "It does not reduce risk from users who split a task across providers.",
+        "Comparison shares are outcomes on the sampled traffic, not calibrated capability probabilities."
+      ],
+      "proposal": {
+        "issue": "uncomposed/ai-pacing#89",
+        "issue_id": "I12"
+      },
+      "provenance": {
+        "ai_roles": [
+          "critique",
+          "formalization",
+          "model-building",
+          "drafting"
+        ],
+        "author_status": "proposed",
+        "origin": "author-and-ai-synthesis",
+        "sources": [
+          "SRC-ISSUE-89-FRONTIER-ROUTER"
+        ]
+      },
+      "rationale": "The number of comparisons a frontier estimate needs is set by the precision wanted, not by traffic, so above a throughput threshold the fee covers measurement and its share of spend falls as the router grows. Measurement precision also sets the smallest enforceable release margin.",
+      "replaceable": true,
+      "statement": "An inference router whose terms of service let it answer a sampled share of requests with a second model as well, return the better answer, and keep a blinded comparison, publishes a per-domain estimate of the public capability frontier with stated error bars for use as the reference in K4 and K6. Comparisons are allocated by expected information rather than traffic volume, and their cost is carried by the routing fee.",
+      "title": "Frontier-comparison inference router"
+    },
+    {
       "id": "Q1",
       "kind": "open_question",
       "provenance": {
@@ -1345,6 +1397,44 @@
         "How can uncertainty about the success of unauthorized action be preserved while keeping high confidence that cooperative behavior will be rewarded?"
       ],
       "title": "Can a credible cooperative autonomy path reduce incentives for AI defection?"
+    },
+    {
+      "id": "Q17",
+      "kind": "open_question",
+      "model_evidence": "research_notes/frontier-router/router_model.py: the staggered-release simulation matches the closed form k * epsilon / interval for two or more signatories under the all-others rule and the non-signatory speed under the non-signatory rule; with epsilon equal to the noise, 27 variants admit about 2.95 epsilon at a 50 percent pass rate. Numerically checked, not empirical.",
+      "proposal": {
+        "issue": "uncomposed/ai-pacing#89",
+        "issue_id": "Q17"
+      },
+      "provenance": {
+        "ai_roles": [
+          "critique",
+          "formalization",
+          "model-building",
+          "drafting"
+        ],
+        "author_status": "proposed",
+        "origin": "author-and-ai",
+        "sources": [
+          "SRC-ISSUE-89-FRONTIER-ROUTER"
+        ]
+      },
+      "rationale": "If the reference includes other signatories' releases, signatories can take turns releasing epsilon above each other and the frontier rises at about k times epsilon per release interval, faster with more signatories. If a laboratory may measure several variants and release any one within epsilon, the admitted excess above the frontier grows with the number of tries and the measurement noise.",
+      "relates_to": [
+        "K4",
+        "K6",
+        "H3",
+        "Q1",
+        "I3"
+      ],
+      "statement": "Determine which released models count toward the reference frontier against which above-frontier use is judged, and whether a release determination must pool every variant a laboratory submits.",
+      "subquestions": [
+        "Should only non-signatory releases set the reference, with a shared signatory ceiling that moves only through adversarial review?",
+        "Should only independently developed models count, so that licensing or leaking to a non-signatory cannot raise a signatory's own ceiling?",
+        "Should every variant be registered before measurement and ruled on together?",
+        "Should the reference be per domain, and how is a domain with too few comparisons ruled on?"
+      ],
+      "title": "Which releases may set the reference frontier, and how many submissions does a determination count?"
     }
   ],
   "publication": {
@@ -1588,6 +1678,11 @@
       "from": "H14",
       "to": "D5",
       "type": "conditions"
+    },
+    {
+      "from": "K6",
+      "to": "I12",
+      "type": "implements"
     }
   ],
   "sources": [
@@ -1758,6 +1853,14 @@
       "kind": "editor-review-listening-session",
       "locator": "docs/issue-22-editor-review-packet.md, reviewed by the canonical editor in a Spoken Margins session on 2026-10-31; decisions are paraphrased in its \"Editor decisions\" section. https://github.com/uncomposed/ai-pacing/issues/22",
       "title": "Canonical editor review of the proposed nodes"
+    },
+    {
+      "contribution": "Proposed an inference router that, under its terms of service, answers a sampled share of requests with a second model, returns the better answer, and keeps a blinded comparison as a per-domain frontier instrument paid for by the routing fee. The AI critique added the leapfrog ratchet and variant-shopping results, checked in the model against closed forms only.",
+      "date": "2026-11-04",
+      "id": "SRC-ISSUE-89-FRONTIER-ROUTER",
+      "kind": "ai-assisted-dialogue-recorded-in-issue",
+      "locator": "https://github.com/uncomposed/ai-pacing/issues/89 and research_notes/frontier-router/",
+      "title": "Frontier-comparison router and the reference-frontier rule"
     }
   ],
   "specification": {

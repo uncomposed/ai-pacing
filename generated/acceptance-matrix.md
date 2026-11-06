@@ -17,4 +17,4 @@ Generated deterministically from executable assertions in `spec/ai-pacing.yaml`.
 
 Overall: **PASS**
 
-Proposed nodes, not accepted by the canonical editor: H15. They are excluded from kernel-identity, node-existence, and dependency-path assertions and are still subject to field assertions.
+Proposed nodes, not accepted by the canonical editor: H15, I12, Q17. They are excluded from kernel-identity, node-existence, and dependency-path assertions and are still subject to field assertions.
