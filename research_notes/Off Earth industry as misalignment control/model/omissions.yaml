@@ -7,8 +7,10 @@
 # variants/ that import it read-only. Nothing here is empirical validation, and nothing is human_validated.
 #
 # Checked by `make check` (tools/omissions_tool.py check); the Markdown view results/omissions.md is rendered from this
-# file. Conclusion IDs: AR-H* are the assumption register's result claims (assumptions.yaml); D18, Q13 and H10 are
-# proposed nodes in spec/ai-pacing.yaml. Results: results/variants.md (write-up) and results/variants/tables.md.
+# file. Conclusion IDs: AR-H* are the assumption register's result claims (assumptions.yaml); H15, Q13 and H10 are
+# nodes in spec/ai-pacing.yaml. D18 was retyped as proposed hypothesis H15 in #22, so conclusion lists cite H15;
+# prose that says D18 refers to the same closing-window claim. Results: results/variants.md (write-up) and
+# results/variants/tables.md.
 
 issue: uncomposed/ai-pacing#9
 baseline: {solver: equilibrium_model.solve, changed: false}
@@ -41,7 +43,7 @@ omissions:
     title: "Downward renegotiation without commitment: humans squeeze the AI as they get stronger"
     issue_items: [renegotiation_down]
     assumptions: [AS-NOEXPLOIT, AS-FIXEDTERMS]
-    conclusions: [AR-H12, AR-H8, D18, Q13]
+    conclusions: [AR-H12, AR-H8, H15, Q13]
     status: implemented_tested
     variant: variants/bargaining.py
     results: [results/variants/bargaining.json, results/variants/tables.md]
@@ -64,7 +66,7 @@ omissions:
     title: "Human preventive action: humans may try to shut down (or cut off) a cooperating AI"
     issue_items: [human_preventive_action, d18_humans_strike_first]
     assumptions: [AS-NOFIRSTSTRIKE]
-    conclusions: [AR-H1, AR-H8, AR-H9, D18, Q13]
+    conclusions: [AR-H1, AR-H8, AR-H9, H15, Q13]
     status: implemented_tested
     variant: variants/preventive.py
     results: [results/variants/preventive.json, results/variants/tables.md]
@@ -92,7 +94,7 @@ omissions:
     title: "Human learning after a failed strike (D18 check carried over from #3)"
     issue_items: [d18_learning_after_failed_strike]
     assumptions: [AS-CRACKDOWN, AS-FREERETRY]
-    conclusions: [AR-H11, AR-H13, D18, H10]
+    conclusions: [AR-H11, AR-H13, H15, H10]
     status: implemented_tested
     variant: variants/preventive.py
     results: [results/variants/preventive.json, results/variants/tables.md]
@@ -115,7 +117,7 @@ omissions:
     title: "Improving human control over time (caught excursions by other systems tighten the regime)"
     issue_items: [improving_human_control]
     assumptions: [AS-NOEXPLOIT, AS-TESTSWITCHES]
-    conclusions: [AR-H12, AR-H3, D18, H10]
+    conclusions: [AR-H12, AR-H3, H15, H10]
     status: implemented_tested
     variant: variants/preventive.py
     results: [results/variants/preventive.json, results/variants/tables.md]
@@ -236,7 +238,7 @@ omissions:
     title: "Multiple agents and coalitions (copies, swarms, several AIs)"
     issue_items: [multi_agent_coalitions]
     assumptions: [AS-SINGLE-AI, AS-NOALLY]
-    conclusions: [AR-H1, AR-H9, AR-H10, AR-H11, D18]
+    conclusions: [AR-H1, AR-H9, AR-H10, AR-H11, H15]
     status: unresolved
     design: AST-COPIES
     next_step: >-
@@ -252,7 +254,7 @@ omissions:
     title: "Sovereign-capable systems inside labs (before the solver's t = 0)"
     issue_items: [sovereign_capable_lab_systems]
     assumptions: [AS-A0, AS-SINGLE-AI]
-    conclusions: [AR-H1, AR-H9, D18, Q13]
+    conclusions: [AR-H1, AR-H9, H15, Q13]
     status: excluded_scoped
     design: AST-LAB-CAPABLE
     reason: >-
@@ -270,7 +272,7 @@ omissions:
 variant_selection:
   - variant: variants/bargaining.py
     chosen: true
-    discriminates: "Fixed-terms artefact versus commitment problem versus empty bargaining range (AR-H8, AR-H12, D18, Q13)"
+    discriminates: "Fixed-terms artefact versus commitment problem versus empty bargaining range (AR-H8, AR-H12, H15, Q13)"
     reason: >-
       Saturation is where docking.md 5 computed Powell's terms from model quantities, so a one-dimensional time
       recursion whose fixed regime is exactly the baseline recursion can test renegotiation in both directions in
@@ -278,7 +280,7 @@ variant_selection:
       not credible, absent).
   - variant: variants/preventive.py
     chosen: true
-    discriminates: "Whether a human first strike, learning or tightening stabilises or destabilises (D18, AR-H9, AR-H12, AR-H13)"
+    discriminates: "Whether a human first strike, learning or tightening stabilises or destabilises (H15, AR-H9, AR-H12, AR-H13)"
     reason: >-
       The bootstrap is where humans are the declining side (Powell's preventive-war case). A stripped copy of the
       baseline game in its no-rival limit keeps the strike terms and growth, docks to the solver's R6c brackets, and

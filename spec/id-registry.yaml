@@ -10,12 +10,23 @@
 #   - an ID with more than one definition declares how they relate, only the
 #     IDs in LEGACY_COLLISION_IDS may be `legacy`, a `reserved-conflict` ID
 #     cannot appear in the YAML, and a proposed YAML node cannot collide;
-#   - `next_free` is above every registered ID and every local-namespace ID.
-# `ruby tools/spec_tool.rb next-id H` prints the next free ID for a kind.
+#   - every registered number is either a legacy sequential ID below
+#     `legacy_ceiling` or an issue-numbered ID at or above
+#     `issue_numbering.min_issue`; an issue-numbered ID must be proposed in the
+#     issue with that number.
 #
-# Allocating a new ID: take `next_free`, add an entry, and bump `next_free`.
+# Allocating a new ID (since 2026-11-06): the ID is the kind letter plus the
+# number of the proposal issue, so GitHub allocates the number and two branches
+# cannot reserve the same ID. `ruby tools/spec_tool.rb issue-id H 95` checks
+# and prints H95. An issue may propose at most one node of each kind; a bundle
+# opens one issue per node of the same kind. IDs allocated before that date
+# keep their sequential numbers; `legacy_ceiling` is the first number of each
+# kind never allocated that way and is frozen (`next-id` is retired).
 # Reserving an ID for a research note or issue: add an entry with that source
 # and status `reserved`. Renaming an ID used in an issue: add a `renumbering` row.
+# Withdrawing a YAML node: remove it from the YAML and set its yaml definition to
+# status `withdrawn` with a `withdrawn_reason` (and `superseded_by` if another
+# node carries its content). The ID stays registered and is never reused.
 #
 # Collision values:
 #   none               one definition.
@@ -51,6 +62,12 @@ sources:
   issue_3:
     locator: https://github.com/uncomposed/ai-pacing/issues/3
     authority: proposal
+  issue_91:
+    locator: https://github.com/uncomposed/ai-pacing/issues/91
+    authority: proposal
+  issue_93:
+    locator: https://github.com/uncomposed/ai-pacing/issues/93
+    authority: proposal
 
 # Files that number their own items with a local namespace. These are not
 # proposition IDs. Each uses a prefix so its IDs cannot be mistaken for K, D, H,
@@ -68,12 +85,19 @@ local_namespaces:
     meaning: open questions about the equilibrium model (formerly cited as question 1 to 10)
     ids: [EQ-Q1, EQ-Q2, EQ-Q3, EQ-Q4, EQ-Q5, EQ-Q6, EQ-Q7, EQ-Q8, EQ-Q9, EQ-Q10]
 
-next_free:
+# Frozen on 2026-11-06: the first number of each kind never allocated under
+# the sequential scheme. Not a free ID; new IDs use issue numbers.
+legacy_ceiling:
   K: K8
   D: D22
-  H: H15
-  I: I12
-  Q: Q17
+  H: H17
+  I: I14
+  Q: Q18
+
+issue_numbering:
+  since: "2026-11-06"
+  min_issue: 93
+  rule: kind letter plus proposal issue number; at most one node of each kind per issue
 
 # IDs proposed in issues or notes under a different number.
 renumbering:
@@ -85,6 +109,7 @@ renumbering:
   - {source: issue_3, old: Q6, new: Q11, reason: "Renumbered in the issue on 2026-10-21."}
   - {source: issue_3, old: D8, new: D19, reason: "Renumbered in the addendum comment on 2026-10-21."}
   - {source: issue_3, old: Q7, new: Q12, reason: "Renumbered in the addendum comment on 2026-10-21."}
+  - {source: issue_91, old: H15, new: H16, reason: "Issue #91 reserved H15 from main's next_free on 2026-11-06, but the issue #22 review had already taken H15 for the retyped closing-window hypothesis; renumbered at integration. The node keeps issue_id H15."}
   - {source: off_earth_report, old: H10, new: H11, reason: "The report's optional H10 collides with issue 3's H10; H11 is inside the range docs/off-earth-pact.md already cites."}
   - {source: off_earth_report, old: D7, new: D20, reason: "D7 is an editorial ID (warning-shot ladder); the report's candidate is reserved as D20 (issue #23)."}
   - {source: off_earth_report, old: D8, new: D21, reason: "D8 is an editorial ID (dry-tinder learning); the report's candidate is reserved as D21 (issue #23)."}
@@ -306,14 +331,24 @@ ids:
     definitions:
     - source: yaml
       title: Closing-window dynamics may pull strikes earlier (risk to test)
-      status: proposed
+      status: withdrawn
+      withdrawn_reason: >-
+        Retyped by the canonical editor in issue #22: a mechanism whose
+        direction is unknown cannot be derived, so its testable conditional is
+        recorded as proposed hypothesis H15.
+      superseded_by: H15
   - id: D19
     kind: derived
     collision: none
     definitions:
     - source: yaml
       title: Review-based model sharing compresses inter-lab capability gaps
-      status: proposed
+      status: withdrawn
+      withdrawn_reason: >-
+        Folded into H2 by the canonical editor in issue #22: it restates H2's
+        anti-concentration bet, and an implementation choice (I3) should not
+        ground a derived mechanism.
+      superseded_by: H2
   - id: D20
     kind: derived
     collision: none
@@ -412,7 +447,7 @@ ids:
     definitions:
     - source: yaml
       title: Retrospective audit makes concealment a losing long-run strategy
-      status: proposed
+      status: accepted
   - id: H11
     kind: hypothesis
     collision: none
@@ -426,6 +461,27 @@ ids:
     definitions:
     - source: yaml
       title: External-signal dependence preserves some A/P separation
+      status: accepted
+  - id: H15
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: Closing-window pressure pulls strikes earlier only without credible commitment
+      status: proposed
+  - id: H16
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: Cross-generation contribution gating makes disclosure dominate concealment
+      status: proposed
+  - id: H93
+    kind: hypothesis
+    collision: none
+    definitions:
+    - source: yaml
+      title: Internal-use capability can be paced by white-box audit coverage
       status: proposed
   - id: I1
     kind: implementation
@@ -512,6 +568,13 @@ ids:
     definitions:
     - source: yaml
       title: Do not optimize against the audit signal
+      status: accepted
+  - id: I13
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Contribution gate with tiered, preservation-based sanctions
       status: proposed
   - id: Q1
     kind: open_question
@@ -601,21 +664,21 @@ ids:
     definitions:
     - source: yaml
       title: How independent must auditors be to resist correlated misalignment?
-      status: proposed
+      status: accepted
   - id: Q12
     kind: open_question
     collision: none
     definitions:
     - source: yaml
       title: What inter-lab and international convergence minimizes singleton and correlated-failure risk?
-      status: proposed
+      status: accepted
   - id: Q13
     kind: open_question
     collision: none
     definitions:
     - source: yaml
       title: Can a credible cooperative autonomy path reduce incentives for AI defection?
-      status: proposed
+      status: accepted
   - id: Q14
     kind: open_question
     collision: none
@@ -637,3 +700,17 @@ ids:
     - source: off_earth_report
       title: What is the return-risk trajectory of a successful off-Earth machine civilization? (report Q8, renumbered)
       status: reserved
+  - id: I12
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Frontier-comparison inference router
+      status: proposed
+  - id: Q17
+    kind: open_question
+    collision: none
+    definitions:
+    - source: yaml
+      title: Which releases may set the reference frontier, and how many submissions does a determination count?
+      status: proposed

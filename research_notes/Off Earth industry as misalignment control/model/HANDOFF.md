@@ -1,6 +1,30 @@
 # HANDOFF: equilibrium model of Cole's clarified pact
 
-Written 2026-10-16 by the session that built it. Nothing is committed. Status: rounds 1 and 2 are `implemented` and `verified`, not `human_validated`. Round 2 was run and checked by session 2 (section 7); section 6 is the original TODO, now done.
+## Current status (2026-10-30)
+
+[[ai gen]] This section was added on 2026-10-30. Everything below it is kept as written, so some of it is out of date. Read this section first.
+
+1. **What the model is.** A game-theoretic model of Cole's clarified off-Earth pact. An AI and N states play a repeated stage game, solved by backward induction (`equilibrium_model.py`), with robust-design ensembles on top (`robust_design.py`).
+2. **Where to start.** Section 1 for the architecture and how to run it, then `results/equilibrium.md` and `results/robust_design.md` for the results in prose.
+3. **Current results.** Sections 7 to 12 below, and the two result documents named above. Section 7 records that round 2 was run.
+4. **What is committed.** All of it is on `main`. The "Nothing is committed" line under the old title was true on 2026-10-16 only.
+5. **The gates.** Run `python model_gates.py numerics`, `software` or `replication` from this folder. Each reports separately. See `docs/ci-gates.md` at the repo root. CI never establishes empirical validation.
+6. **Status words.** Work here is `implemented` and `verified`. Nothing is `human_validated`.
+7. **Open issues that touch the model** (titles only, from the GitHub issue list on 2026-10-30):
+   - #10: Make pact-success claims explicit about horizon, rival outcomes, and terminal assumptions.
+   - #25: Compare alternate sampling measures with fresh draws via sims.yml.
+   - #26: Add outcome-share labels to robust_design --report outputs.
+   - #41: Ground the coupling toy's bottlenecks in physical data and report pact-model scenario bands.
+   - #51: Diagnose the saturation-bound R6c cell where the reduced game and full solver disagree.
+   - #52: Port the human shutdown move to the full equilibrium solver.
+   - #53: Actor-structure variants: AI swarms, two-type AI with private information, and a two-AI post-rival game.
+   - #54: Strategic robustness: reputation strategies, bootstrap renegotiation, and unequal states.
+   - #71: Pact model: convergence gate in grid size, horizon and ensemble size.
+   - #72: Pact model: pass thresholds for breakout_options --check, run in CI.
+   - #73: Pact model: re-solve a sample of legacy caches on macOS arm64 (evidence only).
+
+
+Written 2026-10-16 by the session that built it. *Historical: at the time of writing nothing was committed; that is no longer true, and everything is now on `main`.* Status: rounds 1 and 2 are `implemented` and `verified`, not `human_validated`. Round 2 was run and checked by session 2 (section 7); section 6 is the original TODO, now done.
 
 ## 0. Correction to the parent session's brief
 
@@ -24,7 +48,7 @@ Everything is in this folder (`model/`). The earlier one-sided model (`offearth_
 **`run_equilibrium.py`**
 - `python3 run_equilibrium.py` runs the full round 1: about 52 minutes on this laptop. It writes `results/equilibrium_tables.md`, `results/equilibrium_summary.json` and `figures/eq_*.png` (six figures).
 - `--quick` is a smoke test only, but it **overwrites the same output files**, so re-run the full version afterwards.
-- `--round2` runs only R1–R4 and writes `results/equilibrium_round2_tables.md`. It has never been run (section 6).
+- `--round2` runs only R1–R4 and writes `results/equilibrium_round2_tables.md`. *Historical: when this was written it had never been run. It was run later; see section 7.*
 - `results/equilibrium.md` is hand-written from the tables. It is complete for round 1.
 - Speed: about 3–5 s per parameter set at nA = 160, T_H = 300, batched.
 

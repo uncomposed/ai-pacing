@@ -5,6 +5,15 @@
 **Status:** canonical working definition  
 **Purpose:** source of truth for reconstructing, critiquing, editing, and rendering the AI Pacing proposal into essays, policy memos, slides, videos, diagrams, or other media.
 
+> **Repository status, added 2026-11-06.** This file is frozen as the dated
+> editorial input of 2026-08-29. It is kept verbatim below this note and is not
+> updated. `spec/ai-pacing.yaml` is the normative specification; where the two
+> differ, the YAML controls (`CANONICALITY.md`). The differences are recorded,
+> not reconciled, in `docs/editorial-reference-status.md`. The "source of
+> truth" and "canonical working definition" wording below describes this file's
+> role when it was written. Propositions here that have no YAML node are
+> candidates for a spec-proposal issue, not accepted canon.
+
 ## 0. Generator Contract
 
 This file defines the proposal. A generated essay, slide deck, video, podcast script, infographic, or policy memo is a **rendering** of this specification, not the specification itself.

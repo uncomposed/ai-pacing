@@ -268,8 +268,8 @@ its proposal is the source being modeled.
 
 The following map accounts for all 29 legacy YAML nodes. It is a migration review,
 not an assertion that the new model fully reproduces or validates their content.
-The proposed, not-accepted nodes added later (H10, H14, D18, D19, I11, Q11–Q13;
-see `docs/proposed-extensions.md`) are not mapped here.
+The nodes added later from issues #1, #3 and #22 (H10, H14, H15, I11, Q11–Q13,
+and the withdrawn D18 and D19; see `docs/proposed-extensions.md`) are not mapped here.
 
 | Legacy nodes | Treatment in the challenge workspace |
 |---|---|

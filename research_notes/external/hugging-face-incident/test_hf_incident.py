@@ -176,7 +176,7 @@ class HuggingFaceIncidentTest(unittest.TestCase):
 
     def test_unread_record_cannot_be_cited(self):
         doc = copy.deepcopy(self.events)
-        doc['events'][0]['sources'].append({'record': 'EV-OAI-HF-ROAD-2026', 'locator': 'x'})
+        doc['events'][0]['sources'].append({'record': 'EV-OAI-HF-EVAL-2026', 'locator': 'x'})
         self.rejects(doc, 'which was not read')
 
     def test_missing_locator_is_rejected(self):

@@ -46,8 +46,9 @@ evaluation protocol and the parameter-admission rule. `make evidence-check` chec
 This repository publishes AI Pacing as a versioned, machine-readable idea rather than a single privileged essay. Git is authoritative. Human-facing pages, PDFs, games, songs, simulations, critiques, and other works are renderings of an exact Git state.
 
 The canonical source is [`spec/ai-pacing.yaml`](spec/ai-pacing.yaml). See
-[`CANONICALITY.md`](CANONICALITY.md) for the exact authority order and the known
-conformance gap between the YAML and the supplied editorial reference. The YAML
+[`CANONICALITY.md`](CANONICALITY.md) for the exact authority order and the
+recorded divergence between the YAML and the frozen editorial reference
+([`docs/editorial-reference-status.md`](docs/editorial-reference-status.md)). The YAML
 separates:
 
 - `K` — kernel propositions that define the idea;
@@ -58,7 +59,7 @@ separates:
 
 Every proposition records sources, the role AI played, and the canonical editor's acceptance status. The audit trail distinguishes documentary evidence from historical inference.
 
-Nodes with `author_status: proposed` are recorded for review and are not accepted canon; see [`docs/proposed-extensions.md`](docs/proposed-extensions.md). Every proposition ID used or reserved anywhere in the repository is listed in [`spec/id-registry.yaml`](spec/id-registry.yaml); `ruby tools/spec_tool.rb next-id H` prints the next free ID of a kind.
+Nodes with `author_status: proposed` are recorded for review and are not accepted canon; see [`docs/proposed-extensions.md`](docs/proposed-extensions.md). Every proposition ID used or reserved anywhere in the repository is listed in [`spec/id-registry.yaml`](spec/id-registry.yaml). Since 2026-11-06 a new ID is the kind letter plus its proposal issue number; `ruby tools/spec_tool.rb issue-id H 95` checks and prints it.
 
 ## Quality gate
 

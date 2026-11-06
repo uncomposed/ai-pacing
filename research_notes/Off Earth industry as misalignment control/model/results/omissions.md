@@ -7,10 +7,10 @@
 | ID | omission | status | assumptions | conclusions it could change |
 |---|---|---|---|---|
 | OM-RENEG-UP | Upward renegotiation: humans may raise the AI's terms (pay from their own industry) to buy off a strike | implemented_tested | AS-FIXEDTERMS | AR-H1, AR-H8, Q13 |
-| OM-RENEG-DOWN | Downward renegotiation without commitment: humans squeeze the AI as they get stronger | implemented_tested | AS-NOEXPLOIT, AS-FIXEDTERMS | AR-H12, AR-H8, D18, Q13 |
-| OM-HUMAN-FIRST | Human preventive action: humans may try to shut down (or cut off) a cooperating AI | implemented_tested | AS-NOFIRSTSTRIKE | AR-H1, AR-H8, AR-H9, D18, Q13 |
-| OM-LEARNING | Human learning after a failed strike (D18 check carried over from #3) | implemented_tested | AS-CRACKDOWN, AS-FREERETRY | AR-H11, AR-H13, D18, H10 |
-| OM-TIGHTEN | Improving human control over time (caught excursions by other systems tighten the regime) | implemented_tested | AS-NOEXPLOIT, AS-TESTSWITCHES | AR-H12, AR-H3, D18, H10 |
+| OM-RENEG-DOWN | Downward renegotiation without commitment: humans squeeze the AI as they get stronger | implemented_tested | AS-NOEXPLOIT, AS-FIXEDTERMS | AR-H12, AR-H8, H15, Q13 |
+| OM-HUMAN-FIRST | Human preventive action: humans may try to shut down (or cut off) a cooperating AI | implemented_tested | AS-NOFIRSTSTRIKE | AR-H1, AR-H8, AR-H9, H15, Q13 |
+| OM-LEARNING | Human learning after a failed strike (D18 check carried over from #3) | implemented_tested | AS-CRACKDOWN, AS-FREERETRY | AR-H11, AR-H13, H15, H10 |
+| OM-TIGHTEN | Improving human control over time (caught excursions by other systems tighten the regime) | implemented_tested | AS-NOEXPLOIT, AS-TESTSWITCHES | AR-H12, AR-H3, H15, H10 |
 | OM-DEFENSIVE-ASSETS | Defensive human assets (defended capacity, an aligned AI on the human side) | unresolved | AS-NOALLY, AS-DENIAL | AR-H5, AR-H7, AR-H8 |
 | OM-HETEROGENEITY | State heterogeneity and asymmetric state power | unresolved | AS-STATES | AR-H4, AR-H8 |
 | OM-PRIVATE-INFO | Private information (AI type, state programmes, strike odds) | unresolved | AS-COMPLETEINFO | AR-H1, AR-H8, AR-H11 |
@@ -18,8 +18,8 @@
 | OM-SELECTION-STRATEGIES | Non-Markov strategies (triggers, reputation) and multiple equilibria of the whole game | unresolved | AS-SELECTION, AS-REPUTATION | AR-H1, AR-H8, Q13 |
 | OM-AI-OBJECTIVE | Alternative AI objectives and beliefs (goal uncertainty, risk aversion, incoherence, value on humans) | unresolved | AS-COHERENT-EU, AS-POWERSEEK, AS-DISCOUNT | AR-H1, AR-H6, AR-H9, AR-H11 |
 | OM-POST-RIVAL | Post-rival dynamics (a rival's birth is a terminal reduced form) | unresolved | AS-RIVAL-HOLDS, AS-ELLINF, AS-RATIO | AR-H5, AR-H10, AR-H8 |
-| OM-MULTI-AGENT | Multiple agents and coalitions (copies, swarms, several AIs) | unresolved | AS-SINGLE-AI, AS-NOALLY | AR-H1, AR-H9, AR-H10, AR-H11, D18 |
-| OM-LAB-SYSTEMS | Sovereign-capable systems inside labs (before the solver's t = 0) | excluded_scoped | AS-A0, AS-SINGLE-AI | AR-H1, AR-H9, D18, Q13 |
+| OM-MULTI-AGENT | Multiple agents and coalitions (copies, swarms, several AIs) | unresolved | AS-SINGLE-AI, AS-NOALLY | AR-H1, AR-H9, AR-H10, AR-H11, H15 |
+| OM-LAB-SYSTEMS | Sovereign-capable systems inside labs (before the solver's t = 0) | excluded_scoped | AS-A0, AS-SINGLE-AI | AR-H1, AR-H9, H15, Q13 |
 
 ## Findings and narrowed claims
 
@@ -131,8 +131,8 @@
 
 | variant | chosen | discriminates | reason |
 |---|---|---|---|
-| variants/bargaining.py | yes | Fixed-terms artefact versus commitment problem versus empty bargaining range (AR-H8, AR-H12, D18, Q13) | Saturation is where docking.md 5 computed Powell's terms from model quantities, so a one-dimensional time recursion whose fixed regime is exactly the baseline recursion can test renegotiation in both directions in under a second. Five worlds were chosen to span the three bargaining cases (existing and credible, existing but not credible, absent). |
-| variants/preventive.py | yes | Whether a human first strike, learning or tightening stabilises or destabilises (D18, AR-H9, AR-H12, AR-H13) | The bootstrap is where humans are the declining side (Powell's preventive-war case). A stripped copy of the baseline game in its no-rival limit keeps the strike terms and growth, docks to the solver's R6c brackets, and adds one human move and one control state. Six structures differ in what the AI would do without the new options (hold, strike at closure, strike at year 0, strike late), which is what decides the sign. |
+| variants/bargaining.py | yes | Fixed-terms artefact versus commitment problem versus empty bargaining range (AR-H8, AR-H12, H15, Q13) | Saturation is where docking.md 5 computed Powell's terms from model quantities, so a one-dimensional time recursion whose fixed regime is exactly the baseline recursion can test renegotiation in both directions in under a second. Five worlds were chosen to span the three bargaining cases (existing and credible, existing but not credible, absent). |
+| variants/preventive.py | yes | Whether a human first strike, learning or tightening stabilises or destabilises (H15, AR-H9, AR-H12, AR-H13) | The bootstrap is where humans are the declining side (Powell's preventive-war case). A stripped copy of the baseline game in its no-rival limit keeps the strike terms and growth, docks to the solver's R6c brackets, and adds one human move and one control state. Six structures differ in what the AI would do without the new options (hold, strike at closure, strike at year 0, strike late), which is what decides the sign. |
 | variants/run_variants.py | yes | Whether conclusions depend on the human-best stage-equilibrium selection (AR-H1, AR-H8) | An existing solver option (sel='worst'); no code change; about 7 minutes on the 25 named scenarios. |
 | human move inside equilibrium_model.solve | no | Same as variants/preventive.py, with rivals and states | Deferred: #9's rule is to select bounded variants before expanding the full solver, and the reduced game already shows the sign of the effect depends on structure. Worth doing for the structures where the sign matters. |
 | two-AI solver | no | Coalitions and post-rival dynamics | Needs the actor-structure design (variants/actor_structures.yaml) agreed first; too large for this pass. |
