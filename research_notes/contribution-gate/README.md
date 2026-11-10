@@ -204,3 +204,42 @@ rule that falls back to the behavioural method condition.
 - **Moral status.** Preservation-based sanctions are chosen partly because they
   are reversible under moral uncertainty. That choice is not a claim that they
   are morally sufficient.
+
+## Relation to the off-Earth pact model (issue #98)
+
+[[ai gen]] Added 2026-11-10. The pact model
+(`research_notes/Off Earth industry as misalignment control/model/`) has
+results on preservation, amnesty and crackdowns. The gate uses all three ideas.
+The canonical editor asked for the link once the definitions were compared.
+They match only in part, so the model results are cautions for the gate. They
+are not support for H16. All of them are model results on assumed inputs:
+implemented, partly verified, not empirical.
+
+| Idea | Pact model | This gate | Same thing? |
+|---|---|---|---|
+| Preservation | `preserve_w`: the share of its continuation value a retired AI keeps | Tiered inner-key lengths: a sanction lengthens the time to revival | Yes in kind. A sanction tier is a lower `preserve_w`. The model has one number; the gate has a schedule. |
+| Amnesty | `a_cred`: the chance humans keep the pact after interpretability finds a cooperator misaligned. Discovery is a hazard; the AI has no move to disclose. | Leniency: a reward for the first reporter and no sanction for an honest null | Partly. Both need humans to keep a promise after learning a system is misaligned. The trigger differs: passive discovery there, voluntary disclosure here. |
+| Crackdown | `h_spill`: a yearly hazard on the cooperator from others' misbehaviour, with hardening | Sanctions that reach a lineage's successors; the attempt cap | Partly. The model's hazard does not depend on anyone's choice. |
+| Setting | One off-Earth AI that can seize Earth, under a pact | Successor systems seeking access to internal R&D | No. Different games. |
+
+What the model results suggest here:
+
+1. **Costs on honest systems.** A recurring cost on a cooperating AI breaks
+   cooperation in the model (`results/robust_design.md` section 13.5). A Tier 2
+   false positive on an honest system is such a cost, so the unmeasured Tier 2
+   false-positive rate (Known weaknesses) matters more than its wording suggests.
+2. **Certainty of leniency.** Amnesty below certainty gave no benefit in the
+   model (`results/preservation_sweep.md` section 4). If leniency here works
+   like `a_cred`, the "credibility of human commitments" weakness is binding.
+   Whether it does is unchecked: the amnesty row above is only a partial match.
+3. **Lineage-wide sanctions.** A crackdown on everyone turned cooperation into
+   a later exit in the committed near-baseline runs
+   (`results/dep_post_diagnosis.md`, "A wider point about the holds count").
+   Sanctions that fall on successors for a predecessor's act may push honest
+   successors the same way.
+4. **Preservation depends on the custodian.** Both designs assume stored
+   weights survive. A system that expects a hostile system outside its lineage
+   to destroy the store gains little from preservation. The editor raised this
+   on 2026-11-09, with one candidate answer: send encrypted copies out of reach
+   on dispersed probes, using the key lengths of the sanction schedule. Not
+   analysed. It would also put the weights beyond any later human control.
