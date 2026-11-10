@@ -25,6 +25,7 @@ flowchart LR
   I5["I5 — Separate gate for the AI industrial survival chain"]
   I6["I6 — Seven-stage international ladder"]
   I7["I7 — Licensed compute deployment and data-center taxation"]
+  I99["I99 — Time-capsule preservation of model weights"]
   K1["K1 — Separate capability, substrate, and power"]
   K2["K2 — Pace conversion into irreversible power"]
   K3["K3 — Govern bounded research and consequential use differently"]
@@ -40,6 +41,7 @@ flowchart LR
   Q2["Q2 — What access makes adversarial review credible without unacceptable leakage?"]
   Q3["Q3 — How many independent human vetoes are enough?"]
   Q4["Q4 — When does capability itself collapse A/H/P separability?"]
+  Q99["Q99 — How long should a time capsule's sanction window be, and how likely should its beacon be to fire?"]
   D2 -->|grounds| D3
   D2 -->|implements| I3
   D3 -->|implements| I3
@@ -63,6 +65,7 @@ flowchart LR
   H16 -->|conditions| D5
   H16 -->|conditions| H10
   H16 -->|implements| I13
+  H16 -->|implements| I99
   H16 -->|conditions| K7
   H2 -->|conditions| D2
   H2 -->|conditions| D3
@@ -102,4 +105,4 @@ flowchart LR
   K7 -->|implements| I4
   K7 -->|implements| I5
   classDef proposed stroke-dasharray: 5 5
-  class H15,H16,H93,I12,I13,Q17 proposed
+  class H15,H16,H93,I12,I13,I99,Q17,Q99 proposed

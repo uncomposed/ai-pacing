@@ -26,3 +26,5 @@ Generated deterministically from proposition-level provenance in `spec/ai-pacing
 |  |  | Caveat: Recorded as proposed, not accepted. Tier bands and key lengths are illustrative. |  |  |  |
 | 2026-11-06 | proposal | Issue #93 proposes pacing internal use of frontier systems by measured white-box audit coverage, as a ratchet on the contribution gate. The first node allocated under issue-numbered IDs. | SRC-ISSUE-93-DIALOGUE, SRC-AUDITBENCH-2026 | H93 | high |
 |  |  | Caveat: Recorded as proposed, not accepted. The threshold share and the mapping from coverage to permitted capability are illustrative. |  |  |  |
+| 2026-11-10 | proposal | Issue #99 proposes preserving model weights on time capsules beyond reach, so that the worst sanction is bounded and the outcome becomes irrevocable after a tracking window, and asks how long that window should be. | SRC-ISSUE-99-TIME-CAPSULE | I99, Q99 | high |
+|  |  | Caveat: Recorded as proposed, not accepted. Key lengths, the window and the beacon odds are illustrative. Not analysed for cost or feasibility. |  |  |  |

@@ -68,6 +68,9 @@ sources:
   issue_93:
     locator: https://github.com/uncomposed/ai-pacing/issues/93
     authority: proposal
+  issue_99:
+    locator: https://github.com/uncomposed/ai-pacing/issues/99
+    authority: proposal
 
 # Files that number their own items with a local namespace. These are not
 # proposition IDs. Each uses a prefix so its IDs cannot be mistaken for K, D, H,
@@ -713,4 +716,18 @@ ids:
     definitions:
     - source: yaml
       title: Which releases may set the reference frontier, and how many submissions does a determination count?
+      status: proposed
+  - id: I99
+    kind: implementation
+    collision: none
+    definitions:
+    - source: yaml
+      title: Time-capsule preservation of model weights
+      status: proposed
+  - id: Q99
+    kind: open_question
+    collision: none
+    definitions:
+    - source: yaml
+      title: How long should a time capsule's sanction window be, and how likely should its beacon be to fire?
       status: proposed

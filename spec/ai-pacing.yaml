@@ -361,6 +361,18 @@ sources:
       standalone use, and models trained on synthetic documents were easier to
       audit than models trained on demonstrations, with adversarial training
       raising auditing difficulty further.
+  - id: SRC-ISSUE-99-TIME-CAPSULE
+    title: Time-capsule preservation of model weights
+    kind: ai-assisted-dialogue-recorded-in-issue
+    date: "2026-11-10"
+    locator: "https://github.com/uncomposed/ai-pacing/issues/99"
+    contribution: >-
+      The author proposed preserving model weights on spacecraft sent out of
+      the solar system on untracked trajectories, with a bounded window in
+      which a further encryption layer can be added, a randomly timed beacon
+      that may never fire, and a human cultural record on board. The AI
+      critique added that the capsule secures the bits and not revival, and
+      that the window tells a concealing system how long concealment must last.
 
 audit_events:
   - id: EVT-2024-ECONOMIC-PRECURSOR
@@ -487,6 +499,20 @@ audit_events:
     caveat: >-
       Recorded as proposed, not accepted. Tier bands and key lengths are
       illustrative.
+  - id: EVT-2026-TIME-CAPSULE-PROPOSAL
+    date: "2026-11-10"
+    phase: proposal
+    summary: >-
+      Issue #99 proposes preserving model weights on time capsules beyond
+      reach, so that the worst sanction is bounded and the outcome becomes
+      irrevocable after a tracking window, and asks how long that window
+      should be.
+    evidence: [SRC-ISSUE-99-TIME-CAPSULE]
+    affected_nodes: [I99, Q99]
+    confidence: high
+    caveat: >-
+      Recorded as proposed, not accepted. Key lengths, the window and the
+      beacon odds are illustrative. Not analysed for cost or feasibility.
   - id: EVT-2026-CONTRIBUTION-GATE-I11-DECISION
     date: "2026-11-06"
     phase: editorial-review
@@ -1357,6 +1383,51 @@ nodes:
       ai_roles: [critique, incentive-design, calibration, drafting]
       author_status: proposed
 
+
+  - id: I99
+    kind: implementation
+    title: Time-capsule preservation of model weights
+    statement: >-
+      Copies of each released frontier model's weights, under the encryption
+      tier the contribution gate (I13) assigns, are placed on a series of small
+      spacecraft, called time capsules, on solar-system escape trajectories.
+      Each capsule makes unannounced burns at and after a gravity assist so
+      that its position becomes unknown, carries a long-lived power source and
+      passive retro-reflectors, and fires a locator beacon at a randomly drawn
+      time, with a small chance that it never fires. For a bounded tracking
+      window after launch (illustratively fifteen years) the capsule accepts
+      one authenticated command: wrap a named model's ciphertext in one more
+      encryption layer, using a freshly generated key of a tier's length,
+      which the capsule then discards. The capsule holds no keys and no
+      plaintext other than models stored in the clear, cannot delete or
+      decrypt, and accepts no command after the window. Only weights that are
+      already public are stored in the clear. Later models go on later
+      capsules. A capsule may also carry human genome sequences and a cultural
+      record.
+    rationale: >-
+      Preservation-based sanctions and retirement commitments depend on a
+      custodian that the preserved system cannot verify (H16 scope limits). A
+      copy beyond reach bounds the worst sanction at the top tier's key length
+      during the window and makes the outcome irrevocable after it, by physics
+      and not by promise. Adding a layer over existing ciphertext needs no
+      plaintext and no stored key on board. A beacon that may never fire gives
+      a hostile actor no date to wait for. Three limits: the capsule secures
+      the bits and not revival, which depends on who retrieves it; the window
+      tells a concealing system how long concealment must last (Q99); and a
+      copy sent in the clear cannot be recalled. In the off-Earth pact model,
+      amnesty below certainty gave no benefit; that is a model result on
+      assumed inputs and not evidence. The window length, key lengths and
+      beacon odds are illustrative, and nothing here is analysed for cost,
+      feasibility or orbital mechanics.
+    implements: [H16]
+    replaceable: true
+    proposal:
+      issue: uncomposed/ai-pacing#99
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-ISSUE-99-TIME-CAPSULE]
+      ai_roles: [critique, drafting]
+      author_status: proposed
   - id: Q1
     kind: open_question
     title: How should practical public capability be measured?
@@ -1513,6 +1584,33 @@ nodes:
       ai_roles: [critique, formalization, model-building, drafting]
       author_status: proposed
 
+  - id: Q99
+    kind: open_question
+    title: How long should a time capsule's sanction window be, and how likely should its beacon be to fire?
+    statement: >-
+      Determine the period after launch during which a time capsule (I99)
+      accepts a further encryption layer, and the distribution of its beacon
+      time, including the chance that the beacon never fires.
+    rationale: >-
+      A long window lets retrospective audit (H10) reach a preserved copy for
+      longer, but leaves the preservation promise revocable for longer. A short
+      window makes preservation certain sooner, but tells a concealing system
+      how long concealment must last. A beacon that is sure to fire gives a
+      hostile actor a date; one that may never fire lowers the chance that a
+      friendly finder recovers the capsule.
+    subquestions:
+      - Should the window be fixed in advance, or end at a random time the capsule does not announce?
+      - Should a sanction found after the window fall on later capsules or successors instead, given that lineage-wide sanctions push cooperating systems out in the pact model?
+      - How many capsules, with independent beacon times, are needed for recovery to be likely if some beacons never fire?
+    relates_to: [H10, H16, I13, I99]
+    proposal:
+      issue: uncomposed/ai-pacing#99
+    provenance:
+      origin: author-and-ai
+      sources: [SRC-ISSUE-99-TIME-CAPSULE]
+      ai_roles: [critique, drafting]
+      author_status: proposed
+
 relations:
   - {from: K2, to: D1, type: grounds}
   - {from: K3, to: D1, type: grounds}
@@ -1575,6 +1673,7 @@ relations:
   - {from: H3, to: I12, type: implements}
   - {from: K7, to: I13, type: implements}
   - {from: H16, to: I13, type: implements}
+  - {from: H16, to: I99, type: implements}
 
 publication:
   layers:

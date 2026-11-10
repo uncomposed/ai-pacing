@@ -46,6 +46,8 @@ issues asked to record but that does not belong in proposition nodes.
 | H16 | #91 H15 (renumbered) | hypothesis | Cross-generation contribution gating makes disclosure dominate concealment | conditions K7, D5; supports H10 | proposed |
 | I13 | #91 I13 | implementation | Contribution gate with tiered, preservation-based sanctions | implements D5 | proposed |
 | H93 | #93 H93 | hypothesis | Internal-use capability can be paced by white-box audit coverage | conditions K7, H3 | proposed |
+| I99 | #99 I99 | implementation | Time-capsule preservation of model weights | implements H16 | proposed |
+| Q99 | #99 Q99 | open question | How long should a time capsule's sanction window be, and how likely should its beacon be to fire? | relates to H10, H16, I13, I99 | proposed |
 
 Issue #1 asked for Q5 as "an open question or design extension". It is recorded
 as an open question with the issue's seven sub-questions kept verbatim in
@@ -71,6 +73,11 @@ ratchet on the contribution gate; see `research_notes/contribution-gate/README.m
 section "White-box as the ratchet". The issue asks the editor whether I13's
 method condition is tightened to white-box in the same change or stays
 behavioural until H93 has evidence.
+
+Issue #99 (I99, Q99) proposes preserving model weights on time capsules sent beyond
+reach, so that the worst sanction is bounded during a tracking window and the outcome
+is irrevocable after it. Q99 asks how long that window should be and how likely the
+beacon should be to fire. Nothing in it is analysed for cost or feasibility.
 
 ## 2. ID registry and renumbering
 
