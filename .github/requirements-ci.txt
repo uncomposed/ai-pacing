@@ -4,3 +4,8 @@
 numpy==1.26.4
 matplotlib==3.9.2
 jsonschema==4.23.0
+# Added 2026-11-10 (not from the laptop environment): robust_report.py needs scikit-learn for the
+# decision-tree text in results/robust_design_tables.md and silently skips it otherwise.
+# scipy is pinned because the newest scipy needs numpy 2; 1.17.1 is what pip resolves against numpy 1.26.4.
+scikit-learn==1.5.2
+scipy==1.17.1

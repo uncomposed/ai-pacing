@@ -56,7 +56,7 @@ UTF-8 locale; the Ruby tools read and write non-ASCII text. The Makefile exports
 
 ```sh
 python3 -m venv .venv
-.venv/bin/pip install -r .github/requirements-ci.txt   # numpy 1.26.4, matplotlib 3.9.2, jsonschema 4.23.0
+.venv/bin/pip install -r .github/requirements-ci.txt   # numpy 1.26.4, matplotlib 3.9.2, jsonschema 4.23.0, scikit-learn 1.5.2, scipy 1.17.1
 export PATH="$PWD/.venv/bin:$PATH" LANG=C.UTF-8 LC_ALL=C.UTF-8
 make check
 ```
