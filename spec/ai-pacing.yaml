@@ -1558,6 +1558,23 @@ relations:
   - {from: H93, to: K7, type: conditions}
   - {from: H93, to: H3, type: conditions}
   - {from: D5, to: I13, type: implements}
+  - {from: H3, to: D6, type: conditions}
+  - {from: H4, to: I4, type: conditions}
+  - {from: H5, to: D1, type: conditions}
+  - {from: H10, to: I2, type: conditions}
+  - {from: H16, to: H10, type: conditions}
+  - {from: K3, to: I1, type: implements}
+  - {from: K7, to: I2, type: implements}
+  - {from: K4, to: I3, type: implements}
+  - {from: D3, to: I3, type: implements}
+  - {from: K7, to: I4, type: implements}
+  - {from: K1, to: I5, type: implements}
+  - {from: K2, to: I5, type: implements}
+  - {from: K5, to: I7, type: implements}
+  - {from: K4, to: I12, type: implements}
+  - {from: H3, to: I12, type: implements}
+  - {from: K7, to: I13, type: implements}
+  - {from: H16, to: I13, type: implements}
 
 publication:
   layers:
