@@ -2,6 +2,7 @@
 
 ## Status (for handoff)
 
+- 2026-11-10 [[ai gen]]: the shares in this file are shares of draws under the stated sampling measure, not calibrated probabilities. "Holds" means the AI opens with cooperate or police and P(strike or harvest within T_H = 300 years) < 0.01 under the 'peace' terminal rule; it does not exclude an exit after year 0, and rival-AI worlds count as holding unless a section says it uses P(rival) < 0.5. The full definition is in the "Outcome definition" section that `robust_report.py` writes to `robust_design_tables.md` (HANDOFF.md section 8d).
 - 2026-10-16, robust-design session. Nothing committed. Status: `implemented`, `verified` for the checks in section 6 only.
 - Model change: three new parameters in `equilibrium_model.py` (`q_er`, `q_ea`, `T_rot`), all off by default. Small edits only: PARAMS entries, `q_size`/`erode` after `q_fire`, a per-period `q_fire` at the top of the backward loop, and the same erosion in `simulate`. Round-1 regression (S1, S7, S14, S16): largest difference 0.
 - New files: `robust_design.py` (sampling, solving, cache, checks, stages), `robust_report.py` (tables, regret, PRIM, figures; reads the cache only), `results/robust_runs/*.npz` (one file per ensemble and design), `results/robust_design_checks.md`, this file.
