@@ -98,6 +98,7 @@ def cmd_software(a):
     steps = [("unit tests: run identity", [PY, "tests/test_run_identity.py"]),
              ("unit tests: check comparison", [PY, "tests/test_check_tolerances.py"]),
              ("unit tests: gate categories", [PY, "tests/test_gates.py"]),
+             ("unit tests: outcome labels", [PY, "tests/test_outcome_labels.py"]),
              ("cache provenance: every cache has a manifest or an inventory entry", [PY, "run_identity.py", "inventory", "--check"]),
              ("--check output against the committed reference (drift)", [PY, "ci_sims.py", "compare-checks"])]
     if not a.no_repro:
