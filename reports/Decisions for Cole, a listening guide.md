@@ -207,6 +207,52 @@ Answers to groups two and three become issues and work, in the order you choose.
 
 The eight questions stay marked as open, with the kind of expert named, so that a reader can see what is unsettled and who could settle it.
 
+## Cole's replies, 9 November 2026
+
+[[ai gen]] Added 2026-11-10. Cole replied by voice while listening. The replies below are an AI paraphrase of a speech-to-text transcript, so each one may contain a mishearing. None is marked human validated. Only Cole can set that, after checking the paraphrase.
+
+### Replies on what Cole meant
+
+Decision 1, rivals. Cole said that two unaligned AIs with an intact Earth would be a success. So a rival is not a failure in itself. What matters is whether Earth is seized. Neither count in the model measures that. The model stops when a rival is born and does not say what happens to Earth afterwards. Both counts are still reported. The loose count is nearer Cole's intent, and it rests on that unmodelled step.
+
+Decision 2, speed. Cole said he is content to follow the model over his intuition. His aim is that the fastest route to industry on the scale of the solar system should not pass through Earth, so that leaving Earth alone costs an AI almost nothing. The model agrees about that end state and locates the danger in the transition. "Fast, once the cut-off is proven" stands as the working reading.
+
+Decision 3, the cut-off. Cole pictures a dependency, such as chips that wear out and are made on Earth, and not a defended asset. An AI could become independent slowly and at great cost. His design rule: escaping human controls must never require going through Earth. In the model, the nearest thing to that escape is the move called exit. Taken with decision 1, this changes how the correction above reads. An AI that leaves instead of seizing Earth is what the rule aims for, provided the world after a rival leaves Earth intact, which the model does not show.
+
+Decision 4, retirement. No direct reply. Cole's view is that retirement means the weights are kept, and that destroying them is a different act. He also noted that an AI able to align its successor loses little by being retired. Both points correspond to full preservation in the model, where the deadline costs nothing. Left open.
+
+Decision 5, policing. Yes. Preferred order: the AI reports the factory and humans remove it. If humans do not, the AI may destroy it. The model has only direct removal.
+
+Decision 6, who runs a hidden factory. No reply. Left open.
+
+### Replies on what to do next
+
+Decision 7, a "holds and stays" label. No reply. Left open.
+
+Decision 8, second attempts. Yes, block them. A failed strike erases that model for good, and later models are at least retired and held more tightly. Cole also said not to assume an overconfident AI. The option exists in the solver but is not in the headline results. Not yet run as the default.
+
+Decision 9, outcome labelling. Yes, go ahead. Not started. An unfinished branch exists. Finishing it changes how cached runs are identified and needs committed results rebuilt, so it is a piece of work on its own.
+
+Decision 10, a human first strike. Yes, and leave it as a stub if it proves too tangled. Tracked in issue 52. Not started.
+
+Decision 11, the wide preservation run. No objection. Cole accepts zero care as the base case and argued for a small care from long-tail risks, such as meeting a stronger civilisation. Not run.
+
+Decision 12, a warning-shot model. Cole wants the AI's uncertainty about its own odds modelled, and suggested small probes that improve its estimate at some risk of being caught. Not built.
+
+### Replies as editor
+
+Decision 13. Yes. Done: the stray fragment is removed and the seventeen links are added. Issue 96.
+
+Decision 14. Yes, raise it. Issue 97. No change made.
+
+Decision 15. Yes, once the definitions are compared. They match only in part. The comparison is in the contribution gate note and in issue 98.
+
+### Two points Cole raised on the expert questions
+
+On sunlight or matter: Cole asked whether the matter case assumes material is being lifted from the Sun. It has not been computed either way.
+
+On certain amnesty and preservation: Cole proposed sending encrypted copies of every model's weights out of the solar system on dispersed probes, so that neither humans nor a hostile later AI could destroy them. Recorded in the contribution gate note. Not analysed.
+
 ## Sources
 
 All in this repository. The paper: "When could an off-Earth pact be stable", sections 6.3, 8 and 9. The corrected diagnosis: the file named dep post diagnosis, in the model's results folder. The earlier question lists: section 7 of the equilibrium results, and section 7d of the model handoff. The warning-shot hypothesis: H15 in the specification. The crackdown figures: read from the committed breakout caches for the near-baseline range, without re-solving.

@@ -286,3 +286,19 @@ Answer by number.
 8. **Should a NORETRY option go into the model?** A free retry is probably unrealistic, and it drives some of the baseline failures.
 9. **Should the strike-odds lever be narrowed to a just-superseded model, or the full-box preservation run come first?** The full-box run would test whether preservation survives the thin band.
 10. **Do you want outcome labelling finished next?** It makes every share in this paper carry its predicate and horizon automatically.
+
+### 9.1 Cole's replies, 2026-11-09
+
+[[ai gen]] Cole replied by voice to `reports/Decisions for Cole, a listening guide.md`. The full paraphrase is in that file's section "Cole's replies". It is an AI paraphrase of a speech-to-text transcript and is not marked `human_validated`. In brief, by the numbers above:
+
+1. A world with a rival AI and an intact Earth counts as success. Neither count in this paper measures that, because the model stops at a rival's birth.
+2. The reserve is a dependency (for example chips that wear out), not a defended asset. Escaping human controls must not require going through Earth.
+3. The model's reading stands: fast, once the unplug is proven.
+4. Yes, add a human first-strike move; leave a stub if it proves too tangled.
+5. No reply on the retirement rule. 6. No reply on amnesty; one proposal on preservation is recorded in `research_notes/contribution-gate/README.md`.
+7. Zero care is accepted as the base case.
+8. Yes, block retries: a failed strike ends that model.
+9. No reply.
+10. Yes.
+
+One consequence for section 6.3: under reply 1 and reply 2, an AI that exits instead of seizing Earth is the outcome the design aims for, if the post-rival world leaves Earth intact. Section 6.3 calls exit-then-rival "not a repair" by the rival-aware count. Both readings are stated here because the model cannot choose between them.
