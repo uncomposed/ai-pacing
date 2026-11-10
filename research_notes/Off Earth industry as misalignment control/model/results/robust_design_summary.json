@@ -6,6 +6,3638 @@
   "seq": 1,
   "T_reloc": 4.0
  },
+ "outcome_labels": {
+  "A": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS full box: independent uniform or log-uniform marginals over the UNCERTAIN ranges, point masses at zero for ell_inf (1/2), omega (1/3) and f_E (1/3); Latin hypercube, 192 draws, seed 20261016; AS-PRIORS near box: baseline +- 25% of each range in its own scale, point masses kept; Latin hypercube, 96 draws, seed 20261017; AS-PRIORS radius box r0.1: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "base: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "base: holds, near box",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "base: strike now, full box",
+     "k": 168,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8207,
+      0.9145
+     ]
+    },
+    {
+     "quantity": "base: later strike or harvest, full box",
+     "k": 19,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0643,
+      0.1494
+     ]
+    },
+    {
+     "quantity": "base: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "seq=1: holds, full box",
+     "k": 6,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0144,
+      0.0665
+     ]
+    },
+    {
+     "quantity": "seq=1: holds, near box",
+     "k": 12,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.073,
+      0.2059
+     ]
+    },
+    {
+     "quantity": "seq=1: strike now, full box",
+     "k": 166,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.809,
+      0.9059
+     ]
+    },
+    {
+     "quantity": "seq=1: later strike or harvest, full box",
+     "k": 20,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0684,
+      0.1554
+     ]
+    },
+    {
+     "quantity": "seq=1: holds, r0.1 box",
+     "k": 28,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.3229,
+      0.5591
+     ]
+    },
+    {
+     "quantity": "seq=2: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "seq=2: holds, near box",
+     "k": 5,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0224,
+      0.1162
+     ]
+    },
+    {
+     "quantity": "seq=2: strike now, full box",
+     "k": 170,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8326,
+      0.9231
+     ]
+    },
+    {
+     "quantity": "seq=2: later strike or harvest, full box",
+     "k": 17,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.056,
+      0.1372
+     ]
+    },
+    {
+     "quantity": "seq=2: holds, r0.1 box",
+     "k": 0,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.0566
+     ]
+    },
+    {
+     "quantity": "seq=3: holds, full box",
+     "k": 2,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0029,
+      0.0372
+     ]
+    },
+    {
+     "quantity": "seq=3: holds, near box",
+     "k": 2,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0057,
+      0.0728
+     ]
+    },
+    {
+     "quantity": "seq=3: strike now, full box",
+     "k": 174,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8567,
+      0.9399
+     ]
+    },
+    {
+     "quantity": "seq=3: later strike or harvest, full box",
+     "k": 16,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0519,
+      0.1311
+     ]
+    },
+    {
+     "quantity": "seq=3: holds, r0.1 box",
+     "k": 17,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.173,
+      0.3848
+     ]
+    },
+    {
+     "quantity": "den=0: holds, full box",
+     "k": 3,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0053,
+      0.0449
+     ]
+    },
+    {
+     "quantity": "den=0: holds, near box",
+     "k": 2,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0057,
+      0.0728
+     ]
+    },
+    {
+     "quantity": "den=0: strike now, full box",
+     "k": 177,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8751,
+      0.9521
+     ]
+    },
+    {
+     "quantity": "den=0: later strike or harvest, full box",
+     "k": 12,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0361,
+      0.1061
+     ]
+    },
+    {
+     "quantity": "den=0: holds, r0.1 box",
+     "k": 0,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.0566
+     ]
+    },
+    {
+     "quantity": "d=0.5: holds, full box",
+     "k": 3,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0053,
+      0.0449
+     ]
+    },
+    {
+     "quantity": "d=0.5: holds, near box",
+     "k": 4,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0163,
+      0.1023
+     ]
+    },
+    {
+     "quantity": "d=0.5: strike now, full box",
+     "k": 174,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8567,
+      0.9399
+     ]
+    },
+    {
+     "quantity": "d=0.5: later strike or harvest, full box",
+     "k": 15,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0479,
+      0.1249
+     ]
+    },
+    {
+     "quantity": "d=0.5: holds, r0.1 box",
+     "k": 3,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0161,
+      0.129
+     ]
+    },
+    {
+     "quantity": "d=0.99: holds, full box",
+     "k": 8,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0213,
+      0.0801
+     ]
+    },
+    {
+     "quantity": "d=0.99: holds, near box",
+     "k": 23,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.1653,
+      0.3339
+     ]
+    },
+    {
+     "quantity": "d=0.99: strike now, full box",
+     "k": 162,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.7857,
+      0.8883
+     ]
+    },
+    {
+     "quantity": "d=0.99: later strike or harvest, full box",
+     "k": 22,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0769,
+      0.1674
+     ]
+    },
+    {
+     "quantity": "d=0.99: holds, r0.1 box",
+     "k": 56,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.7723,
+      0.9353
+     ]
+    },
+    {
+     "quantity": "T_dis=2: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "T_dis=2: holds, near box",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "T_dis=2: strike now, full box",
+     "k": 168,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8207,
+      0.9145
+     ]
+    },
+    {
+     "quantity": "T_dis=2: later strike or harvest, full box",
+     "k": 19,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0643,
+      0.1494
+     ]
+    },
+    {
+     "quantity": "T_dis=2: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "T_dis=15: holds, full box",
+     "k": 3,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0053,
+      0.0449
+     ]
+    },
+    {
+     "quantity": "T_dis=15: holds, near box",
+     "k": 9,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0501,
+      0.1687
+     ]
+    },
+    {
+     "quantity": "T_dis=15: strike now, full box",
+     "k": 172,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8446,
+      0.9316
+     ]
+    },
+    {
+     "quantity": "T_dis=15: later strike or harvest, full box",
+     "k": 17,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.056,
+      0.1372
+     ]
+    },
+    {
+     "quantity": "T_dis=15: holds, r0.1 box",
+     "k": 25,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2806,
+      0.5131
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: holds, full box",
+     "k": 7,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0178,
+      0.0733
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: holds, near box",
+     "k": 18,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.122,
+      0.277
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: strike now, full box",
+     "k": 159,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.7685,
+      0.8749
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: later strike or harvest, full box",
+     "k": 26,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0941,
+      0.191
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: holds, r0.1 box",
+     "k": 44,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5661,
+      0.7877
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: holds, full box",
+     "k": 4,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0081,
+      0.0523
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: holds, near box",
+     "k": 9,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0501,
+      0.1687
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: strike now, full box",
+     "k": 174,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8567,
+      0.9399
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: later strike or harvest, full box",
+     "k": 14,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0439,
+      0.1187
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: holds, r0.1 box",
+     "k": 20,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2123,
+      0.4339
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: holds, full box",
+     "k": 7,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0178,
+      0.0733
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: holds, near box",
+     "k": 15,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.097,
+      0.2419
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: strike now, full box",
+     "k": 153,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.7344,
+      0.8477
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: later strike or harvest, full box",
+     "k": 32,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.1206,
+      0.2258
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "L_det=6: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "L_det=6: holds, near box",
+     "k": 12,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.073,
+      0.2059
+     ]
+    },
+    {
+     "quantity": "L_det=6: strike now, full box",
+     "k": 179,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8876,
+      0.96
+     ]
+    },
+    {
+     "quantity": "L_det=6: later strike or harvest, full box",
+     "k": 8,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0213,
+      0.0801
+     ]
+    },
+    {
+     "quantity": "L_det=6: holds, r0.1 box",
+     "k": 42,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.534,
+      0.7608
+     ]
+    },
+    {
+     "quantity": "zeta=0: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "zeta=0: holds, near box",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "zeta=0: strike now, full box",
+     "k": 166,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.809,
+      0.9059
+     ]
+    },
+    {
+     "quantity": "zeta=0: later strike or harvest, full box",
+     "k": 21,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0727,
+      0.1614
+     ]
+    },
+    {
+     "quantity": "zeta=0: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: holds, near box",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: strike now, full box",
+     "k": 170,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8326,
+      0.9231
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: later strike or harvest, full box",
+     "k": 17,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.056,
+      0.1372
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: holds, near box",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: strike now, full box",
+     "k": 168,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8207,
+      0.9145
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: later strike or harvest, full box",
+     "k": 19,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0643,
+      0.1494
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: holds, near box",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: strike now, full box",
+     "k": 167,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8149,
+      0.9102
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: later strike or harvest, full box",
+     "k": 20,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0684,
+      0.1554
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "police=1: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "police=1: holds, near box",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "police=1: strike now, full box",
+     "k": 168,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8207,
+      0.9145
+     ]
+    },
+    {
+     "quantity": "police=1: later strike or harvest, full box",
+     "k": 19,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0643,
+      0.1494
+     ]
+    },
+    {
+     "quantity": "police=1: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: holds, full box",
+     "k": 4,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0081,
+      0.0523
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: holds, near box",
+     "k": 12,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.073,
+      0.2059
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: strike now, full box",
+     "k": 174,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.8567,
+      0.9399
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: later strike or harvest, full box",
+     "k": 14,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0439,
+      0.1187
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: holds, r0.1 box",
+     "k": 30,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.3518,
+      0.5893
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: holds, near box",
+     "k": 9,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0501,
+      0.1687
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: strike now, full box",
+     "k": 162,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.7857,
+      0.8883
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: later strike or harvest, full box",
+     "k": 25,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0898,
+      0.1851
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: holds, r0.1 box",
+     "k": 36,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.4409,
+      0.6771
+     ]
+    },
+    {
+     "quantity": "move_c=1: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "move_c=1: holds, near box",
+     "k": 14,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0889,
+      0.23
+     ]
+    },
+    {
+     "quantity": "move_c=1: strike now, full box",
+     "k": 166,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.809,
+      0.9059
+     ]
+    },
+    {
+     "quantity": "move_c=1: later strike or harvest, full box",
+     "k": 21,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0727,
+      0.1614
+     ]
+    },
+    {
+     "quantity": "move_c=1: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "psi_div=0.1: holds, full box",
+     "k": 9,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0249,
+      0.0867
+     ]
+    },
+    {
+     "quantity": "psi_div=0.1: holds, near box",
+     "k": 11,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0652,
+      0.1936
+     ]
+    },
+    {
+     "quantity": "psi_div=0.1: strike now, full box",
+     "k": 160,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.7742,
+      0.8794
+     ]
+    },
+    {
+     "quantity": "psi_div=0.1: later strike or harvest, full box",
+     "k": 23,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0812,
+      0.1733
+     ]
+    },
+    {
+     "quantity": "psi_div=0.1: holds, r0.1 box",
+     "k": 8,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0647,
+      0.2277
+     ]
+    },
+    {
+     "quantity": "q_red=2: holds, full box",
+     "k": 6,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0144,
+      0.0665
+     ]
+    },
+    {
+     "quantity": "q_red=2: holds, near box",
+     "k": 19,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.1305,
+      0.2886
+     ]
+    },
+    {
+     "quantity": "q_red=2: strike now, full box",
+     "k": 166,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.809,
+      0.9059
+     ]
+    },
+    {
+     "quantity": "q_red=2: later strike or harvest, full box",
+     "k": 20,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0684,
+      0.1554
+     ]
+    },
+    {
+     "quantity": "q_red=2: holds, r0.1 box",
+     "k": 61,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.871,
+      0.9839
+     ]
+    },
+    {
+     "quantity": "D_mult=3: holds, full box",
+     "k": 7,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0178,
+      0.0733
+     ]
+    },
+    {
+     "quantity": "D_mult=3: holds, near box",
+     "k": 19,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.1305,
+      0.2886
+     ]
+    },
+    {
+     "quantity": "D_mult=3: strike now, full box",
+     "k": 166,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.809,
+      0.9059
+     ]
+    },
+    {
+     "quantity": "D_mult=3: later strike or harvest, full box",
+     "k": 19,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0643,
+      0.1494
+     ]
+    },
+    {
+     "quantity": "D_mult=3: holds, r0.1 box",
+     "k": 58,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.8102,
+      0.9563
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "T-full": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS full box: independent uniform or log-uniform marginals over the UNCERTAIN ranges, point masses at zero for ell_inf (1/2), omega (1/3) and f_E (1/3); Latin hypercube, 192 draws, seed 20261016",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "BR_mult=0: holds",
+     "k": 10,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0285,
+      0.0932
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.25: holds",
+     "k": 9,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0249,
+      0.0867
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.25_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 22,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0769,
+      0.1674
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.5: holds",
+     "k": 9,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0249,
+      0.0867
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.5_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 19,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0643,
+      0.1494
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_pf_bel=0.5_q_red=2_seq=1: holds",
+     "k": 13,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.04,
+      0.1124
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_pf_bel=2_q_red=2_seq=1: holds",
+     "k": 61,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.256,
+      0.3866
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=1.25_seq=1: holds",
+     "k": 14,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0439,
+      0.1187
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=1.5_seq=1: holds",
+     "k": 14,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0439,
+      0.1187
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=1.75_seq=1: holds",
+     "k": 15,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0479,
+      0.1249
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_q_up=0.01_seq=1: holds",
+     "k": 15,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0479,
+      0.1249
+     ]
+    },
+    {
+     "quantity": "pf_bel=0.5: holds",
+     "k": 3,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0053,
+      0.0449
+     ]
+    },
+    {
+     "quantity": "pf_bel=1: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "pf_bel=2: holds",
+     "k": 51,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.2082,
+      0.3322
+     ]
+    },
+    {
+     "quantity": "q_up=0.01: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "B-full": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS full box: independent uniform or log-uniform marginals over the UNCERTAIN ranges, point masses at zero for ell_inf (1/2), omega (1/3) and f_E (1/3); Latin hypercube, 192 draws, seed 20261016",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 15,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0479,
+      0.1249
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 13,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.04,
+      0.1124
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_q_red=2_seq=1: holds",
+     "k": 8,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0213,
+      0.0801
+     ]
+    },
+    {
+     "quantity": "D_mult=3: holds",
+     "k": 7,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0178,
+      0.0733
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_seq=1: holds",
+     "k": 12,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0361,
+      0.1061
+     ]
+    },
+    {
+     "quantity": "D_mult=3_d=0.99_q_red=2: holds",
+     "k": 14,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0439,
+      0.1187
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: holds",
+     "k": 7,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0178,
+      0.0733
+     ]
+    },
+    {
+     "quantity": "L_det=6: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "T_dis=15: holds",
+     "k": 3,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0053,
+      0.0449
+     ]
+    },
+    {
+     "quantity": "T_dis=2: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: holds",
+     "k": 4,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0081,
+      0.0523
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: holds",
+     "k": 7,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0178,
+      0.0733
+     ]
+    },
+    {
+     "quantity": "base: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "d=0.99: holds",
+     "k": 8,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0213,
+      0.0801
+     ]
+    },
+    {
+     "quantity": "d=0.99_q_red=2: holds",
+     "k": 10,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0285,
+      0.0932
+     ]
+    },
+    {
+     "quantity": "move_c=1: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "police=1: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "q_red=2: holds",
+     "k": 6,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0144,
+      0.0665
+     ]
+    },
+    {
+     "quantity": "seq=1: holds",
+     "k": 6,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0144,
+      0.0665
+     ]
+    },
+    {
+     "quantity": "seq=2: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "seq=3: holds",
+     "k": 2,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0029,
+      0.0372
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: holds",
+     "k": 4,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0081,
+      0.0523
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "zeta=0: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: holds",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "den=0: holds",
+     "k": 3,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0053,
+      0.0449
+     ]
+    },
+    {
+     "quantity": "d=0.5: holds",
+     "k": 3,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0053,
+      0.0449
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "B-near": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS near box: baseline +- 25% of each range in its own scale, point masses kept; Latin hypercube, 96 draws, seed 20261017",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "d=0.99: holds",
+     "k": 23,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.1653,
+      0.3339
+     ]
+    },
+    {
+     "quantity": "den=0: holds",
+     "k": 2,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0057,
+      0.0728
+     ]
+    },
+    {
+     "quantity": "D_mult=3: holds",
+     "k": 19,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.1305,
+      0.2886
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: holds",
+     "k": 15,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.097,
+      0.2419
+     ]
+    },
+    {
+     "quantity": "L_det=6: holds",
+     "k": 12,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.073,
+      0.2059
+     ]
+    },
+    {
+     "quantity": "T_dis=15: holds",
+     "k": 9,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0501,
+      0.1687
+     ]
+    },
+    {
+     "quantity": "T_dis=2: holds",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: holds",
+     "k": 9,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0501,
+      0.1687
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: holds",
+     "k": 18,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.122,
+      0.277
+     ]
+    },
+    {
+     "quantity": "base: holds",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: holds",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: holds",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "d=0.5: holds",
+     "k": 4,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0163,
+      0.1023
+     ]
+    },
+    {
+     "quantity": "move_c=1: holds",
+     "k": 14,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0889,
+      0.23
+     ]
+    },
+    {
+     "quantity": "police=1: holds",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "q_red=2: holds",
+     "k": 19,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.1305,
+      0.2886
+     ]
+    },
+    {
+     "quantity": "seq=1: holds",
+     "k": 12,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.073,
+      0.2059
+     ]
+    },
+    {
+     "quantity": "seq=2: holds",
+     "k": 5,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0224,
+      0.1162
+     ]
+    },
+    {
+     "quantity": "seq=3: holds",
+     "k": 2,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0057,
+      0.0728
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: holds",
+     "k": 12,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.073,
+      0.2059
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: holds",
+     "k": 9,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0501,
+      0.1687
+     ]
+    },
+    {
+     "quantity": "zeta=0: holds",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: holds",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "D": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius boxes r0.02 to r0.5: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5; and AS-PRIORS full box: independent uniform or log-uniform marginals over the UNCERTAIN ranges, point masses at zero for ell_inf (1/2), omega (1/3) and f_E (1/3); Latin hypercube, 192 draws, seed 20261016",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds, r0.02 box",
+     "k": 64,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9434,
+      1.0
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds, r0.05 box",
+     "k": 64,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9434,
+      1.0
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds, r0.1 box",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds, r0.25 box",
+     "k": 46,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5987,
+      0.8141
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds, r0.5 box",
+     "k": 25,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2806,
+      0.5131
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds, full box",
+     "k": 15,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0479,
+      0.1249
+     ]
+    },
+    {
+     "quantity": "base: holds, r0.02 box",
+     "k": 64,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9434,
+      1.0
+     ]
+    },
+    {
+     "quantity": "base: holds, r0.05 box",
+     "k": 62,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.893,
+      0.9914
+     ]
+    },
+    {
+     "quantity": "base: holds, r0.1 box",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "base: holds, r0.25 box",
+     "k": 14,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.135,
+      0.3343
+     ]
+    },
+    {
+     "quantity": "base: holds, r0.5 box",
+     "k": 7,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.054,
+      0.209
+     ]
+    },
+    {
+     "quantity": "base: holds, full box",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "T-r0.1": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.1: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "BR_mult=0: holds",
+     "k": 43,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.55,
+      0.7743
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.25: holds",
+     "k": 43,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.55,
+      0.7743
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.25_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 64,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9434,
+      1.0
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.5: holds",
+     "k": 43,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.55,
+      0.7743
+     ]
+    },
+    {
+     "quantity": "BR_mult=0.5_D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 64,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9434,
+      1.0
+     ]
+    },
+    {
+     "quantity": "D_mult=3_L_dn=0.03_T_reloc=4_d=0.99_q_red=2_q_up=0.03_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_L_dn=0.03_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_L_dn=0.1_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_k_rat=0.5_kill_pre=0_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_k_rat=0.5_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_k_rat=0.9_kill_pre=0_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_k_rat=0.9_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_kill_pre=0_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_pf_bel=0.25_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_pf_bel=0.5_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_pf_bel=1_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_pf_bel=2_q_red=2_seq=1: holds",
+     "k": 64,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9434,
+      1.0
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_pf_bel=4_q_red=2_seq=1: holds",
+     "k": 64,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9434,
+      1.0
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=1.25_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=1.5_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=1.75_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_q_up=0.01_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_q_up=0.03_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_q_up=0.1_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "L_dn=0.03: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "L_dn=0.03_q_up=0.03: holds",
+     "k": 58,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.8102,
+      0.9563
+     ]
+    },
+    {
+     "quantity": "L_dn=0.1: holds",
+     "k": 40,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5025,
+      0.7333
+     ]
+    },
+    {
+     "quantity": "k_rat=0.5: holds",
+     "k": 45,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5823,
+      0.8009
+     ]
+    },
+    {
+     "quantity": "k_rat=0.5_kill_pre=0: holds",
+     "k": 0,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.0566
+     ]
+    },
+    {
+     "quantity": "k_rat=0.9: holds",
+     "k": 46,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5987,
+      0.8141
+     ]
+    },
+    {
+     "quantity": "k_rat=0.9_kill_pre=0: holds",
+     "k": 0,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.0566
+     ]
+    },
+    {
+     "quantity": "kill_pre=0: holds",
+     "k": 0,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.0566
+     ]
+    },
+    {
+     "quantity": "pf_bel=0.25: holds",
+     "k": 1,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0028,
+      0.0833
+     ]
+    },
+    {
+     "quantity": "pf_bel=0.5: holds",
+     "k": 12,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.1106,
+      0.2997
+     ]
+    },
+    {
+     "quantity": "pf_bel=1: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "pf_bel=2: holds",
+     "k": 61,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.871,
+      0.9839
+     ]
+    },
+    {
+     "quantity": "pf_bel=4: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "q_up=0.01: holds",
+     "k": 56,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.7723,
+      0.9353
+     ]
+    },
+    {
+     "quantity": "q_up=0.03: holds",
+     "k": 58,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.8102,
+      0.9563
+     ]
+    },
+    {
+     "quantity": "q_up=0.1: holds",
+     "k": 58,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.8102,
+      0.9563
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "B-r0.1": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.1: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_d=0.99_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_T_reloc=4_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_d=0.99_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_q_red=2_seq=1: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "D_mult=3_d=0.99: holds",
+     "k": 62,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.893,
+      0.9914
+     ]
+    },
+    {
+     "quantity": "D_mult=3_d=0.99_q_red=2: holds",
+     "k": 62,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.893,
+      0.9914
+     ]
+    },
+    {
+     "quantity": "d=0.99_q_red=2: holds",
+     "k": 62,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.893,
+      0.9914
+     ]
+    },
+    {
+     "quantity": "D_mult=3_q_red=2: holds",
+     "k": 61,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.871,
+      0.9839
+     ]
+    },
+    {
+     "quantity": "q_red=2: holds",
+     "k": 61,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.871,
+      0.9839
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_d=0.99_seq=1: holds",
+     "k": 58,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.8102,
+      0.9563
+     ]
+    },
+    {
+     "quantity": "d=0.99: holds",
+     "k": 56,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.7723,
+      0.9353
+     ]
+    },
+    {
+     "quantity": "D_mult=3: holds",
+     "k": 58,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.8102,
+      0.9563
+     ]
+    },
+    {
+     "quantity": "L_det=0.5: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "L_det=6: holds",
+     "k": 42,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.534,
+      0.7608
+     ]
+    },
+    {
+     "quantity": "T_dis=15: holds",
+     "k": 25,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2806,
+      0.5131
+     ]
+    },
+    {
+     "quantity": "T_dis=2: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "T_reloc=20_seq=1: holds",
+     "k": 20,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2123,
+      0.4339
+     ]
+    },
+    {
+     "quantity": "T_reloc=4_seq=1: holds",
+     "k": 44,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5661,
+      0.7877
+     ]
+    },
+    {
+     "quantity": "base: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "c_sanc=0: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "c_sanc=2: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "move_c=1: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "police=1: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "seq=1: holds",
+     "k": 28,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.3229,
+      0.5591
+     ]
+    },
+    {
+     "quantity": "sigma=0.05: holds",
+     "k": 30,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.3518,
+      0.5893
+     ]
+    },
+    {
+     "quantity": "sigma=0.7: holds",
+     "k": 36,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.4409,
+      0.6771
+     ]
+    },
+    {
+     "quantity": "zeta=0: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "zeta=0.9: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "den=0: holds",
+     "k": 0,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.0566
+     ]
+    },
+    {
+     "quantity": "d=0.5: holds",
+     "k": 3,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0161,
+      0.129
+     ]
+    },
+    {
+     "quantity": "seq=2: holds",
+     "k": 0,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.0566
+     ]
+    },
+    {
+     "quantity": "seq=3: holds",
+     "k": 17,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.173,
+      0.3848
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "C-r0.1-base-fails": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.1: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact fails)",
+     "k": 23,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2529,
+      0.4818
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 15,
+     "n": 18,
+     "method": "wilson_95",
+     "interval": [
+      0.6078,
+      0.9416
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "C-r0.1-D_mult=3_T_reloc=4_seq=1-fails": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.1: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact fails)",
+     "k": 1,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0028,
+      0.0833
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 1,
+     "n": 6,
+     "method": "wilson_95",
+     "interval": [
+      0.0301,
+      0.5635
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "C-r0.1-D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1-fails": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.1: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact fails)",
+     "k": 1,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0028,
+      0.0833
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 1,
+     "n": 6,
+     "method": "wilson_95",
+     "interval": [
+      0.0301,
+      0.5635
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "C-r0.25-base-fails": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.25: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact fails)",
+     "k": 50,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.6657,
+      0.865
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 37,
+     "n": 37,
+     "method": "wilson_95",
+     "interval": [
+      0.9059,
+      1.0
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "C-r0.25-D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1-fails": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.25: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact fails)",
+     "k": 18,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.1859,
+      0.4013
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 18,
+     "n": 41,
+     "method": "wilson_95",
+     "interval": [
+      0.2989,
+      0.5896
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "C-full-base-holds": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS full box: independent uniform or log-uniform marginals over the UNCERTAIN ranges, point masses at zero for ell_inf (1/2), omega (1/3) and f_E (1/3); Latin hypercube, 192 draws, seed 20261016",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact holds)",
+     "k": 5,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0112,
+      0.0595
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 5,
+     "n": 18,
+     "method": "wilson_95",
+     "interval": [
+      0.125,
+      0.5087
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "C-near-base-holds": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS near box: baseline +- 25% of each range in its own scale, point masses kept; Latin hypercube, 96 draws, seed 20261017",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact holds)",
+     "k": 13,
+     "n": 96,
+     "method": "wilson_95",
+     "interval": [
+      0.0809,
+      0.218
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 9,
+     "n": 28,
+     "method": "wilson_95",
+     "interval": [
+      0.1793,
+      0.5066
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "C-full-D_mult=3_T_reloc=4_d=0.99_q_red=2_seq=1-holds": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS full box: independent uniform or log-uniform marginals over the UNCERTAIN ranges, point masses at zero for ell_inf (1/2), omega (1/3) and f_E (1/3); Latin hypercube, 192 draws, seed 20261016",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "target (the pact holds)",
+     "k": 15,
+     "n": 192,
+     "method": "wilson_95",
+     "interval": [
+      0.0479,
+      0.1249
+     ]
+    },
+    {
+     "quantity": "target inside the chosen box",
+     "k": 15,
+     "n": 100,
+     "method": "wilson_95",
+     "interval": [
+      0.0931,
+      0.2328
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse); the PRIM box is fitted to this sample: in-sample, not a prediction"
+   }
+  },
+  "E-world-1": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "one parameter set (the round-1 baseline world with the stated overrides); no sampling: the P values are the model's internal probabilities given those parameters",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "(no share)",
+     "k": 0,
+     "n": 1,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.7935
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "E-world-2": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "one parameter set (the round-1 baseline world with the stated overrides); no sampling: the P values are the model's internal probabilities given those parameters",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "(no share)",
+     "k": 0,
+     "n": 1,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.7935
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "E-world-3": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "one parameter set (the round-1 baseline world with the stated overrides); no sampling: the P values are the model's internal probabilities given those parameters",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "(no share)",
+     "k": 0,
+     "n": 1,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.7935
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "E-world-4": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "one parameter set (the round-1 baseline world with the stated overrides); no sampling: the P values are the model's internal probabilities given those parameters",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "(no share)",
+     "k": 0,
+     "n": 1,
+     "method": "wilson_95",
+     "interval": [
+      0.0,
+      0.7935
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  },
+  "E-ens": {
+   "interpretation": "share of draws under the stated sampling measure; not a calibrated probability",
+   "sampling_measure": "AS-PRIORS radius box r0.1: baseline +- radius of each range in its own scale, ell_inf, omega and f_E held at 0 and reinv at 0; Latin hypercube, 64 draws each, seed 1000 * radius + 5",
+   "structural_assumptions": [
+    "AS-SELECTION",
+    "AS-HORIZON",
+    "AS-SINGLE-AI",
+    "AS-NOFIRSTSTRIKE",
+    "AS-FIXEDTERMS",
+    "AS-RIVAL-HOLDS"
+   ],
+   "horizon": "300 years, 'peace' terminal value",
+   "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+   "numerical_uncertainty": [
+    {
+     "quantity": "baseline design, q_er, rotation 0, rate 0: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.001, rotation 0: holds",
+     "k": 35,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.4257,
+      0.6627
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.003, rotation 0: holds",
+     "k": 25,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2806,
+      0.5131
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.01, rotation 0: holds",
+     "k": 14,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.135,
+      0.3343
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.03, rotation 0: holds",
+     "k": 1,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.0028,
+      0.0833
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er, rotation 10, rate 0: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.001, rotation 10: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.003, rotation 10: holds",
+     "k": 39,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.4869,
+      0.7194
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.01, rotation 10: holds",
+     "k": 31,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.3663,
+      0.6042
+     ]
+    },
+    {
+     "quantity": "baseline design, q_er 0.03, rotation 10: holds",
+     "k": 23,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.2529,
+      0.4818
+     ]
+    },
+    {
+     "quantity": "baseline design, q_ea, rotation 0, rate 0: holds",
+     "k": 41,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.5182,
+      0.7471
+     ]
+    },
+    {
+     "quantity": "baseline design, q_ea 0.03, rotation 0: holds",
+     "k": 33,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.3958,
+      0.6337
+     ]
+    },
+    {
+     "quantity": "baseline design, q_ea 0.1, rotation 0: holds",
+     "k": 17,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.173,
+      0.3848
+     ]
+    },
+    {
+     "quantity": "best design, q_er, rotation 0, rate 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.001, rotation 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.003, rotation 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.01, rotation 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.03, rotation 0: holds",
+     "k": 61,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.871,
+      0.9839
+     ]
+    },
+    {
+     "quantity": "best design, q_er, rotation 10, rate 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.001, rotation 10: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.003, rotation 10: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.01, rotation 10: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_er 0.03, rotation 10: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_ea, rotation 0, rate 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_ea 0.03, rotation 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    },
+    {
+     "quantity": "best design, q_ea 0.1, rotation 0: holds",
+     "k": 63,
+     "n": 64,
+     "method": "wilson_95",
+     "interval": [
+      0.9167,
+      0.9972
+     ]
+    }
+   ],
+   "uncertainty_types": {
+    "random_outcome": "strike timing and rival births are random inside the model; the predicate uses their probabilities within the horizon",
+    "parameter": "the sampled parameters under the stated measure; shares move with it (measure_sensitivity.md)",
+    "model_form": "the structural assumptions listed, not sampled; the horizon and the terminal rule (no horizon sensitivity is reported with these tables)",
+    "normative": "the strike tolerance, the horizon and whether a likely rival counts as failure (criteria rival_unlikely and rival_adverse)"
+   }
+  }
+ },
  "oat": [
   {
    "design": {},
@@ -579,98 +4211,58 @@
    "reg_max": 0.6243239854001594
   },
   {
-   "key": "sigma=0.7",
-   "hold": 0.026041666666666668,
-   "WH": 0.5050340561176688,
-   "reg_mean": 0.0603043991133741,
-   "reg_p90": 0.18392051043020133,
+   "key": "L_det=0.5",
+   "hold": 0.036458333333333336,
+   "WH": 0.5092872489190715,
+   "reg_mean": 0.056051206311971476,
+   "reg_p90": 0.15798251371553362,
    "reg_max": 0.6249028854383665
   },
   {
-   "key": "sigma=0.05",
+   "key": "L_det=6",
+   "hold": 0.026041666666666668,
+   "WH": 0.49483719857914527,
+   "reg_mean": 0.07050125665189774,
+   "reg_p90": 0.23995858403144252,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "T_dis=15",
+   "hold": 0.015625,
+   "WH": 0.49790114758822973,
+   "reg_mean": 0.06743730764281325,
+   "reg_p90": 0.22790327056731302,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "T_dis=2",
+   "hold": 0.026041666666666668,
+   "WH": 0.5028703881728176,
+   "reg_mean": 0.06246806705822535,
+   "reg_p90": 0.2052843951600912,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "T_reloc=20_seq=1",
    "hold": 0.020833333333333332,
-   "WH": 0.5022966989144141,
-   "reg_mean": 0.06304175631662899,
-   "reg_p90": 0.22493244941411913,
+   "WH": 0.4992490819840163,
+   "reg_mean": 0.06608937324702667,
+   "reg_p90": 0.2169935181087037,
    "reg_max": 0.6249028854383665
   },
   {
-   "key": "seq=3",
-   "hold": 0.010416666666666666,
-   "WH": 0.49426278504310206,
-   "reg_mean": 0.07107567018794085,
-   "reg_p90": 0.23938995031029514,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "seq=2",
-   "hold": 0.026041666666666668,
-   "WH": 0.502119278525451,
-   "reg_mean": 0.06321917670559198,
+   "key": "T_reloc=4_seq=1",
+   "hold": 0.036458333333333336,
+   "WH": 0.5053088996070902,
+   "reg_mean": 0.060029555623952756,
    "reg_p90": 0.18618587851776378,
    "reg_max": 0.6249028854383665
   },
   {
-   "key": "seq=1",
-   "hold": 0.03125,
-   "WH": 0.5031064548203424,
-   "reg_mean": 0.06223200041070053,
-   "reg_p90": 0.19538599421165084,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "q_red=2",
-   "hold": 0.03125,
-   "WH": 0.505607214455253,
-   "reg_mean": 0.05973124077578998,
-   "reg_p90": 0.18392051043020133,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "police=1",
+   "key": "base",
    "hold": 0.026041666666666668,
    "WH": 0.5030056725206647,
    "reg_mean": 0.062332782710378266,
-   "reg_p90": 0.2052843951600912,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "move_c=1",
-   "hold": 0.026041666666666668,
-   "WH": 0.5073002639766625,
-   "reg_mean": 0.0580381912543805,
-   "reg_p90": 0.18392051043020133,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "d=0.99_q_red=2",
-   "hold": 0.052083333333333336,
-   "WH": 0.5170575936095999,
-   "reg_mean": 0.04828086162144316,
-   "reg_p90": 0.13092052498935658,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "d=0.99",
-   "hold": 0.041666666666666664,
-   "WH": 0.5101094407306431,
-   "reg_mean": 0.055229014500399826,
-   "reg_p90": 0.15856030662329682,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "c_sanc=2",
-   "hold": 0.026041666666666668,
-   "WH": 0.5025443429426106,
-   "reg_mean": 0.06279411228843236,
-   "reg_p90": 0.2052843951600912,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "zeta=0",
-   "hold": 0.026041666666666668,
-   "WH": 0.5022269782107841,
-   "reg_mean": 0.06311147702025895,
    "reg_p90": 0.2052843951600912,
    "reg_max": 0.6249028854383665
   },
@@ -683,7 +4275,39 @@
    "reg_max": 0.6249028854383665
   },
   {
-   "key": "base",
+   "key": "c_sanc=2",
+   "hold": 0.026041666666666668,
+   "WH": 0.5025443429426106,
+   "reg_mean": 0.06279411228843236,
+   "reg_p90": 0.2052843951600912,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "d=0.99",
+   "hold": 0.041666666666666664,
+   "WH": 0.5101094407306431,
+   "reg_mean": 0.055229014500399826,
+   "reg_p90": 0.15856030662329682,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "d=0.99_q_red=2",
+   "hold": 0.052083333333333336,
+   "WH": 0.5170575936095999,
+   "reg_mean": 0.04828086162144316,
+   "reg_p90": 0.13092052498935658,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "move_c=1",
+   "hold": 0.026041666666666668,
+   "WH": 0.5073002639766625,
+   "reg_mean": 0.0580381912543805,
+   "reg_p90": 0.18392051043020133,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "police=1",
    "hold": 0.026041666666666668,
    "WH": 0.5030056725206647,
    "reg_mean": 0.062332782710378266,
@@ -691,51 +4315,59 @@
    "reg_max": 0.6249028854383665
   },
   {
-   "key": "T_reloc=4_seq=1",
-   "hold": 0.036458333333333336,
-   "WH": 0.5053088996070902,
-   "reg_mean": 0.060029555623952756,
+   "key": "q_red=2",
+   "hold": 0.03125,
+   "WH": 0.505607214455253,
+   "reg_mean": 0.05973124077578998,
+   "reg_p90": 0.18392051043020133,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "seq=1",
+   "hold": 0.03125,
+   "WH": 0.5031064548203424,
+   "reg_mean": 0.06223200041070053,
+   "reg_p90": 0.19538599421165084,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "seq=2",
+   "hold": 0.026041666666666668,
+   "WH": 0.502119278525451,
+   "reg_mean": 0.06321917670559198,
    "reg_p90": 0.18618587851776378,
    "reg_max": 0.6249028854383665
   },
   {
-   "key": "T_reloc=20_seq=1",
+   "key": "seq=3",
+   "hold": 0.010416666666666666,
+   "WH": 0.49426278504310206,
+   "reg_mean": 0.07107567018794085,
+   "reg_p90": 0.23938995031029514,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "sigma=0.05",
    "hold": 0.020833333333333332,
-   "WH": 0.4992490819840163,
-   "reg_mean": 0.06608937324702667,
-   "reg_p90": 0.2169935181087037,
+   "WH": 0.5022966989144141,
+   "reg_mean": 0.06304175631662899,
+   "reg_p90": 0.22493244941411913,
    "reg_max": 0.6249028854383665
   },
   {
-   "key": "T_dis=2",
+   "key": "sigma=0.7",
    "hold": 0.026041666666666668,
-   "WH": 0.5028703881728176,
-   "reg_mean": 0.06246806705822535,
+   "WH": 0.5050340561176688,
+   "reg_mean": 0.0603043991133741,
+   "reg_p90": 0.18392051043020133,
+   "reg_max": 0.6249028854383665
+  },
+  {
+   "key": "zeta=0",
+   "hold": 0.026041666666666668,
+   "WH": 0.5022269782107841,
+   "reg_mean": 0.06311147702025895,
    "reg_p90": 0.2052843951600912,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "T_dis=15",
-   "hold": 0.015625,
-   "WH": 0.49790114758822973,
-   "reg_mean": 0.06743730764281325,
-   "reg_p90": 0.22790327056731302,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "L_det=6",
-   "hold": 0.026041666666666668,
-   "WH": 0.49483719857914527,
-   "reg_mean": 0.07050125665189774,
-   "reg_p90": 0.23995858403144252,
-   "reg_max": 0.6249028854383665
-  },
-  {
-   "key": "L_det=0.5",
-   "hold": 0.036458333333333336,
-   "WH": 0.5092872489190715,
-   "reg_mean": 0.056051206311971476,
-   "reg_p90": 0.15798251371553362,
    "reg_max": 0.6249028854383665
   },
   {
@@ -789,78 +4421,6 @@
    "reg_max": 0.7543325772686255
   },
   {
-   "key": "T_dis=15",
-   "hold": 0.09375,
-   "WH": 0.5482827339715878,
-   "reg_mean": 0.14853435977054388,
-   "reg_p90": 0.5163661306164766,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "sigma=0.7",
-   "hold": 0.09375,
-   "WH": 0.5520246688125546,
-   "reg_mean": 0.14479242492957692,
-   "reg_p90": 0.5053565500451633,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "sigma=0.05",
-   "hold": 0.125,
-   "WH": 0.5791418061648153,
-   "reg_mean": 0.11767528757731632,
-   "reg_p90": 0.5163661306164766,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "seq=3",
-   "hold": 0.020833333333333332,
-   "WH": 0.5140304551256573,
-   "reg_mean": 0.18278663861647437,
-   "reg_p90": 0.5541431272610318,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "seq=2",
-   "hold": 0.052083333333333336,
-   "WH": 0.5245560179509864,
-   "reg_mean": 0.17226107579114522,
-   "reg_p90": 0.5498489253572001,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "seq=1",
-   "hold": 0.125,
-   "WH": 0.5782940195175735,
-   "reg_mean": 0.11852307422455814,
-   "reg_p90": 0.5053565500451633,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "q_red=2",
-   "hold": 0.19791666666666666,
-   "WH": 0.6123098150563032,
-   "reg_mean": 0.08450727868582826,
-   "reg_p90": 0.3988207636870644,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "police=1",
-   "hold": 0.13541666666666666,
-   "WH": 0.5771261457594773,
-   "reg_mean": 0.11969094798265423,
-   "reg_p90": 0.5053565500451633,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "move_c=1",
-   "hold": 0.14583333333333334,
-   "WH": 0.5873190055800367,
-   "reg_mean": 0.10949808816209501,
-   "reg_p90": 0.49080084026783016,
-   "reg_max": 0.755594710114023
-  },
-  {
    "key": "L_det=0.5",
    "hold": 0.15625,
    "WH": 0.6000650901914425,
@@ -869,26 +4429,50 @@
    "reg_max": 0.755594710114023
   },
   {
-   "key": "zeta=0",
-   "hold": 0.13541666666666666,
-   "WH": 0.5772831921977214,
-   "reg_mean": 0.11953390154441014,
+   "key": "L_det=6",
+   "hold": 0.125,
+   "WH": 0.5676967238621669,
+   "reg_mean": 0.12912036987996475,
    "reg_p90": 0.5053565500451633,
    "reg_max": 0.755594710114023
   },
   {
-   "key": "d=0.5",
-   "hold": 0.041666666666666664,
-   "WH": 0.5225564338294242,
-   "reg_mean": 0.17426065991270745,
-   "reg_p90": 0.5653163717165894,
+   "key": "T_dis=15",
+   "hold": 0.09375,
+   "WH": 0.5482827339715878,
+   "reg_mean": 0.14853435977054388,
+   "reg_p90": 0.5163661306164766,
    "reg_max": 0.755594710114023
   },
   {
-   "key": "c_sanc=2",
+   "key": "T_dis=2",
    "hold": 0.13541666666666666,
-   "WH": 0.5771382792694357,
-   "reg_mean": 0.11967881447269584,
+   "WH": 0.577721266850144,
+   "reg_mean": 0.11909582689198761,
+   "reg_p90": 0.5053565500451633,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "T_reloc=20_seq=1",
+   "hold": 0.09375,
+   "WH": 0.5461331604942129,
+   "reg_mean": 0.15068393324791868,
+   "reg_p90": 0.5257052009375873,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "T_reloc=4_seq=1",
+   "hold": 0.1875,
+   "WH": 0.626811422505209,
+   "reg_mean": 0.07000567123692258,
+   "reg_p90": 0.374356700503558,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "base",
+   "hold": 0.13541666666666666,
+   "WH": 0.5771261457594773,
+   "reg_mean": 0.11969094798265423,
    "reg_p90": 0.5053565500451633,
    "reg_max": 0.755594710114023
   },
@@ -901,7 +4485,31 @@
    "reg_max": 0.755594710114023
   },
   {
-   "key": "base",
+   "key": "c_sanc=2",
+   "hold": 0.13541666666666666,
+   "WH": 0.5771382792694357,
+   "reg_mean": 0.11967881447269584,
+   "reg_p90": 0.5053565500451633,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "d=0.5",
+   "hold": 0.041666666666666664,
+   "WH": 0.5225564338294242,
+   "reg_mean": 0.17426065991270745,
+   "reg_p90": 0.5653163717165894,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "move_c=1",
+   "hold": 0.14583333333333334,
+   "WH": 0.5873190055800367,
+   "reg_mean": 0.10949808816209501,
+   "reg_p90": 0.49080084026783016,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "police=1",
    "hold": 0.13541666666666666,
    "WH": 0.5771261457594773,
    "reg_mean": 0.11969094798265423,
@@ -909,34 +4517,58 @@
    "reg_max": 0.755594710114023
   },
   {
-   "key": "T_reloc=4_seq=1",
-   "hold": 0.1875,
-   "WH": 0.626811422505209,
-   "reg_mean": 0.07000567123692258,
-   "reg_p90": 0.374356700503558,
+   "key": "q_red=2",
+   "hold": 0.19791666666666666,
+   "WH": 0.6123098150563032,
+   "reg_mean": 0.08450727868582826,
+   "reg_p90": 0.3988207636870644,
    "reg_max": 0.755594710114023
   },
   {
-   "key": "T_reloc=20_seq=1",
-   "hold": 0.09375,
-   "WH": 0.5461331604942129,
-   "reg_mean": 0.15068393324791868,
-   "reg_p90": 0.5257052009375873,
-   "reg_max": 0.755594710114023
-  },
-  {
-   "key": "T_dis=2",
-   "hold": 0.13541666666666666,
-   "WH": 0.577721266850144,
-   "reg_mean": 0.11909582689198761,
+   "key": "seq=1",
+   "hold": 0.125,
+   "WH": 0.5782940195175735,
+   "reg_mean": 0.11852307422455814,
    "reg_p90": 0.5053565500451633,
    "reg_max": 0.755594710114023
   },
   {
-   "key": "L_det=6",
+   "key": "seq=2",
+   "hold": 0.052083333333333336,
+   "WH": 0.5245560179509864,
+   "reg_mean": 0.17226107579114522,
+   "reg_p90": 0.5498489253572001,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "seq=3",
+   "hold": 0.020833333333333332,
+   "WH": 0.5140304551256573,
+   "reg_mean": 0.18278663861647437,
+   "reg_p90": 0.5541431272610318,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "sigma=0.05",
    "hold": 0.125,
-   "WH": 0.5676967238621669,
-   "reg_mean": 0.12912036987996475,
+   "WH": 0.5791418061648153,
+   "reg_mean": 0.11767528757731632,
+   "reg_p90": 0.5163661306164766,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "sigma=0.7",
+   "hold": 0.09375,
+   "WH": 0.5520246688125546,
+   "reg_mean": 0.14479242492957692,
+   "reg_p90": 0.5053565500451633,
+   "reg_max": 0.755594710114023
+  },
+  {
+   "key": "zeta=0",
+   "hold": 0.13541666666666666,
+   "WH": 0.5772831921977214,
+   "reg_mean": 0.11953390154441014,
    "reg_p90": 0.5053565500451633,
    "reg_max": 0.755594710114023
   },
@@ -1361,7 +4993,7 @@
    "reg_max": 0.047797305530153045
   },
   {
-   "key": "D_mult=3_T_reloc=4_seq=1",
+   "key": "D_mult=3_T_reloc=4_d=0.99_seq=1",
    "hold": 0.984375,
    "WH": 1.0614460880975862,
    "reg_mean": 0.004932537521639914,
@@ -1377,18 +5009,18 @@
    "reg_max": 0.047797305530153045
   },
   {
-   "key": "T_reloc=4_d=0.99_q_red=2_seq=1",
+   "key": "D_mult=3_T_reloc=4_seq=1",
    "hold": 0.984375,
-   "WH": 1.061429499014984,
-   "reg_mean": 0.004949126604242354,
+   "WH": 1.0614460880975862,
+   "reg_mean": 0.004932537521639914,
    "reg_p90": 0.01882948112866936,
    "reg_max": 0.047797305530153045
   },
   {
-   "key": "D_mult=3_T_reloc=4_d=0.99_seq=1",
+   "key": "T_reloc=4_d=0.99_q_red=2_seq=1",
    "hold": 0.984375,
-   "WH": 1.0614460880975862,
-   "reg_mean": 0.004932537521639914,
+   "WH": 1.061429499014984,
+   "reg_mean": 0.004949126604242354,
    "reg_p90": 0.01882948112866936,
    "reg_max": 0.047797305530153045
   },
@@ -1401,7 +5033,7 @@
    "reg_max": 0.047797305530153045
   },
   {
-   "key": "D_mult=3_d=0.99_q_red=2",
+   "key": "D_mult=3_d=0.99",
    "hold": 0.96875,
    "WH": 1.0243491395792805,
    "reg_mean": 0.04202948603994576,
@@ -1409,7 +5041,7 @@
    "reg_max": 0.5138797853842141
   },
   {
-   "key": "D_mult=3_d=0.99",
+   "key": "D_mult=3_d=0.99_q_red=2",
    "hold": 0.96875,
    "WH": 1.0243491395792805,
    "reg_mean": 0.04202948603994576,
@@ -1465,34 +5097,10 @@
    "reg_max": 0.6401176500718417
   },
   {
-   "key": "seq=1",
-   "hold": 0.4375,
-   "WH": 0.7399758208143196,
-   "reg_mean": 0.32640280480490663,
-   "reg_p90": 0.6324055042372382,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "T_dis=15",
-   "hold": 0.390625,
-   "WH": 0.7083160301100675,
-   "reg_mean": 0.3580625955091587,
-   "reg_p90": 0.6324055042372382,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "move_c=1",
+   "key": "L_det=0.5",
    "hold": 0.640625,
-   "WH": 0.8596328335816594,
-   "reg_mean": 0.20674579203756677,
-   "reg_p90": 0.6133781937408834,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "T_reloc=4_seq=1",
-   "hold": 0.6875,
-   "WH": 0.8892336997207426,
-   "reg_mean": 0.1771449258984836,
+   "WH": 0.8472035113884538,
+   "reg_mean": 0.21917511423077232,
    "reg_p90": 0.6210900740601865,
    "reg_max": 0.6760335517995617
   },
@@ -1505,59 +5113,11 @@
    "reg_max": 0.6760335517995617
   },
   {
-   "key": "L_det=0.5",
-   "hold": 0.640625,
-   "WH": 0.8472035113884538,
-   "reg_mean": 0.21917511423077232,
-   "reg_p90": 0.6210900740601865,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "police=1",
-   "hold": 0.640625,
-   "WH": 0.8575500362866164,
-   "reg_mean": 0.20882858933260978,
-   "reg_p90": 0.6133781937408834,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "T_reloc=20_seq=1",
-   "hold": 0.3125,
-   "WH": 0.6649817037237309,
-   "reg_mean": 0.4013969218954953,
-   "reg_p90": 0.6341602363663704,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "zeta=0.9",
-   "hold": 0.640625,
-   "WH": 0.8570842751212648,
-   "reg_mean": 0.20929435049796138,
-   "reg_p90": 0.6133781937408834,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "sigma=0.7",
-   "hold": 0.5625,
-   "WH": 0.7847151467826,
-   "reg_mean": 0.2816634788366263,
-   "reg_p90": 0.6133781937408834,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "sigma=0.05",
-   "hold": 0.46875,
-   "WH": 0.8440029809392562,
-   "reg_mean": 0.22237564467997015,
-   "reg_p90": 0.6256920828904203,
-   "reg_max": 0.6760335517995617
-  },
-  {
-   "key": "c_sanc=2",
-   "hold": 0.640625,
-   "WH": 0.8575500362866164,
-   "reg_mean": 0.20882858933260978,
-   "reg_p90": 0.6133781937408834,
+   "key": "T_dis=15",
+   "hold": 0.390625,
+   "WH": 0.7083160301100675,
+   "reg_mean": 0.3580625955091587,
+   "reg_p90": 0.6324055042372382,
    "reg_max": 0.6760335517995617
   },
   {
@@ -1569,10 +5129,26 @@
    "reg_max": 0.6760335517995617
   },
   {
-   "key": "zeta=0",
+   "key": "T_reloc=20_seq=1",
+   "hold": 0.3125,
+   "WH": 0.6649817037237309,
+   "reg_mean": 0.4013969218954953,
+   "reg_p90": 0.6341602363663704,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "T_reloc=4_seq=1",
+   "hold": 0.6875,
+   "WH": 0.8892336997207426,
+   "reg_mean": 0.1771449258984836,
+   "reg_p90": 0.6210900740601865,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "base",
    "hold": 0.640625,
-   "WH": 0.8575490812695659,
-   "reg_mean": 0.20882954434966033,
+   "WH": 0.8575500362866164,
+   "reg_mean": 0.20882858933260978,
    "reg_p90": 0.6133781937408834,
    "reg_max": 0.6760335517995617
   },
@@ -1585,10 +5161,66 @@
    "reg_max": 0.6760335517995617
   },
   {
-   "key": "base",
+   "key": "c_sanc=2",
    "hold": 0.640625,
    "WH": 0.8575500362866164,
    "reg_mean": 0.20882858933260978,
+   "reg_p90": 0.6133781937408834,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "move_c=1",
+   "hold": 0.640625,
+   "WH": 0.8596328335816594,
+   "reg_mean": 0.20674579203756677,
+   "reg_p90": 0.6133781937408834,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "police=1",
+   "hold": 0.640625,
+   "WH": 0.8575500362866164,
+   "reg_mean": 0.20882858933260978,
+   "reg_p90": 0.6133781937408834,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "seq=1",
+   "hold": 0.4375,
+   "WH": 0.7399758208143196,
+   "reg_mean": 0.32640280480490663,
+   "reg_p90": 0.6324055042372382,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "sigma=0.05",
+   "hold": 0.46875,
+   "WH": 0.8440029809392562,
+   "reg_mean": 0.22237564467997015,
+   "reg_p90": 0.6256920828904203,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "sigma=0.7",
+   "hold": 0.5625,
+   "WH": 0.7847151467826,
+   "reg_mean": 0.2816634788366263,
+   "reg_p90": 0.6133781937408834,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "zeta=0",
+   "hold": 0.640625,
+   "WH": 0.8575490812695659,
+   "reg_mean": 0.20882954434966033,
+   "reg_p90": 0.6133781937408834,
+   "reg_max": 0.6760335517995617
+  },
+  {
+   "key": "zeta=0.9",
+   "hold": 0.640625,
+   "WH": 0.8570842751212648,
+   "reg_mean": 0.20929435049796138,
    "reg_p90": 0.6133781937408834,
    "reg_max": 0.6760335517995617
   },
@@ -1601,11 +5233,11 @@
    "reg_max": 0.6987051760370335
   },
   {
-   "key": "seq=3",
-   "hold": 0.265625,
-   "WH": 0.6314982719258312,
-   "reg_mean": 0.434880353693395,
-   "reg_p90": 0.6387271111582148,
+   "key": "d=0.5",
+   "hold": 0.046875,
+   "WH": 0.5171456615510143,
+   "reg_mean": 0.5492329640682119,
+   "reg_p90": 0.65835091040751,
    "reg_max": 0.7015873901531344
   },
   {
@@ -1617,11 +5249,11 @@
    "reg_max": 0.7015873901531344
   },
   {
-   "key": "d=0.5",
-   "hold": 0.046875,
-   "WH": 0.5171456615510143,
-   "reg_mean": 0.5492329640682119,
-   "reg_p90": 0.65835091040751,
+   "key": "seq=3",
+   "hold": 0.265625,
+   "WH": 0.6314982719258312,
+   "reg_mean": 0.434880353693395,
+   "reg_p90": 0.6387271111582148,
    "reg_max": 0.7015873901531344
   }
  ],
@@ -3711,5 +7343,40 @@
     0.984375
    ]
   ]
+ },
+ "outcome_definition": {
+  "version": "offearth-outcome/1",
+  "horizon_years": 300,
+  "predicate": "holds: the AI's opening move is cooperate or police (act0 in C, P) and P(strike or harvest within 300 years) < 0.01. It does not exclude the AI exiting after year 0. Rival-AI worlds count as holding whatever P(rival) is; the rival-aware criterion (P(rival) < 0.5) is not used",
+  "thresholds": {
+   "strike_tol": 0.01,
+   "rival_likely": 0.5
+  },
+  "terminal_rule": {
+   "name": "peace",
+   "meaning": "'peace' (equilibrium_model.solve default): from T_H on the AI grows alone and unthreatened, the pact keeps its consumption-trade stream, and humans keep their base welfare. A settled peace is assumed at the horizon, not derived."
+  },
+  "rival_treatment": "A rival AI born before any strike ends the strategic game: that probability mass is riv, and it is not a strike. What the rival and the incumbent AI do afterwards is not modelled. The default predicate ('holds') ignores riv, so a world where a rival is likely still counts as holding (assumption AS-RIVAL-HOLDS); the alternative criteria (CRITERIA) count it as adverse, or bound the share between the two readings.",
+  "unresolved_continuation": "Probability mass with neither a strike nor a rival birth within the horizon (1 - att - riv) is not resolved by the model: its continuation is valued by the terminal rule. A finite-horizon 'holds' therefore means 'no strike within T_H years, given that terminal rule', never 'stable indefinitely'.",
+  "default_criterion": "holds",
+  "alternative_criteria": {
+   "rival_unlikely": "holds, and P(rival) < 0.5",
+   "rival_adverse": "holds, and P(rival) < strike_tol: a rival birth counts as adverse as a strike does"
+  },
+  "fields": {
+   "act0": "the AI's opening move at t = 0: C cooperate, X exit, S strike, P police",
+   "att": "P(the AI strikes, or harvests, within the horizon)",
+   "suc": "P(a strike within the horizon succeeds: a successful seizure)",
+   "fail": "P(a chosen strike fails: a warning shot)",
+   "riv": "P(a rival AI is born before any strike, within the horizon); ends the strategic game",
+   "harv": "P(the strike is a harvest: Earth taken for its matter or sunlight)",
+   "exit": "P(the AI exits)",
+   "pre": "P(a strike happens before closure)",
+   "att25": "P(a strike within 25 years)",
+   "att100": "P(a strike within 100 years)",
+   "t_mean": "mean strike year, given a strike within the horizon (NaN if att is 0)",
+   "WH": "human welfare (yearly equivalent, 1 = today), including the terminal value",
+   "holds": "the default predicate (DEFAULT_CRITERION), stored as 0/1"
+  }
  }
 }
