@@ -474,7 +474,6 @@ audit_events:
     caveat: >-
       Recorded as proposed, not accepted. The model results are arithmetic on
       assumed inputs, numerically checked and not empirically validated.
-      issue #15; see docs/proposed-extensions.md.
   - id: EVT-2026-CONTRIBUTION-GATE-PROPOSAL
     date: "2026-11-06"
     phase: proposal

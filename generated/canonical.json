@@ -410,7 +410,7 @@
         "I12",
         "Q17"
       ],
-      "caveat": "Recorded as proposed, not accepted. The model results are arithmetic on assumed inputs, numerically checked and not empirically validated. issue #15; see docs/proposed-extensions.md.",
+      "caveat": "Recorded as proposed, not accepted. The model results are arithmetic on assumed inputs, numerically checked and not empirically validated.",
       "confidence": "high",
       "date": "2026-11-04",
       "evidence": [
