@@ -50,4 +50,19 @@ g = pm.generations(n_gen=5, gamma=0.0, rho=0.0)
 o = pm.mixed(pm.solve())
 close(g["first_seizure"], o["success"] * sum(o["stand_down"] ** k for k in range(5)), 1e-9)
 close(g["first_warning"] + g["first_seizure"] + g["quiet"], 1.0, 1e-9)
-print("probe model: 6 checks passed (closed forms, identities, seeded Monte Carlo); nothing here is empirical")
+# 7. With no decoys the two-count solver agrees with the one-count solver (value and outcome shares).
+s1, s2 = pm.solve(), pm.solve_decoy()
+close(s1["V0"], s2["V0"], 1e-8)
+for high in (True, False):
+    o1, o2 = pm.outcomes(s1, high), pm.outcomes_decoy(s2, high)
+    for k in o1:
+        close(o1[k], o2[k], 1e-8)
+
+# 8. A tripwire decoy is never seen by a surviving AI, so it is the same game with detection f + (1 - f) q.
+for f in (0.05, 0.3):
+    close(pm.solve_decoy(decoy=f, catch=1.0)["V0"], pm.solve(q=f + (1 - f) * 0.03)["V0"], 1e-8)
+
+# 9. A misleading decoy weakens "high" signals only: the AI's value cannot rise with the decoy share.
+v = [pm.solve_decoy(decoy=f, catch=0.0)["V0"] for f in (0.0, 0.1, 0.3, 0.6)]
+assert all(a >= b - 1e-12 for a, b in zip(v, v[1:]))
+print("probe model: 9 checks passed (closed forms, identities, seeded Monte Carlo); nothing here is empirical")

@@ -61,6 +61,23 @@ Thirty generations that start weak (odds 0.3 if high, 0.02 if low) and grow:
    strong hardening (`rho` 2, each warning cuts the odds about sevenfold) it falls to
    48% at `w` 0.1, and only to 88% at `w` 0.6.
 
+Decoys (added 2026-11-10 at Cole's request). A share of probes hit a planted target that
+looks like a real weakness. A tripwire decoy catches the probe. A misleading decoy only
+returns a false "high". The AI knows the share, not which targets are decoys.
+
+7. **A few tripwires end probing.** With 3% ordinary detection, a 2% tripwire share
+   leaves probing in place and a 5% share stops it. An AI with `w` 0.6 then stands
+   down: its chance of a successful strike falls from 29% to zero.
+8. **Tripwires backfire on an AI with little to lose.** At `w` 0.3 the same 5% share
+   makes it strike blind. Successful strikes rise from 42% to 48%, and failed strikes
+   rise from 19% to 53%.
+9. **Misleading decoys do little.** The AI discounts "high" signals by the known share.
+   Even a 30% share moves successful strikes by two points or less. Failed strikes rise
+   somewhat.
+10. **Over generations the gain is modest.** In the start-weak chain with strong
+    hardening, a 30% tripwire share lowers the chance of a seizure within 30 generations
+    from 48% to 39% at `w` 0.1, and from 88% to 86% at `w` 0.6.
+
 ## Reading
 
 In this toy Cole's prediction holds where AIs have little to lose, and the warnings help
@@ -68,13 +85,18 @@ only if each one hardens defences a lot. Preservation moves the other way: fewer
 warnings, and a first event that is more often a seizure. That is the tension between
 warning shots and preservation named in the listening guide, now with numbers behind it.
 
+Decoys and preservation work together in one generation: a tripwire share of 5% turns a
+well-kept AI from a prober into one that stands down. Decoys alone, against an AI with
+little to lose, replace probing with a blind strike. Decoys that only mislead are weak
+here because the AI is assumed to know how common they are.
+
 ## Limits
 
 1. Every generation eventually strikes if its odds get high enough, because standing
    down is always worth less than winning. There is no pact here and nothing that makes
    cooperation better than a sure win.
-2. Two possible odds, not a range. Signals are symmetric. Humans do not plant false
-   signals, though decoys would lower signal accuracy and so discourage probing.
+2. Two possible odds, not a range. The AI knows the decoy share exactly. An AI that
+   underestimated it would be misled, which is not modelled. Decoys cost humans nothing here.
 3. Detection ends that AI. A milder response would make probing cheaper.
 4. Humans react by a fixed rule. They do not choose, and they do not strike first.
 5. The time scale of a generation, and every input, is assumed.
