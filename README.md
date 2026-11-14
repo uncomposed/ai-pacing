@@ -168,3 +168,14 @@ scope, and omissions in [`examples/renderings/dependency-map.yaml`](examples/ren
 ## Publication rule
 
 A rendering may initially name a branch for discovery, but any verification must resolve that branch to a full immutable Git commit object ID. Verification is an attributable judgment about the declared relationship between an artifact and that exact state. It is not endorsement or a quality award.
+
+## License and citation
+
+Code is under the MIT license ([`LICENSE`](LICENSE)). The specification, documents,
+research notes and data the project wrote are under CC BY 4.0
+([`LICENSE-CC-BY-4.0`](LICENSE-CC-BY-4.0)). Third-party material under
+`research_notes/external/` keeps its upstream terms. [`LICENSING.md`](LICENSING.md)
+says which paths each license covers.
+
+To cite the project, use [`CITATION.cff`](CITATION.cff) and name the full commit
+ID or release tag you read.

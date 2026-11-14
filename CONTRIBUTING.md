@@ -222,5 +222,8 @@ From the history:
 - Use the pull request template. `Closes #N` only when every Done-when box of the
   issue is met; otherwise `Part of #N` and list which boxes are done.
 - Do not merge your own PR if you are not the maintainer, and do not push to `main`.
+- Contributions are accepted under the repository's licenses: code under MIT, text
+  and data under CC BY 4.0 (`LICENSING.md`). Do not commit third-party material
+  unless its license allows it and its `SOURCES.yaml` entry records that license.
 - Keep spec changes and model changes in separate PRs where you can: they rest on
   different evidence.

@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: >-
+  If you use this work, please cite it and name the full Git commit ID or
+  release tag you read. The specification changes; a citation without a commit
+  does not identify what was cited.
+title: "AI Pacing"
+abstract: >-
+  A Git-native, machine-readable specification of AI Pacing: slowing and
+  conditioning the conversion of frontier AI capability into irreversible
+  power while preserving bounded research progress and meaningful human
+  vetoes. Includes the specification, its checks, a systems-engineering
+  workspace, an evidence protocol, replications of external models, and
+  research on an off-Earth pact.
+authors:
+  - family-names: Miller
+    given-names: Cole
+repository-code: "https://github.com/uncomposed/ai-pacing"
+url: "https://ideas.proximitytoprogress.com/ideas/ai-pacing"
+license:
+  - MIT
+  - CC-BY-4.0
+keywords:
+  - AI governance
+  - AI safety
+  - frontier AI
+  - compute governance
