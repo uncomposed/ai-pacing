@@ -32,7 +32,7 @@ Short quotations from cited works remain their authors'.
 
 ## Attribution
 
-For CC BY 4.0 material, credit "AI Pacing, Cole Miller", link
+For CC BY 4.0 material, credit "AI Pacing, edited by Cole Miller", link
 <https://github.com/uncomposed/ai-pacing>, name the full commit ID or release
 tag you used, and say if you changed it. [`CITATION.cff`](CITATION.cff) gives
 the same information in machine-readable form.
@@ -45,7 +45,9 @@ proposal as a faithful rendering.
 
 Much of the text was drafted with AI assistance, as each node's provenance and
 each note's status line record. The licenses above apply to whatever rights the
-author holds in that material.
+author holds in that material. Crediting the project does not mean the editor
+wrote or endorses every sentence: before attributing a specific claim to the
+editor, check the provenance of the node or note it comes from.
 
 ## Contributions
 

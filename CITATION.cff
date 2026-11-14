@@ -2,7 +2,11 @@ cff-version: 1.2.0
 message: >-
   If you use this work, please cite it and name the full Git commit ID or
   release tag you read. The specification changes; a citation without a commit
-  does not identify what was cited.
+  does not identify what was cited. Cole Miller is the canonical editor, not
+  the sole writer: much of the text was drafted with AI assistance, and each
+  specification node and research note records the role AI played. Attribute
+  a specific claim to the editor only where the provenance shows the editor
+  made it.
 title: "AI Pacing"
 abstract: >-
   A Git-native, machine-readable specification of AI Pacing: slowing and
